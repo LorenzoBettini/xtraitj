@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="xtraitj.site"
+      label="Xtraitj.site Feature"
+      version="1.0.0.qualifier"
+      provider-name="Lorenzo Bettini">
+
+   <includes
+         id="xtraitj.sdk"
+         version="0.0.0"/>
+
+</feature>

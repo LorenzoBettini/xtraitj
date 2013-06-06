@@ -1,0 +1,40 @@
+«IMPORT xtraitj::ui::wizard»
+
+«DEFINE main FOR XtraitjProjectInfo»
+«EXPAND model FOR this»
+«EXPAND javamain FOR this»
+«ENDDEFINE»
+
+«DEFINE model FOR XtraitjProjectInfo»
+«FILE "src/xtraitj/example.xtraitj"-»
+/*
+ * This is an example Xtraitj program
+ */
+
+package my.traits;
+
+trait T {
+	String s;
+	String m() { this.s; }
+}
+
+class C uses T {
+	String s = "aString";
+}
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE javamain FOR XtraitjProjectInfo»
+«FILE "src/main/Main.java"-»
+package main;
+
+import my.traits.C;
+
+public class Main {
+	public static void main(String[] args) {
+		System.out.println(new C().m());
+	}
+}
+«ENDFILE»
+«ENDDEFINE»
+

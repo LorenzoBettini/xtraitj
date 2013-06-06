@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="xtraitj.sdk" version="0.0.0">
+      <category name="main"/>
+   </feature>
+   <feature id="xtraitj.sdk.source" version="0.0.0">
+      <category name="main.source"/>
+   </feature>
+   <category-def name="main" label="Xtraitj">
+      <description>
+         Xtraitj
+      </description>
+   </category-def>
+   <category-def name="main.source" label="Source for Xtraitj">
+      <description>
+         Xtraitj
+      </description>
+   </category-def>
+</site>

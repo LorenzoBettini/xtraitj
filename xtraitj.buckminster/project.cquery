@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" resourceMap="project.rmap">
+    <cq:rootRequest name="xtraitj.site" componentType="eclipse.feature"/>
+    <cq:advisorNode namePattern="^org\.objectweb\.asm\.source" skipComponent="true"/>
+    <cq:advisorNode namePattern="^org\.apache\.log4j\.source" skipComponent="true"/>
+</cq:componentQuery>

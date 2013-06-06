@@ -1,0 +1,86 @@
+grammar xtraitj.Xtraitj with org.eclipse.xtext.xbase.Xbase
+
+import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
+
+generate xtraitj "http://www.Xtraitj.xtraitj"
+
+TJProgram:
+	('package' name=QualifiedName ';')?
+	importSection=XImportSection?
+	elements+=TJDeclaration*
+;
+
+TJDeclaration:
+	TJTrait | TJClass
+;
+
+TJTrait:
+	'trait' name=ID ('uses' traitExpression=TJTraitExpression)? '{'
+		members+=TJMember*
+	'}'
+;
+
+TJClass:
+	'class' name=ID 
+			('implements'
+				interfaces += JvmParameterizedTypeReference
+				(',' interfaces += JvmParameterizedTypeReference)*
+			)?
+			('uses' traitExpression=TJTraitExpression)? '{'
+		fields+=TJField*
+	'}'
+;
+
+TJTraitExpression:
+	references += TJTraitReference (
+		','
+		references += TJTraitReference)*
+;
+
+TJTraitReference: 	
+	trait=[TJTrait|QualifiedName]
+	('['
+		operations+=TJTraitOperation
+		(',' operations+=TJTraitOperation)*
+	']')?
+;
+
+TJTraitOperation:
+	TjTraitOperationForProvided |
+	TJRenameOperation |
+	TJRedirectOperation
+;
+
+TjTraitOperationForProvided:
+	TJHideOperation | TJRestrictOperation | TJAliasOperation
+;
+
+TJHideOperation: {TJHideOperation} 'hide' member=[types::JvmMember] ;
+
+TJRestrictOperation: {TJRestrictOperation} 'restrict' member=[types::JvmMember] ;
+
+TJAliasOperation: {TJAliasOperation} 'alias' member=[types::JvmMember] 'as' newname=ID ;
+
+TJRenameOperation: {TJRenameOperation} 'rename' member=[types::JvmMember] 'to' newname=ID ;
+
+TJRedirectOperation: {TJRedirectOperation} 'redirect' member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
+
+TJMember:
+	=>TJField | TJMethodDeclaration;
+
+TJField:
+	type=JvmTypeReference name=ValidID ('=' init=XExpression)? ';' ;
+
+TJMethodDeclaration:
+	=>TJRequiredMethod | TJMethod
+;
+
+TJRequiredMethod:
+	type=JvmTypeReference name=ValidID 
+		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')'
+		';' ;
+
+TJMethod:
+	private?='private'? type=JvmTypeReference name=ValidID 
+		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')' 
+		body=XBlockExpression;
