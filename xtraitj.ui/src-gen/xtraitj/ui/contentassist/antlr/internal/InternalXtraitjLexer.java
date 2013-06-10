@@ -39,7 +39,6 @@ public class InternalXtraitjLexer extends Lexer {
     public static final int T__14=14;
     public static final int T__13=13;
     public static final int RULE_DECIMAL=7;
-    public static final int T__95=95;
     public static final int T__80=80;
     public static final int T__81=81;
     public static final int T__82=82;
@@ -1490,10 +1489,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__79;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:77:7: ( '::' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:77:9: '::'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:77:7: ( 'new' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:77:9: 'new'
             {
-            match("::"); 
+            match("new"); 
 
 
             }
@@ -1511,10 +1510,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__80;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:78:7: ( 'new' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:78:9: 'new'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:78:7: ( 'null' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:78:9: 'null'
             {
-            match("new"); 
+            match("null"); 
 
 
             }
@@ -1532,10 +1531,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__81;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:79:7: ( 'null' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:79:9: 'null'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:79:7: ( 'typeof' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:79:9: 'typeof'
             {
-            match("null"); 
+            match("typeof"); 
 
 
             }
@@ -1553,10 +1552,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__82;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:80:7: ( 'typeof' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:80:9: 'typeof'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:80:7: ( 'throw' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:80:9: 'throw'
             {
-            match("typeof"); 
+            match("throw"); 
 
 
             }
@@ -1574,10 +1573,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__83;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:81:7: ( 'throw' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:81:9: 'throw'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:81:7: ( 'return' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:81:9: 'return'
             {
-            match("throw"); 
+            match("return"); 
 
 
             }
@@ -1595,10 +1594,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__84;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:82:7: ( 'return' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:82:9: 'return'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:82:7: ( 'try' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:82:9: 'try'
             {
-            match("return"); 
+            match("try"); 
 
 
             }
@@ -1616,10 +1615,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__85;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:83:7: ( 'try' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:83:9: 'try'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:83:7: ( 'finally' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:83:9: 'finally'
             {
-            match("try"); 
+            match("finally"); 
 
 
             }
@@ -1637,10 +1636,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__86;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:84:7: ( 'finally' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:84:9: 'finally'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:84:7: ( 'catch' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:84:9: 'catch'
             {
-            match("finally"); 
+            match("catch"); 
 
 
             }
@@ -1658,11 +1657,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__87;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:85:7: ( 'catch' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:85:9: 'catch'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:85:7: ( '?' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:85:9: '?'
             {
-            match("catch"); 
-
+            match('?'); 
 
             }
 
@@ -1679,10 +1677,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__88;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:86:7: ( '?' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:86:9: '?'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:86:7: ( '&' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:86:9: '&'
             {
-            match('?'); 
+            match('&'); 
 
             }
 
@@ -1699,10 +1697,11 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__89;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:87:7: ( '&' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:87:9: '&'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:87:7: ( 'private' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:87:9: 'private'
             {
-            match('&'); 
+            match("private"); 
+
 
             }
 
@@ -1719,10 +1718,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__90;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:88:7: ( 'private' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:88:9: 'private'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:88:7: ( '::' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:88:9: '::'
             {
-            match("private"); 
+            match("::"); 
 
 
             }
@@ -1761,11 +1760,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__92;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:90:7: ( '*.' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:90:9: '*.'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:90:7: ( '|' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:90:9: '|'
             {
-            match("*."); 
-
+            match('|'); 
 
             }
 
@@ -1782,10 +1780,11 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__93;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:91:7: ( '|' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:91:9: '|'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:91:7: ( 'var' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:91:9: 'var'
             {
-            match('|'); 
+            match("var"); 
+
 
             }
 
@@ -1802,29 +1801,8 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = T__94;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:92:7: ( 'var' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:92:9: 'var'
-            {
-            match("var"); 
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__94"
-
-    // $ANTLR start "T__95"
-    public final void mT__95() throws RecognitionException {
-        try {
-            int _type = T__95;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:93:7: ( 'true' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:93:9: 'true'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:92:7: ( 'true' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:92:9: 'true'
             {
             match("true"); 
 
@@ -1837,17 +1815,17 @@ public class InternalXtraitjLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "T__95"
+    // $ANTLR end "T__94"
 
     // $ANTLR start "RULE_HEX"
     public final void mRULE_HEX() throws RecognitionException {
         try {
             int _type = RULE_HEX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
             {
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:12: ( '0x' | '0X' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:12: ( '0x' | '0X' )
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -1875,7 +1853,7 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:13: '0x'
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:13: '0x'
                     {
                     match("0x"); 
 
@@ -1883,7 +1861,7 @@ public class InternalXtraitjLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:18: '0X'
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:18: '0X'
                     {
                     match("0X"); 
 
@@ -1893,7 +1871,7 @@ public class InternalXtraitjLexer extends Lexer {
 
             }
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
             int cnt2=0;
             loop2:
             do {
@@ -1931,7 +1909,7 @@ public class InternalXtraitjLexer extends Lexer {
                 cnt2++;
             } while (true);
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -1940,10 +1918,10 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
                     {
                     match('#'); 
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -1961,7 +1939,7 @@ public class InternalXtraitjLexer extends Lexer {
                     }
                     switch (alt3) {
                         case 1 :
-                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:64: ( 'b' | 'B' ) ( 'i' | 'I' )
+                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:64: ( 'b' | 'B' ) ( 'i' | 'I' )
                             {
                             if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                                 input.consume();
@@ -1985,7 +1963,7 @@ public class InternalXtraitjLexer extends Lexer {
                             }
                             break;
                         case 2 :
-                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20783:84: ( 'l' | 'L' )
+                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20683:84: ( 'l' | 'L' )
                             {
                             if ( input.LA(1)=='L'||input.LA(1)=='l' ) {
                                 input.consume();
@@ -2024,11 +2002,11 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20785:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20785:12: '0' .. '9' ( '0' .. '9' | '_' )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20685:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20685:12: '0' .. '9' ( '0' .. '9' | '_' )*
             {
             matchRange('0','9'); 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20785:21: ( '0' .. '9' | '_' )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20685:21: ( '0' .. '9' | '_' )*
             loop5:
             do {
                 int alt5=2;
@@ -2077,11 +2055,11 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_DECIMAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
             {
             mRULE_INT(); 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -2090,7 +2068,7 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
                     {
                     if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                         input.consume();
@@ -2101,7 +2079,7 @@ public class InternalXtraitjLexer extends Lexer {
                         recover(mse);
                         throw mse;}
 
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:36: ( '+' | '-' )?
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:36: ( '+' | '-' )?
                     int alt6=2;
                     int LA6_0 = input.LA(1);
 
@@ -2134,7 +2112,7 @@ public class InternalXtraitjLexer extends Lexer {
 
             }
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
             int alt8=3;
             int LA8_0 = input.LA(1);
 
@@ -2146,7 +2124,7 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt8) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
                     {
                     if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                         input.consume();
@@ -2170,7 +2148,7 @@ public class InternalXtraitjLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20787:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20687:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
                     {
                     if ( input.LA(1)=='D'||input.LA(1)=='F'||input.LA(1)=='L'||input.LA(1)=='d'||input.LA(1)=='f'||input.LA(1)=='l' ) {
                         input.consume();
@@ -2203,10 +2181,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20789:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20789:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20689:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20689:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             {
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20789:11: ( '^' )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20689:11: ( '^' )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -2215,7 +2193,7 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20789:11: '^'
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20689:11: '^'
                     {
                     match('^'); 
 
@@ -2233,7 +2211,7 @@ public class InternalXtraitjLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20789:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20689:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             loop10:
             do {
                 int alt10=2;
@@ -2282,10 +2260,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -2303,10 +2281,10 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt13) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop11:
                     do {
                         int alt11=3;
@@ -2322,7 +2300,7 @@ public class InternalXtraitjLexer extends Lexer {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2338,7 +2316,7 @@ public class InternalXtraitjLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:66: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:66: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2363,10 +2341,10 @@ public class InternalXtraitjLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop12:
                     do {
                         int alt12=3;
@@ -2382,7 +2360,7 @@ public class InternalXtraitjLexer extends Lexer {
 
                         switch (alt12) {
                     	case 1 :
-                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2398,7 +2376,7 @@ public class InternalXtraitjLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20791:137: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20691:137: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2441,12 +2419,12 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20793:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20793:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20693:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20693:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20793:24: ( options {greedy=false; } : . )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20693:24: ( options {greedy=false; } : . )*
             loop14:
             do {
                 int alt14=2;
@@ -2471,7 +2449,7 @@ public class InternalXtraitjLexer extends Lexer {
 
                 switch (alt14) {
             	case 1 :
-            	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20793:52: .
+            	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20693:52: .
             	    {
             	    matchAny(); 
 
@@ -2501,12 +2479,12 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop15:
             do {
                 int alt15=2;
@@ -2519,7 +2497,7 @@ public class InternalXtraitjLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2539,7 +2517,7 @@ public class InternalXtraitjLexer extends Lexer {
                 }
             } while (true);
 
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:40: ( ( '\\r' )? '\\n' )?
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:40: ( ( '\\r' )? '\\n' )?
             int alt17=2;
             int LA17_0 = input.LA(1);
 
@@ -2548,9 +2526,9 @@ public class InternalXtraitjLexer extends Lexer {
             }
             switch (alt17) {
                 case 1 :
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:41: ( '\\r' )? '\\n'
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:41: ( '\\r' )? '\\n'
                     {
-                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:41: ( '\\r' )?
+                    // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:41: ( '\\r' )?
                     int alt16=2;
                     int LA16_0 = input.LA(1);
 
@@ -2559,7 +2537,7 @@ public class InternalXtraitjLexer extends Lexer {
                     }
                     switch (alt16) {
                         case 1 :
-                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20795:41: '\\r'
+                            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20695:41: '\\r'
                             {
                             match('\r'); 
 
@@ -2591,10 +2569,10 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20797:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20797:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20697:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20697:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20797:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20697:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt18=0;
             loop18:
             do {
@@ -2648,8 +2626,8 @@ public class InternalXtraitjLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20799:16: ( . )
-            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20799:18: .
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20699:16: ( . )
+            // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:20699:18: .
             {
             matchAny(); 
 
@@ -2664,8 +2642,8 @@ public class InternalXtraitjLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:8: ( T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_ID | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
-        int alt19=92;
+        // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:8: ( T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_ID | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
+        int alt19=91;
         alt19 = dfa19.predict(input);
         switch (alt19) {
             case 1 :
@@ -3243,70 +3221,63 @@ public class InternalXtraitjLexer extends Lexer {
                 }
                 break;
             case 83 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:502: T__95
-                {
-                mT__95(); 
-
-                }
-                break;
-            case 84 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:508: RULE_HEX
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:502: RULE_HEX
                 {
                 mRULE_HEX(); 
 
                 }
                 break;
-            case 85 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:517: RULE_INT
+            case 84 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:511: RULE_INT
                 {
                 mRULE_INT(); 
 
                 }
                 break;
-            case 86 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:526: RULE_DECIMAL
+            case 85 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:520: RULE_DECIMAL
                 {
                 mRULE_DECIMAL(); 
 
                 }
                 break;
-            case 87 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:539: RULE_ID
+            case 86 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:533: RULE_ID
                 {
                 mRULE_ID(); 
 
                 }
                 break;
-            case 88 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:547: RULE_STRING
+            case 87 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:541: RULE_STRING
                 {
                 mRULE_STRING(); 
 
                 }
                 break;
-            case 89 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:559: RULE_ML_COMMENT
+            case 88 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:553: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
-            case 90 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:575: RULE_SL_COMMENT
+            case 89 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:569: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
-            case 91 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:591: RULE_WS
+            case 90 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:585: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
-            case 92 :
-                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:599: RULE_ANY_OTHER
+            case 91 :
+                // ../xtraitj.ui/src-gen/xtraitj/ui/contentassist/antlr/internal/InternalXtraitj.g:1:593: RULE_ANY_OTHER
                 {
                 mRULE_ANY_OTHER(); 
 
@@ -3321,30 +3292,30 @@ public class InternalXtraitjLexer extends Lexer {
     protected DFA19 dfa19 = new DFA19(this);
     static final String DFA19_eotS =
         "\1\uffff\1\61\1\63\1\65\1\67\1\72\1\74\1\76\1\101\1\103\1\106\1"+
-        "\111\1\114\1\uffff\6\117\1\uffff\1\117\2\uffff\2\117\3\uffff\3\117"+
-        "\3\uffff\1\162\3\117\2\171\1\56\1\uffff\2\56\2\uffff\1\177\13\uffff"+
-        "\1\u0081\3\uffff\1\u0083\2\uffff\1\u0085\13\uffff\1\117\1\uffff"+
-        "\7\117\1\u008f\5\117\1\uffff\1\117\1\u0098\2\117\2\uffff\3\117\3"+
-        "\uffff\3\117\1\u00a5\5\uffff\1\117\1\u00a7\3\117\2\uffff\1\171\13"+
-        "\uffff\1\u00ab\1\u00ac\7\117\1\uffff\1\117\1\u00b6\4\117\1\u00bb"+
-        "\1\117\1\uffff\14\117\1\uffff\1\117\1\uffff\1\117\1\u00cb\1\117"+
-        "\2\uffff\1\117\1\u00ce\7\117\1\uffff\4\117\1\uffff\1\u00da\2\117"+
-        "\1\u00dd\1\117\1\u00df\1\117\1\u00e1\7\117\1\uffff\1\u00e9\1\117"+
-        "\1\uffff\1\117\1\u00ed\4\117\1\u00f2\3\117\1\u00f6\1\uffff\1\117"+
-        "\1\u00f8\1\uffff\1\u00f9\1\uffff\1\u00fa\1\uffff\4\117\1\u00ff\1"+
-        "\117\1\u0101\1\uffff\2\117\1\u0104\1\uffff\1\u0105\1\u0106\2\117"+
-        "\1\uffff\3\117\1\uffff\1\u010c\3\uffff\1\117\1\u010e\1\117\1\u0110"+
-        "\1\uffff\1\117\1\uffff\1\u0112\1\117\3\uffff\2\117\1\u0116\1\u0117"+
-        "\1\u0118\1\uffff\1\117\1\uffff\1\117\1\uffff\1\u011b\1\uffff\3\117"+
-        "\3\uffff\1\u011f\1\u0120\1\uffff\1\u0121\2\117\3\uffff\1\u0124\1"+
-        "\u0125\2\uffff";
+        "\110\1\113\1\uffff\6\116\1\uffff\1\116\2\uffff\2\116\3\uffff\3\116"+
+        "\3\uffff\1\161\3\116\2\170\1\56\1\uffff\2\56\2\uffff\1\176\13\uffff"+
+        "\1\u0080\3\uffff\1\u0082\2\uffff\1\u0084\12\uffff\1\116\1\uffff"+
+        "\7\116\1\u008e\5\116\1\uffff\1\116\1\u0097\2\116\2\uffff\3\116\3"+
+        "\uffff\3\116\1\u00a4\5\uffff\1\116\1\u00a6\3\116\2\uffff\1\170\13"+
+        "\uffff\1\u00aa\1\u00ab\7\116\1\uffff\1\116\1\u00b5\4\116\1\u00ba"+
+        "\1\116\1\uffff\14\116\1\uffff\1\116\1\uffff\1\116\1\u00ca\1\116"+
+        "\2\uffff\1\116\1\u00cd\7\116\1\uffff\4\116\1\uffff\1\u00d9\2\116"+
+        "\1\u00dc\1\116\1\u00de\1\116\1\u00e0\7\116\1\uffff\1\u00e8\1\116"+
+        "\1\uffff\1\116\1\u00ec\4\116\1\u00f1\3\116\1\u00f5\1\uffff\1\116"+
+        "\1\u00f7\1\uffff\1\u00f8\1\uffff\1\u00f9\1\uffff\4\116\1\u00fe\1"+
+        "\116\1\u0100\1\uffff\2\116\1\u0103\1\uffff\1\u0104\1\u0105\2\116"+
+        "\1\uffff\3\116\1\uffff\1\u010b\3\uffff\1\116\1\u010d\1\116\1\u010f"+
+        "\1\uffff\1\116\1\uffff\1\u0111\1\116\3\uffff\2\116\1\u0115\1\u0116"+
+        "\1\u0117\1\uffff\1\116\1\uffff\1\116\1\uffff\1\u011a\1\uffff\3\116"+
+        "\3\uffff\1\u011e\1\u011f\1\uffff\1\u0120\2\116\3\uffff\1\u0123\1"+
+        "\u0124\2\uffff";
     static final String DFA19_eofS =
-        "\u0126\uffff";
+        "\u0125\uffff";
     static final String DFA19_minS =
         "\1\0\1\75\1\174\1\46\5\75\2\56\2\52\1\uffff\1\141\1\154\1\164\1"+
         "\146\2\141\1\uffff\1\150\2\uffff\1\163\1\141\3\uffff\1\151\1\145"+
         "\1\154\3\uffff\1\72\1\145\1\150\1\145\2\60\1\44\1\uffff\2\0\2\uffff"+
-        "\1\75\13\uffff\1\75\3\uffff\1\76\2\uffff\1\74\13\uffff\1\154\1\uffff"+
+        "\1\75\13\uffff\1\75\3\uffff\1\76\2\uffff\1\74\12\uffff\1\154\1\uffff"+
         "\1\164\1\163\1\141\1\160\1\151\1\160\1\163\1\44\1\154\1\162\1\156"+
         "\1\143\1\151\1\uffff\1\141\1\44\1\160\1\162\2\uffff\1\145\1\141"+
         "\1\163\3\uffff\2\144\1\151\1\44\5\uffff\1\146\1\44\1\151\1\167\1"+
@@ -3363,11 +3334,11 @@ public class InternalXtraitjLexer extends Lexer {
         "\1\uffff\1\164\1\uffff\1\44\1\uffff\1\156\1\164\1\157\3\uffff\2"+
         "\44\1\uffff\1\44\1\163\1\146\3\uffff\2\44\2\uffff";
     static final String DFA19_maxS =
-        "\1\uffff\1\76\1\174\1\46\1\75\1\76\2\75\1\76\1\56\1\72\1\56\1\57"+
+        "\1\uffff\1\76\1\174\1\46\1\75\1\76\2\75\1\76\1\56\1\72\1\52\1\57"+
         "\1\uffff\1\141\1\170\1\167\1\156\1\157\1\162\1\uffff\1\171\2\uffff"+
         "\1\163\1\154\3\uffff\1\151\1\145\1\163\3\uffff\1\72\1\157\1\150"+
         "\1\165\1\170\1\154\1\172\1\uffff\2\uffff\2\uffff\1\75\13\uffff\1"+
-        "\75\3\uffff\1\76\2\uffff\1\74\13\uffff\1\162\1\uffff\1\164\1\163"+
+        "\75\3\uffff\1\76\2\uffff\1\74\12\uffff\1\162\1\uffff\1\164\1\163"+
         "\1\141\1\160\1\151\1\160\1\163\1\172\1\154\1\162\1\156\1\143\1\151"+
         "\1\uffff\1\171\1\172\1\160\1\162\2\uffff\1\145\1\141\1\164\3\uffff"+
         "\1\144\1\164\1\151\1\172\5\uffff\1\146\1\172\1\151\1\167\1\154\2"+
@@ -3387,25 +3358,25 @@ public class InternalXtraitjLexer extends Lexer {
         "\157\3\uffff\2\172\1\uffff\1\172\1\163\1\146\3\uffff\2\172\2\uffff";
     static final String DFA19_acceptS =
         "\15\uffff\1\32\6\uffff\1\45\1\uffff\1\47\1\50\2\uffff\1\54\1\55"+
-        "\1\56\3\uffff\1\66\1\67\1\71\7\uffff\1\127\2\uffff\1\133\1\134\1"+
-        "\uffff\1\21\1\1\1\2\1\121\1\3\1\115\1\4\1\25\1\5\1\16\1\26\1\uffff"+
-        "\1\33\1\12\1\14\1\uffff\1\22\1\15\1\uffff\1\34\1\23\1\117\1\114"+
-        "\1\30\1\120\1\27\1\131\1\132\1\31\1\32\1\uffff\1\127\15\uffff\1"+
-        "\45\4\uffff\1\47\1\50\3\uffff\1\54\1\55\1\56\4\uffff\1\66\1\67\1"+
-        "\71\1\103\1\75\5\uffff\1\124\1\125\1\uffff\1\126\1\130\1\133\1\10"+
-        "\1\6\1\11\1\7\1\24\1\13\1\17\1\20\11\uffff\1\72\10\uffff\1\64\14"+
-        "\uffff\1\62\1\uffff\1\102\3\uffff\1\35\1\122\11\uffff\1\100\4\uffff"+
-        "\1\111\17\uffff\1\104\2\uffff\1\73\13\uffff\1\123\2\uffff\1\51\1"+
-        "\uffff\1\77\1\uffff\1\57\7\uffff\1\105\3\uffff\1\42\4\uffff\1\43"+
-        "\3\uffff\1\46\1\uffff\1\107\1\52\1\113\4\uffff\1\61\1\uffff\1\101"+
-        "\2\uffff\1\37\1\74\1\40\5\uffff\1\106\1\uffff\1\63\1\uffff\1\110"+
-        "\1\uffff\1\36\3\uffff\1\112\1\44\1\116\2\uffff\1\76\3\uffff\1\60"+
-        "\1\65\1\41\2\uffff\1\53\1\70";
+        "\1\56\3\uffff\1\66\1\67\1\71\7\uffff\1\126\2\uffff\1\132\1\133\1"+
+        "\uffff\1\21\1\1\1\2\1\120\1\3\1\114\1\4\1\25\1\5\1\16\1\26\1\uffff"+
+        "\1\33\1\12\1\14\1\uffff\1\22\1\15\1\uffff\1\34\1\23\1\117\1\113"+
+        "\1\30\1\27\1\130\1\131\1\31\1\32\1\uffff\1\126\15\uffff\1\45\4\uffff"+
+        "\1\47\1\50\3\uffff\1\54\1\55\1\56\4\uffff\1\66\1\67\1\71\1\116\1"+
+        "\75\5\uffff\1\123\1\124\1\uffff\1\125\1\127\1\132\1\10\1\6\1\11"+
+        "\1\7\1\24\1\13\1\17\1\20\11\uffff\1\72\10\uffff\1\64\14\uffff\1"+
+        "\62\1\uffff\1\102\3\uffff\1\35\1\121\11\uffff\1\100\4\uffff\1\110"+
+        "\17\uffff\1\103\2\uffff\1\73\13\uffff\1\122\2\uffff\1\51\1\uffff"+
+        "\1\77\1\uffff\1\57\7\uffff\1\104\3\uffff\1\42\4\uffff\1\43\3\uffff"+
+        "\1\46\1\uffff\1\106\1\52\1\112\4\uffff\1\61\1\uffff\1\101\2\uffff"+
+        "\1\37\1\74\1\40\5\uffff\1\105\1\uffff\1\63\1\uffff\1\107\1\uffff"+
+        "\1\36\3\uffff\1\111\1\44\1\115\2\uffff\1\76\3\uffff\1\60\1\65\1"+
+        "\41\2\uffff\1\53\1\70";
     static final String DFA19_specialS =
-        "\1\0\52\uffff\1\1\1\2\u00f9\uffff}>";
+        "\1\1\52\uffff\1\0\1\2\u00f8\uffff}>";
     static final String[] DFA19_transitionS = {
-            "\11\56\2\55\2\56\1\55\22\56\1\55\1\6\1\53\1\42\1\52\1\15\1\3"+
-            "\1\54\1\40\1\41\1\13\1\4\1\32\1\5\1\11\1\14\1\47\11\50\1\43"+
+            "\11\56\2\55\2\56\1\55\22\56\1\55\1\6\1\53\1\42\1\52\1\15\1"+
+            "\3\1\54\1\40\1\41\1\13\1\4\1\32\1\5\1\11\1\14\1\47\11\50\1\43"+
             "\1\24\1\10\1\1\1\7\1\12\1\56\32\52\1\33\1\56\1\34\1\51\1\52"+
             "\1\56\1\37\1\52\1\31\1\44\1\17\1\22\1\52\1\35\1\21\4\52\1\46"+
             "\1\52\1\23\1\52\1\36\1\20\1\25\1\30\1\16\1\45\3\52\1\26\1\2"+
@@ -3420,65 +3391,46 @@ public class InternalXtraitjLexer extends Lexer {
             "\1\77\1\100",
             "\1\102",
             "\1\105\13\uffff\1\104",
-            "\1\107\3\uffff\1\110",
-            "\1\112\4\uffff\1\113",
+            "\1\107",
+            "\1\111\4\uffff\1\112",
             "",
-            "\1\116",
-            "\1\121\13\uffff\1\120",
-            "\1\122\1\123\1\uffff\1\124",
-            "\1\127\6\uffff\1\125\1\126",
-            "\1\130\7\uffff\1\132\5\uffff\1\131",
-            "\1\133\20\uffff\1\134",
+            "\1\115",
+            "\1\120\13\uffff\1\117",
+            "\1\121\1\122\1\uffff\1\123",
+            "\1\126\6\uffff\1\124\1\125",
+            "\1\127\7\uffff\1\131\5\uffff\1\130",
+            "\1\132\20\uffff\1\133",
             "",
-            "\1\141\6\uffff\1\137\2\uffff\1\136\6\uffff\1\140",
-            "",
-            "",
-            "\1\144",
-            "\1\146\12\uffff\1\145",
+            "\1\140\6\uffff\1\136\2\uffff\1\135\6\uffff\1\137",
             "",
             "",
+            "\1\143",
+            "\1\145\12\uffff\1\144",
             "",
+            "",
+            "",
+            "\1\151",
             "\1\152",
-            "\1\153",
-            "\1\154\6\uffff\1\155",
+            "\1\153\6\uffff\1\154",
             "",
             "",
             "",
-            "\1\161",
-            "\1\163\11\uffff\1\164",
-            "\1\165",
-            "\1\166\17\uffff\1\167",
-            "\12\172\10\uffff\1\173\1\uffff\3\173\5\uffff\1\173\13\uffff"+
-            "\1\170\6\uffff\1\172\2\uffff\1\173\1\uffff\3\173\5\uffff\1\173"+
-            "\13\uffff\1\170",
-            "\12\172\10\uffff\1\173\1\uffff\3\173\5\uffff\1\173\22\uffff"+
-            "\1\172\2\uffff\1\173\1\uffff\3\173\5\uffff\1\173",
-            "\1\117\34\uffff\32\117\4\uffff\1\117\1\uffff\32\117",
+            "\1\160",
+            "\1\162\11\uffff\1\163",
+            "\1\164",
+            "\1\165\17\uffff\1\166",
+            "\12\171\10\uffff\1\172\1\uffff\3\172\5\uffff\1\172\13\uffff"+
+            "\1\167\6\uffff\1\171\2\uffff\1\172\1\uffff\3\172\5\uffff\1\172"+
+            "\13\uffff\1\167",
+            "\12\171\10\uffff\1\172\1\uffff\3\172\5\uffff\1\172\22\uffff"+
+            "\1\171\2\uffff\1\172\1\uffff\3\172\5\uffff\1\172",
+            "\1\116\34\uffff\32\116\4\uffff\1\116\1\uffff\32\116",
             "",
-            "\0\174",
-            "\0\174",
-            "",
-            "",
-            "\1\176",
+            "\0\173",
+            "\0\173",
             "",
             "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\1\u0080",
-            "",
-            "",
-            "",
-            "\1\u0082",
-            "",
-            "",
-            "\1\u0084",
+            "\1\175",
             "",
             "",
             "",
@@ -3490,58 +3442,74 @@ public class InternalXtraitjLexer extends Lexer {
             "",
             "",
             "",
-            "\1\u0086\5\uffff\1\u0087",
+            "\1\177",
             "",
+            "",
+            "",
+            "\1\u0081",
+            "",
+            "",
+            "\1\u0083",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\1\u0085\5\uffff\1\u0086",
+            "",
+            "\1\u0087",
             "\1\u0088",
             "\1\u0089",
             "\1\u008a",
             "\1\u008b",
             "\1\u008c",
             "\1\u008d",
-            "\1\u008e",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u008f",
             "\1\u0090",
             "\1\u0091",
             "\1\u0092",
             "\1\u0093",
-            "\1\u0094",
             "",
-            "\1\u0095\23\uffff\1\u0097\3\uffff\1\u0096",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u0094\23\uffff\1\u0096\3\uffff\1\u0095",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u0098",
             "\1\u0099",
+            "",
+            "",
             "\1\u009a",
-            "",
-            "",
             "\1\u009b",
-            "\1\u009c",
-            "\1\u009d\1\u009e",
+            "\1\u009c\1\u009d",
             "",
             "",
             "",
-            "\1\u009f",
-            "\1\u00a2\11\uffff\1\u00a1\4\uffff\1\u00a0\1\u00a3",
-            "\1\u00a4",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u009e",
+            "\1\u00a1\11\uffff\1\u00a0\4\uffff\1\u009f\1\u00a2",
+            "\1\u00a3",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
             "",
             "",
             "",
             "",
-            "\1\u00a6",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u00a5",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00a7",
             "\1\u00a8",
             "\1\u00a9",
-            "\1\u00aa",
             "",
             "",
-            "\12\172\10\uffff\1\173\1\uffff\3\173\5\uffff\1\173\22\uffff"+
-            "\1\172\2\uffff\1\173\1\uffff\3\173\5\uffff\1\173",
-            "",
-            "",
+            "\12\171\10\uffff\1\172\1\uffff\3\172\5\uffff\1\172\22\uffff"+
+            "\1\171\2\uffff\1\172\1\uffff\3\172\5\uffff\1\172",
             "",
             "",
             "",
@@ -3551,29 +3519,32 @@ public class InternalXtraitjLexer extends Lexer {
             "",
             "",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "",
+            "",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00ac",
             "\1\u00ad",
             "\1\u00ae",
             "\1\u00af",
             "\1\u00b0",
-            "\1\u00b1",
-            "\1\u00b3\2\uffff\1\u00b2",
-            "\1\u00b4",
+            "\1\u00b2\2\uffff\1\u00b1",
+            "\1\u00b3",
             "",
-            "\1\u00b5",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u00b4",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00b6",
             "\1\u00b7",
             "\1\u00b8",
             "\1\u00b9",
-            "\1\u00ba",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u00bc",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00bb",
             "",
+            "\1\u00bc",
             "\1\u00bd",
             "\1\u00be",
             "\1\u00bf",
@@ -3585,165 +3556,164 @@ public class InternalXtraitjLexer extends Lexer {
             "\1\u00c5",
             "\1\u00c6",
             "\1\u00c7",
+            "",
             "\1\u00c8",
             "",
             "\1\u00c9",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00cb",
             "",
-            "\1\u00ca",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "",
             "\1\u00cc",
-            "",
-            "",
-            "\1\u00cd",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00ce",
             "\1\u00cf",
             "\1\u00d0",
             "\1\u00d1",
             "\1\u00d2",
             "\1\u00d3",
             "\1\u00d4",
-            "\1\u00d5",
             "",
+            "\1\u00d5",
             "\1\u00d6",
             "\1\u00d7",
             "\1\u00d8",
-            "\1\u00d9",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00da",
             "\1\u00db",
-            "\1\u00dc",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u00de",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u00e0",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00dd",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00df",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00e1",
             "\1\u00e2",
             "\1\u00e3",
             "\1\u00e4",
             "\1\u00e5",
             "\1\u00e6",
             "\1\u00e7",
-            "\1\u00e8",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u00ea\16\uffff\1\u00eb",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00e9\16\uffff\1\u00ea",
             "",
-            "\1\u00ec",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u00eb",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00ed",
             "\1\u00ee",
             "\1\u00ef",
             "\1\u00f0",
-            "\1\u00f1",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00f2",
             "\1\u00f3",
             "\1\u00f4",
-            "\1\u00f5",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\u00f7",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u00f6",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
+            "\1\u00fa",
             "\1\u00fb",
             "\1\u00fc",
             "\1\u00fd",
-            "\1\u00fe",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u0100",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u00ff",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
+            "\1\u0101",
             "\1\u0102",
-            "\1\u0103",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u0106",
             "\1\u0107",
-            "\1\u0108",
             "",
+            "\1\u0108",
             "\1\u0109",
             "\1\u010a",
-            "\1\u010b",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
             "",
-            "\1\u010d",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\u010f",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
             "",
-            "\1\u0111",
+            "\1\u010c",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u010e",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\u0110",
+            "",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u0112",
+            "",
+            "",
+            "",
             "\1\u0113",
-            "",
-            "",
-            "",
             "\1\u0114",
-            "\1\u0115",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "",
+            "\1\u0118",
             "",
             "\1\u0119",
             "",
-            "\1\u011a",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "",
+            "\1\u011b",
             "\1\u011c",
             "\1\u011d",
-            "\1\u011e",
             "",
             "",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\u0121",
             "\1\u0122",
-            "\1\u0123",
             "",
             "",
             "",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
-            "\1\117\13\uffff\12\117\7\uffff\32\117\4\uffff\1\117\1\uffff"+
-            "\32\117",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
+            "\1\116\13\uffff\12\116\7\uffff\32\116\4\uffff\1\116\1\uffff"+
+            "\32\116",
             "",
             ""
     };
@@ -3778,13 +3748,23 @@ public class InternalXtraitjLexer extends Lexer {
             this.transition = DFA19_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_ID | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER );";
+            return "1:1: Tokens : ( T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | RULE_HEX | RULE_INT | RULE_DECIMAL | RULE_ID | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA19_43 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA19_43>='\u0000' && LA19_43<='\uFFFF')) ) {s = 123;}
+
+                        else s = 46;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA19_0 = input.LA(1);
 
                         s = -1;
@@ -3882,21 +3862,11 @@ public class InternalXtraitjLexer extends Lexer {
 
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
-                        int LA19_43 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA19_43>='\u0000' && LA19_43<='\uFFFF')) ) {s = 124;}
-
-                        else s = 46;
-
-                        if ( s>=0 ) return s;
-                        break;
                     case 2 : 
                         int LA19_44 = input.LA(1);
 
                         s = -1;
-                        if ( ((LA19_44>='\u0000' && LA19_44<='\uFFFF')) ) {s = 124;}
+                        if ( ((LA19_44>='\u0000' && LA19_44<='\uFFFF')) ) {s = 123;}
 
                         else s = 46;
 

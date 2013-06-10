@@ -63,8 +63,11 @@ public class TraitJJvmModelUtil {
   private TraitJTypingUtil _traitJTypingUtil;
   
   public JvmParameterizedTypeReference associatedInterface(final TJTraitReference t) {
+    JvmParameterizedTypeReference _createTypeRef = null;
     JvmGenericType _associatedInterfaceType = this.associatedInterfaceType(t);
-    JvmParameterizedTypeReference _createTypeRef = _associatedInterfaceType==null?(JvmParameterizedTypeReference)null:this._typeReferences.createTypeRef(_associatedInterfaceType);
+    if (_associatedInterfaceType!=null) {
+      _createTypeRef=this._typeReferences.createTypeRef(_associatedInterfaceType);
+    }
     return _createTypeRef;
   }
   
@@ -79,8 +82,11 @@ public class TraitJJvmModelUtil {
   }
   
   public JvmParameterizedTypeReference associatedInterface(final TJTrait t) {
+    JvmParameterizedTypeReference _createTypeRef = null;
     JvmGenericType _associatedInterfaceType = this.associatedInterfaceType(t);
-    JvmParameterizedTypeReference _createTypeRef = _associatedInterfaceType==null?(JvmParameterizedTypeReference)null:this._typeReferences.createTypeRef(_associatedInterfaceType);
+    if (_associatedInterfaceType!=null) {
+      _createTypeRef=this._typeReferences.createTypeRef(_associatedInterfaceType);
+    }
     return _createTypeRef;
   }
   
@@ -104,8 +110,11 @@ public class TraitJJvmModelUtil {
   }
   
   public JvmParameterizedTypeReference associatedClass(final TJTraitReference t) {
+    JvmParameterizedTypeReference _createTypeRef = null;
     JvmGenericType _associatedClassType = this.associatedClassType(t);
-    JvmParameterizedTypeReference _createTypeRef = _associatedClassType==null?(JvmParameterizedTypeReference)null:this._typeReferences.createTypeRef(_associatedClassType);
+    if (_associatedClassType!=null) {
+      _createTypeRef=this._typeReferences.createTypeRef(_associatedClassType);
+    }
     return _createTypeRef;
   }
   
@@ -120,8 +129,11 @@ public class TraitJJvmModelUtil {
   }
   
   public JvmParameterizedTypeReference associatedClass(final TJTrait t) {
+    JvmParameterizedTypeReference _createTypeRef = null;
     JvmGenericType _associatedClassType = this.associatedClassType(t);
-    JvmParameterizedTypeReference _createTypeRef = _associatedClassType==null?(JvmParameterizedTypeReference)null:this._typeReferences.createTypeRef(_associatedClassType);
+    if (_associatedClassType!=null) {
+      _createTypeRef=this._typeReferences.createTypeRef(_associatedClassType);
+    }
     return _createTypeRef;
   }
   
@@ -162,7 +174,10 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmFeature> _jvmAllFeatures(final TJTrait t) {
     Iterable<JvmFeature> _elvis = null;
     JvmGenericType _associatedInterfaceType = this.associatedInterfaceType(t);
-    Iterable<JvmFeature> _allFeatures = _associatedInterfaceType==null?(Iterable<JvmFeature>)null:_associatedInterfaceType.getAllFeatures();
+    Iterable<JvmFeature> _allFeatures = null;
+    if (_associatedInterfaceType!=null) {
+      _allFeatures=_associatedInterfaceType.getAllFeatures();
+    }
     if (_allFeatures != null) {
       _elvis = _allFeatures;
     } else {
@@ -175,7 +190,10 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmFeature> _jvmAllFeatures(final TJTraitReference t) {
     Iterable<JvmFeature> _elvis = null;
     JvmGenericType _associatedInterfaceType = this.associatedInterfaceType(t);
-    Iterable<JvmFeature> _allFeatures = _associatedInterfaceType==null?(Iterable<JvmFeature>)null:_associatedInterfaceType.getAllFeatures();
+    Iterable<JvmFeature> _allFeatures = null;
+    if (_associatedInterfaceType!=null) {
+      _allFeatures=_associatedInterfaceType.getAllFeatures();
+    }
     if (_allFeatures != null) {
       _elvis = _allFeatures;
     } else {
@@ -258,7 +276,10 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmFeature> _jvmAllOperations(final TJTraitReference t) {
     Iterable<JvmFeature> _elvis = null;
     JvmGenericType _associatedInterfaceType = this.associatedInterfaceType(t);
-    Iterable<JvmFeature> _allFeatures = _associatedInterfaceType==null?(Iterable<JvmFeature>)null:_associatedInterfaceType.getAllFeatures();
+    Iterable<JvmFeature> _allFeatures = null;
+    if (_associatedInterfaceType!=null) {
+      _allFeatures=_associatedInterfaceType.getAllFeatures();
+    }
     if (_allFeatures != null) {
       _elvis = _allFeatures;
     } else {
@@ -299,7 +320,10 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmOperation> jvmAllMethods(final TJClass e) {
     Iterable<JvmOperation> _elvis = null;
     JvmGenericType __associatedClassType = this._associatedClassType(e);
-    Iterable<JvmFeature> _allFeatures = __associatedClassType==null?(Iterable<JvmFeature>)null:__associatedClassType.getAllFeatures();
+    Iterable<JvmFeature> _allFeatures = null;
+    if (__associatedClassType!=null) {
+      _allFeatures=__associatedClassType.getAllFeatures();
+    }
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(_allFeatures, JvmOperation.class);
     if (_filter != null) {
       _elvis = _filter;
@@ -554,7 +578,10 @@ public class TraitJJvmModelUtil {
   
   public String fieldRepresentation(final JvmOperation f) {
     JvmTypeReference _returnType = f.getReturnType();
-    String _simpleName = _returnType==null?(String)null:_returnType.getSimpleName();
+    String _simpleName = null;
+    if (_returnType!=null) {
+      _simpleName=_returnType.getSimpleName();
+    }
     String _plus = (_simpleName + " ");
     String _fieldName = this.fieldName(f);
     String _plus_1 = (_plus + _fieldName);
@@ -563,7 +590,10 @@ public class TraitJJvmModelUtil {
   
   public String methodRepresentation(final JvmOperation m) {
     JvmTypeReference _returnType = m.getReturnType();
-    String _simpleName = _returnType==null?(String)null:_returnType.getSimpleName();
+    String _simpleName = null;
+    if (_returnType!=null) {
+      _simpleName=_returnType.getSimpleName();
+    }
     String _plus = (_simpleName + " ");
     String _simpleName_1 = m.getSimpleName();
     String _plus_1 = (_plus + _simpleName_1);
@@ -573,7 +603,10 @@ public class TraitJJvmModelUtil {
     final Function1<JvmFormalParameter,String> _function = new Function1<JvmFormalParameter,String>() {
         public String apply(final JvmFormalParameter it) {
           JvmTypeReference _parameterType = it.getParameterType();
-          String _simpleName = _parameterType==null?(String)null:_parameterType.getSimpleName();
+          String _simpleName = null;
+          if (_parameterType!=null) {
+            _simpleName=_parameterType.getSimpleName();
+          }
           return _simpleName;
         }
       };

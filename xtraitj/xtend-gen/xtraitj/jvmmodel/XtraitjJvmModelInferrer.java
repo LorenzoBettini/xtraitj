@@ -164,17 +164,17 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     }
                   };
                 JvmField _field = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toField(field, _name, _type, _function);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _field);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members, _field);
                 EList<JvmMember> _members_1 = it.getMembers();
                 String _name_1 = field.getName();
                 JvmTypeReference _type_1 = field.getType();
                 JvmOperation _getter = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toGetter(field, _name_1, _type_1);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _getter);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _getter);
                 EList<JvmMember> _members_2 = it.getMembers();
                 String _name_2 = field.getName();
                 JvmTypeReference _type_2 = field.getType();
                 JvmOperation _setter = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toSetter(field, _name_2, _type_2);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _setter);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_2, _setter);
               }
             };
           IterableExtensions.<TJField>forEach(_fields, _function);
@@ -184,17 +184,17 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
               public void apply(final TJTraitReference traitExp) {
                 EList<JvmTypeReference> _superTypes = it.getSuperTypes();
                 JvmParameterizedTypeReference _associatedInterface = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(traitExp);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmTypeReference>operator_add(_superTypes, _associatedInterface);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmParameterizedTypeReference>operator_add(_superTypes, _associatedInterface);
                 EList<JvmMember> _members = it.getMembers();
                 JvmField _traitField = XtraitjJvmModelInferrer.this.toTraitField(traitExp);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _traitField);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members, _traitField);
                 Iterable<JvmOperation> _jvmAllMethodOperations = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.jvmAllMethodOperations(traitExp);
                 final Procedure1<JvmOperation> _function = new Procedure1<JvmOperation>() {
                     public void apply(final JvmOperation traitMethod) {
                       EList<JvmMember> _members = it.getMembers();
                       String _traitFieldName = XtraitjJvmModelInferrer.this.traitFieldName(traitExp);
                       JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(traitMethod, _traitFieldName);
-                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _methodDelegate);
+                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _methodDelegate);
                     }
                   };
                 IterableExtensions.<JvmOperation>forEach(_jvmAllMethodOperations, _function);
@@ -247,10 +247,10 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                 public void apply(final TJField field) {
                   EList<JvmMember> _members = it.getMembers();
                   JvmOperation _getterAbstract = XtraitjJvmModelInferrer.this.toGetterAbstract(field);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _getterAbstract);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _getterAbstract);
                   EList<JvmMember> _members_1 = it.getMembers();
                   JvmOperation _setterAbstract = XtraitjJvmModelInferrer.this.toSetterAbstract(field);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _setterAbstract);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _setterAbstract);
                 }
               };
             IterableExtensions.<TJField>forEach(_fields, _function);
@@ -262,7 +262,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   if (_not) {
                     EList<JvmMember> _members = it.getMembers();
                     JvmOperation _abstractMethod = XtraitjJvmModelInferrer.this.toAbstractMethod(method);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _abstractMethod);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _abstractMethod);
                   }
                 }
               };
@@ -272,7 +272,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                 public void apply(final TJRequiredMethod method) {
                   EList<JvmMember> _members = it.getMembers();
                   JvmOperation _abstractMethod = XtraitjJvmModelInferrer.this.toAbstractMethod(method);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _abstractMethod);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _abstractMethod);
                 }
               };
             IterableExtensions.<TJRequiredMethod>forEach(_requiredMethods, _function_2);
@@ -323,7 +323,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                       public void apply(final JvmOperation op) {
                         EList<JvmMember> _members = it.getMembers();
                         JvmOperation _abstractMethod = XtraitjJvmModelInferrer.this.toAbstractMethod(op);
-                        XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _abstractMethod);
+                        XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _abstractMethod);
                       }
                     };
                   IterableExtensions.<JvmOperation>forEach(_jvmAllMethodOperations, _function);
@@ -366,7 +366,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   EList<JvmMember> _members = it.getMembers();
                   String _simpleName = jvmOp.getSimpleName();
                   JvmOperation _abstractMethod = XtraitjJvmModelInferrer.this.toAbstractMethod(jvmOp, _simpleName);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _abstractMethod);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _abstractMethod);
                 } else {
                   boolean _notEquals = (!Objects.equal(renameOperation, null));
                   if (_notEquals) {
@@ -375,14 +375,14 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _newname = renameOperation.getNewname();
                     String _renameGetterOrSetter = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.renameGetterOrSetter(_simpleName_1, _newname);
                     JvmOperation _abstractMethod_1 = XtraitjJvmModelInferrer.this.toAbstractMethod(jvmOp, _renameGetterOrSetter);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _abstractMethod_1);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _abstractMethod_1);
                   }
                   boolean _notEquals_1 = (!Objects.equal(aliasOperation, null));
                   if (_notEquals_1) {
                     EList<JvmMember> _members_2 = it.getMembers();
                     String _newname_1 = aliasOperation.getNewname();
                     JvmOperation _abstractMethod_2 = XtraitjJvmModelInferrer.this.toAbstractMethod(jvmOp, _newname_1);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _abstractMethod_2);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_2, _abstractMethod_2);
                     boolean _and = false;
                     boolean _and_1 = false;
                     boolean _equals = Objects.equal(renameOperation, null);
@@ -403,7 +403,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                       JvmMember _member = aliasOperation.getMember();
                       String _simpleName_2 = _member.getSimpleName();
                       JvmOperation _abstractMethod_3 = XtraitjJvmModelInferrer.this.toAbstractMethod(jvmOp, _simpleName_2);
-                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_3, _abstractMethod_3);
+                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_3, _abstractMethod_3);
                     }
                   }
                   boolean _notEquals_2 = (!Objects.equal(restrictOperation, null));
@@ -411,7 +411,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     EList<JvmMember> _members_4 = it.getMembers();
                     String _simpleName_3 = jvmOp.getSimpleName();
                     JvmOperation _abstractMethod_4 = XtraitjJvmModelInferrer.this.toAbstractMethod(restrictOperation, jvmOp, _simpleName_3);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_4, _abstractMethod_4);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_4, _abstractMethod_4);
                   }
                 }
               }
@@ -428,7 +428,10 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
         public Boolean apply(final TJTraitOperation it) {
           boolean _or = false;
           JvmMember _member = it.getMember();
-          String _simpleName = _member==null?(String)null:_member.getSimpleName();
+          String _simpleName = null;
+          if (_member!=null) {
+            _simpleName=_member.getSimpleName();
+          }
           String _simpleName_1 = jvmOp.getSimpleName();
           boolean _equals = Objects.equal(_simpleName, _simpleName_1);
           if (_equals) {
@@ -436,8 +439,12 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
           } else {
             boolean _xblockexpression = false;
             {
+              TJField _sourceField = null;
               JvmMember _member_1 = it.getMember();
-              final TJField memberSourceField = _member_1==null?(TJField)null:XtraitjJvmModelInferrer.this._traitJJvmModelUtil.sourceField(_member_1);
+              if (_member_1!=null) {
+                _sourceField=XtraitjJvmModelInferrer.this._traitJJvmModelUtil.sourceField(_member_1);
+              }
+              final TJField memberSourceField = _sourceField;
               final TJField jvmOpSourceField = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.sourceField(jvmOp);
               boolean _and = false;
               boolean _and_1 = false;
@@ -473,23 +480,23 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
         public void apply(final JvmGenericType it) {
           EList<JvmTypeReference> _superTypes = it.getSuperTypes();
           JvmParameterizedTypeReference _associatedInterface = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(t);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmTypeReference>operator_add(_superTypes, _associatedInterface);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmParameterizedTypeReference>operator_add(_superTypes, _associatedInterface);
           EList<JvmTypeReference> _superTypes_1 = it.getSuperTypes();
           TJTrait _trait = t.getTrait();
           JvmParameterizedTypeReference _associatedInterface_1 = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(_trait);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmTypeReference>operator_add(_superTypes_1, _associatedInterface_1);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmParameterizedTypeReference>operator_add(_superTypes_1, _associatedInterface_1);
           final String traitFieldName = XtraitjJvmModelInferrer.this.traitFieldNameForOperations(t);
           EList<JvmMember> _members = it.getMembers();
           TJDeclaration _containingDeclaration = TraitJModelUtil.containingDeclaration(t);
           String _delegateFieldName = XtraitjJvmModelInferrer.this.delegateFieldName();
           JvmParameterizedTypeReference _associatedInterface_2 = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(t);
           JvmField _field = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toField(_containingDeclaration, _delegateFieldName, _associatedInterface_2);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _field);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members, _field);
           EList<JvmMember> _members_1 = it.getMembers();
           TJTrait _trait_1 = t.getTrait();
           JvmParameterizedTypeReference _associatedClass = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedClass(_trait_1);
           JvmField _field_1 = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toField(t, traitFieldName, _associatedClass);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _field_1);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members_1, _field_1);
           EList<JvmMember> _members_2 = it.getMembers();
           final Procedure1<JvmConstructor> _function = new Procedure1<JvmConstructor>() {
               public void apply(final JvmConstructor it) {
@@ -524,7 +531,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
               }
             };
           JvmConstructor _constructor = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toConstructor(t, _function);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _constructor);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmConstructor>operator_add(_members_2, _constructor);
           TJTrait _trait_2 = t.getTrait();
           Iterable<JvmOperation> _jvmAllOperations = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.jvmAllOperations(_trait_2);
           final Procedure1<JvmOperation> _function_1 = new Procedure1<JvmOperation>() {
@@ -561,7 +568,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   String _simpleName = jvmOp.getSimpleName();
                   String _simpleName_1 = jvmOp.getSimpleName();
                   JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName, _simpleName, _simpleName_1);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _methodDelegate);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _methodDelegate);
                   boolean _and_2 = false;
                   boolean _isRequired = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.isRequired(jvmOp);
                   boolean _not = (!_isRequired);
@@ -578,7 +585,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _simpleName_3 = jvmOp.getSimpleName();
                     String _underscoreName_1 = XtraitjJvmModelInferrer.this.underscoreName(_simpleName_3);
                     JvmOperation _methodDelegate_1 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, traitFieldName, _underscoreName, _underscoreName_1);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _methodDelegate_1);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _methodDelegate_1);
                   }
                 }
                 boolean _notEquals = (!Objects.equal(renameOperation, null));
@@ -592,11 +599,11 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _simpleName_5 = jvmOp.getSimpleName();
                     JvmOperation _methodDelegate_2 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, 
                       "this", _simpleName_5, newname);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _methodDelegate_2);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_2, _methodDelegate_2);
                     EList<JvmMember> _members_3 = it.getMembers();
                     String _delegateFieldName_1 = XtraitjJvmModelInferrer.this.delegateFieldName();
                     JvmOperation _methodDelegate_3 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName_1, newname, newname);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_3, _methodDelegate_3);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_3, _methodDelegate_3);
                   } else {
                     EList<JvmMember> _members_4 = it.getMembers();
                     JvmMember _member = renameOperation.getMember();
@@ -604,13 +611,13 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _newname_1 = renameOperation.getNewname();
                     JvmOperation _methodDelegate_4 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, 
                       "this", _simpleName_6, _newname_1);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_4, _methodDelegate_4);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_4, _methodDelegate_4);
                     EList<JvmMember> _members_5 = it.getMembers();
                     String _delegateFieldName_2 = XtraitjJvmModelInferrer.this.delegateFieldName();
                     String _newname_2 = renameOperation.getNewname();
                     String _newname_3 = renameOperation.getNewname();
                     JvmOperation _methodDelegate_5 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName_2, _newname_2, _newname_3);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_5, _methodDelegate_5);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_5, _methodDelegate_5);
                     EList<JvmMember> _members_6 = it.getMembers();
                     String _newname_4 = renameOperation.getNewname();
                     String _underscoreName_2 = XtraitjJvmModelInferrer.this.underscoreName(_newname_4);
@@ -618,7 +625,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _simpleName_7 = _member_1.getSimpleName();
                     String _underscoreName_3 = XtraitjJvmModelInferrer.this.underscoreName(_simpleName_7);
                     JvmOperation _methodDelegate_6 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, traitFieldName, _underscoreName_2, _underscoreName_3);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_6, _methodDelegate_6);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_6, _methodDelegate_6);
                   }
                 }
                 boolean _notEquals_1 = (!Objects.equal(hideOperation, null));
@@ -630,7 +637,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   String _simpleName_9 = _member_3.getSimpleName();
                   String _underscoreName_4 = XtraitjJvmModelInferrer.this.underscoreName(_simpleName_9);
                   JvmOperation _methodDelegate_7 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, traitFieldName, _simpleName_8, _underscoreName_4);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_7, _methodDelegate_7);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_7, _methodDelegate_7);
                 }
                 boolean _notEquals_2 = (!Objects.equal(aliasOperation, null));
                 if (_notEquals_2) {
@@ -639,7 +646,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   String _newname_5 = aliasOperation.getNewname();
                   String _newname_6 = aliasOperation.getNewname();
                   JvmOperation _methodDelegate_8 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName_3, _newname_5, _newname_6);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_8, _methodDelegate_8);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_8, _methodDelegate_8);
                   EList<JvmMember> _members_9 = it.getMembers();
                   String _newname_7 = aliasOperation.getNewname();
                   String _underscoreName_5 = XtraitjJvmModelInferrer.this.underscoreName(_newname_7);
@@ -647,7 +654,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   String _simpleName_10 = _member_4.getSimpleName();
                   String _underscoreName_6 = XtraitjJvmModelInferrer.this.underscoreName(_simpleName_10);
                   JvmOperation _methodDelegate_9 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, traitFieldName, _underscoreName_5, _underscoreName_6);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_9, _methodDelegate_9);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_9, _methodDelegate_9);
                 }
                 boolean _and_3 = false;
                 boolean _notEquals_3 = (!Objects.equal(redirectOperation, null));
@@ -670,7 +677,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     String _stripGetter = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.stripGetter(_simpleName_13);
                     String _renameGetterOrSetter = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.renameGetterOrSetter(_simpleName_12, _stripGetter);
                     JvmOperation _methodDelegate_10 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName_4, _simpleName_11, _renameGetterOrSetter);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_10, _methodDelegate_10);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_10, _methodDelegate_10);
                   } else {
                     EList<JvmMember> _members_11 = it.getMembers();
                     String _delegateFieldName_5 = XtraitjJvmModelInferrer.this.delegateFieldName();
@@ -679,7 +686,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                     JvmMember _member2_2 = redirectOperation.getMember2();
                     String _simpleName_15 = _member2_2.getSimpleName();
                     JvmOperation _methodDelegate_11 = XtraitjJvmModelInferrer.this.toMethodDelegate(jvmOp, _delegateFieldName_5, _simpleName_14, _simpleName_15);
-                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_11, _methodDelegate_11);
+                    XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_11, _methodDelegate_11);
                   }
                 }
               }
@@ -714,11 +721,11 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
           XtraitjJvmModelInferrer.this._jvmTypesBuilder.setDocumentation(it, _documentation);
           final JvmParameterizedTypeReference traitInterfaceTypeRef = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(t);
           EList<JvmTypeReference> _superTypes = it.getSuperTypes();
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmTypeReference>operator_add(_superTypes, traitInterfaceTypeRef);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmParameterizedTypeReference>operator_add(_superTypes, traitInterfaceTypeRef);
           EList<JvmMember> _members = it.getMembers();
           String _delegateFieldName = XtraitjJvmModelInferrer.this.delegateFieldName();
           JvmField _field = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toField(t, _delegateFieldName, traitInterfaceTypeRef);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _field);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members, _field);
           List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(t);
           final Procedure1<TJTraitReference> _function = new Procedure1<TJTraitReference>() {
               public void apply(final TJTraitReference traitExp) {
@@ -726,7 +733,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                 String _traitFieldName = XtraitjJvmModelInferrer.this.traitFieldName(traitExp);
                 JvmParameterizedTypeReference _associatedClass = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedClass(traitExp);
                 JvmField _field = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toField(traitExp, _traitFieldName, _associatedClass);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _field);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmField>operator_add(_members, _field);
               }
             };
           IterableExtensions.<TJTraitReference>forEach(_traitReferences, _function);
@@ -770,16 +777,16 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
               }
             };
           JvmConstructor _constructor = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toConstructor(t, _function_1);
-          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _constructor);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmConstructor>operator_add(_members_1, _constructor);
           Iterable<TJField> _fields = TraitJModelUtil.fields(t);
           final Procedure1<TJField> _function_2 = new Procedure1<TJField>() {
               public void apply(final TJField field) {
                 EList<JvmMember> _members = it.getMembers();
                 JvmOperation _getterDelegate = XtraitjJvmModelInferrer.this.toGetterDelegate(field);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _getterDelegate);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _getterDelegate);
                 EList<JvmMember> _members_1 = it.getMembers();
                 JvmOperation _setterDelegate = XtraitjJvmModelInferrer.this.toSetterDelegate(field);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _setterDelegate);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _setterDelegate);
               }
             };
           IterableExtensions.<TJField>forEach(_fields, _function_2);
@@ -789,7 +796,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                 EList<JvmMember> _members = it.getMembers();
                 String _delegateFieldName = XtraitjJvmModelInferrer.this.delegateFieldName();
                 JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(aMethod, _delegateFieldName);
-                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _methodDelegate);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _methodDelegate);
               }
             };
           IterableExtensions.<TJRequiredMethod>forEach(_requiredMethods, _function_3);
@@ -801,17 +808,17 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                   EList<JvmMember> _members = it.getMembers();
                   String _name = method.getName();
                   JvmOperation _traitMethod = XtraitjJvmModelInferrer.this.toTraitMethod(method, _name);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _traitMethod);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _traitMethod);
                 } else {
                   EList<JvmMember> _members_1 = it.getMembers();
                   String _delegateFieldName = XtraitjJvmModelInferrer.this.delegateFieldName();
                   JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(method, _delegateFieldName);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _methodDelegate);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _methodDelegate);
                   EList<JvmMember> _members_2 = it.getMembers();
                   String _name_1 = method.getName();
                   String _underscoreName = XtraitjJvmModelInferrer.this.underscoreName(_name_1);
                   JvmOperation _traitMethod_1 = XtraitjJvmModelInferrer.this.toTraitMethod(method, _underscoreName);
-                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _traitMethod_1);
+                  XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_2, _traitMethod_1);
                 }
               }
             };
@@ -827,7 +834,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                       String _simpleName = traitMethod.getSimpleName();
                       String _simpleName_1 = traitMethod.getSimpleName();
                       JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(traitMethod, _delegateFieldName, _simpleName, _simpleName_1);
-                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members, _methodDelegate);
+                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members, _methodDelegate);
                       EList<JvmMember> _members_1 = it.getMembers();
                       String _traitFieldName = XtraitjJvmModelInferrer.this.traitFieldName(traitExp);
                       String _simpleName_2 = traitMethod.getSimpleName();
@@ -835,7 +842,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                       String _simpleName_3 = traitMethod.getSimpleName();
                       String _underscoreName_1 = XtraitjJvmModelInferrer.this.underscoreName(_simpleName_3);
                       JvmOperation _methodDelegate_1 = XtraitjJvmModelInferrer.this.toMethodDelegate(traitMethod, _traitFieldName, _underscoreName, _underscoreName_1);
-                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _methodDelegate_1);
+                      XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _methodDelegate_1);
                     }
                   };
                 IterableExtensions.<JvmOperation>forEach(_jvmAllMethodOperations, _function);
@@ -867,14 +874,14 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
                           String _simpleName = op.getSimpleName();
                           String _simpleName_1 = op.getSimpleName();
                           JvmOperation _methodDelegate = XtraitjJvmModelInferrer.this.toMethodDelegate(op, _delegateFieldName, _simpleName, _simpleName_1);
-                          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_1, _methodDelegate);
+                          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_1, _methodDelegate);
                         } else {
                           EList<JvmMember> _members_2 = it.getMembers();
                           String _delegateFieldName_1 = XtraitjJvmModelInferrer.this.delegateFieldName();
                           String _simpleName_2 = op.getSimpleName();
                           String _simpleName_3 = op.getSimpleName();
                           JvmOperation _methodDelegate_1 = XtraitjJvmModelInferrer.this.toMethodDelegate(op, _delegateFieldName_1, _simpleName_2, _simpleName_3);
-                          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmMember>operator_add(_members_2, _methodDelegate_1);
+                          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmOperation>operator_add(_members_2, _methodDelegate_1);
                         }
                       }
                     }
@@ -1018,7 +1025,10 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
             List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_parameters_2, _function);
             final String args = IterableExtensions.join(_map, ", ");
             JvmTypeReference _returnType = op.getReturnType();
-            String _simpleName = _returnType==null?(String)null:_returnType.getSimpleName();
+            String _simpleName = null;
+            if (_returnType!=null) {
+              _simpleName=_returnType.getSimpleName();
+            }
             boolean _notEquals = (!Objects.equal(_simpleName, "void"));
             if (_notEquals) {
               final Procedure1<ITreeAppendable> _function_1 = new Procedure1<ITreeAppendable>() {
@@ -1094,7 +1104,10 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
             List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_parameters_2, _function);
             final String args = IterableExtensions.join(_map, ", ");
             JvmTypeReference _returnType = op.getReturnType();
-            String _simpleName = _returnType==null?(String)null:_returnType.getSimpleName();
+            String _simpleName = null;
+            if (_returnType!=null) {
+              _simpleName=_returnType.getSimpleName();
+            }
             boolean _notEquals = (!Objects.equal(_simpleName, "void"));
             if (_notEquals) {
               final Procedure1<ITreeAppendable> _function_1 = new Procedure1<ITreeAppendable>() {
@@ -1159,7 +1172,10 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
           List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_params_1, _function);
           final String args = IterableExtensions.join(_map, ", ");
           JvmTypeReference _type = m.getType();
-          String _simpleName = _type==null?(String)null:_type.getSimpleName();
+          String _simpleName = null;
+          if (_type!=null) {
+            _simpleName=_type.getSimpleName();
+          }
           boolean _notEquals = (!Objects.equal(_simpleName, "void"));
           if (_notEquals) {
             final Procedure1<ITreeAppendable> _function_1 = new Procedure1<ITreeAppendable>() {
@@ -1277,14 +1293,20 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
   }
   
   public String traitInterfaceName(final TJTraitReference e) {
+    String _traitInterfaceName = null;
     TJTrait _trait = e.getTrait();
-    String _traitInterfaceName = _trait==null?(String)null:this.traitInterfaceName(_trait);
+    if (_trait!=null) {
+      _traitInterfaceName=this.traitInterfaceName(_trait);
+    }
     return _traitInterfaceName;
   }
   
   public String traitClassName(final TJTraitReference e) {
+    String _traitClassName = null;
     TJTrait _trait = e.getTrait();
-    String _traitClassName = _trait==null?(String)null:this.traitClassName(_trait);
+    if (_trait!=null) {
+      _traitClassName=this.traitClassName(_trait);
+    }
     return _traitClassName;
   }
   
@@ -1379,16 +1401,23 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
     EList<TJTraitOperation> _operations = e.getOperations();
     boolean _isEmpty = _operations.isEmpty();
     if (_isEmpty) {
+      String _traitFieldName = null;
       TJTrait _trait = e.getTrait();
-      return _trait==null?(String)null:this.traitFieldName(_trait);
+      if (_trait!=null) {
+        _traitFieldName=this.traitFieldName(_trait);
+      }
+      return _traitFieldName;
     }
     String _syntheticName = this.syntheticName(e);
     return ("_" + _syntheticName);
   }
   
   public String traitFieldNameForOperations(final TJTraitReference e) {
+    String _traitFieldName = null;
     TJTrait _trait = e.getTrait();
-    String _traitFieldName = _trait==null?(String)null:this.traitFieldName(_trait);
+    if (_trait!=null) {
+      _traitFieldName=this.traitFieldName(_trait);
+    }
     String _plus = (_traitFieldName + "_");
     TJDeclaration _containingDeclaration = TraitJModelUtil.containingDeclaration(e);
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_containingDeclaration);

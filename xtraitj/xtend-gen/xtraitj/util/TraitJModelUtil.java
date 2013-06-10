@@ -57,14 +57,20 @@ public class TraitJModelUtil {
   }
   
   public static Iterable<TJField> fields(final TJTraitReference e) {
+    Iterable<TJField> _fields = null;
     TJTrait _trait = e.getTrait();
-    Iterable<TJField> _fields = _trait==null?(Iterable<TJField>)null:TraitJModelUtil.fields(_trait);
+    if (_trait!=null) {
+      _fields=TraitJModelUtil.fields(_trait);
+    }
     return _fields;
   }
   
   public static Iterable<TJMethod> methods(final TJTraitReference e) {
+    Iterable<TJMethod> _methods = null;
     TJTrait _trait = e.getTrait();
-    Iterable<TJMethod> _methods = _trait==null?(Iterable<TJMethod>)null:TraitJModelUtil.methods(_trait);
+    if (_trait!=null) {
+      _methods=TraitJModelUtil.methods(_trait);
+    }
     return _methods;
   }
   
@@ -97,8 +103,11 @@ public class TraitJModelUtil {
   }
   
   public static Iterable<TJRequiredMethod> requiredMethods(final TJTraitReference e) {
+    Iterable<TJRequiredMethod> _requiredMethods = null;
     TJTrait _trait = e.getTrait();
-    Iterable<TJRequiredMethod> _requiredMethods = _trait==null?(Iterable<TJRequiredMethod>)null:TraitJModelUtil.requiredMethods(_trait);
+    if (_trait!=null) {
+      _requiredMethods=TraitJModelUtil.requiredMethods(_trait);
+    }
     return _requiredMethods;
   }
   
@@ -178,8 +187,11 @@ public class TraitJModelUtil {
    * avoiding possible cycles
    */
   public static Iterable<TJTrait> allTraitsDependency(final TJTrait t) {
+    ArrayList<TJTraitReference> _allTraitReferences = null;
     TJTraitExpression _traitExpression = t.getTraitExpression();
-    ArrayList<TJTraitReference> _allTraitReferences = _traitExpression==null?(ArrayList<TJTraitReference>)null:TraitJModelUtil.allTraitReferences(_traitExpression);
+    if (_traitExpression!=null) {
+      _allTraitReferences=TraitJModelUtil.allTraitReferences(_traitExpression);
+    }
     Iterable<TJTraitReference> _filter = Iterables.<TJTraitReference>filter(_allTraitReferences, TJTraitReference.class);
     final Function1<TJTraitReference,TJTrait> _function = new Function1<TJTraitReference,TJTrait>() {
         public TJTrait apply(final TJTraitReference it) {
@@ -215,14 +227,19 @@ public class TraitJModelUtil {
         traitExpressions.add(t);
         TJTrait _trait_2 = t.getTrait();
         TJTraitExpression _traitExpression = _trait_2.getTraitExpression();
-        if (_traitExpression!=null) TraitJModelUtil.allTraitReferences(_traitExpression, traitExpressions, visited);
+        if (_traitExpression!=null) {
+          TraitJModelUtil.allTraitReferences(_traitExpression, traitExpressions, visited);
+        }
       }
     }
   }
   
   public static String representationWithTypes(final TJField f) {
     JvmTypeReference _type = f.getType();
-    String _simpleName = _type==null?(String)null:_type.getSimpleName();
+    String _simpleName = null;
+    if (_type!=null) {
+      _simpleName=_type.getSimpleName();
+    }
     String _plus = (_simpleName + " ");
     String _name = f.getName();
     String _plus_1 = (_plus + _name);
@@ -231,7 +248,10 @@ public class TraitJModelUtil {
   
   public static String representationWithTypes(final TJMethodDeclaration f) {
     JvmTypeReference _type = f.getType();
-    String _simpleName = _type==null?(String)null:_type.getSimpleName();
+    String _simpleName = null;
+    if (_type!=null) {
+      _simpleName=_type.getSimpleName();
+    }
     String _plus = (_simpleName + " ");
     String _name = f.getName();
     String _plus_1 = (_plus + _name);
@@ -245,7 +265,10 @@ public class TraitJModelUtil {
     final Function1<JvmFormalParameter,String> _function = new Function1<JvmFormalParameter,String>() {
         public String apply(final JvmFormalParameter it) {
           JvmTypeReference _parameterType = it.getParameterType();
-          String _simpleName = _parameterType==null?(String)null:_parameterType.getSimpleName();
+          String _simpleName = null;
+          if (_parameterType!=null) {
+            _simpleName=_parameterType.getSimpleName();
+          }
           return _simpleName;
         }
       };

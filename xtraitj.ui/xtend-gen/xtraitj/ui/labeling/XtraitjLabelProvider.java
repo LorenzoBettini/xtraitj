@@ -62,7 +62,10 @@ public class XtraitjLabelProvider extends XbaseLabelProvider {
   
   public String text(final TJTraitReference r) {
     TJTrait _trait = r.getTrait();
-    String _name = _trait==null?(String)null:_trait.getName();
+    String _name = null;
+    if (_trait!=null) {
+      _name=_trait.getName();
+    }
     return _name;
   }
   
