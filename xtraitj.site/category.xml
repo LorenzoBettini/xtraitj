@@ -8,12 +8,12 @@
    </feature>
    <category-def name="main" label="Xtraitj">
       <description>
-         Xtraitj
+         Xtraitj - Pure Trait Programming for the Java Platform
       </description>
    </category-def>
-   <category-def name="main.source" label="Source for Xtraitj">
+   <category-def name="main.source" label="Xtraitj (Sources)">
       <description>
-         Xtraitj
+         Xtraitj - Pure Trait Programming for the Java Platform
       </description>
    </category-def>
 </site>
