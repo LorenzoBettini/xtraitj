@@ -61950,8 +61950,8 @@ public class InternalXtraitjParser extends AbstractInternalContentAssistParser {
     static final String DFA104_specialS =
         "\1\uffff\1\0\110\uffff}>";
     static final String[] DFA104_transitionS = {
-            "\5\2\5\uffff\13\2\1\1\26\2\1\uffff\1\2\1\uffff\2\2\3\uffff"+
-            "\3\2\3\uffff\1\2\3\uffff\25\2\3\uffff\2\2\1\uffff\2\2",
+            "\5\2\5\uffff\13\2\1\1\26\2\1\uffff\1\2\1\uffff\2\2\3\uffff\3"+
+            "\2\3\uffff\1\2\3\uffff\25\2\3\uffff\2\2\1\uffff\2\2",
             "\1\uffff",
             "",
             "",
@@ -62395,9 +62395,9 @@ public class InternalXtraitjParser extends AbstractInternalContentAssistParser {
     static final String DFA111_acceptS =
         "\40\uffff\1\2\50\uffff\1\1";
     static final String DFA111_specialS =
-        "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1"+
-        "\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30"+
-        "\1\31\1\32\1\33\1\34\1\35\1\36\52\uffff}>";
+        "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14"+
+        "\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27\1\30\1\31"+
+        "\1\32\1\33\1\34\1\35\1\36\52\uffff}>";
     static final String[] DFA111_transitionS = {
             "\1\1\1\22\1\23\1\24\1\26\5\uffff\13\40\1\14\7\40\1\10\1\7\4"+
             "\40\1\6\2\40\1\2\1\3\1\4\1\5\1\15\1\20\1\uffff\1\40\1\uffff"+
@@ -63001,8 +63001,8 @@ public class InternalXtraitjParser extends AbstractInternalContentAssistParser {
     static final String DFA120_specialS =
         "\1\uffff\1\0\111\uffff}>";
     static final String[] DFA120_transitionS = {
-            "\5\2\5\uffff\13\2\1\1\26\2\1\uffff\1\2\1\uffff\3\2\2\uffff"+
-            "\3\2\3\uffff\1\2\3\uffff\25\2\3\uffff\2\2\1\uffff\2\2",
+            "\5\2\5\uffff\13\2\1\1\26\2\1\uffff\1\2\1\uffff\3\2\2\uffff\3"+
+            "\2\3\uffff\1\2\3\uffff\25\2\3\uffff\2\2\1\uffff\2\2",
             "\1\uffff",
             "",
             "",
