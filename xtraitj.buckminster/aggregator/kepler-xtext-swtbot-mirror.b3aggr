@@ -15,7 +15,7 @@
       </repositories>
     </contributions>
     <contributions description="SwtBot" label="SwtBot">
-      <repositories location="http://download.eclipse.org/technology/swtbot/snapshots">
+      <repositories location="http://download.eclipse.org/technology/swtbot/releases/latest">
         <features name="org.eclipse.swtbot.eclipse.feature.group"/>
         <features name="org.eclipse.swtbot.ide.feature.group"/>
       </repositories>
