@@ -26,6 +26,7 @@ import xtraitj.util.TraitJModelUtil;
 import xtraitj.validation.AbstractXtraitjValidator;
 import xtraitj.xtraitj.TJAliasOperation;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJDeclaration;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJHideOperation;
@@ -182,6 +183,13 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
   public final static String MEMBER_ALREADY_EXISTS = new Function0<String>() {
     public String apply() {
       String _plus = (XtraitjValidator.PREFIX + "MemberAlreadyExists");
+      return _plus;
+    }
+  }.apply();
+  
+  public final static String WRONG_CONSTRUCTOR_NAME = new Function0<String>() {
+    public String apply() {
+      String _plus = (XtraitjValidator.PREFIX + "WrongConstructorName");
       return _plus;
     }
   }.apply();
@@ -785,6 +793,25 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
           }
         }
       }
+    }
+  }
+  
+  @Check
+  public void checkConstructorName(final TJConstructor cons) {
+    TJDeclaration _containingDeclaration = TraitJModelUtil.containingDeclaration(cons);
+    String _name = null;
+    if (_containingDeclaration!=null) {
+      _name=_containingDeclaration.getName();
+    }
+    String _name_1 = cons.getName();
+    boolean _notEquals = (!Objects.equal(_name, _name_1));
+    if (_notEquals) {
+      String _name_2 = cons.getName();
+      String _plus = ("Wrong constructor name \'" + _name_2);
+      String _plus_1 = (_plus + "\'");
+      EAttribute _tJConstructor_Name = XtraitjPackage.eINSTANCE.getTJConstructor_Name();
+      this.error(_plus_1, _tJConstructor_Name, 
+        XtraitjValidator.WRONG_CONSTRUCTOR_NAME);
     }
   }
 }

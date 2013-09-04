@@ -1105,6 +1105,27 @@ public class TraitJValidatorTest {
     }
   }
   
+  @Test
+  public void testConstructorWithTheWrongName() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("class C {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("D() {}");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      EClass _tJConstructor = XtraitjPackage.eINSTANCE.getTJConstructor();
+      this._validationTestHelper.assertError(_parse, _tJConstructor, 
+        XtraitjValidator.WRONG_CONSTRUCTOR_NAME, 
+        "Wrong constructor name \'D\'");
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
   private void assertMissingInterfaceMethod(final EObject o, final String methodRepr) {
     EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
     String _plus = ("Class must provide interface method \'" + methodRepr);

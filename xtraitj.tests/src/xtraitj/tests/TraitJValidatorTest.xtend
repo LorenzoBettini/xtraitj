@@ -584,6 +584,18 @@ class TraitJValidatorTest {
 		]
 	}
 
+	@Test def void testConstructorWithTheWrongName() {
+		'''
+		class C {
+			D() {}
+		}
+		'''.parse.assertError(
+			XtraitjPackage.eINSTANCE.TJConstructor,
+			XtraitjValidator.WRONG_CONSTRUCTOR_NAME,
+			"Wrong constructor name 'D'"
+		)
+	}
+
 	def private assertMissingInterfaceMethod(EObject o, String methodRepr) {
 		o.assertError(
 			XtraitjPackage::eINSTANCE.TJClass,

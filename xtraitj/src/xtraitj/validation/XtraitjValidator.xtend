@@ -25,6 +25,7 @@ import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJTraitOperation
 import org.eclipse.emf.ecore.EStructuralFeature
 import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJConstructor
 
 /**
  * Custom validation rules. 
@@ -72,6 +73,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val METHOD_CONFLICT = PREFIX + "MethodConflict"
 	
 	public static val MEMBER_ALREADY_EXISTS = PREFIX + "MemberAlreadyExists"
+
+	public static val WRONG_CONSTRUCTOR_NAME = PREFIX + "WrongConstructorName"
 	
 	@Inject extension TraitJJvmModelUtil
 
@@ -419,4 +422,15 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			}
 		}
 	}
+
+	@Check
+	def void checkConstructorName(TJConstructor cons) {
+		if (cons.containingDeclaration?.name != cons.name) {
+			error(
+				"Wrong constructor name '" + cons.name + "'",
+				XtraitjPackage.eINSTANCE.TJConstructor_Name,
+				WRONG_CONSTRUCTOR_NAME
+			)
+		}
+	} 
 }
