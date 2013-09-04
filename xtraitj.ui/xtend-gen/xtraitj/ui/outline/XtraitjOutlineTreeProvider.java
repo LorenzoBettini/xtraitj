@@ -28,6 +28,7 @@ import org.eclipse.xtext.xtype.XtypePackage;
 import xtraitj.jvmmodel.TraitJJvmModelUtil;
 import xtraitj.ui.outline.TraitJRequirementsNode;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJDeclaration;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJMember;
@@ -97,8 +98,12 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
     Iterable<JvmOperation> _jvmAllInterfaceMethods = this._traitJJvmModelUtil.jvmAllInterfaceMethods(c);
     this.nodesForRequirements(parentNode, c, _jvmAllInterfaceMethods);
     EList<TJField> _fields = c.getFields();
-    for (final TJField m : _fields) {
-      this.createNode(parentNode, m);
+    for (final TJField f : _fields) {
+      this.createNode(parentNode, f);
+    }
+    EList<TJConstructor> _constructors = c.getConstructors();
+    for (final TJConstructor cons : _constructors) {
+      this.createNode(parentNode, cons);
     }
   }
   
@@ -236,6 +241,10 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
   }
   
   public boolean _isLeaf(final TJMember m) {
+    return true;
+  }
+  
+  public boolean _isLeaf(final TJConstructor m) {
     return true;
   }
   

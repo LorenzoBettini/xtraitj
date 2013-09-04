@@ -14,6 +14,7 @@ import org.eclipse.xtext.xbase.ui.labeling.XbaseImages;
 import org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider;
 import xtraitj.util.TraitJModelUtil;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJMethod;
 import xtraitj.xtraitj.TJMethodDeclaration;
@@ -49,6 +50,11 @@ public class XtraitjLabelProvider extends XbaseLabelProvider {
       StyledString.DECORATIONS_STYLER);
     StyledString _append = _styledString.append(_styledString_1);
     return _append;
+  }
+  
+  public String text(final TJConstructor cons) {
+    String _constructorRepresentation = TraitJModelUtil.constructorRepresentation(cons);
+    return _constructorRepresentation;
   }
   
   public String text(final TJField f) {
@@ -93,6 +99,11 @@ public class XtraitjLabelProvider extends XbaseLabelProvider {
     Image _forOperation = this.images.forOperation(_xifexpression, 
       false, false, false);
     return _forOperation;
+  }
+  
+  public Image image(final TJConstructor c) {
+    Image _forConstructor = this.images.forConstructor(JvmVisibility.PUBLIC);
+    return _forConstructor;
   }
   
   public Image image(final TJRequiredMethod m) {

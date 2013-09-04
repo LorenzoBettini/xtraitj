@@ -14,6 +14,7 @@ import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
 import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
@@ -69,8 +70,12 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		nodesForTraitReferences(parentNode, c)
 		nodesForRequirements(parentNode, c, c.jvmAllInterfaceMethods)
 		
-		for (m : c.fields) {
-			createNode(parentNode, m)
+		for (f : c.fields) {
+			createNode(parentNode, f)
+		}
+		
+		for (cons : c.constructors) {
+			createNode(parentNode, cons)
 		}
 	}
 
@@ -168,6 +173,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def _isLeaf(TJMember m) {
+		return true;
+	}
+
+	def _isLeaf(TJConstructor m) {
 		return true;
 	}
 

@@ -150,4 +150,11 @@ class TraitJModelUtil {
 		+ ")"
 	}
 
+	def static constructorRepresentation(TJConstructor c) {
+		c.name +
+			"(" +
+			c.params.map[parameterType?.simpleName].join(", ")
+			+ ")"
+	}
+
 }

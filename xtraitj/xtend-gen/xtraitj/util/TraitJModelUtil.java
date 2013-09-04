@@ -284,4 +284,26 @@ public class TraitJModelUtil {
     String _plus_1 = (_plus + ")");
     return _plus_1;
   }
+  
+  public static String constructorRepresentation(final TJConstructor c) {
+    String _name = c.getName();
+    String _plus = (_name + 
+      "(");
+    EList<JvmFormalParameter> _params = c.getParams();
+    final Function1<JvmFormalParameter,String> _function = new Function1<JvmFormalParameter,String>() {
+      public String apply(final JvmFormalParameter it) {
+        JvmTypeReference _parameterType = it.getParameterType();
+        String _simpleName = null;
+        if (_parameterType!=null) {
+          _simpleName=_parameterType.getSimpleName();
+        }
+        return _simpleName;
+      }
+    };
+    List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_params, _function);
+    String _join = IterableExtensions.join(_map, ", ");
+    String _plus_1 = (_plus + _join);
+    String _plus_2 = (_plus_1 + ")");
+    return _plus_2;
+  }
 }

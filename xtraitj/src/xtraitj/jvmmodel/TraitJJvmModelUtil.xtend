@@ -10,7 +10,9 @@ import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import xtraitj.typing.TraitJTypingUtil
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
@@ -18,11 +20,8 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
-import xtraitj.typing.TraitJTypingUtil
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import xtraitj.xtraitj.TJDeclaration
-import xtraitj.xtraitj.TJConstructor
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -258,13 +257,6 @@ class TraitJJvmModelUtil {
 		m.returnType?.simpleName + " " + m.simpleName +
 			"(" +
 			m.parameters.map[parameterType?.simpleName].join(", ")
-			+ ")"
-	}
-
-	def constructorRepresentation(TJConstructor c) {
-		c.name +
-			"(" +
-			c.params.map[parameterType?.simpleName].join(", ")
 			+ ")"
 	}
 

@@ -824,7 +824,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
   
   @Check
   public void checkDuplicateConstructors(final TJConstructor cons) {
-    final String consRepresentation = this._traitJJvmModelUtil.constructorRepresentation(cons);
+    final String consRepresentation = TraitJModelUtil.constructorRepresentation(cons);
     TJClass _containingClass = TraitJModelUtil.containingClass(cons);
     EList<TJConstructor> _constructors = null;
     if (_containingClass!=null) {
@@ -837,7 +837,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
         if (!_notEquals) {
           _and = false;
         } else {
-          String _constructorRepresentation = XtraitjValidator.this._traitJJvmModelUtil.constructorRepresentation(it);
+          String _constructorRepresentation = TraitJModelUtil.constructorRepresentation(it);
           boolean _equals = Objects.equal(_constructorRepresentation, consRepresentation);
           _and = (_notEquals && _equals);
         }

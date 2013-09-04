@@ -18,6 +18,7 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.jface.viewers.StyledString
+import xtraitj.xtraitj.TJConstructor
 
 /**
  * Provides labels for a EObjects.
@@ -42,6 +43,10 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 				StyledString::DECORATIONS_STYLER
 			)
 		);
+	}
+
+	def text(TJConstructor cons) {
+		cons.constructorRepresentation
 	}
 
 	def text(TJField f) {
@@ -72,6 +77,10 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 				JvmVisibility::PUBLIC
 			, 
 			false, false, false);
+	}
+
+	def image(TJConstructor c) {
+		images.forConstructor(JvmVisibility::PUBLIC)
 	}
 	
 	def image(TJRequiredMethod m) {
