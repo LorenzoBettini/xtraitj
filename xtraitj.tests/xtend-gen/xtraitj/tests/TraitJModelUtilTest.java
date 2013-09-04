@@ -88,13 +88,13 @@ public class TraitJModelUtilTest {
       TJClass _head = IterableExtensions.<TJClass>head(_classes);
       EList<TJField> _fields = _head.getFields();
       final Procedure1<EList<TJField>> _function = new Procedure1<EList<TJField>>() {
-          public void apply(final EList<TJField> it) {
-            TJField _get = it.get(0);
-            TraitJModelUtilTest.this.assertRepresentation(_get, "Object o");
-            TJField _get_1 = it.get(1);
-            TraitJModelUtilTest.this.assertRepresentation(_get_1, "List<String> l");
-          }
-        };
+        public void apply(final EList<TJField> it) {
+          TJField _get = it.get(0);
+          TraitJModelUtilTest.this.assertRepresentation(_get, "Object o");
+          TJField _get_1 = it.get(1);
+          TraitJModelUtilTest.this.assertRepresentation(_get_1, "List<String> l");
+        }
+      };
       ObjectExtensions.<EList<TJField>>operator_doubleArrow(_fields, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -124,15 +124,15 @@ public class TraitJModelUtilTest {
       Iterable<TJTrait> _traits = TraitJModelUtil.traits(_parse);
       TJTrait _head = IterableExtensions.<TJTrait>head(_traits);
       final Procedure1<TJTrait> _function = new Procedure1<TJTrait>() {
-          public void apply(final TJTrait it) {
-            Iterable<TJRequiredMethod> _requiredMethods = TraitJModelUtil.requiredMethods(it);
-            TJRequiredMethod _head = IterableExtensions.<TJRequiredMethod>head(_requiredMethods);
-            TraitJModelUtilTest.this.assertRepresentation(_head, "int m(List<String>, Object)");
-            Iterable<TJMethod> _methods = TraitJModelUtil.methods(it);
-            TJMethod _head_1 = IterableExtensions.<TJMethod>head(_methods);
-            TraitJModelUtilTest.this.assertRepresentation(_head_1, "Set<? extends String> n()");
-          }
-        };
+        public void apply(final TJTrait it) {
+          Iterable<TJRequiredMethod> _requiredMethods = TraitJModelUtil.requiredMethods(it);
+          TJRequiredMethod _head = IterableExtensions.<TJRequiredMethod>head(_requiredMethods);
+          TraitJModelUtilTest.this.assertRepresentation(_head, "int m(List<String>, Object)");
+          Iterable<TJMethod> _methods = TraitJModelUtil.methods(it);
+          TJMethod _head_1 = IterableExtensions.<TJMethod>head(_methods);
+          TraitJModelUtilTest.this.assertRepresentation(_head_1, "Set<? extends String> n()");
+        }
+      };
       ObjectExtensions.<TJTrait>operator_doubleArrow(_head, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -147,11 +147,11 @@ public class TraitJModelUtilTest {
     TJTraitReference _head = IterableExtensions.<TJTraitReference>head(_references_1);
     Iterable<TJMethod> _methods = TraitJModelUtil.methods(_head);
     final Function1<TJMethod,String> _function = new Function1<TJMethod,String>() {
-        public String apply(final TJMethod it) {
-          String _name = it.getName();
-          return _name;
-        }
-      };
+      public String apply(final TJMethod it) {
+        String _name = it.getName();
+        return _name;
+      }
+    };
     Iterable<String> _map = IterableExtensions.<TJMethod, String>map(_methods, _function);
     String _join = IterableExtensions.join(_map, ",");
     Assert.assertEquals(expected, _join);

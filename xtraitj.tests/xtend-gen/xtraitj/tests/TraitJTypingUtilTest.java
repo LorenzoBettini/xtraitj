@@ -69,21 +69,21 @@ public class TraitJTypingUtilTest {
       TJClass _head = IterableExtensions.<TJClass>head(_classes);
       EList<TJField> _fields = _head.getFields();
       final Procedure1<EList<TJField>> _function = new Procedure1<EList<TJField>>() {
-          public void apply(final EList<TJField> it) {
-            TJField _get = it.get(0);
-            TJField _get_1 = it.get(1);
-            TraitJTypingUtilTest.this.assertSameType(_get, _get_1, true);
-            TJField _get_2 = it.get(0);
-            TJField _get_3 = it.get(2);
-            TraitJTypingUtilTest.this.assertSameType(_get_2, _get_3, false);
-            TJField _get_4 = it.get(3);
-            TJField _get_5 = it.get(4);
-            TraitJTypingUtilTest.this.assertSameType(_get_4, _get_5, true);
-            TJField _get_6 = it.get(3);
-            TJField _get_7 = it.get(5);
-            TraitJTypingUtilTest.this.assertSameType(_get_6, _get_7, false);
-          }
-        };
+        public void apply(final EList<TJField> it) {
+          TJField _get = it.get(0);
+          TJField _get_1 = it.get(1);
+          TraitJTypingUtilTest.this.assertSameType(_get, _get_1, true);
+          TJField _get_2 = it.get(0);
+          TJField _get_3 = it.get(2);
+          TraitJTypingUtilTest.this.assertSameType(_get_2, _get_3, false);
+          TJField _get_4 = it.get(3);
+          TJField _get_5 = it.get(4);
+          TraitJTypingUtilTest.this.assertSameType(_get_4, _get_5, true);
+          TJField _get_6 = it.get(3);
+          TJField _get_7 = it.get(5);
+          TraitJTypingUtilTest.this.assertSameType(_get_6, _get_7, false);
+        }
+      };
       ObjectExtensions.<EList<TJField>>operator_doubleArrow(_fields, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -129,30 +129,30 @@ public class TraitJTypingUtilTest {
       TJClass _head = IterableExtensions.<TJClass>head(_classes);
       EList<TJField> _fields = _head.getFields();
       final Procedure1<EList<TJField>> _function = new Procedure1<EList<TJField>>() {
-          public void apply(final EList<TJField> it) {
-            TJField _get = it.get(0);
-            TJField _get_1 = it.get(1);
-            TraitJTypingUtilTest.this.assertSubtype(_get, _get_1, true);
-            TJField _get_2 = it.get(0);
-            TJField _get_3 = it.get(2);
-            TraitJTypingUtilTest.this.assertSubtype(_get_2, _get_3, false);
-            TJField _get_4 = it.get(3);
-            TJField _get_5 = it.get(1);
-            TraitJTypingUtilTest.this.assertSubtype(_get_4, _get_5, true);
-            TJField _get_6 = it.get(3);
-            TJField _get_7 = it.get(4);
-            TraitJTypingUtilTest.this.assertSubtype(_get_6, _get_7, true);
-            TJField _get_8 = it.get(5);
-            TJField _get_9 = it.get(3);
-            TraitJTypingUtilTest.this.assertSubtype(_get_8, _get_9, false);
-            TJField _get_10 = it.get(3);
-            TJField _get_11 = it.get(5);
-            TraitJTypingUtilTest.this.assertSubtype(_get_10, _get_11, true);
-            TJField _get_12 = it.get(6);
-            TJField _get_13 = it.get(5);
-            TraitJTypingUtilTest.this.assertSubtype(_get_12, _get_13, true);
-          }
-        };
+        public void apply(final EList<TJField> it) {
+          TJField _get = it.get(0);
+          TJField _get_1 = it.get(1);
+          TraitJTypingUtilTest.this.assertSubtype(_get, _get_1, true);
+          TJField _get_2 = it.get(0);
+          TJField _get_3 = it.get(2);
+          TraitJTypingUtilTest.this.assertSubtype(_get_2, _get_3, false);
+          TJField _get_4 = it.get(3);
+          TJField _get_5 = it.get(1);
+          TraitJTypingUtilTest.this.assertSubtype(_get_4, _get_5, true);
+          TJField _get_6 = it.get(3);
+          TJField _get_7 = it.get(4);
+          TraitJTypingUtilTest.this.assertSubtype(_get_6, _get_7, true);
+          TJField _get_8 = it.get(5);
+          TJField _get_9 = it.get(3);
+          TraitJTypingUtilTest.this.assertSubtype(_get_8, _get_9, false);
+          TJField _get_10 = it.get(3);
+          TJField _get_11 = it.get(5);
+          TraitJTypingUtilTest.this.assertSubtype(_get_10, _get_11, true);
+          TJField _get_12 = it.get(6);
+          TJField _get_13 = it.get(5);
+          TraitJTypingUtilTest.this.assertSubtype(_get_12, _get_13, true);
+        }
+      };
       ObjectExtensions.<EList<TJField>>operator_doubleArrow(_fields, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -184,21 +184,21 @@ public class TraitJTypingUtilTest {
       TJClass _head = IterableExtensions.<TJClass>head(_classes);
       EList<TJField> _fields = _head.getFields();
       final Procedure1<EList<TJField>> _function = new Procedure1<EList<TJField>>() {
-          public void apply(final EList<TJField> it) {
-            TJField _get = it.get(0);
-            TJField _get_1 = it.get(1);
-            TraitJTypingUtilTest.this.assertSameType(_get, _get_1, false);
-            TJField _get_2 = it.get(1);
-            TJField _get_3 = it.get(0);
-            TraitJTypingUtilTest.this.assertSameType(_get_2, _get_3, false);
-            TJField _get_4 = it.get(0);
-            TJField _get_5 = it.get(2);
-            TraitJTypingUtilTest.this.assertSameType(_get_4, _get_5, true);
-            TJField _get_6 = it.get(1);
-            TJField _get_7 = it.get(3);
-            TraitJTypingUtilTest.this.assertSameType(_get_6, _get_7, true);
-          }
-        };
+        public void apply(final EList<TJField> it) {
+          TJField _get = it.get(0);
+          TJField _get_1 = it.get(1);
+          TraitJTypingUtilTest.this.assertSameType(_get, _get_1, false);
+          TJField _get_2 = it.get(1);
+          TJField _get_3 = it.get(0);
+          TraitJTypingUtilTest.this.assertSameType(_get_2, _get_3, false);
+          TJField _get_4 = it.get(0);
+          TJField _get_5 = it.get(2);
+          TraitJTypingUtilTest.this.assertSameType(_get_4, _get_5, true);
+          TJField _get_6 = it.get(1);
+          TJField _get_7 = it.get(3);
+          TraitJTypingUtilTest.this.assertSameType(_get_6, _get_7, true);
+        }
+      };
       ObjectExtensions.<EList<TJField>>operator_doubleArrow(_fields, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -230,21 +230,21 @@ public class TraitJTypingUtilTest {
       TJClass _head = IterableExtensions.<TJClass>head(_classes);
       EList<TJField> _fields = _head.getFields();
       final Procedure1<EList<TJField>> _function = new Procedure1<EList<TJField>>() {
-          public void apply(final EList<TJField> it) {
-            TJField _get = it.get(0);
-            TJField _get_1 = it.get(1);
-            TraitJTypingUtilTest.this.assertSubtype(_get, _get_1, false);
-            TJField _get_2 = it.get(1);
-            TJField _get_3 = it.get(0);
-            TraitJTypingUtilTest.this.assertSubtype(_get_2, _get_3, false);
-            TJField _get_4 = it.get(0);
-            TJField _get_5 = it.get(2);
-            TraitJTypingUtilTest.this.assertSubtype(_get_4, _get_5, true);
-            TJField _get_6 = it.get(1);
-            TJField _get_7 = it.get(3);
-            TraitJTypingUtilTest.this.assertSubtype(_get_6, _get_7, true);
-          }
-        };
+        public void apply(final EList<TJField> it) {
+          TJField _get = it.get(0);
+          TJField _get_1 = it.get(1);
+          TraitJTypingUtilTest.this.assertSubtype(_get, _get_1, false);
+          TJField _get_2 = it.get(1);
+          TJField _get_3 = it.get(0);
+          TraitJTypingUtilTest.this.assertSubtype(_get_2, _get_3, false);
+          TJField _get_4 = it.get(0);
+          TJField _get_5 = it.get(2);
+          TraitJTypingUtilTest.this.assertSubtype(_get_4, _get_5, true);
+          TJField _get_6 = it.get(1);
+          TJField _get_7 = it.get(3);
+          TraitJTypingUtilTest.this.assertSubtype(_get_6, _get_7, true);
+        }
+      };
       ObjectExtensions.<EList<TJField>>operator_doubleArrow(_fields, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

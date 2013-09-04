@@ -169,13 +169,13 @@ public class TraitJModelUtil {
     TJTraitExpression _traitExpression = t.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Boolean> _function = new Function1<TJTraitReference,Boolean>() {
-        public Boolean apply(final TJTraitReference it) {
-          EList<TJTraitOperation> _operations = it.getOperations();
-          boolean _isEmpty = _operations.isEmpty();
-          boolean _not = (!_isEmpty);
-          return Boolean.valueOf(_not);
-        }
-      };
+      public Boolean apply(final TJTraitReference it) {
+        EList<TJTraitOperation> _operations = it.getOperations();
+        boolean _isEmpty = _operations.isEmpty();
+        boolean _not = (!_isEmpty);
+        return Boolean.valueOf(_not);
+      }
+    };
     Iterable<TJTraitReference> _filter = IterableExtensions.<TJTraitReference>filter(_traitReferences, _function);
     List<TJTraitReference> _list = IterableExtensions.<TJTraitReference>toList(_filter);
     return _list;
@@ -194,11 +194,11 @@ public class TraitJModelUtil {
     }
     Iterable<TJTraitReference> _filter = Iterables.<TJTraitReference>filter(_allTraitReferences, TJTraitReference.class);
     final Function1<TJTraitReference,TJTrait> _function = new Function1<TJTraitReference,TJTrait>() {
-        public TJTrait apply(final TJTraitReference it) {
-          TJTrait _trait = it.getTrait();
-          return _trait;
-        }
-      };
+      public TJTrait apply(final TJTraitReference it) {
+        TJTrait _trait = it.getTrait();
+        return _trait;
+      }
+    };
     Iterable<TJTrait> _map = IterableExtensions.<TJTraitReference, TJTrait>map(_filter, _function);
     return _map;
   }
@@ -206,11 +206,11 @@ public class TraitJModelUtil {
   public static ArrayList<TJTraitReference> allTraitReferences(final TJTraitExpression e) {
     ArrayList<TJTraitReference> _newArrayList = CollectionLiterals.<TJTraitReference>newArrayList();
     final Procedure1<ArrayList<TJTraitReference>> _function = new Procedure1<ArrayList<TJTraitReference>>() {
-        public void apply(final ArrayList<TJTraitReference> it) {
-          HashSet<TJTrait> _newHashSet = CollectionLiterals.<TJTrait>newHashSet();
-          TraitJModelUtil.allTraitReferences(e, it, _newHashSet);
-        }
-      };
+      public void apply(final ArrayList<TJTraitReference> it) {
+        HashSet<TJTrait> _newHashSet = CollectionLiterals.<TJTrait>newHashSet();
+        TraitJModelUtil.allTraitReferences(e, it, _newHashSet);
+      }
+    };
     ArrayList<TJTraitReference> _doubleArrow = ObjectExtensions.<ArrayList<TJTraitReference>>operator_doubleArrow(_newArrayList, _function);
     return _doubleArrow;
   }
@@ -263,15 +263,15 @@ public class TraitJModelUtil {
   public static String parameterRepresentation(final TJMethodDeclaration f) {
     EList<JvmFormalParameter> _params = f.getParams();
     final Function1<JvmFormalParameter,String> _function = new Function1<JvmFormalParameter,String>() {
-        public String apply(final JvmFormalParameter it) {
-          JvmTypeReference _parameterType = it.getParameterType();
-          String _simpleName = null;
-          if (_parameterType!=null) {
-            _simpleName=_parameterType.getSimpleName();
-          }
-          return _simpleName;
+      public String apply(final JvmFormalParameter it) {
+        JvmTypeReference _parameterType = it.getParameterType();
+        String _simpleName = null;
+        if (_parameterType!=null) {
+          _simpleName=_parameterType.getSimpleName();
         }
-      };
+        return _simpleName;
+      }
+    };
     List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_params, _function);
     String _join = IterableExtensions.join(_map, ", ");
     String _plus = ("(" + _join);

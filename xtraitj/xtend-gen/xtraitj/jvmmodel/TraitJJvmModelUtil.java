@@ -99,11 +99,11 @@ public class TraitJJvmModelUtil {
     Set<EObject> _jvmElements = this._iJvmModelAssociations.getJvmElements(t);
     Iterable<JvmGenericType> _filter = Iterables.<JvmGenericType>filter(_jvmElements, JvmGenericType.class);
     final Function1<JvmGenericType,Boolean> _function = new Function1<JvmGenericType,Boolean>() {
-        public Boolean apply(final JvmGenericType it) {
-          boolean _isInterface = it.isInterface();
-          return Boolean.valueOf(_isInterface);
-        }
-      };
+      public Boolean apply(final JvmGenericType it) {
+        boolean _isInterface = it.isInterface();
+        return Boolean.valueOf(_isInterface);
+      }
+    };
     Iterable<JvmGenericType> _filter_1 = IterableExtensions.<JvmGenericType>filter(_filter, _function);
     JvmGenericType _head = IterableExtensions.<JvmGenericType>head(_filter_1);
     return _head;
@@ -146,12 +146,12 @@ public class TraitJJvmModelUtil {
     Set<EObject> _jvmElements = this._iJvmModelAssociations.getJvmElements(t);
     Iterable<JvmGenericType> _filter = Iterables.<JvmGenericType>filter(_jvmElements, JvmGenericType.class);
     final Function1<JvmGenericType,Boolean> _function = new Function1<JvmGenericType,Boolean>() {
-        public Boolean apply(final JvmGenericType it) {
-          boolean _isInterface = it.isInterface();
-          boolean _not = (!_isInterface);
-          return Boolean.valueOf(_not);
-        }
-      };
+      public Boolean apply(final JvmGenericType it) {
+        boolean _isInterface = it.isInterface();
+        boolean _not = (!_isInterface);
+        return Boolean.valueOf(_not);
+      }
+    };
     Iterable<JvmGenericType> _filter_1 = IterableExtensions.<JvmGenericType>filter(_filter, _function);
     JvmGenericType _head = IterableExtensions.<JvmGenericType>head(_filter_1);
     return _head;
@@ -160,13 +160,13 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmFeature> jvmAllFeatures(final TJTrait t) {
     Iterable<JvmFeature> __jvmAllFeatures = this._jvmAllFeatures(t);
     final Function1<JvmFeature,Boolean> _function = new Function1<JvmFeature,Boolean>() {
-        public Boolean apply(final JvmFeature it) {
-          Set<EObject> _sourceElements = TraitJJvmModelUtil.this._iJvmModelAssociations.getSourceElements(it);
-          boolean _isEmpty = _sourceElements.isEmpty();
-          boolean _not = (!_isEmpty);
-          return Boolean.valueOf(_not);
-        }
-      };
+      public Boolean apply(final JvmFeature it) {
+        Set<EObject> _sourceElements = TraitJJvmModelUtil.this._iJvmModelAssociations.getSourceElements(it);
+        boolean _isEmpty = _sourceElements.isEmpty();
+        boolean _not = (!_isEmpty);
+        return Boolean.valueOf(_not);
+      }
+    };
     Iterable<JvmFeature> _filter = IterableExtensions.<JvmFeature>filter(__jvmAllFeatures, _function);
     return _filter;
   }
@@ -218,10 +218,10 @@ public class TraitJJvmModelUtil {
   public TJField sourceField(final JvmMember f) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(f);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          return Boolean.valueOf((it instanceof TJField));
-        }
-      };
+      public Boolean apply(final EObject it) {
+        return Boolean.valueOf((it instanceof TJField));
+      }
+    };
     EObject _findFirst = IterableExtensions.<EObject>findFirst(_sourceElements, _function);
     return ((TJField) _findFirst);
   }
@@ -229,10 +229,10 @@ public class TraitJJvmModelUtil {
   public TJMethod sourceMethod(final JvmFeature f) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(f);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          return Boolean.valueOf((it instanceof TJMethod));
-        }
-      };
+      public Boolean apply(final EObject it) {
+        return Boolean.valueOf((it instanceof TJMethod));
+      }
+    };
     EObject _findFirst = IterableExtensions.<EObject>findFirst(_sourceElements, _function);
     return ((TJMethod) _findFirst);
   }
@@ -240,10 +240,10 @@ public class TraitJJvmModelUtil {
   public TJRequiredMethod sourceRequiredMethod(final JvmFeature f) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(f);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          return Boolean.valueOf((it instanceof TJRequiredMethod));
-        }
-      };
+      public Boolean apply(final EObject it) {
+        return Boolean.valueOf((it instanceof TJRequiredMethod));
+      }
+    };
     EObject _findFirst = IterableExtensions.<EObject>findFirst(_sourceElements, _function);
     return ((TJRequiredMethod) _findFirst);
   }
@@ -251,10 +251,10 @@ public class TraitJJvmModelUtil {
   public TJRestrictOperation sourceRestricted(final JvmFeature f) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(f);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          return Boolean.valueOf((it instanceof TJRestrictOperation));
-        }
-      };
+      public Boolean apply(final EObject it) {
+        return Boolean.valueOf((it instanceof TJRestrictOperation));
+      }
+    };
     EObject _findFirst = IterableExtensions.<EObject>findFirst(_sourceElements, _function);
     return ((TJRestrictOperation) _findFirst);
   }
@@ -262,13 +262,13 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmFeature> jvmAllFeatures(final TJTraitReference t) {
     Iterable<JvmFeature> __jvmAllFeatures = this._jvmAllFeatures(t);
     final Function1<JvmFeature,Boolean> _function = new Function1<JvmFeature,Boolean>() {
-        public Boolean apply(final JvmFeature it) {
-          Set<EObject> _sourceElements = TraitJJvmModelUtil.this._iJvmModelAssociations.getSourceElements(it);
-          boolean _isEmpty = _sourceElements.isEmpty();
-          boolean _not = (!_isEmpty);
-          return Boolean.valueOf(_not);
-        }
-      };
+      public Boolean apply(final JvmFeature it) {
+        Set<EObject> _sourceElements = TraitJJvmModelUtil.this._iJvmModelAssociations.getSourceElements(it);
+        boolean _isEmpty = _sourceElements.isEmpty();
+        boolean _not = (!_isEmpty);
+        return Boolean.valueOf(_not);
+      }
+    };
     Iterable<JvmFeature> _filter = IterableExtensions.<JvmFeature>filter(__jvmAllFeatures, _function);
     return _filter;
   }
@@ -293,12 +293,12 @@ public class TraitJJvmModelUtil {
     Iterable<JvmFeature> __jvmAllOperations = this._jvmAllOperations(e);
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(__jvmAllOperations, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          TJMethod _sourceMethod = TraitJJvmModelUtil.this.sourceMethod(it);
-          boolean _notEquals = (!Objects.equal(_sourceMethod, null));
-          return Boolean.valueOf(_notEquals);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        TJMethod _sourceMethod = TraitJJvmModelUtil.this.sourceMethod(it);
+        boolean _notEquals = (!Objects.equal(_sourceMethod, null));
+        return Boolean.valueOf(_notEquals);
+      }
+    };
     Iterable<JvmOperation> _filter_1 = IterableExtensions.<JvmOperation>filter(_filter, _function);
     return _filter_1;
   }
@@ -307,11 +307,11 @@ public class TraitJJvmModelUtil {
     TJTraitExpression _traitExpression = e.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Iterable<JvmOperation>> _function = new Function1<TJTraitReference,Iterable<JvmOperation>>() {
-        public Iterable<JvmOperation> apply(final TJTraitReference it) {
-          Iterable<JvmOperation> _jvmAllMethodOperations = TraitJJvmModelUtil.this.jvmAllMethodOperations(it);
-          return _jvmAllMethodOperations;
-        }
-      };
+      public Iterable<JvmOperation> apply(final TJTraitReference it) {
+        Iterable<JvmOperation> _jvmAllMethodOperations = TraitJJvmModelUtil.this.jvmAllMethodOperations(it);
+        return _jvmAllMethodOperations;
+      }
+    };
     List<Iterable<JvmOperation>> _map = ListExtensions.<TJTraitReference, Iterable<JvmOperation>>map(_traitReferences, _function);
     Iterable<JvmOperation> _flatten = Iterables.<JvmOperation>concat(_map);
     return _flatten;
@@ -337,30 +337,30 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmOperation> jvmAllInterfaceMethods(final TJClass e) {
     EList<JvmParameterizedTypeReference> _interfaces = e.getInterfaces();
     final Function1<JvmParameterizedTypeReference,JvmType> _function = new Function1<JvmParameterizedTypeReference,JvmType>() {
-        public JvmType apply(final JvmParameterizedTypeReference it) {
-          JvmType _type = it.getType();
-          return _type;
-        }
-      };
+      public JvmType apply(final JvmParameterizedTypeReference it) {
+        JvmType _type = it.getType();
+        return _type;
+      }
+    };
     List<JvmType> _map = ListExtensions.<JvmParameterizedTypeReference, JvmType>map(_interfaces, _function);
     Iterable<JvmGenericType> _filter = Iterables.<JvmGenericType>filter(_map, JvmGenericType.class);
     final Function1<JvmGenericType,Iterable<JvmFeature>> _function_1 = new Function1<JvmGenericType,Iterable<JvmFeature>>() {
-        public Iterable<JvmFeature> apply(final JvmGenericType it) {
-          Iterable<JvmFeature> _allFeatures = it.getAllFeatures();
-          return _allFeatures;
-        }
-      };
+      public Iterable<JvmFeature> apply(final JvmGenericType it) {
+        Iterable<JvmFeature> _allFeatures = it.getAllFeatures();
+        return _allFeatures;
+      }
+    };
     Iterable<Iterable<JvmFeature>> _map_1 = IterableExtensions.<JvmGenericType, Iterable<JvmFeature>>map(_filter, _function_1);
     Iterable<JvmFeature> _flatten = Iterables.<JvmFeature>concat(_map_1);
     Iterable<JvmOperation> _filter_1 = Iterables.<JvmOperation>filter(_flatten, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function_2 = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          JvmDeclaredType _declaringType = it.getDeclaringType();
-          String _identifier = _declaringType.getIdentifier();
-          boolean _notEquals = (!Objects.equal(_identifier, "java.lang.Object"));
-          return Boolean.valueOf(_notEquals);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        JvmDeclaredType _declaringType = it.getDeclaringType();
+        String _identifier = _declaringType.getIdentifier();
+        boolean _notEquals = (!Objects.equal(_identifier, "java.lang.Object"));
+        return Boolean.valueOf(_notEquals);
+      }
+    };
     Iterable<JvmOperation> _filter_2 = IterableExtensions.<JvmOperation>filter(_filter_1, _function_2);
     return _filter_2;
   }
@@ -369,11 +369,11 @@ public class TraitJJvmModelUtil {
     Iterable<JvmFeature> __jvmAllOperations = this._jvmAllOperations(e);
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(__jvmAllOperations, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          boolean _isRequiredMethod = TraitJJvmModelUtil.this.isRequiredMethod(it);
-          return Boolean.valueOf(_isRequiredMethod);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        boolean _isRequiredMethod = TraitJJvmModelUtil.this.isRequiredMethod(it);
+        return Boolean.valueOf(_isRequiredMethod);
+      }
+    };
     Iterable<JvmOperation> _filter_1 = IterableExtensions.<JvmOperation>filter(_filter, _function);
     return _filter_1;
   }
@@ -382,11 +382,11 @@ public class TraitJJvmModelUtil {
     Iterable<JvmOperation> _jvmAllOperations = this.jvmAllOperations(e);
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(_jvmAllOperations, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          boolean _isRequiredMethod = TraitJJvmModelUtil.this.isRequiredMethod(it);
-          return Boolean.valueOf(_isRequiredMethod);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        boolean _isRequiredMethod = TraitJJvmModelUtil.this.isRequiredMethod(it);
+        return Boolean.valueOf(_isRequiredMethod);
+      }
+    };
     Iterable<JvmOperation> _filter_1 = IterableExtensions.<JvmOperation>filter(_filter, _function);
     return _filter_1;
   }
@@ -400,11 +400,11 @@ public class TraitJJvmModelUtil {
     TJTraitExpression _traitExpression = e.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Iterable<JvmOperation>> _function = new Function1<TJTraitReference,Iterable<JvmOperation>>() {
-        public Iterable<JvmOperation> apply(final TJTraitReference it) {
-          Iterable<JvmOperation> _jvmAllRequiredMethodOperations = TraitJJvmModelUtil.this.jvmAllRequiredMethodOperations(it);
-          return _jvmAllRequiredMethodOperations;
-        }
-      };
+      public Iterable<JvmOperation> apply(final TJTraitReference it) {
+        Iterable<JvmOperation> _jvmAllRequiredMethodOperations = TraitJJvmModelUtil.this.jvmAllRequiredMethodOperations(it);
+        return _jvmAllRequiredMethodOperations;
+      }
+    };
     List<Iterable<JvmOperation>> _map = ListExtensions.<TJTraitReference, Iterable<JvmOperation>>map(_traitReferences, _function);
     Iterable<JvmOperation> _flatten = Iterables.<JvmOperation>concat(_map);
     return _flatten;
@@ -414,12 +414,12 @@ public class TraitJJvmModelUtil {
     Iterable<JvmOperation> _jvmAllOperations = this.jvmAllOperations(e);
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(_jvmAllOperations, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          TJField _sourceField = TraitJJvmModelUtil.this.sourceField(it);
-          boolean _notEquals = (!Objects.equal(_sourceField, null));
-          return Boolean.valueOf(_notEquals);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        TJField _sourceField = TraitJJvmModelUtil.this.sourceField(it);
+        boolean _notEquals = (!Objects.equal(_sourceField, null));
+        return Boolean.valueOf(_notEquals);
+      }
+    };
     Iterable<JvmOperation> _filter_1 = IterableExtensions.<JvmOperation>filter(_filter, _function);
     return _filter_1;
   }
@@ -428,12 +428,12 @@ public class TraitJJvmModelUtil {
     Iterable<JvmFeature> __jvmAllOperations = this._jvmAllOperations(e);
     Iterable<JvmOperation> _filter = Iterables.<JvmOperation>filter(__jvmAllOperations, JvmOperation.class);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          TJField _sourceField = TraitJJvmModelUtil.this.sourceField(it);
-          boolean _notEquals = (!Objects.equal(_sourceField, null));
-          return Boolean.valueOf(_notEquals);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        TJField _sourceField = TraitJJvmModelUtil.this.sourceField(it);
+        boolean _notEquals = (!Objects.equal(_sourceField, null));
+        return Boolean.valueOf(_notEquals);
+      }
+    };
     Iterable<JvmOperation> _filter_1 = IterableExtensions.<JvmOperation>filter(_filter, _function);
     return _filter_1;
   }
@@ -446,13 +446,13 @@ public class TraitJJvmModelUtil {
   public Iterable<JvmOperation> jvmAllRequiredFieldOperations(final TJTraitReference e) {
     Iterable<JvmOperation> _jvmAllFieldOperations = this.jvmAllFieldOperations(e);
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          String _simpleName = it.getSimpleName();
-          boolean _startsWith = _simpleName.startsWith("set");
-          boolean _not = (!_startsWith);
-          return Boolean.valueOf(_not);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        String _simpleName = it.getSimpleName();
+        boolean _startsWith = _simpleName.startsWith("set");
+        boolean _not = (!_startsWith);
+        return Boolean.valueOf(_not);
+      }
+    };
     Iterable<JvmOperation> _filter = IterableExtensions.<JvmOperation>filter(_jvmAllFieldOperations, _function);
     return _filter;
   }
@@ -461,11 +461,11 @@ public class TraitJJvmModelUtil {
     TJTraitExpression _traitExpression = e.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Iterable<JvmOperation>> _function = new Function1<TJTraitReference,Iterable<JvmOperation>>() {
-        public Iterable<JvmOperation> apply(final TJTraitReference it) {
-          Iterable<JvmOperation> _jvmAllRequiredFieldOperations = TraitJJvmModelUtil.this.jvmAllRequiredFieldOperations(it);
-          return _jvmAllRequiredFieldOperations;
-        }
-      };
+      public Iterable<JvmOperation> apply(final TJTraitReference it) {
+        Iterable<JvmOperation> _jvmAllRequiredFieldOperations = TraitJJvmModelUtil.this.jvmAllRequiredFieldOperations(it);
+        return _jvmAllRequiredFieldOperations;
+      }
+    };
     List<Iterable<JvmOperation>> _map = ListExtensions.<TJTraitReference, Iterable<JvmOperation>>map(_traitReferences, _function);
     Iterable<JvmOperation> _flatten = Iterables.<JvmOperation>concat(_map);
     return _flatten;
@@ -474,10 +474,10 @@ public class TraitJJvmModelUtil {
   public TJMember originalSource(final JvmMember o) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(o);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          return Boolean.valueOf((it instanceof TJMember));
-        }
-      };
+      public Boolean apply(final EObject it) {
+        return Boolean.valueOf((it instanceof TJMember));
+      }
+    };
     EObject _findFirst = IterableExtensions.<EObject>findFirst(_sourceElements, _function);
     return ((TJMember) _findFirst);
   }
@@ -485,38 +485,38 @@ public class TraitJJvmModelUtil {
   public boolean defines(final TJTrait t, final JvmMember m) {
     EList<TJMember> _members = t.getMembers();
     final Function1<TJMember,Boolean> _function = new Function1<TJMember,Boolean>() {
-        public Boolean apply(final TJMember it) {
-          String _name = it.getName();
-          String _simpleName = m.getSimpleName();
-          boolean _equals = Objects.equal(_name, _simpleName);
-          return Boolean.valueOf(_equals);
-        }
-      };
+      public Boolean apply(final TJMember it) {
+        String _name = it.getName();
+        String _simpleName = m.getSimpleName();
+        boolean _equals = Objects.equal(_name, _simpleName);
+        return Boolean.valueOf(_equals);
+      }
+    };
     boolean _exists = IterableExtensions.<TJMember>exists(_members, _function);
     return _exists;
   }
   
   public JvmOperation memberByName(final Iterable<JvmOperation> members, final String name) {
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          String _simpleName = it.getSimpleName();
-          boolean _equals = Objects.equal(name, _simpleName);
-          return Boolean.valueOf(_equals);
-        }
-      };
+      public Boolean apply(final JvmOperation it) {
+        String _simpleName = it.getSimpleName();
+        boolean _equals = Objects.equal(name, _simpleName);
+        return Boolean.valueOf(_equals);
+      }
+    };
     JvmOperation _findFirst = IterableExtensions.<JvmOperation>findFirst(members, _function);
     return _findFirst;
   }
   
   public boolean alreadyDefined(final Iterable<JvmMember> members, final JvmMember m) {
     final Function1<JvmMember,Boolean> _function = new Function1<JvmMember,Boolean>() {
-        public Boolean apply(final JvmMember it) {
-          String _simpleName = it.getSimpleName();
-          String _simpleName_1 = m.getSimpleName();
-          boolean _equals = Objects.equal(_simpleName, _simpleName_1);
-          return Boolean.valueOf(_equals);
-        }
-      };
+      public Boolean apply(final JvmMember it) {
+        String _simpleName = it.getSimpleName();
+        String _simpleName_1 = m.getSimpleName();
+        boolean _equals = Objects.equal(_simpleName, _simpleName_1);
+        return Boolean.valueOf(_equals);
+      }
+    };
     boolean _exists = IterableExtensions.<JvmMember>exists(members, _function);
     return _exists;
   }
@@ -524,22 +524,22 @@ public class TraitJJvmModelUtil {
   public boolean isRequired(final JvmMember m) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(m);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          boolean _or = false;
-          boolean _or_1 = false;
-          if ((it instanceof TJRequiredMethod)) {
-            _or_1 = true;
-          } else {
-            _or_1 = ((it instanceof TJRequiredMethod) || (it instanceof TJField));
-          }
-          if (_or_1) {
-            _or = true;
-          } else {
-            _or = (_or_1 || (it instanceof TJRestrictOperation));
-          }
-          return Boolean.valueOf(_or);
+      public Boolean apply(final EObject it) {
+        boolean _or = false;
+        boolean _or_1 = false;
+        if ((it instanceof TJRequiredMethod)) {
+          _or_1 = true;
+        } else {
+          _or_1 = ((it instanceof TJRequiredMethod) || (it instanceof TJField));
         }
-      };
+        if (_or_1) {
+          _or = true;
+        } else {
+          _or = (_or_1 || (it instanceof TJRestrictOperation));
+        }
+        return Boolean.valueOf(_or);
+      }
+    };
     boolean _exists = IterableExtensions.<EObject>exists(_sourceElements, _function);
     return _exists;
   }
@@ -547,16 +547,16 @@ public class TraitJJvmModelUtil {
   public boolean isRequiredMethod(final JvmMember m) {
     Set<EObject> _sourceElements = this._iJvmModelAssociations.getSourceElements(m);
     final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-        public Boolean apply(final EObject it) {
-          boolean _or = false;
-          if ((it instanceof TJRequiredMethod)) {
-            _or = true;
-          } else {
-            _or = ((it instanceof TJRequiredMethod) || (it instanceof TJRestrictOperation));
-          }
-          return Boolean.valueOf(_or);
+      public Boolean apply(final EObject it) {
+        boolean _or = false;
+        if ((it instanceof TJRequiredMethod)) {
+          _or = true;
+        } else {
+          _or = ((it instanceof TJRequiredMethod) || (it instanceof TJRestrictOperation));
         }
-      };
+        return Boolean.valueOf(_or);
+      }
+    };
     boolean _exists = IterableExtensions.<EObject>exists(_sourceElements, _function);
     return _exists;
   }
@@ -601,15 +601,15 @@ public class TraitJJvmModelUtil {
       "(");
     EList<JvmFormalParameter> _parameters = m.getParameters();
     final Function1<JvmFormalParameter,String> _function = new Function1<JvmFormalParameter,String>() {
-        public String apply(final JvmFormalParameter it) {
-          JvmTypeReference _parameterType = it.getParameterType();
-          String _simpleName = null;
-          if (_parameterType!=null) {
-            _simpleName=_parameterType.getSimpleName();
-          }
-          return _simpleName;
+      public String apply(final JvmFormalParameter it) {
+        JvmTypeReference _parameterType = it.getParameterType();
+        String _simpleName = null;
+        if (_parameterType!=null) {
+          _simpleName=_parameterType.getSimpleName();
         }
-      };
+        return _simpleName;
+      }
+    };
     List<String> _map = ListExtensions.<JvmFormalParameter, String>map(_parameters, _function);
     String _join = IterableExtensions.join(_map, ", ");
     String _plus_3 = (_plus_2 + _join);
@@ -632,42 +632,42 @@ public class TraitJJvmModelUtil {
   
   public TJField findMatchingField(final Iterable<? extends TJField> candidates, final JvmOperation member) {
     final Function1<TJField,Boolean> _function = new Function1<TJField,Boolean>() {
-        public Boolean apply(final TJField it) {
-          boolean _and = false;
-          String _name = it.getName();
-          String _fieldName = TraitJJvmModelUtil.this.fieldName(member);
-          boolean _equals = Objects.equal(_name, _fieldName);
-          if (!_equals) {
-            _and = false;
-          } else {
-            JvmTypeReference _type = it.getType();
-            JvmTypeReference _returnType = member.getReturnType();
-            boolean _sameType = TraitJJvmModelUtil.this._traitJTypingUtil.sameType(_type, _returnType);
-            _and = (_equals && _sameType);
-          }
-          return Boolean.valueOf(_and);
+      public Boolean apply(final TJField it) {
+        boolean _and = false;
+        String _name = it.getName();
+        String _fieldName = TraitJJvmModelUtil.this.fieldName(member);
+        boolean _equals = Objects.equal(_name, _fieldName);
+        if (!_equals) {
+          _and = false;
+        } else {
+          JvmTypeReference _type = it.getType();
+          JvmTypeReference _returnType = member.getReturnType();
+          boolean _sameType = TraitJJvmModelUtil.this._traitJTypingUtil.sameType(_type, _returnType);
+          _and = (_equals && _sameType);
         }
-      };
+        return Boolean.valueOf(_and);
+      }
+    };
     TJField _findFirst = IterableExtensions.findFirst(candidates, _function);
     return _findFirst;
   }
   
   public JvmOperation findMatchingMethod(final Iterable<? extends JvmOperation> candidates, final JvmOperation member) {
     final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-        public Boolean apply(final JvmOperation it) {
-          boolean _and = false;
-          String _simpleName = it.getSimpleName();
-          String _simpleName_1 = member.getSimpleName();
-          boolean _equals = Objects.equal(_simpleName, _simpleName_1);
-          if (!_equals) {
-            _and = false;
-          } else {
-            boolean _compliant = TraitJJvmModelUtil.this.compliant(it, member);
-            _and = (_equals && _compliant);
-          }
-          return Boolean.valueOf(_and);
+      public Boolean apply(final JvmOperation it) {
+        boolean _and = false;
+        String _simpleName = it.getSimpleName();
+        String _simpleName_1 = member.getSimpleName();
+        boolean _equals = Objects.equal(_simpleName, _simpleName_1);
+        if (!_equals) {
+          _and = false;
+        } else {
+          boolean _compliant = TraitJJvmModelUtil.this.compliant(it, member);
+          _and = (_equals && _compliant);
         }
-      };
+        return Boolean.valueOf(_and);
+      }
+    };
     JvmOperation _findFirst = IterableExtensions.findFirst(candidates, _function);
     return _findFirst;
   }

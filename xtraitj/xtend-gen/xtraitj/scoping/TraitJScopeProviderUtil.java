@@ -65,34 +65,34 @@ public class TraitJScopeProviderUtil {
     TJTrait _trait = _containingTraitOperationExpression.getTrait();
     Iterable<JvmFeature> _jvmAllFeatures = this._traitJJvmModelUtil.jvmAllFeatures(_trait);
     final Function<JvmFeature,QualifiedName> _function = new Function<JvmFeature,QualifiedName>() {
-        public QualifiedName apply(final JvmFeature it) {
-          QualifiedName _xblockexpression = null;
-          {
-            final TJField field = TraitJScopeProviderUtil.this._traitJJvmModelUtil.sourceField(it);
-            QualifiedName _xifexpression = null;
-            boolean _notEquals = (!Objects.equal(field, null));
-            if (_notEquals) {
-              QualifiedName _xifexpression_1 = null;
-              String _simpleName = it.getSimpleName();
-              boolean _startsWith = _simpleName.startsWith("set");
-              if (_startsWith) {
-                _xifexpression_1 = null;
-              } else {
-                String _name = field.getName();
-                QualifiedName _create = QualifiedName.create(_name);
-                _xifexpression_1 = _create;
-              }
-              _xifexpression = _xifexpression_1;
+      public QualifiedName apply(final JvmFeature it) {
+        QualifiedName _xblockexpression = null;
+        {
+          final TJField field = TraitJScopeProviderUtil.this._traitJJvmModelUtil.sourceField(it);
+          QualifiedName _xifexpression = null;
+          boolean _notEquals = (!Objects.equal(field, null));
+          if (_notEquals) {
+            QualifiedName _xifexpression_1 = null;
+            String _simpleName = it.getSimpleName();
+            boolean _startsWith = _simpleName.startsWith("set");
+            if (_startsWith) {
+              _xifexpression_1 = null;
             } else {
-              String _simpleName_1 = it.getSimpleName();
-              QualifiedName _create_1 = QualifiedName.create(_simpleName_1);
-              _xifexpression = _create_1;
+              String _name = field.getName();
+              QualifiedName _create = QualifiedName.create(_name);
+              _xifexpression_1 = _create;
             }
-            _xblockexpression = (_xifexpression);
+            _xifexpression = _xifexpression_1;
+          } else {
+            String _simpleName_1 = it.getSimpleName();
+            QualifiedName _create_1 = QualifiedName.create(_simpleName_1);
+            _xifexpression = _create_1;
           }
-          return _xblockexpression;
+          _xblockexpression = (_xifexpression);
         }
-      };
+        return _xblockexpression;
+      }
+    };
     Iterable<IEObjectDescription> _scopedElementsFor = Scopes.<JvmFeature>scopedElementsFor(_jvmAllFeatures, _function);
     SimpleScope _simpleScope = new SimpleScope(_scopedElementsFor);
     return _simpleScope;
@@ -107,28 +107,28 @@ public class TraitJScopeProviderUtil {
     TJTrait _trait = _containingTraitOperationExpression.getTrait();
     Iterable<JvmFeature> _jvmAllFeatures = this._traitJJvmModelUtil.jvmAllFeatures(_trait);
     final Function<JvmFeature,QualifiedName> _function = new Function<JvmFeature,QualifiedName>() {
-        public QualifiedName apply(final JvmFeature it) {
-          QualifiedName _xifexpression = null;
-          boolean _and = false;
-          TJField _sourceField = TraitJScopeProviderUtil.this._traitJJvmModelUtil.sourceField(it);
-          boolean _equals = Objects.equal(_sourceField, null);
-          if (!_equals) {
-            _and = false;
-          } else {
-            TJMember _originalSource = TraitJScopeProviderUtil.this._traitJJvmModelUtil.originalSource(it);
-            boolean _notEquals = (!Objects.equal(_originalSource, null));
-            _and = (_equals && _notEquals);
-          }
-          if (_and) {
-            String _simpleName = it.getSimpleName();
-            QualifiedName _create = QualifiedName.create(_simpleName);
-            _xifexpression = _create;
-          } else {
-            _xifexpression = null;
-          }
-          return _xifexpression;
+      public QualifiedName apply(final JvmFeature it) {
+        QualifiedName _xifexpression = null;
+        boolean _and = false;
+        TJField _sourceField = TraitJScopeProviderUtil.this._traitJJvmModelUtil.sourceField(it);
+        boolean _equals = Objects.equal(_sourceField, null);
+        if (!_equals) {
+          _and = false;
+        } else {
+          TJMember _originalSource = TraitJScopeProviderUtil.this._traitJJvmModelUtil.originalSource(it);
+          boolean _notEquals = (!Objects.equal(_originalSource, null));
+          _and = (_equals && _notEquals);
         }
-      };
+        if (_and) {
+          String _simpleName = it.getSimpleName();
+          QualifiedName _create = QualifiedName.create(_simpleName);
+          _xifexpression = _create;
+        } else {
+          _xifexpression = null;
+        }
+        return _xifexpression;
+      }
+    };
     Iterable<IEObjectDescription> _scopedElementsFor = Scopes.<JvmFeature>scopedElementsFor(_jvmAllFeatures, _function);
     SimpleScope _simpleScope = new SimpleScope(_scopedElementsFor);
     return _simpleScope;

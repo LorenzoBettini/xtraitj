@@ -194,11 +194,11 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
   public void checkDependencyCycle(final TJTrait t) {
     Iterable<TJTrait> _allTraitsDependency = TraitJModelUtil.allTraitsDependency(t);
     final Function1<TJTrait,Boolean> _function = new Function1<TJTrait,Boolean>() {
-        public Boolean apply(final TJTrait it) {
-          boolean _equals = Objects.equal(it, t);
-          return Boolean.valueOf(_equals);
-        }
-      };
+      public Boolean apply(final TJTrait it) {
+        boolean _equals = Objects.equal(it, t);
+        return Boolean.valueOf(_equals);
+      }
+    };
     boolean _exists = IterableExtensions.<TJTrait>exists(_allTraitsDependency, _function);
     if (_exists) {
       String _name = t.getName();
@@ -233,54 +233,54 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
   public void checkClassProvidesAllRequirements(final TJClass c) {
     Iterable<JvmOperation> _jvmAllRequiredFieldOperations = this._traitJJvmModelUtil.jvmAllRequiredFieldOperations(c);
     final Procedure1<JvmOperation> _function = new Procedure1<JvmOperation>() {
-        public void apply(final JvmOperation requiredField) {
-          EList<TJField> _fields = c.getFields();
-          TJField _findMatchingField = XtraitjValidator.this._traitJJvmModelUtil.findMatchingField(_fields, requiredField);
-          boolean _equals = Objects.equal(_findMatchingField, null);
-          if (_equals) {
-            String _fieldRepresentation = XtraitjValidator.this._traitJJvmModelUtil.fieldRepresentation(requiredField);
-            String _plus = ("Class must provide required field \'" + _fieldRepresentation);
-            String _plus_1 = (_plus + "\'");
-            EReference _tJDeclaration_TraitExpression = XtraitjPackage.eINSTANCE.getTJDeclaration_TraitExpression();
-            XtraitjValidator.this.error(_plus_1, _tJDeclaration_TraitExpression, 
-              XtraitjValidator.MISSING_REQUIRED_FIELD);
-          }
+      public void apply(final JvmOperation requiredField) {
+        EList<TJField> _fields = c.getFields();
+        TJField _findMatchingField = XtraitjValidator.this._traitJJvmModelUtil.findMatchingField(_fields, requiredField);
+        boolean _equals = Objects.equal(_findMatchingField, null);
+        if (_equals) {
+          String _fieldRepresentation = XtraitjValidator.this._traitJJvmModelUtil.fieldRepresentation(requiredField);
+          String _plus = ("Class must provide required field \'" + _fieldRepresentation);
+          String _plus_1 = (_plus + "\'");
+          EReference _tJDeclaration_TraitExpression = XtraitjPackage.eINSTANCE.getTJDeclaration_TraitExpression();
+          XtraitjValidator.this.error(_plus_1, _tJDeclaration_TraitExpression, 
+            XtraitjValidator.MISSING_REQUIRED_FIELD);
         }
-      };
+      }
+    };
     IterableExtensions.<JvmOperation>forEach(_jvmAllRequiredFieldOperations, _function);
     Iterable<JvmOperation> _jvmAllRequiredMethodOperations = this._traitJJvmModelUtil.jvmAllRequiredMethodOperations(c);
     final Procedure1<JvmOperation> _function_1 = new Procedure1<JvmOperation>() {
-        public void apply(final JvmOperation requiredMethod) {
-          Iterable<JvmOperation> _jvmAllMethodOperations = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethodOperations(c);
-          JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethodOperations, requiredMethod);
-          boolean _equals = Objects.equal(_findMatchingMethod, null);
-          if (_equals) {
-            String _methodRepresentation = XtraitjValidator.this._traitJJvmModelUtil.methodRepresentation(requiredMethod);
-            String _plus = ("Class must provide required method \'" + _methodRepresentation);
-            String _plus_1 = (_plus + "\'");
-            EReference _tJDeclaration_TraitExpression = XtraitjPackage.eINSTANCE.getTJDeclaration_TraitExpression();
-            XtraitjValidator.this.error(_plus_1, _tJDeclaration_TraitExpression, 
-              XtraitjValidator.MISSING_REQUIRED_METHOD);
-          }
+      public void apply(final JvmOperation requiredMethod) {
+        Iterable<JvmOperation> _jvmAllMethodOperations = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethodOperations(c);
+        JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethodOperations, requiredMethod);
+        boolean _equals = Objects.equal(_findMatchingMethod, null);
+        if (_equals) {
+          String _methodRepresentation = XtraitjValidator.this._traitJJvmModelUtil.methodRepresentation(requiredMethod);
+          String _plus = ("Class must provide required method \'" + _methodRepresentation);
+          String _plus_1 = (_plus + "\'");
+          EReference _tJDeclaration_TraitExpression = XtraitjPackage.eINSTANCE.getTJDeclaration_TraitExpression();
+          XtraitjValidator.this.error(_plus_1, _tJDeclaration_TraitExpression, 
+            XtraitjValidator.MISSING_REQUIRED_METHOD);
         }
-      };
+      }
+    };
     IterableExtensions.<JvmOperation>forEach(_jvmAllRequiredMethodOperations, _function_1);
     Iterable<JvmOperation> _jvmAllInterfaceMethods = this._traitJJvmModelUtil.jvmAllInterfaceMethods(c);
     final Procedure1<JvmOperation> _function_2 = new Procedure1<JvmOperation>() {
-        public void apply(final JvmOperation method) {
-          Iterable<JvmOperation> _jvmAllMethods = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethods(c);
-          JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethods, method);
-          boolean _equals = Objects.equal(_findMatchingMethod, null);
-          if (_equals) {
-            String _methodRepresentation = XtraitjValidator.this._traitJJvmModelUtil.methodRepresentation(method);
-            String _plus = ("Class must provide interface method \'" + _methodRepresentation);
-            String _plus_1 = (_plus + "\'");
-            EAttribute _tJDeclaration_Name = XtraitjPackage.eINSTANCE.getTJDeclaration_Name();
-            XtraitjValidator.this.error(_plus_1, _tJDeclaration_Name, 
-              XtraitjValidator.MISSING_INTERFACE_METHOD);
-          }
+      public void apply(final JvmOperation method) {
+        Iterable<JvmOperation> _jvmAllMethods = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethods(c);
+        JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethods, method);
+        boolean _equals = Objects.equal(_findMatchingMethod, null);
+        if (_equals) {
+          String _methodRepresentation = XtraitjValidator.this._traitJJvmModelUtil.methodRepresentation(method);
+          String _plus = ("Class must provide interface method \'" + _methodRepresentation);
+          String _plus_1 = (_plus + "\'");
+          EAttribute _tJDeclaration_Name = XtraitjPackage.eINSTANCE.getTJDeclaration_Name();
+          XtraitjValidator.this.error(_plus_1, _tJDeclaration_Name, 
+            XtraitjValidator.MISSING_INTERFACE_METHOD);
         }
-      };
+      }
+    };
     IterableExtensions.<JvmOperation>forEach(_jvmAllInterfaceMethods, _function_2);
   }
   
@@ -306,20 +306,20 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     TJDeclaration _containingDeclaration = TraitJModelUtil.containingDeclaration(m);
     EList<? extends TJMember> _members = TraitJModelUtil.members(_containingDeclaration);
     final Function1<TJMember,Boolean> _function = new Function1<TJMember,Boolean>() {
-        public Boolean apply(final TJMember it) {
-          boolean _and = false;
-          boolean _notEquals = (!Objects.equal(it, m));
-          if (!_notEquals) {
-            _and = false;
-          } else {
-            String _name = it.getName();
-            String _name_1 = m.getName();
-            boolean _equals = Objects.equal(_name, _name_1);
-            _and = (_notEquals && _equals);
-          }
-          return Boolean.valueOf(_and);
+      public Boolean apply(final TJMember it) {
+        boolean _and = false;
+        boolean _notEquals = (!Objects.equal(it, m));
+        if (!_notEquals) {
+          _and = false;
+        } else {
+          String _name = it.getName();
+          String _name_1 = m.getName();
+          boolean _equals = Objects.equal(_name, _name_1);
+          _and = (_notEquals && _equals);
         }
-      };
+        return Boolean.valueOf(_and);
+      }
+    };
     boolean _exists = IterableExtensions.exists(_members, _function);
     if (_exists) {
       String _name = m.getName();
@@ -336,20 +336,20 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     TJProgram _containingProgram = TraitJModelUtil.containingProgram(d);
     EList<TJDeclaration> _elements = _containingProgram.getElements();
     final Function1<TJDeclaration,Boolean> _function = new Function1<TJDeclaration,Boolean>() {
-        public Boolean apply(final TJDeclaration it) {
-          boolean _and = false;
-          boolean _notEquals = (!Objects.equal(it, d));
-          if (!_notEquals) {
-            _and = false;
-          } else {
-            String _name = it.getName();
-            String _name_1 = d.getName();
-            boolean _equals = Objects.equal(_name, _name_1);
-            _and = (_notEquals && _equals);
-          }
-          return Boolean.valueOf(_and);
+      public Boolean apply(final TJDeclaration it) {
+        boolean _and = false;
+        boolean _notEquals = (!Objects.equal(it, d));
+        if (!_notEquals) {
+          _and = false;
+        } else {
+          String _name = it.getName();
+          String _name_1 = d.getName();
+          boolean _equals = Objects.equal(_name, _name_1);
+          _and = (_notEquals && _equals);
         }
-      };
+        return Boolean.valueOf(_and);
+      }
+    };
     boolean _exists = IterableExtensions.<TJDeclaration>exists(_elements, _function);
     if (_exists) {
       String _name = d.getName();
@@ -374,11 +374,11 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
             if (_notEquals) {
               Iterable<JvmOperation> _jvmAllRequiredFieldOperations_1 = this._traitJJvmModelUtil.jvmAllRequiredFieldOperations(t2);
               final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-                  public Boolean apply(final JvmOperation it) {
-                    boolean _conflictsWith = XtraitjValidator.this._traitJJvmModelUtil.conflictsWith(it, f1);
-                    return Boolean.valueOf(_conflictsWith);
-                  }
-                };
+                public Boolean apply(final JvmOperation it) {
+                  boolean _conflictsWith = XtraitjValidator.this._traitJJvmModelUtil.conflictsWith(it, f1);
+                  return Boolean.valueOf(_conflictsWith);
+                }
+              };
               boolean _exists = IterableExtensions.<JvmOperation>exists(_jvmAllRequiredFieldOperations_1, _function);
               if (_exists) {
                 String _fieldRepresentation = this._traitJJvmModelUtil.fieldRepresentation(f1);
@@ -402,11 +402,11 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
             if (_notEquals_1) {
               Iterable<JvmOperation> _jvmAllRequiredMethodOperations_1 = this._traitJJvmModelUtil.jvmAllRequiredMethodOperations(t2_1);
               final Function1<JvmOperation,Boolean> _function_1 = new Function1<JvmOperation,Boolean>() {
-                  public Boolean apply(final JvmOperation it) {
-                    boolean _conflictsWith = XtraitjValidator.this._traitJJvmModelUtil.conflictsWith(it, f1_1);
-                    return Boolean.valueOf(_conflictsWith);
-                  }
-                };
+                public Boolean apply(final JvmOperation it) {
+                  boolean _conflictsWith = XtraitjValidator.this._traitJJvmModelUtil.conflictsWith(it, f1_1);
+                  return Boolean.valueOf(_conflictsWith);
+                }
+              };
               boolean _exists_1 = IterableExtensions.<JvmOperation>exists(_jvmAllRequiredMethodOperations_1, _function_1);
               if (_exists_1) {
                 String _methodRepresentation = this._traitJJvmModelUtil.methodRepresentation(f1_1);
@@ -430,13 +430,13 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
             if (_notEquals_2) {
               Iterable<JvmOperation> _jvmAllMethodOperations_1 = this._traitJJvmModelUtil.jvmAllMethodOperations(t2_2);
               final Function1<JvmOperation,Boolean> _function_2 = new Function1<JvmOperation,Boolean>() {
-                  public Boolean apply(final JvmOperation it) {
-                    String _simpleName = f1_2.getSimpleName();
-                    String _simpleName_1 = it.getSimpleName();
-                    boolean _equals = Objects.equal(_simpleName, _simpleName_1);
-                    return Boolean.valueOf(_equals);
-                  }
-                };
+                public Boolean apply(final JvmOperation it) {
+                  String _simpleName = f1_2.getSimpleName();
+                  String _simpleName_1 = it.getSimpleName();
+                  boolean _equals = Objects.equal(_simpleName, _simpleName_1);
+                  return Boolean.valueOf(_equals);
+                }
+              };
               boolean _exists_2 = IterableExtensions.<JvmOperation>exists(_jvmAllMethodOperations_1, _function_2);
               if (_exists_2) {
                 String _methodRepresentation_1 = this._traitJJvmModelUtil.methodRepresentation(f1_2);
@@ -469,14 +469,14 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
       {
         Iterable<JvmOperation> _jvmAllRequiredFieldOperations = this._traitJJvmModelUtil.jvmAllRequiredFieldOperations(t1);
         final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-            public Boolean apply(final JvmOperation it) {
-              String _simpleName = it.getSimpleName();
-              String _stripGetter = XtraitjValidator.this._traitJJvmModelUtil.stripGetter(_simpleName);
-              String _name = f.getName();
-              boolean _equals = Objects.equal(_stripGetter, _name);
-              return Boolean.valueOf(_equals);
-            }
-          };
+          public Boolean apply(final JvmOperation it) {
+            String _simpleName = it.getSimpleName();
+            String _stripGetter = XtraitjValidator.this._traitJJvmModelUtil.stripGetter(_simpleName);
+            String _name = f.getName();
+            boolean _equals = Objects.equal(_stripGetter, _name);
+            return Boolean.valueOf(_equals);
+          }
+        };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllRequiredFieldOperations, _function);
         boolean _notEquals = (!Objects.equal(t1, null));
         if (_notEquals) {
@@ -513,13 +513,13 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
       {
         Iterable<JvmOperation> _jvmAllOperations = this._traitJJvmModelUtil.jvmAllOperations(t1);
         final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-            public Boolean apply(final JvmOperation it) {
-              String _simpleName = it.getSimpleName();
-              String _name = m.getName();
-              boolean _equals = Objects.equal(_simpleName, _name);
-              return Boolean.valueOf(_equals);
-            }
-          };
+          public Boolean apply(final JvmOperation it) {
+            String _simpleName = it.getSimpleName();
+            String _name = m.getName();
+            boolean _equals = Objects.equal(_simpleName, _name);
+            return Boolean.valueOf(_equals);
+          }
+        };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllOperations, _function);
         boolean _notEquals = (!Objects.equal(t1, null));
         if (_notEquals) {
@@ -556,13 +556,13 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
       {
         Iterable<JvmOperation> _jvmAllMethodOperations = this._traitJJvmModelUtil.jvmAllMethodOperations(t1);
         final Function1<JvmOperation,Boolean> _function = new Function1<JvmOperation,Boolean>() {
-            public Boolean apply(final JvmOperation it) {
-              String _simpleName = it.getSimpleName();
-              String _name = m.getName();
-              boolean _equals = Objects.equal(_simpleName, _name);
-              return Boolean.valueOf(_equals);
-            }
-          };
+          public Boolean apply(final JvmOperation it) {
+            String _simpleName = it.getSimpleName();
+            String _name = m.getName();
+            boolean _equals = Objects.equal(_simpleName, _name);
+            return Boolean.valueOf(_equals);
+          }
+        };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllMethodOperations, _function);
         boolean _notEquals = (!Objects.equal(t1, null));
         if (_notEquals) {
@@ -596,29 +596,29 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     TJTraitExpression _traitExpression = c.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Boolean> _function = new Function1<TJTraitReference,Boolean>() {
-        public Boolean apply(final TJTraitReference it) {
-          EList<TJTraitOperation> _operations = it.getOperations();
-          boolean _isEmpty = _operations.isEmpty();
-          return Boolean.valueOf(_isEmpty);
-        }
-      };
+      public Boolean apply(final TJTraitReference it) {
+        EList<TJTraitOperation> _operations = it.getOperations();
+        boolean _isEmpty = _operations.isEmpty();
+        return Boolean.valueOf(_isEmpty);
+      }
+    };
     final Iterable<TJTraitReference> referencesWithNoOperations = IterableExtensions.<TJTraitReference>filter(_traitReferences, _function);
     for (final TJTraitReference ref : referencesWithNoOperations) {
       final Function1<TJTraitReference,Boolean> _function_1 = new Function1<TJTraitReference,Boolean>() {
-          public Boolean apply(final TJTraitReference it) {
-            boolean _and = false;
-            boolean _notEquals = (!Objects.equal(ref, it));
-            if (!_notEquals) {
-              _and = false;
-            } else {
-              TJTrait _trait = ref.getTrait();
-              TJTrait _trait_1 = it.getTrait();
-              boolean _equals = Objects.equal(_trait, _trait_1);
-              _and = (_notEquals && _equals);
-            }
-            return Boolean.valueOf(_and);
+        public Boolean apply(final TJTraitReference it) {
+          boolean _and = false;
+          boolean _notEquals = (!Objects.equal(ref, it));
+          if (!_notEquals) {
+            _and = false;
+          } else {
+            TJTrait _trait = ref.getTrait();
+            TJTrait _trait_1 = it.getTrait();
+            boolean _equals = Objects.equal(_trait, _trait_1);
+            _and = (_notEquals && _equals);
           }
-        };
+          return Boolean.valueOf(_and);
+        }
+      };
       TJTraitReference _findFirst = IterableExtensions.<TJTraitReference>findFirst(referencesWithNoOperations, _function_1);
       boolean _notEquals = (!Objects.equal(_findFirst, null));
       if (_notEquals) {
@@ -684,12 +684,12 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     TJTrait _trait = _containingTraitOperationExpression.getTrait();
     EList<TJMember> _members = _trait.getMembers();
     final Function1<TJMember,Boolean> _function = new Function1<TJMember,Boolean>() {
-        public Boolean apply(final TJMember it) {
-          String _name = it.getName();
-          boolean _equals = Objects.equal(_name, newname);
-          return Boolean.valueOf(_equals);
-        }
-      };
+      public Boolean apply(final TJMember it) {
+        String _name = it.getName();
+        boolean _equals = Objects.equal(_name, newname);
+        return Boolean.valueOf(_equals);
+      }
+    };
     boolean _exists = IterableExtensions.<TJMember>exists(_members, _function);
     if (_exists) {
       String _plus = ("Member already exists \'" + newname);

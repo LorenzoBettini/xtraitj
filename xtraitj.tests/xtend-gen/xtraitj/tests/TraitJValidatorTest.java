@@ -65,13 +65,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJTrait = XtraitjPackage.eINSTANCE.getTJTrait();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJTrait, 
-              XtraitjValidator.DEPENDENCY_CYCLE, 
-              "Cycle in dependency of \'T1\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJTrait = XtraitjPackage.eINSTANCE.getTJTrait();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJTrait, 
+            XtraitjValidator.DEPENDENCY_CYCLE, 
+            "Cycle in dependency of \'T1\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -91,13 +91,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJField = XtraitjPackage.eINSTANCE.getTJField();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJField, 
-              XtraitjValidator.TRAIT_INITIALIZES_FIELD, 
-              "Traits cannot initialize fields");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJField = XtraitjPackage.eINSTANCE.getTJField();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJField, 
+            XtraitjValidator.TRAIT_INITIALIZES_FIELD, 
+            "Traits cannot initialize fields");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -120,13 +120,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
-              XtraitjValidator.MISSING_REQUIRED_FIELD, 
-              "Class must provide required field \'String s\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
+            XtraitjValidator.MISSING_REQUIRED_FIELD, 
+            "Class must provide required field \'String s\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -160,13 +160,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
-              XtraitjValidator.MISSING_REQUIRED_METHOD, 
-              "Class must provide required method \'String n(int)\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
+            XtraitjValidator.MISSING_REQUIRED_METHOD, 
+            "Class must provide required method \'String n(int)\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -203,13 +203,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
-              XtraitjValidator.MISSING_REQUIRED_METHOD, 
-              "Class must provide required method \'String n(int)\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
+            XtraitjValidator.MISSING_REQUIRED_METHOD, 
+            "Class must provide required method \'String n(int)\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -235,13 +235,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
-              XtraitjValidator.MISSING_REQUIRED_METHOD, 
-              "Class must provide required method \'String m()\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJClass, 
+            XtraitjValidator.MISSING_REQUIRED_METHOD, 
+            "Class must provide required method \'String m()\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -266,13 +266,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJHideOperation = XtraitjPackage.eINSTANCE.getTJHideOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJHideOperation, 
-              XtraitjValidator.HIDING_REQUIRED, 
-              "Cannot hide required method \'n\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJHideOperation = XtraitjPackage.eINSTANCE.getTJHideOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJHideOperation, 
+            XtraitjValidator.HIDING_REQUIRED, 
+            "Cannot hide required method \'n\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -297,13 +297,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJAliasOperation = XtraitjPackage.eINSTANCE.getTJAliasOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJAliasOperation, 
-              XtraitjValidator.ALIASING_REQUIRED, 
-              "Cannot alias required method \'n\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJAliasOperation = XtraitjPackage.eINSTANCE.getTJAliasOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJAliasOperation, 
+            XtraitjValidator.ALIASING_REQUIRED, 
+            "Cannot alias required method \'n\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -328,13 +328,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJRestrictOperation = XtraitjPackage.eINSTANCE.getTJRestrictOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRestrictOperation, 
-              XtraitjValidator.RESTRICTING_REQUIRED, 
-              "Cannot restrict required method \'n\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJRestrictOperation = XtraitjPackage.eINSTANCE.getTJRestrictOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRestrictOperation, 
+            XtraitjValidator.RESTRICTING_REQUIRED, 
+            "Cannot restrict required method \'n\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -359,13 +359,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJRestrictOperation = XtraitjPackage.eINSTANCE.getTJRestrictOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRestrictOperation, 
-              Diagnostic.LINKING_DIAGNOSTIC, 
-              "Couldn\'t resolve reference to JvmMember \'n\'.");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJRestrictOperation = XtraitjPackage.eINSTANCE.getTJRestrictOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRestrictOperation, 
+            Diagnostic.LINKING_DIAGNOSTIC, 
+            "Couldn\'t resolve reference to JvmMember \'n\'.");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -464,17 +464,17 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJRedirectOperation = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation, 
-              XtraitjValidator.REDIRECT_NOT_COMPLIANT, 
-              "\'int i\' is not compliant with \'String f\'");
-            EClass _tJRedirectOperation_1 = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation_1, 
-              XtraitjValidator.REDIRECT_NOT_COMPLIANT, 
-              "\'List<? extends String> m()\' is not compliant with \'List<String> n()\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJRedirectOperation = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation, 
+            XtraitjValidator.REDIRECT_NOT_COMPLIANT, 
+            "\'int i\' is not compliant with \'String f\'");
+          EClass _tJRedirectOperation_1 = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation_1, 
+            XtraitjValidator.REDIRECT_NOT_COMPLIANT, 
+            "\'List<? extends String> m()\' is not compliant with \'List<String> n()\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -504,17 +504,17 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJRedirectOperation = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation, 
-              XtraitjValidator.REDIRECT_TO_SAME_MEMBER, 
-              "Redirect to the same member \'f\'");
-            EClass _tJRedirectOperation_1 = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
-            TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation_1, 
-              XtraitjValidator.REDIRECT_TO_SAME_MEMBER, 
-              "Redirect to the same member \'n\'");
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJRedirectOperation = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation, 
+            XtraitjValidator.REDIRECT_TO_SAME_MEMBER, 
+            "Redirect to the same member \'f\'");
+          EClass _tJRedirectOperation_1 = XtraitjPackage.eINSTANCE.getTJRedirectOperation();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJRedirectOperation_1, 
+            XtraitjValidator.REDIRECT_TO_SAME_MEMBER, 
+            "Redirect to the same member \'n\'");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -545,11 +545,11 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMissingInterfaceMethod(it, "void add(int, E)");
-            TraitJValidatorTest.this.assertMissingInterfaceMethod(it, "int indexOf(Object)");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMissingInterfaceMethod(it, "void add(int, E)");
+          TraitJValidatorTest.this.assertMissingInterfaceMethod(it, "int indexOf(Object)");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -668,17 +668,17 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJField = XtraitjPackage.eINSTANCE.getTJField();
-            TraitJValidatorTest.this.assertDuplicateMember(it, "f", _tJField);
-            EClass _tJField_1 = XtraitjPackage.eINSTANCE.getTJField();
-            TraitJValidatorTest.this.assertDuplicateMember(it, "c", _tJField_1);
-            EClass _tJMethod = XtraitjPackage.eINSTANCE.getTJMethod();
-            TraitJValidatorTest.this.assertDuplicateMember(it, "m", _tJMethod);
-            EClass _tJRequiredMethod = XtraitjPackage.eINSTANCE.getTJRequiredMethod();
-            TraitJValidatorTest.this.assertDuplicateMember(it, "m", _tJRequiredMethod);
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJField = XtraitjPackage.eINSTANCE.getTJField();
+          TraitJValidatorTest.this.assertDuplicateMember(it, "f", _tJField);
+          EClass _tJField_1 = XtraitjPackage.eINSTANCE.getTJField();
+          TraitJValidatorTest.this.assertDuplicateMember(it, "c", _tJField_1);
+          EClass _tJMethod = XtraitjPackage.eINSTANCE.getTJMethod();
+          TraitJValidatorTest.this.assertDuplicateMember(it, "m", _tJMethod);
+          EClass _tJRequiredMethod = XtraitjPackage.eINSTANCE.getTJRequiredMethod();
+          TraitJValidatorTest.this.assertDuplicateMember(it, "m", _tJRequiredMethod);
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -709,11 +709,11 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T1");
-            TraitJValidatorTest.this.assertFieldConflict(it, "int s", "T2");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T1");
+          TraitJValidatorTest.this.assertFieldConflict(it, "int s", "T2");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -741,11 +741,11 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T1");
-            TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "s");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T1");
+          TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "s");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -776,11 +776,11 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "int m(int)", "T2");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "int m(int)", "T2");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -808,11 +808,11 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -846,13 +846,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -889,13 +889,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "int m(int)", "T2");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T2");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "int m(int)", "T2");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T2");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -929,13 +929,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -974,13 +974,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m1(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n1(int)", "T1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n1(int)", "T2");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m1(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n1(int)", "T1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n1(int)", "T2");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -1019,13 +1019,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            TraitJValidatorTest.this.assertMethodConflict(it, "String m1(int)", "T1");
-            TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
-            TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T2");
-          }
-        };
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m1(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T1");
+          TraitJValidatorTest.this.assertMethodConflict(it, "String n(int)", "T2");
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -1046,15 +1046,15 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJTrait = XtraitjPackage.eINSTANCE.getTJTrait();
-            TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T", _tJTrait);
-            EClass _tJTrait_1 = XtraitjPackage.eINSTANCE.getTJTrait();
-            TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T1", _tJTrait_1);
-            EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
-            TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T1", _tJClass);
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJTrait = XtraitjPackage.eINSTANCE.getTJTrait();
+          TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T", _tJTrait);
+          EClass _tJTrait_1 = XtraitjPackage.eINSTANCE.getTJTrait();
+          TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T1", _tJTrait_1);
+          EClass _tJClass = XtraitjPackage.eINSTANCE.getTJClass();
+          TraitJValidatorTest.this.assertDuplicateDeclaration(it, "T1", _tJClass);
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -1092,13 +1092,13 @@ public class TraitJValidatorTest {
       _builder.newLine();
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
-          public void apply(final TJProgram it) {
-            EClass _tJAliasOperation = XtraitjPackage.eINSTANCE.getTJAliasOperation();
-            TraitJValidatorTest.this.assertAlreadyExistingMember(it, "m1", _tJAliasOperation);
-            EClass _tJRenameOperation = XtraitjPackage.eINSTANCE.getTJRenameOperation();
-            TraitJValidatorTest.this.assertAlreadyExistingMember(it, "n1", _tJRenameOperation);
-          }
-        };
+        public void apply(final TJProgram it) {
+          EClass _tJAliasOperation = XtraitjPackage.eINSTANCE.getTJAliasOperation();
+          TraitJValidatorTest.this.assertAlreadyExistingMember(it, "m1", _tJAliasOperation);
+          EClass _tJRenameOperation = XtraitjPackage.eINSTANCE.getTJRenameOperation();
+          TraitJValidatorTest.this.assertAlreadyExistingMember(it, "n1", _tJRenameOperation);
+        }
+      };
       ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

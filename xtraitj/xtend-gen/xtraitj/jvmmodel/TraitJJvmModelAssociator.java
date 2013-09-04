@@ -29,16 +29,16 @@ public class TraitJJvmModelAssociator extends JvmModelAssociator {
       EObject _eContainer = jvmElement.eContainer();
       Set<EObject> _sourceElements = super.getSourceElements(_eContainer);
       final Function1<EObject,Boolean> _function = new Function1<EObject,Boolean>() {
-          public Boolean apply(final EObject it) {
-            boolean _or = false;
-            if ((it instanceof TJTraitReference)) {
-              _or = true;
-            } else {
-              _or = ((it instanceof TJTraitReference) || (it instanceof TJDeclaration));
-            }
-            return Boolean.valueOf(_or);
+        public Boolean apply(final EObject it) {
+          boolean _or = false;
+          if ((it instanceof TJTraitReference)) {
+            _or = true;
+          } else {
+            _or = ((it instanceof TJTraitReference) || (it instanceof TJDeclaration));
           }
-        };
+          return Boolean.valueOf(_or);
+        }
+      };
       final Iterable<EObject> decl = IterableExtensions.<EObject>filter(_sourceElements, _function);
       boolean _isEmpty_1 = IterableExtensions.isEmpty(decl);
       boolean _not_1 = (!_isEmpty_1);

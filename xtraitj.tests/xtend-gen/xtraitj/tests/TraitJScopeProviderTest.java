@@ -126,11 +126,11 @@ public class TraitJScopeProviderTest {
     IScope _scope = this._traitJXbaseBatchScopeProvider.getScope(o, ref);
     Iterable<IEObjectDescription> _allElements = _scope.getAllElements();
     final Function1<IEObjectDescription,QualifiedName> _function = new Function1<IEObjectDescription,QualifiedName>() {
-        public QualifiedName apply(final IEObjectDescription it) {
-          QualifiedName _name = it.getName();
-          return _name;
-        }
-      };
+      public QualifiedName apply(final IEObjectDescription it) {
+        QualifiedName _name = it.getName();
+        return _name;
+      }
+    };
     Iterable<QualifiedName> _map = IterableExtensions.<IEObjectDescription, QualifiedName>map(_allElements, _function);
     String _join = IterableExtensions.join(_map, ", ");
     Assert.assertEquals(expected, _join);
