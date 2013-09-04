@@ -18,6 +18,7 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJDeclaration;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJMember;
@@ -128,6 +129,11 @@ public class TraitJModelUtil {
   
   public static TJTraitReference containingTraitOperationExpression(final EObject e) {
     TJTraitReference _containerOfType = EcoreUtil2.<TJTraitReference>getContainerOfType(e, TJTraitReference.class);
+    return _containerOfType;
+  }
+  
+  public static TJClass containingClass(final TJConstructor e) {
+    TJClass _containerOfType = EcoreUtil2.<TJClass>getContainerOfType(e, TJClass.class);
     return _containerOfType;
   }
   

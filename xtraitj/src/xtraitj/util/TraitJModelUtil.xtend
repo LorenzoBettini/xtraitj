@@ -16,6 +16,7 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import xtraitj.xtraitj.TJConstructor
 
 class TraitJModelUtil {
 	def static traits(TJProgram p) {
@@ -71,6 +72,10 @@ class TraitJModelUtil {
 
 	def static containingTraitOperationExpression(EObject e) {
 		e.getContainerOfType(typeof(TJTraitReference))
+	}
+
+	def static containingClass(TJConstructor e) {
+		e.getContainerOfType(typeof(TJClass))
 	}
 
 	def static containingProgram(TJDeclaration e) {

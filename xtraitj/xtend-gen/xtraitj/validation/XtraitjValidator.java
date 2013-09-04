@@ -166,6 +166,13 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     }
   }.apply();
   
+  public final static String DUPLICATE_CONSTRUCTOR = new Function0<String>() {
+    public String apply() {
+      String _plus = (XtraitjValidator.PREFIX + "DuplicateConstructor");
+      return _plus;
+    }
+  }.apply();
+  
   public final static String FIELD_CONFLICT = new Function0<String>() {
     public String apply() {
       String _plus = (XtraitjValidator.PREFIX + "FieldConflict");
@@ -812,6 +819,38 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
       EAttribute _tJConstructor_Name = XtraitjPackage.eINSTANCE.getTJConstructor_Name();
       this.error(_plus_1, _tJConstructor_Name, 
         XtraitjValidator.WRONG_CONSTRUCTOR_NAME);
+    }
+  }
+  
+  @Check
+  public void checkDuplicateConstructors(final TJConstructor cons) {
+    final String consRepresentation = this._traitJJvmModelUtil.constructorRepresentation(cons);
+    TJClass _containingClass = TraitJModelUtil.containingClass(cons);
+    EList<TJConstructor> _constructors = null;
+    if (_containingClass!=null) {
+      _constructors=_containingClass.getConstructors();
+    }
+    final Function1<TJConstructor,Boolean> _function = new Function1<TJConstructor,Boolean>() {
+      public Boolean apply(final TJConstructor it) {
+        boolean _and = false;
+        boolean _notEquals = (!Objects.equal(it, cons));
+        if (!_notEquals) {
+          _and = false;
+        } else {
+          String _constructorRepresentation = XtraitjValidator.this._traitJJvmModelUtil.constructorRepresentation(it);
+          boolean _equals = Objects.equal(_constructorRepresentation, consRepresentation);
+          _and = (_notEquals && _equals);
+        }
+        return Boolean.valueOf(_and);
+      }
+    };
+    boolean _exists = IterableExtensions.<TJConstructor>exists(_constructors, _function);
+    if (_exists) {
+      String _plus = ("Duplicate constructor \'" + consRepresentation);
+      String _plus_1 = (_plus + "\'");
+      EAttribute _tJConstructor_Name = XtraitjPackage.eINSTANCE.getTJConstructor_Name();
+      this.error(_plus_1, _tJConstructor_Name, 
+        XtraitjValidator.DUPLICATE_CONSTRUCTOR);
     }
   }
 }

@@ -1,6 +1,7 @@
 package xtraitj.tests;
 
 import com.google.inject.Inject;
+import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -10,10 +11,12 @@ import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.junit4.XtextRunner;
 import org.eclipse.xtext.junit4.util.ParseHelper;
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import xtraitj.XtraitjInjectorProvider;
@@ -1121,6 +1124,76 @@ public class TraitJValidatorTest {
       this._validationTestHelper.assertError(_parse, _tJConstructor, 
         XtraitjValidator.WRONG_CONSTRUCTOR_NAME, 
         "Wrong constructor name \'D\'");
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testDuplicateConstructors() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("class C {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C() {}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C(int i) {}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C() {}");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          EClass _tJConstructor = XtraitjPackage.eINSTANCE.getTJConstructor();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJConstructor, 
+            XtraitjValidator.DUPLICATE_CONSTRUCTOR, 
+            "Duplicate constructor \'C()\'");
+          List<Issue> _validate = TraitJValidatorTest.this._validationTestHelper.validate(it);
+          int _size = _validate.size();
+          Assert.assertEquals(2, _size);
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testDuplicateConstructors2() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("class C {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C(int j, String s) {}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C(int i) {}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("C(int k, String s2) {}");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          EClass _tJConstructor = XtraitjPackage.eINSTANCE.getTJConstructor();
+          TraitJValidatorTest.this._validationTestHelper.assertError(it, _tJConstructor, 
+            XtraitjValidator.DUPLICATE_CONSTRUCTOR, 
+            "Duplicate constructor \'C(int, String)\'");
+          List<Issue> _validate = TraitJValidatorTest.this._validationTestHelper.validate(it);
+          int _size = _validate.size();
+          Assert.assertEquals(2, _size);
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

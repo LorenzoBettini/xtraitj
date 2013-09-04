@@ -22,6 +22,7 @@ import xtraitj.typing.TraitJTypingUtil
 
 import static extension xtraitj.util.TraitJModelUtil.*
 import xtraitj.xtraitj.TJDeclaration
+import xtraitj.xtraitj.TJConstructor
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -257,6 +258,13 @@ class TraitJJvmModelUtil {
 		m.returnType?.simpleName + " " + m.simpleName +
 			"(" +
 			m.parameters.map[parameterType?.simpleName].join(", ")
+			+ ")"
+	}
+
+	def constructorRepresentation(TJConstructor c) {
+		c.name +
+			"(" +
+			c.params.map[parameterType?.simpleName].join(", ")
 			+ ")"
 	}
 

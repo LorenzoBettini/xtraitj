@@ -4,28 +4,28 @@
 package xtraitj.validation
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.validation.Check
 import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
+import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJRedirectOperation
+import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.xtraitj.TJMethod
-import xtraitj.xtraitj.TJTraitOperation
-import org.eclipse.emf.ecore.EStructuralFeature
-import xtraitj.xtraitj.TJRenameOperation
-import xtraitj.xtraitj.TJConstructor
 
 /**
  * Custom validation rules. 
@@ -67,6 +67,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val DUPLICATE_MEMBER = PREFIX + "DuplicateMember"
 	
 	public static val DUPLICATE_DECLARATION = PREFIX + "DuplicateDeclaration"
+
+	public static val DUPLICATE_CONSTRUCTOR = PREFIX + "DuplicateConstructor"
 	
 	public static val FIELD_CONFLICT = PREFIX + "FieldConflict"
 	
@@ -432,5 +434,20 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				WRONG_CONSTRUCTOR_NAME
 			)
 		}
-	} 
+	}
+
+	@Check
+	def void checkDuplicateConstructors(TJConstructor cons) {
+		val consRepresentation = cons.constructorRepresentation
+		if (cons.containingClass?.constructors.exists[
+			it != cons && 
+			it.constructorRepresentation == consRepresentation
+		]) {
+			error(
+				"Duplicate constructor '" + consRepresentation + "'",
+				XtraitjPackage.eINSTANCE.TJConstructor_Name,
+				DUPLICATE_CONSTRUCTOR
+			)
+		}
+	}
 }

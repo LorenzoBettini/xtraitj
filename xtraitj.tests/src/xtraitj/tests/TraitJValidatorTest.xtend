@@ -16,6 +16,8 @@ import xtraitj.validation.XtraitjValidator
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.XtraitjPackage
 
+import static extension org.junit.Assert.*
+
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class TraitJValidatorTest {
@@ -594,6 +596,40 @@ class TraitJValidatorTest {
 			XtraitjValidator.WRONG_CONSTRUCTOR_NAME,
 			"Wrong constructor name 'D'"
 		)
+	}
+
+	@Test def void testDuplicateConstructors() {
+		'''
+		class C {
+			C() {}
+			C(int i) {}
+			C() {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C()'"
+			)
+			2.assertEquals(validate.size)
+		]
+	}
+
+	@Test def void testDuplicateConstructors2() {
+		'''
+		class C {
+			C(int j, String s) {}
+			C(int i) {}
+			C(int k, String s2) {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C(int, String)'"
+			)
+			2.assertEquals(validate.size)
+		]
 	}
 
 	def private assertMissingInterfaceMethod(EObject o, String methodRepr) {
