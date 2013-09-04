@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<aggregator:Aggregation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:aggregator="http://www.eclipse.org/b3/2011/aggregator/1.1.0" description="Mirror for Xtext 2.4 and SWTBot Target Platform" label="Mirror for Xtext 2.4 and SWTBot Target Platform" buildRoot="${user.home}/mirror/kepler-xtext-swtbot">
+<aggregator:Aggregation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:aggregator="http://www.eclipse.org/b3/2011/aggregator/1.1.0" description="Mirror for Kepler SDK, Xtext 2.4 and SWTBot Target Platform" label="Mirror for Kepler SDK, Xtext 2.4 and SWTBot Target Platform" buildRoot="${user.home}/mirror/kepler-xtext-2.4-swtbot">
   <validationSets label="main">
     <contributions label="Kepler RCP">
       <repositories location="http://download.eclipse.org/releases/kepler">
+        <products name="org.eclipse.sdk.ide"/>
         <features name="org.eclipse.emf.sdk.feature.group"/>
-        <features name="org.eclipse.platform.feature.group"/>
-        <features name="org.eclipse.platform.source.feature.group"/>
-        <features name="org.eclipse.pde.feature.group"/>
+        <features name="org.eclipse.sdk.feature.group"/>
+      </repositories>
+    </contributions>
+    <contributions description="Xtext Releases" label="Xtext Releases">
+      <repositories location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases">
         <features name="org.eclipse.xtext.sdk.feature.group" versionRange="[2.4.2,2.5.0)"/>
         <features name="org.eclipse.xtend.sdk.feature.group" versionRange="[2.4.2,2.5.0)"/>
         <features name="org.eclipse.xpand.sdk.feature.group" versionRange="[1.4.0,1.5.0)"/>
@@ -18,6 +21,11 @@
       <repositories location="http://download.eclipse.org/technology/swtbot/releases/latest">
         <features name="org.eclipse.swtbot.eclipse.feature.group"/>
         <features name="org.eclipse.swtbot.ide.feature.group"/>
+      </repositories>
+    </contributions>
+    <contributions description="Xdoc" label="Xdoc">
+      <repositories location="http://sourceforge.net/projects/xtext-xdoc/files/updates-2.4">
+        <features name="org.eclipse.xtext.xdoc.feature.feature.group"/>
       </repositories>
     </contributions>
   </validationSets>
