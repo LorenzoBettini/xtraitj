@@ -232,13 +232,22 @@ public interface XtraitjPackage extends EPackage
   int TJ_CLASS__FIELDS = TJ_DECLARATION_FEATURE_COUNT + 1;
 
   /**
+   * The feature id for the '<em><b>Constructors</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TJ_CLASS__CONSTRUCTORS = TJ_DECLARATION_FEATURE_COUNT + 2;
+
+  /**
    * The number of structural features of the '<em>TJ Class</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TJ_CLASS_FEATURE_COUNT = TJ_DECLARATION_FEATURE_COUNT + 2;
+  int TJ_CLASS_FEATURE_COUNT = TJ_DECLARATION_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link xtraitj.xtraitj.impl.TJTraitExpressionImpl <em>TJ Trait Expression</em>}' class.
@@ -767,6 +776,52 @@ public interface XtraitjPackage extends EPackage
    */
   int TJ_METHOD_FEATURE_COUNT = TJ_METHOD_DECLARATION_FEATURE_COUNT + 2;
 
+  /**
+   * The meta object id for the '{@link xtraitj.xtraitj.impl.TJConstructorImpl <em>TJ Constructor</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see xtraitj.xtraitj.impl.TJConstructorImpl
+   * @see xtraitj.xtraitj.impl.XtraitjPackageImpl#getTJConstructor()
+   * @generated
+   */
+  int TJ_CONSTRUCTOR = 18;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TJ_CONSTRUCTOR__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Params</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TJ_CONSTRUCTOR__PARAMS = 1;
+
+  /**
+   * The feature id for the '<em><b>Body</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TJ_CONSTRUCTOR__BODY = 2;
+
+  /**
+   * The number of structural features of the '<em>TJ Constructor</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TJ_CONSTRUCTOR_FEATURE_COUNT = 3;
+
 
   /**
    * Returns the meta object for class '{@link xtraitj.xtraitj.TJProgram <em>TJ Program</em>}'.
@@ -895,6 +950,17 @@ public interface XtraitjPackage extends EPackage
    * @generated
    */
   EReference getTJClass_Fields();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link xtraitj.xtraitj.TJClass#getConstructors <em>Constructors</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Constructors</em>'.
+   * @see xtraitj.xtraitj.TJClass#getConstructors()
+   * @see #getTJClass()
+   * @generated
+   */
+  EReference getTJClass_Constructors();
 
   /**
    * Returns the meta object for class '{@link xtraitj.xtraitj.TJTraitExpression <em>TJ Trait Expression</em>}'.
@@ -1180,6 +1246,49 @@ public interface XtraitjPackage extends EPackage
   EReference getTJMethod_Body();
 
   /**
+   * Returns the meta object for class '{@link xtraitj.xtraitj.TJConstructor <em>TJ Constructor</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>TJ Constructor</em>'.
+   * @see xtraitj.xtraitj.TJConstructor
+   * @generated
+   */
+  EClass getTJConstructor();
+
+  /**
+   * Returns the meta object for the attribute '{@link xtraitj.xtraitj.TJConstructor#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see xtraitj.xtraitj.TJConstructor#getName()
+   * @see #getTJConstructor()
+   * @generated
+   */
+  EAttribute getTJConstructor_Name();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link xtraitj.xtraitj.TJConstructor#getParams <em>Params</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Params</em>'.
+   * @see xtraitj.xtraitj.TJConstructor#getParams()
+   * @see #getTJConstructor()
+   * @generated
+   */
+  EReference getTJConstructor_Params();
+
+  /**
+   * Returns the meta object for the containment reference '{@link xtraitj.xtraitj.TJConstructor#getBody <em>Body</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Body</em>'.
+   * @see xtraitj.xtraitj.TJConstructor#getBody()
+   * @see #getTJConstructor()
+   * @generated
+   */
+  EReference getTJConstructor_Body();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1305,6 +1414,14 @@ public interface XtraitjPackage extends EPackage
      * @generated
      */
     EReference TJ_CLASS__FIELDS = eINSTANCE.getTJClass_Fields();
+
+    /**
+     * The meta object literal for the '<em><b>Constructors</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TJ_CLASS__CONSTRUCTORS = eINSTANCE.getTJClass_Constructors();
 
     /**
      * The meta object literal for the '{@link xtraitj.xtraitj.impl.TJTraitExpressionImpl <em>TJ Trait Expression</em>}' class.
@@ -1549,6 +1666,40 @@ public interface XtraitjPackage extends EPackage
      * @generated
      */
     EReference TJ_METHOD__BODY = eINSTANCE.getTJMethod_Body();
+
+    /**
+     * The meta object literal for the '{@link xtraitj.xtraitj.impl.TJConstructorImpl <em>TJ Constructor</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see xtraitj.xtraitj.impl.TJConstructorImpl
+     * @see xtraitj.xtraitj.impl.XtraitjPackageImpl#getTJConstructor()
+     * @generated
+     */
+    EClass TJ_CONSTRUCTOR = eINSTANCE.getTJConstructor();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute TJ_CONSTRUCTOR__NAME = eINSTANCE.getTJConstructor_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Params</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TJ_CONSTRUCTOR__PARAMS = eINSTANCE.getTJConstructor_Params();
+
+    /**
+     * The meta object literal for the '<em><b>Body</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TJ_CONSTRUCTOR__BODY = eINSTANCE.getTJConstructor_Body();
 
   }
 

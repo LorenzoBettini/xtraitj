@@ -164,15 +164,19 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLeftCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		private final Assignment cFieldsAssignment_5 = (Assignment)cGroup.eContents().get(5);
 		private final RuleCall cFieldsTJFieldParserRuleCall_5_0 = (RuleCall)cFieldsAssignment_5.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Assignment cConstructorsAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cConstructorsTJConstructorParserRuleCall_6_0 = (RuleCall)cConstructorsAssignment_6.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
 		//TJClass:
 		//	"class" name=ID ("implements" interfaces+=JvmParameterizedTypeReference (","
-		//	interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField* "}";
+		//	interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField*
+		//	constructors+=TJConstructor* "}";
 		public ParserRule getRule() { return rule; }
 
 		//"class" name=ID ("implements" interfaces+=JvmParameterizedTypeReference (","
-		//interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField* "}"
+		//interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField*
+		//constructors+=TJConstructor* "}"
 		public Group getGroup() { return cGroup; }
 
 		//"class"
@@ -229,8 +233,14 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 		//TJField
 		public RuleCall getFieldsTJFieldParserRuleCall_5_0() { return cFieldsTJFieldParserRuleCall_5_0; }
 
+		//constructors+=TJConstructor*
+		public Assignment getConstructorsAssignment_6() { return cConstructorsAssignment_6; }
+
+		//TJConstructor
+		public RuleCall getConstructorsTJConstructorParserRuleCall_6_0() { return cConstructorsTJConstructorParserRuleCall_6_0; }
+
 		//"}"
-		public Keyword getRightCurlyBracketKeyword_6() { return cRightCurlyBracketKeyword_6; }
+		public Keyword getRightCurlyBracketKeyword_7() { return cRightCurlyBracketKeyword_7; }
 	}
 
 	public class TJTraitExpressionElements extends AbstractParserRuleElementFinder {
@@ -815,6 +825,70 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 		//XBlockExpression
 		public RuleCall getBodyXBlockExpressionParserRuleCall_6_0() { return cBodyXBlockExpressionParserRuleCall_6_0; }
 	}
+
+	public class TJConstructorElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "TJConstructor");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameValidIDParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Assignment cParamsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cParamsFullJvmFormalParameterParserRuleCall_2_0_0 = (RuleCall)cParamsAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cParamsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cParamsFullJvmFormalParameterParserRuleCall_2_1_1_0 = (RuleCall)cParamsAssignment_2_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cBodyAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cBodyXBlockExpressionParserRuleCall_4_0 = (RuleCall)cBodyAssignment_4.eContents().get(0);
+		
+		//TJConstructor:
+		//	name=ValidID "(" (params+=FullJvmFormalParameter ("," params+=FullJvmFormalParameter)*)? ")" body=XBlockExpression;
+		public ParserRule getRule() { return rule; }
+
+		//name=ValidID "(" (params+=FullJvmFormalParameter ("," params+=FullJvmFormalParameter)*)? ")" body=XBlockExpression
+		public Group getGroup() { return cGroup; }
+
+		//name=ValidID
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_0_0() { return cNameValidIDParserRuleCall_0_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
+
+		//(params+=FullJvmFormalParameter ("," params+=FullJvmFormalParameter)*)?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//params+=FullJvmFormalParameter
+		public Assignment getParamsAssignment_2_0() { return cParamsAssignment_2_0; }
+
+		//FullJvmFormalParameter
+		public RuleCall getParamsFullJvmFormalParameterParserRuleCall_2_0_0() { return cParamsFullJvmFormalParameterParserRuleCall_2_0_0; }
+
+		//("," params+=FullJvmFormalParameter)*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+
+		//","
+		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
+
+		//params+=FullJvmFormalParameter
+		public Assignment getParamsAssignment_2_1_1() { return cParamsAssignment_2_1_1; }
+
+		//FullJvmFormalParameter
+		public RuleCall getParamsFullJvmFormalParameterParserRuleCall_2_1_1_0() { return cParamsFullJvmFormalParameterParserRuleCall_2_1_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
+
+		//body=XBlockExpression
+		public Assignment getBodyAssignment_4() { return cBodyAssignment_4; }
+
+		//XBlockExpression
+		public RuleCall getBodyXBlockExpressionParserRuleCall_4_0() { return cBodyXBlockExpressionParserRuleCall_4_0; }
+	}
 	
 	
 	private TJProgramElements pTJProgram;
@@ -835,6 +909,7 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 	private TJMethodDeclarationElements pTJMethodDeclaration;
 	private TJRequiredMethodElements pTJRequiredMethod;
 	private TJMethodElements pTJMethod;
+	private TJConstructorElements pTJConstructor;
 	
 	private final Grammar grammar;
 
@@ -906,7 +981,8 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 
 	//TJClass:
 	//	"class" name=ID ("implements" interfaces+=JvmParameterizedTypeReference (","
-	//	interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField* "}";
+	//	interfaces+=JvmParameterizedTypeReference)*)? ("uses" traitExpression=TJTraitExpression)? "{" fields+=TJField*
+	//	constructors+=TJConstructor* "}";
 	public TJClassElements getTJClassAccess() {
 		return (pTJClass != null) ? pTJClass : (pTJClass = new TJClassElements());
 	}
@@ -1055,6 +1131,16 @@ public class XtraitjGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getTJMethodRule() {
 		return getTJMethodAccess().getRule();
+	}
+
+	//TJConstructor:
+	//	name=ValidID "(" (params+=FullJvmFormalParameter ("," params+=FullJvmFormalParameter)*)? ")" body=XBlockExpression;
+	public TJConstructorElements getTJConstructorAccess() {
+		return (pTJConstructor != null) ? pTJConstructor : (pTJConstructor = new TJConstructorElements());
+	}
+	
+	public ParserRule getTJConstructorRule() {
+		return getTJConstructorAccess().getRule();
 	}
 
 	//XExpression:

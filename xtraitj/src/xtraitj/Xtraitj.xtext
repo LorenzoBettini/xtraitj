@@ -28,6 +28,7 @@ TJClass:
 			)?
 			('uses' traitExpression=TJTraitExpression)? '{'
 		fields+=TJField*
+		constructors+=TJConstructor*
 	'}'
 ;
 
@@ -82,5 +83,10 @@ TJRequiredMethod:
 
 TJMethod:
 	private?='private'? type=JvmTypeReference name=ValidID 
+		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')' 
+		body=XBlockExpression;
+
+TJConstructor:
+	name=ValidID 
 		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')' 
 		body=XBlockExpression;

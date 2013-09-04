@@ -57,6 +57,7 @@ import org.eclipse.xtext.xtype.XtypePackage;
 import xtraitj.services.XtraitjGrammarAccess;
 import xtraitj.xtraitj.TJAliasOperation;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJHideOperation;
 import xtraitj.xtraitj.TJMethod;
@@ -1009,6 +1010,12 @@ public class XtraitjSemanticSequencer extends XbaseSemanticSequencer {
 					return; 
 				}
 				else break;
+			case XtraitjPackage.TJ_CONSTRUCTOR:
+				if(context == grammarAccess.getTJConstructorRule()) {
+					sequence_TJConstructor(context, (TJConstructor) semanticObject); 
+					return; 
+				}
+				else break;
 			case XtraitjPackage.TJ_FIELD:
 				if(context == grammarAccess.getTJFieldRule() ||
 				   context == grammarAccess.getTJMemberRule()) {
@@ -1138,10 +1145,20 @@ public class XtraitjSemanticSequencer extends XbaseSemanticSequencer {
 	 *         name=ID 
 	 *         (interfaces+=JvmParameterizedTypeReference interfaces+=JvmParameterizedTypeReference*)? 
 	 *         traitExpression=TJTraitExpression? 
-	 *         fields+=TJField*
+	 *         fields+=TJField* 
+	 *         constructors+=TJConstructor*
 	 *     )
 	 */
 	protected void sequence_TJClass(EObject context, TJClass semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ValidID (params+=FullJvmFormalParameter params+=FullJvmFormalParameter*)? body=XBlockExpression)
+	 */
+	protected void sequence_TJConstructor(EObject context, TJConstructor semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

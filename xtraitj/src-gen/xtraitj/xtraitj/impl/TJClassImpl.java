@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.XtraitjPackage;
 
@@ -29,6 +30,7 @@ import xtraitj.xtraitj.XtraitjPackage;
  * <ul>
  *   <li>{@link xtraitj.xtraitj.impl.TJClassImpl#getInterfaces <em>Interfaces</em>}</li>
  *   <li>{@link xtraitj.xtraitj.impl.TJClassImpl#getFields <em>Fields</em>}</li>
+ *   <li>{@link xtraitj.xtraitj.impl.TJClassImpl#getConstructors <em>Constructors</em>}</li>
  * </ul>
  * </p>
  *
@@ -55,6 +57,16 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
    * @ordered
    */
   protected EList<TJField> fields;
+
+  /**
+   * The cached value of the '{@link #getConstructors() <em>Constructors</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getConstructors()
+   * @generated
+   * @ordered
+   */
+  protected EList<TJConstructor> constructors;
 
   /**
    * <!-- begin-user-doc -->
@@ -110,6 +122,20 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<TJConstructor> getConstructors()
+  {
+    if (constructors == null)
+    {
+      constructors = new EObjectContainmentEList<TJConstructor>(TJConstructor.class, this, XtraitjPackage.TJ_CLASS__CONSTRUCTORS);
+    }
+    return constructors;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -119,6 +145,8 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
         return ((InternalEList<?>)getInterfaces()).basicRemove(otherEnd, msgs);
       case XtraitjPackage.TJ_CLASS__FIELDS:
         return ((InternalEList<?>)getFields()).basicRemove(otherEnd, msgs);
+      case XtraitjPackage.TJ_CLASS__CONSTRUCTORS:
+        return ((InternalEList<?>)getConstructors()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -137,6 +165,8 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
         return getInterfaces();
       case XtraitjPackage.TJ_CLASS__FIELDS:
         return getFields();
+      case XtraitjPackage.TJ_CLASS__CONSTRUCTORS:
+        return getConstructors();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -160,6 +190,10 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
         getFields().clear();
         getFields().addAll((Collection<? extends TJField>)newValue);
         return;
+      case XtraitjPackage.TJ_CLASS__CONSTRUCTORS:
+        getConstructors().clear();
+        getConstructors().addAll((Collection<? extends TJConstructor>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -180,6 +214,9 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
       case XtraitjPackage.TJ_CLASS__FIELDS:
         getFields().clear();
         return;
+      case XtraitjPackage.TJ_CLASS__CONSTRUCTORS:
+        getConstructors().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -198,6 +235,8 @@ public class TJClassImpl extends TJDeclarationImpl implements TJClass
         return interfaces != null && !interfaces.isEmpty();
       case XtraitjPackage.TJ_CLASS__FIELDS:
         return fields != null && !fields.isEmpty();
+      case XtraitjPackage.TJ_CLASS__CONSTRUCTORS:
+        return constructors != null && !constructors.isEmpty();
     }
     return super.eIsSet(featureID);
   }

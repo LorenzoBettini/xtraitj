@@ -16,6 +16,7 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
  * <ul>
  *   <li>{@link xtraitj.xtraitj.TJClass#getInterfaces <em>Interfaces</em>}</li>
  *   <li>{@link xtraitj.xtraitj.TJClass#getFields <em>Fields</em>}</li>
+ *   <li>{@link xtraitj.xtraitj.TJClass#getConstructors <em>Constructors</em>}</li>
  * </ul>
  * </p>
  *
@@ -56,5 +57,21 @@ public interface TJClass extends TJDeclaration
    * @generated
    */
   EList<TJField> getFields();
+
+  /**
+   * Returns the value of the '<em><b>Constructors</b></em>' containment reference list.
+   * The list contents are of type {@link xtraitj.xtraitj.TJConstructor}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Constructors</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Constructors</em>' containment reference list.
+   * @see xtraitj.xtraitj.XtraitjPackage#getTJClass_Constructors()
+   * @model containment="true"
+   * @generated
+   */
+  EList<TJConstructor> getConstructors();
 
 } // TJClass

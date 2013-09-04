@@ -82,6 +82,7 @@ public class XtraitjFactoryImpl extends EFactoryImpl implements XtraitjFactory
       case XtraitjPackage.TJ_METHOD_DECLARATION: return createTJMethodDeclaration();
       case XtraitjPackage.TJ_REQUIRED_METHOD: return createTJRequiredMethod();
       case XtraitjPackage.TJ_METHOD: return createTJMethod();
+      case XtraitjPackage.TJ_CONSTRUCTOR: return createTJConstructor();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -283,6 +284,17 @@ public class XtraitjFactoryImpl extends EFactoryImpl implements XtraitjFactory
   {
     TJMethodImpl tjMethod = new TJMethodImpl();
     return tjMethod;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TJConstructor createTJConstructor()
+  {
+    TJConstructorImpl tjConstructor = new TJConstructorImpl();
+    return tjConstructor;
   }
 
   /**

@@ -105,6 +105,9 @@ public class XtraitjParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTJMethodAccess().getGroup(), "rule__TJMethod__Group__0");
 					put(grammarAccess.getTJMethodAccess().getGroup_4(), "rule__TJMethod__Group_4__0");
 					put(grammarAccess.getTJMethodAccess().getGroup_4_1(), "rule__TJMethod__Group_4_1__0");
+					put(grammarAccess.getTJConstructorAccess().getGroup(), "rule__TJConstructor__Group__0");
+					put(grammarAccess.getTJConstructorAccess().getGroup_2(), "rule__TJConstructor__Group_2__0");
+					put(grammarAccess.getTJConstructorAccess().getGroup_2_1(), "rule__TJConstructor__Group_2_1__0");
 					put(grammarAccess.getXAssignmentAccess().getGroup_0(), "rule__XAssignment__Group_0__0");
 					put(grammarAccess.getXAssignmentAccess().getGroup_1(), "rule__XAssignment__Group_1__0");
 					put(grammarAccess.getXAssignmentAccess().getGroup_1_1(), "rule__XAssignment__Group_1_1__0");
@@ -269,6 +272,7 @@ public class XtraitjParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTJClassAccess().getInterfacesAssignment_2_2_1(), "rule__TJClass__InterfacesAssignment_2_2_1");
 					put(grammarAccess.getTJClassAccess().getTraitExpressionAssignment_3_1(), "rule__TJClass__TraitExpressionAssignment_3_1");
 					put(grammarAccess.getTJClassAccess().getFieldsAssignment_5(), "rule__TJClass__FieldsAssignment_5");
+					put(grammarAccess.getTJClassAccess().getConstructorsAssignment_6(), "rule__TJClass__ConstructorsAssignment_6");
 					put(grammarAccess.getTJTraitExpressionAccess().getReferencesAssignment_0(), "rule__TJTraitExpression__ReferencesAssignment_0");
 					put(grammarAccess.getTJTraitExpressionAccess().getReferencesAssignment_1_1(), "rule__TJTraitExpression__ReferencesAssignment_1_1");
 					put(grammarAccess.getTJTraitReferenceAccess().getTraitAssignment_0(), "rule__TJTraitReference__TraitAssignment_0");
@@ -295,6 +299,10 @@ public class XtraitjParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTJMethodAccess().getParamsAssignment_4_0(), "rule__TJMethod__ParamsAssignment_4_0");
 					put(grammarAccess.getTJMethodAccess().getParamsAssignment_4_1_1(), "rule__TJMethod__ParamsAssignment_4_1_1");
 					put(grammarAccess.getTJMethodAccess().getBodyAssignment_6(), "rule__TJMethod__BodyAssignment_6");
+					put(grammarAccess.getTJConstructorAccess().getNameAssignment_0(), "rule__TJConstructor__NameAssignment_0");
+					put(grammarAccess.getTJConstructorAccess().getParamsAssignment_2_0(), "rule__TJConstructor__ParamsAssignment_2_0");
+					put(grammarAccess.getTJConstructorAccess().getParamsAssignment_2_1_1(), "rule__TJConstructor__ParamsAssignment_2_1_1");
+					put(grammarAccess.getTJConstructorAccess().getBodyAssignment_4(), "rule__TJConstructor__BodyAssignment_4");
 					put(grammarAccess.getXAssignmentAccess().getFeatureAssignment_0_1(), "rule__XAssignment__FeatureAssignment_0_1");
 					put(grammarAccess.getXAssignmentAccess().getValueAssignment_0_3(), "rule__XAssignment__ValueAssignment_0_3");
 					put(grammarAccess.getXAssignmentAccess().getFeatureAssignment_1_1_0_0_1(), "rule__XAssignment__FeatureAssignment_1_1_0_0_1");

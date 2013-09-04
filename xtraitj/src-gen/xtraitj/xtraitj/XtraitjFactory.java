@@ -185,6 +185,15 @@ public interface XtraitjFactory extends EFactory
   TJMethod createTJMethod();
 
   /**
+   * Returns a new object of class '<em>TJ Constructor</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>TJ Constructor</em>'.
+   * @generated
+   */
+  TJConstructor createTJConstructor();
+
+  /**
    * Returns the package supported by this factory.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

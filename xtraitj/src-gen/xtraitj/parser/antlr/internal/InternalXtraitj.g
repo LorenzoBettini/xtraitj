@@ -401,9 +401,27 @@ ruleTJClass returns [EObject current=null]
 	    }
 
 )
-)*	otherlv_10='}' 
+)*(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTJClassAccess().getConstructorsTJConstructorParserRuleCall_6_0()); 
+	    }
+		lv_constructors_10_0=ruleTJConstructor		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTJClassRule());
+	        }
+       		add(
+       			$current, 
+       			"constructors",
+        		lv_constructors_10_0, 
+        		"TJConstructor");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)*	otherlv_11='}' 
     {
-    	newLeafNode(otherlv_10, grammarAccess.getTJClassAccess().getRightCurlyBracketKeyword_6());
+    	newLeafNode(otherlv_11, grammarAccess.getTJClassAccess().getRightCurlyBracketKeyword_7());
     }
 )
 ;
@@ -1336,6 +1354,111 @@ ruleTJMethod returns [EObject current=null]
        			$current, 
        			"body",
         		lv_body_8_0, 
+        		"XBlockExpression");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))
+;
+
+
+
+
+
+// Entry rule entryRuleTJConstructor
+entryRuleTJConstructor returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getTJConstructorRule()); }
+	 iv_ruleTJConstructor=ruleTJConstructor 
+	 { $current=$iv_ruleTJConstructor.current; } 
+	 EOF 
+;
+
+// Rule TJConstructor
+ruleTJConstructor returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTJConstructorAccess().getNameValidIDParserRuleCall_0_0()); 
+	    }
+		lv_name_0_0=ruleValidID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTJConstructorRule());
+	        }
+       		set(
+       			$current, 
+       			"name",
+        		lv_name_0_0, 
+        		"ValidID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)	otherlv_1='(' 
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getTJConstructorAccess().getLeftParenthesisKeyword_1());
+    }
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTJConstructorAccess().getParamsFullJvmFormalParameterParserRuleCall_2_0_0()); 
+	    }
+		lv_params_2_0=ruleFullJvmFormalParameter		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTJConstructorRule());
+	        }
+       		add(
+       			$current, 
+       			"params",
+        		lv_params_2_0, 
+        		"FullJvmFormalParameter");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(	otherlv_3=',' 
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getTJConstructorAccess().getCommaKeyword_2_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTJConstructorAccess().getParamsFullJvmFormalParameterParserRuleCall_2_1_1_0()); 
+	    }
+		lv_params_4_0=ruleFullJvmFormalParameter		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTJConstructorRule());
+	        }
+       		add(
+       			$current, 
+       			"params",
+        		lv_params_4_0, 
+        		"FullJvmFormalParameter");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)?	otherlv_5=')' 
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getTJConstructorAccess().getRightParenthesisKeyword_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTJConstructorAccess().getBodyXBlockExpressionParserRuleCall_4_0()); 
+	    }
+		lv_body_6_0=ruleXBlockExpression		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTJConstructorRule());
+	        }
+       		set(
+       			$current, 
+       			"body",
+        		lv_body_6_0, 
         		"XBlockExpression");
 	        afterParserOrEnumRuleCall();
 	    }

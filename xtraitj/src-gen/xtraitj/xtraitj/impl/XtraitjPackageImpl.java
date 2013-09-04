@@ -17,6 +17,7 @@ import org.eclipse.xtext.xtype.XtypePackage;
 
 import xtraitj.xtraitj.TJAliasOperation;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJDeclaration;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJHideOperation;
@@ -169,6 +170,13 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
    * @generated
    */
   private EClass tjMethodEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass tjConstructorEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -355,6 +363,16 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
   public EReference getTJClass_Fields()
   {
     return (EReference)tjClassEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTJClass_Constructors()
+  {
+    return (EReference)tjClassEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -632,6 +650,46 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getTJConstructor()
+  {
+    return tjConstructorEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTJConstructor_Name()
+  {
+    return (EAttribute)tjConstructorEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTJConstructor_Params()
+  {
+    return (EReference)tjConstructorEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTJConstructor_Body()
+  {
+    return (EReference)tjConstructorEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public XtraitjFactory getXtraitjFactory()
   {
     return (XtraitjFactory)getEFactoryInstance();
@@ -672,6 +730,7 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
     tjClassEClass = createEClass(TJ_CLASS);
     createEReference(tjClassEClass, TJ_CLASS__INTERFACES);
     createEReference(tjClassEClass, TJ_CLASS__FIELDS);
+    createEReference(tjClassEClass, TJ_CLASS__CONSTRUCTORS);
 
     tjTraitExpressionEClass = createEClass(TJ_TRAIT_EXPRESSION);
     createEReference(tjTraitExpressionEClass, TJ_TRAIT_EXPRESSION__REFERENCES);
@@ -713,6 +772,11 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
     tjMethodEClass = createEClass(TJ_METHOD);
     createEAttribute(tjMethodEClass, TJ_METHOD__PRIVATE);
     createEReference(tjMethodEClass, TJ_METHOD__BODY);
+
+    tjConstructorEClass = createEClass(TJ_CONSTRUCTOR);
+    createEAttribute(tjConstructorEClass, TJ_CONSTRUCTOR__NAME);
+    createEReference(tjConstructorEClass, TJ_CONSTRUCTOR__PARAMS);
+    createEReference(tjConstructorEClass, TJ_CONSTRUCTOR__BODY);
   }
 
   /**
@@ -778,6 +842,7 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
     initEClass(tjClassEClass, TJClass.class, "TJClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTJClass_Interfaces(), theTypesPackage.getJvmParameterizedTypeReference(), null, "interfaces", null, 0, -1, TJClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getTJClass_Fields(), this.getTJField(), null, "fields", null, 0, -1, TJClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTJClass_Constructors(), this.getTJConstructor(), null, "constructors", null, 0, -1, TJClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(tjTraitExpressionEClass, TJTraitExpression.class, "TJTraitExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTJTraitExpression_References(), this.getTJTraitReference(), null, "references", null, 0, -1, TJTraitExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -819,6 +884,11 @@ public class XtraitjPackageImpl extends EPackageImpl implements XtraitjPackage
     initEClass(tjMethodEClass, TJMethod.class, "TJMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getTJMethod_Private(), ecorePackage.getEBoolean(), "private", null, 0, 1, TJMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getTJMethod_Body(), theXbasePackage.getXExpression(), null, "body", null, 0, 1, TJMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(tjConstructorEClass, TJConstructor.class, "TJConstructor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getTJConstructor_Name(), ecorePackage.getEString(), "name", null, 0, 1, TJConstructor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTJConstructor_Params(), theTypesPackage.getJvmFormalParameter(), null, "params", null, 0, -1, TJConstructor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTJConstructor_Body(), theXbasePackage.getXExpression(), null, "body", null, 0, 1, TJConstructor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

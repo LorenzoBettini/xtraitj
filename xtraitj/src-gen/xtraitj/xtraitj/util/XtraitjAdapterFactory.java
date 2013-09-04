@@ -165,6 +165,11 @@ public class XtraitjAdapterFactory extends AdapterFactoryImpl
         return createTJMethodAdapter();
       }
       @Override
+      public Adapter caseTJConstructor(TJConstructor object)
+      {
+        return createTJConstructorAdapter();
+      }
+      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -452,6 +457,21 @@ public class XtraitjAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createTJMethodAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link xtraitj.xtraitj.TJConstructor <em>TJ Constructor</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see xtraitj.xtraitj.TJConstructor
+   * @generated
+   */
+  public Adapter createTJConstructorAdapter()
   {
     return null;
   }
