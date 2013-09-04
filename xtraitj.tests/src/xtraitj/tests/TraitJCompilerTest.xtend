@@ -3747,6 +3747,65 @@ public class T2Impl implements T2 {
 		]
 	}
 
+	@Test def void testClassWithDefaultEmptyConstructor() {
+		classWithDefaultEmptyConstructor.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public class C {
+  private String s;
+  
+  public String getS() {
+    return this.s;
+  }
+  
+  public void setS(final String s) {
+    this.s = s;
+  }
+  
+  public C() {
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testClassWithDefaultConstructor() {
+		classWithDefaultConstructor.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public class C {
+  private String s;
+  
+  public String getS() {
+    return this.s;
+  }
+  
+  public void setS(final String s) {
+    this.s = s;
+  }
+  
+  public C() {
+    this.s = "";
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

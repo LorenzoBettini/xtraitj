@@ -37,6 +37,7 @@ import xtraitj.jvmmodel.TraitJJvmModelUtil;
 import xtraitj.util.TraitJModelUtil;
 import xtraitj.xtraitj.TJAliasOperation;
 import xtraitj.xtraitj.TJClass;
+import xtraitj.xtraitj.TJConstructor;
 import xtraitj.xtraitj.TJDeclaration;
 import xtraitj.xtraitj.TJField;
 import xtraitj.xtraitj.TJHideOperation;
@@ -178,9 +179,29 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
           }
         };
         IterableExtensions.<TJField>forEach(_fields, _function);
+        EList<TJConstructor> _constructors = c.getConstructors();
+        for (final TJConstructor cons : _constructors) {
+          EList<JvmMember> _members = it.getMembers();
+          final Procedure1<JvmConstructor> _function_1 = new Procedure1<JvmConstructor>() {
+            public void apply(final JvmConstructor it) {
+              EList<JvmFormalParameter> _params = cons.getParams();
+              for (final JvmFormalParameter p : _params) {
+                EList<JvmFormalParameter> _parameters = it.getParameters();
+                String _name = p.getName();
+                JvmTypeReference _parameterType = p.getParameterType();
+                JvmFormalParameter _parameter = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toParameter(p, _name, _parameterType);
+                XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmFormalParameter>operator_add(_parameters, _parameter);
+              }
+              XExpression _body = cons.getBody();
+              XtraitjJvmModelInferrer.this._jvmTypesBuilder.setBody(it, _body);
+            }
+          };
+          JvmConstructor _constructor = XtraitjJvmModelInferrer.this._jvmTypesBuilder.toConstructor(cons, _function_1);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmConstructor>operator_add(_members, _constructor);
+        }
         TJTraitExpression _traitExpression = c.getTraitExpression();
         List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
-        final Procedure1<TJTraitReference> _function_1 = new Procedure1<TJTraitReference>() {
+        final Procedure1<TJTraitReference> _function_2 = new Procedure1<TJTraitReference>() {
           public void apply(final TJTraitReference traitExp) {
             EList<JvmTypeReference> _superTypes = it.getSuperTypes();
             JvmParameterizedTypeReference _associatedInterface = XtraitjJvmModelInferrer.this._traitJJvmModelUtil.associatedInterface(traitExp);
@@ -200,7 +221,7 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
             IterableExtensions.<JvmOperation>forEach(_jvmAllMethodOperations, _function);
           }
         };
-        IterableExtensions.<TJTraitReference>forEach(_traitReferences, _function_1);
+        IterableExtensions.<TJTraitReference>forEach(_traitReferences, _function_2);
       }
     };
     _accept.initializeLater(_function_2);

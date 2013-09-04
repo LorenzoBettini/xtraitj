@@ -1614,4 +1614,46 @@ public class TraitJInputs {
     _builder.newLine();
     return _builder;
   }
+  
+  public CharSequence classWithDefaultEmptyConstructor() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package tests;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("class C {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("String s;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("C() {}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
+  
+  public CharSequence classWithDefaultConstructor() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package tests;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("class C {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("String s;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("C() {");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("s = \"\";");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
 }

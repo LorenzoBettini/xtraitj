@@ -296,4 +296,26 @@ public class TraitJParserTest {
       throw Exceptions.sneakyThrow(_e);
     }
   }
+  
+  @Test
+  public void testClassWithDefaultConstructor() {
+    try {
+      CharSequence _classWithDefaultConstructor = this._traitJInputs.classWithDefaultConstructor();
+      TJProgram _parse = this._parseHelper.parse(_classWithDefaultConstructor);
+      this._validationTestHelper.assertNoErrors(_parse);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testClassWithDefaultEmptyConstructor() {
+    try {
+      CharSequence _classWithDefaultEmptyConstructor = this._traitJInputs.classWithDefaultEmptyConstructor();
+      TJProgram _parse = this._parseHelper.parse(_classWithDefaultEmptyConstructor);
+      this._validationTestHelper.assertNoErrors(_parse);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
 }

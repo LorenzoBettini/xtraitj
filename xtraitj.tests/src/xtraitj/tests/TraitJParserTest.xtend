@@ -124,4 +124,12 @@ class TraitJParserTest {
 	@Test def void testClassImplementsSerializableAndClonable() {
 		classImplementsSerializableAndClonable.parse.assertNoErrors
 	}
+
+	@Test def void testClassWithDefaultConstructor() {
+		classWithDefaultConstructor.parse.assertNoErrors
+	}
+
+	@Test def void testClassWithDefaultEmptyConstructor() {
+		classWithDefaultEmptyConstructor.parse.assertNoErrors
+	}
 }

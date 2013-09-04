@@ -838,4 +838,28 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def classWithDefaultEmptyConstructor() {
+		'''
+		package tests;
+		
+		class C {
+			String s;
+			C() {}
+		}
+		'''
+	}
+
+	def classWithDefaultConstructor() {
+		'''
+		package tests;
+		
+		class C {
+			String s;
+			C() {
+				s = "";
+			}
+		}
+		'''
+	}
 }

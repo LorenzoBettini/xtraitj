@@ -106,6 +106,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				members += field.toSetter(field.name, field.type)
    			]
    			
+   			for (cons : c.constructors) {
+   				members += cons.toConstructor[
+   					for (p : cons.params) {
+   						parameters += p.toParameter(p.name, p.parameterType)
+   					}
+   					body = cons.body
+   				]
+   			}
+   			
    			c.traitExpression.traitReferences.forEach[
    				traitExp | 
    				superTypes += traitExp.associatedInterface
