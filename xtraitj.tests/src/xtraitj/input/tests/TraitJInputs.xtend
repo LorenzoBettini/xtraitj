@@ -862,4 +862,24 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def classWithConstructors() {
+		'''
+		package tests;
+		
+		class C {
+			String s;
+			int i;
+			C() {
+				s = "";
+				i = 0;
+			}
+			C(String mys) { s = mys; }
+			C(int i, String s) {
+				this.i = i;
+				this.s = s;
+			}
+		}
+		'''
+	}
 }

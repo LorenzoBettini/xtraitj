@@ -8483,6 +8483,123 @@ public class TraitJCompilerTest {
   }
   
   @Test
+  public void testClassConstructors() {
+    try {
+      CharSequence _classWithConstructors = this._traitJInputs.classWithConstructors();
+      final IAcceptor<Result> _function = new IAcceptor<Result>() {
+        public void accept(final Result it) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("package tests;");
+          _builder.newLine();
+          _builder.newLine();
+          _builder.append("@SuppressWarnings(\"all\")");
+          _builder.newLine();
+          _builder.append("public class C {");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("private String s;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public String getS() {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("return this.s;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public void setS(final String s) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.s = s;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("private int i;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public int getI() {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("return this.i;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public void setI(final int i) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.i = i;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public C() {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.s = \"\";");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.i = 0;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public C(final String mys) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.s = mys;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public C(final int i, final String s) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.i = i;");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("this.s = s;");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("}");
+          _builder.newLine();
+          TraitJCompilerTest.this.assertJavaClass(it, "tests", "C", _builder);
+          TraitJCompilerTest.this.assertGeneratedJavaCodeCompiles(it);
+        }
+      };
+      this._compilationTestHelper.compile(_classWithConstructors, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
   public void testCompliantRequiredFields() {
     try {
       CharSequence _compliantRequiredFields = this._traitJInputs.compliantRequiredFields();

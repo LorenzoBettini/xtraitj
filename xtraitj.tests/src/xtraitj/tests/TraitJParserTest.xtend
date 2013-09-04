@@ -132,4 +132,8 @@ class TraitJParserTest {
 	@Test def void testClassWithDefaultEmptyConstructor() {
 		classWithDefaultEmptyConstructor.parse.assertNoErrors
 	}
+
+	@Test def void testClassWithConstructors() {
+		classWithConstructors.parse.assertNoErrors
+	}
 }

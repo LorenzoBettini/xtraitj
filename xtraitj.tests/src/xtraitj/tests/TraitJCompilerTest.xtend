@@ -3806,6 +3806,56 @@ public class C {
 		]
 	}
 
+	@Test def void testClassConstructors() {
+		classWithConstructors.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public class C {
+  private String s;
+  
+  public String getS() {
+    return this.s;
+  }
+  
+  public void setS(final String s) {
+    this.s = s;
+  }
+  
+  private int i;
+  
+  public int getI() {
+    return this.i;
+  }
+  
+  public void setI(final int i) {
+    this.i = i;
+  }
+  
+  public C() {
+    this.s = "";
+    this.i = 0;
+  }
+  
+  public C(final String mys) {
+    this.s = mys;
+  }
+  
+  public C(final int i, final String s) {
+    this.i = i;
+    this.s = s;
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

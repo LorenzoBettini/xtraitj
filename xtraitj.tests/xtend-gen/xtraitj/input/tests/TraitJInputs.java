@@ -1656,4 +1656,49 @@ public class TraitJInputs {
     _builder.newLine();
     return _builder;
   }
+  
+  public CharSequence classWithConstructors() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package tests;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("class C {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("String s;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("int i;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("C() {");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("s = \"\";");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("i = 0;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("C(String mys) { s = mys; }");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("C(int i, String s) {");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("this.i = i;");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.append("this.s = s;");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
+  }
 }

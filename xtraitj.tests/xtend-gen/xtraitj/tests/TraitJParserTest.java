@@ -318,4 +318,15 @@ public class TraitJParserTest {
       throw Exceptions.sneakyThrow(_e);
     }
   }
+  
+  @Test
+  public void testClassWithConstructors() {
+    try {
+      CharSequence _classWithConstructors = this._traitJInputs.classWithConstructors();
+      TJProgram _parse = this._parseHelper.parse(_classWithConstructors);
+      this._validationTestHelper.assertNoErrors(_parse);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
 }
