@@ -26,4 +26,24 @@ class XtraitjSwtbotTests extends XtraitjSwtbotAbstractTests {
 		]
 	}
 
+	@Test
+	def void testOutlineForConstructors() {
+		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		updateEditorContents(
+		'''
+		package my.traits;
+		
+		class C {
+			String s;
+			C() {}
+			C(int i, String s) {}
+		}
+		'''
+		)
+		outlineTraitNode("C").expand => [
+			getNode("C()")
+			getNode("C(int, String)")
+		]
+	}
+
 }

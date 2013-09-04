@@ -185,4 +185,12 @@ public class XtraitjSwtbotAbstractTests {
 	protected SWTBotTreeItem outlineClassNode(String name) {
 		return outlineTraitNode(name);
 	}
+
+	protected void updateEditorContents(CharSequence contents) throws CoreException {
+		SWTBotEditor botEditor = bot.editorByTitle("example.xtraitj");
+		botEditor.toTextEditor().setText(contents.toString());
+		botEditor.save();
+		waitForAutoBuild();
+//		assertErrorsInProject(0);
+	}
 }
