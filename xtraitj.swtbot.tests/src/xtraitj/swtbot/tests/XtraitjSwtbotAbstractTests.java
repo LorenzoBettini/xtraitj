@@ -13,6 +13,7 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
@@ -21,6 +22,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,11 +36,13 @@ public class XtraitjSwtbotAbstractTests {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		bot = new SWTWorkbenchBot();
-		try {
-			bot.viewByTitle("Welcome").close();
-		} catch (WidgetNotFoundException e) {
-			// OK, no Welcome view, that's fine :)
-		}
+//		try {
+//			bot.viewByTitle("Welcome").close();
+//		} catch (WidgetNotFoundException e) {
+//			// OK, no Welcome view, that's fine :)
+//		}
+
+		closeWelcomePage();
 
 		// Change the perspective via the Open Perspective dialog
 		bot.menu("Window").menu("Open Perspective").menu("Other...").click();
@@ -62,6 +66,17 @@ public class XtraitjSwtbotAbstractTests {
 	public void runAfterEveryTest() throws CoreException {
 		cleanWorkspace();
 		waitForAutoBuild();
+	}
+
+	protected static void closeWelcomePage() throws InterruptedException {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				if (PlatformUI.getWorkbench().getIntroManager().getIntro() != null) {
+					PlatformUI.getWorkbench().getIntroManager()
+							.closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
+				}
+			}
+		});
 	}
 
 	//@Test

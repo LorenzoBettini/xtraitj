@@ -5,13 +5,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(typeof(SWTBotJunit4ClassRunner))
-class XtraitjSwtbotTests extends XtraitjSwtbotAbstractTests {
+class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
 
-	@Test
-	def void canCreateANewXtraitjProject() {
-		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
-	}
-	
 	@Test
 	def void testOutline() {
 		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);

@@ -12,16 +12,7 @@ import xtraitj.swtbot.tests.XtraitjSwtbotAbstractTests;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 @SuppressWarnings("all")
-public class XtraitjSwtbotTests extends XtraitjSwtbotAbstractTests {
-  @Test
-  public void canCreateANewXtraitjProject() {
-    try {
-      this.createProjectAndAssertNoErrorMarker(XtraitjSwtbotAbstractTests.PROJECT_TYPE);
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
+public class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
   @Test
   public void testOutline() {
     try {
