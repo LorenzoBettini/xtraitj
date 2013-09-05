@@ -13,7 +13,7 @@
 	<property name="eclipse.juno.repos" value="http://download.eclipse.org/releases/juno" />
 	<property name="eclipse.indigo.repos" value="http://download.eclipse.org/releases/indigo" />
 	
-	<property name="xtraitj.remote.repo" value="http://sourceforge.net/projects/xtraitj/files/updates/releases" />
+	<property name="xtraitj.remote.repo" value="http://sourceforge.net/projects/xtraitj/files/updates" />
 
 	<property name="expected.xtext.bundles" value="*xtext*2.4.3*.jar"/>
 	<property name="unwanted.xtext.bundles" value="*xtext*2.5*.jar"/>
