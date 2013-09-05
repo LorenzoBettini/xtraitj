@@ -86,8 +86,7 @@ public class XtraitjSwtbotAbstractTests {
 		editor.toTextEditor().setText(
 				"package smalljava.lang;\nclass Object {}"
 		);
-		editor.save();
-		waitForAutoBuild();
+		saveAndWaitForAutoBuild(editor);
 		assertErrorsInProject(1);
 	}
 
@@ -201,11 +200,16 @@ public class XtraitjSwtbotAbstractTests {
 		return outlineTraitNode(name);
 	}
 
-	protected void updateEditorContents(CharSequence contents) throws CoreException {
+	protected SWTBotEditor updateEditorContents(CharSequence contents) throws CoreException {
 		SWTBotEditor botEditor = bot.editorByTitle("example.xtraitj");
 		botEditor.toTextEditor().setText(contents.toString());
+		saveAndWaitForAutoBuild(botEditor);
+//		assertErrorsInProject(0);
+		return botEditor;
+	}
+
+	protected void saveAndWaitForAutoBuild(SWTBotEditor botEditor) {
 		botEditor.save();
 		waitForAutoBuild();
-//		assertErrorsInProject(0);
 	}
 }
