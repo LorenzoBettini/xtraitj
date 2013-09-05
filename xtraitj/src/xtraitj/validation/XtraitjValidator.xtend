@@ -40,7 +40,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	
 	public static val TRAIT_INITIALIZES_FIELD = PREFIX + "TraitInitializesField"
 	
-	public static val MISSING_REQUIRED_FIELD = PREFIX + "MissingRequiredField"
+	public static val MISSING_REQUIRED_FIELD = "xtraitj.MissingRequiredField"
 
 	public static val MISSING_REQUIRED_METHOD = PREFIX + "MissingRequiredMethod"
 
@@ -108,7 +108,9 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					"Class must provide required field '" +
 						requiredField.fieldRepresentation + "'",
 					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
-					MISSING_REQUIRED_FIELD
+					MISSING_REQUIRED_FIELD,
+					requiredField.simpleName,
+					requiredField.returnType.identifier
 				)
 			}
 		]

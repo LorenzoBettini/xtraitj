@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.common.types.JvmMember;
 import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
+import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -68,12 +69,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     }
   }.apply();
   
-  public final static String MISSING_REQUIRED_FIELD = new Function0<String>() {
-    public String apply() {
-      String _plus = (XtraitjValidator.PREFIX + "MissingRequiredField");
-      return _plus;
-    }
-  }.apply();
+  public final static String MISSING_REQUIRED_FIELD = "xtraitj.MissingRequiredField";
   
   public final static String MISSING_REQUIRED_METHOD = new Function0<String>() {
     public String apply() {
@@ -257,8 +253,11 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
           String _plus = ("Class must provide required field \'" + _fieldRepresentation);
           String _plus_1 = (_plus + "\'");
           EReference _tJDeclaration_TraitExpression = XtraitjPackage.eINSTANCE.getTJDeclaration_TraitExpression();
+          String _simpleName = requiredField.getSimpleName();
+          JvmTypeReference _returnType = requiredField.getReturnType();
+          String _identifier = _returnType.getIdentifier();
           XtraitjValidator.this.error(_plus_1, _tJDeclaration_TraitExpression, 
-            XtraitjValidator.MISSING_REQUIRED_FIELD);
+            XtraitjValidator.MISSING_REQUIRED_FIELD, _simpleName, _identifier);
         }
       }
     };

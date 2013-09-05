@@ -3,6 +3,17 @@
 */
 package xtraitj.ui.quickfix
 
+import com.google.inject.Inject
+import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
+import org.eclipse.xtext.validation.Issue
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import xtraitj.jvmmodel.TraitJJvmModelUtil
+import xtraitj.validation.XtraitjValidator
+import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.XtraitjFactory
+
 //import org.eclipse.xtext.ui.editor.quickfix.Fix
 //import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 //import org.eclipse.xtext.validation.Issue
@@ -12,7 +23,36 @@ package xtraitj.ui.quickfix
  *
  * see http://www.eclipse.org/Xtext/documentation.html#quickfixes
  */
-class XtraitjQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
+class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
+	
+	@Inject extension JvmTypesBuilder
+	@Inject extension TraitJJvmModelUtil
+
+	@Fix(XtraitjValidator::MISSING_REQUIRED_FIELD)
+	def addMissingRequiredField(Issue issue, IssueResolutionAcceptor acceptor) {
+		val fieldName = issue.data.get(0).stripGetter
+		val fieldType = issue.data.get(1)
+		acceptor.accept(issue, 
+			"Add required field '" + fieldType + " " + fieldName + "'", 
+			"Add the missing required field '" + fieldType + " " + fieldName + "'", 
+			'field_private_obj.gif') 
+		[
+			elem, context |
+			// we need to access the actual required JvmOperation
+			// to get the type of the required field as a correct
+			// type reference: using only type string representation
+			// would not allow to get a proper type reference in case
+			// of type paramenters (e.g., List<String>)
+			val clazz = (elem as TJClass)
+			clazz.fields += 
+				XtraitjFactory.eINSTANCE.createTJField => [
+					name = fieldName
+					type = clazz.jvmAllRequiredFieldOperations.findFirst[
+						simpleName.stripGetter == fieldName
+					].returnType.cloneWithProxies
+				]
+		]
+	}
 
 //	@Fix(MyDslValidator::INVALID_NAME)
 //	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
