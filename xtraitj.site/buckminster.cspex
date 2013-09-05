@@ -4,4 +4,40 @@
 		<cs:dependency name="xtraitj.tests" componentType="osgi.bundle" />
 		<cs:dependency name="xtraitj.swtbot.tests.feature" componentType="eclipse.feature" />
 	</cs:dependencies>
+    <cs:actions>
+        <cs:public name="eclipse-install-test-indigo" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="eclipse-install-test/eclipse-install-test.ant"/>
+                <cs:property key="targets" value="test.install.in.indigo"/>
+            </cs:actorProperties>
+            <cs:prerequisites alias="repository">
+                <cs:attribute name="site.p2" />
+            </cs:prerequisites>
+        </cs:public>
+        <cs:public name="eclipse-install-test-juno" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="eclipse-install-test/eclipse-install-test.ant"/>
+                <cs:property key="targets" value="test.install.in.juno"/>
+            </cs:actorProperties>
+            <cs:prerequisites alias="repository">
+                <cs:attribute name="site.p2" />
+            </cs:prerequisites>
+        </cs:public>
+        <cs:public name="eclipse-install-test-kepler" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="eclipse-install-test/eclipse-install-test.ant"/>
+                <cs:property key="targets" value="test.install.in.kepler"/>
+            </cs:actorProperties>
+            <cs:prerequisites alias="repository">
+                <cs:attribute name="site.p2" />
+            </cs:prerequisites>
+        </cs:public>
+    </cs:actions>
+    <cs:groups>
+        <cs:public name="eclipse-install-test">
+            <cs:attribute name="eclipse-install-test-indigo"/>
+            <cs:attribute name="eclipse-install-test-juno"/>
+            <cs:attribute name="eclipse-install-test-kepler"/>
+        </cs:public>
+    </cs:groups>
 </cs:cspecExtension>
