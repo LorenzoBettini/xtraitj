@@ -31,7 +31,7 @@
 				additional.repos="${additional.repos}"
 				features.to.install="${xtraitj.sdk.feature}"/>
 			<test.xtext.installed.versions/>
-			<!-- <test.xtext.installed.features.versions/> -->
+			<test.xtext.installed.features.versions/>
 		</sequential>
 	</macrodef>
 	

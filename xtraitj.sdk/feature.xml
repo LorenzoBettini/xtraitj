@@ -6,7 +6,7 @@
       provider-name="Lorenzo Bettini">
 
    <description url="http://xtraitj.sourceforge.net">
-      Xtraitj is a programming language for pure trait-based programming. It is completely compatible and interoperable with the JAVA platform without reducing the flexibility of traits. Xtraitj is integrated in Eclipse (editor with all the standard tooling) and JDT. It is implemented in Xtext, relying also on Xbase. 
+      Xtraitj is a programming language for pure trait-based programming. It is completely compatible and interoperable with the JAVA platform without reducing the flexibility of traits. Xtraitj is integrated in Eclipse (editor with all the standard tooling) and JDT. It is implemented in Xtext, relying also on Xbase.
    </description>
 
    <copyright url="http://www.lorenzobettini.it">
@@ -103,6 +103,11 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
 
+   <requires>
+      <import feature="org.eclipse.xtext.xbase" version="2.4.3.v201309030823" match="greaterOrEqual"/>
+      <import feature="org.eclipse.xtext.runtime" version="2.4.3.v201309030823" match="greaterOrEqual"/>
+      <import feature="org.eclipse.xtext.ui" version="2.4.3.v201309030823" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="xtraitj"
