@@ -50,7 +50,12 @@ public class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
       _builder_1.append("}");
       _builder_1.newLine();
       _builder_1.newLine();
-      _builder_1.append("class C uses T { String s ; }");
+      _builder_1.append("class C uses T {");
+      _builder_1.newLine();
+      _builder_1.append("\t");
+      _builder_1.append("String s ;");
+      _builder_1.newLine();
+      _builder_1.append("}");
       _builder_1.newLine();
       String _string = _builder_1.toString();
       String _text = editor.getText();

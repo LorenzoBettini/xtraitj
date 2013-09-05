@@ -40,7 +40,9 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 			String s;
 		}
 		
-		class C uses T { String s ; }
+		class C uses T {
+			String s ;
+		}
 		'''.toString.
 		assertEquals(editor.text)
 		

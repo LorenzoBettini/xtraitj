@@ -3,10 +3,10 @@
  */
 package xtraitj.formatting
 
+import com.google.inject.Inject
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter
 import org.eclipse.xtext.formatting.impl.FormattingConfig
-// import com.google.inject.Inject;
-// import xtraitj.services.TraitJGrammarAccess
+import xtraitj.services.XtraitjGrammarAccess
 
 /**
  * This class contains custom formatting description.
@@ -18,13 +18,25 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig
  */
 class XtraitjFormatter extends AbstractDeclarativeFormatter {
 
-//	@Inject extension TraitJGrammarAccess
+	@Inject extension XtraitjGrammarAccess f
 	
 	override protected void configureFormatting(FormattingConfig c) {
-// It's usually a good idea to activate the following three statements.
-// They will add and preserve newlines around comments
-//		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
-//		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
-//		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
+		c.setAutoLinewrap(120);
+		
+		c.setLinewrap(1, 2, 3).around(f.TJDeclarationRule);
+		//c.setLinewrap(1, 2, 3).around(f.getPackageDeclarationRule());
+		c.setLinewrap(1, 1, 2).around(f.TJFieldRule);
+		c.setLinewrap(1, 1, 2).around(f.TJMemberRule);
+		
+		val pairs = f.findKeywordPairs("{", "}");
+		for (pair : pairs) {
+			c.setIndentation(pair.getFirst(), pair.getSecond());
+		}
+
+		// It's usually a good idea to activate the following three statements.
+		// They will add and preserve newlines around comments
+		c.setLinewrap(0, 1, 2).before(f.getSL_COMMENTRule());
+		c.setLinewrap(0, 1, 2).before(f.getML_COMMENTRule());
+		c.setLinewrap(0, 1, 1).after(f.getML_COMMENTRule());
 	}
 }
