@@ -141,7 +141,7 @@ class TraitJJvmModelUtil {
 			// filter[sourceField == null && sourceMethod != null]
 	}
 
-	def jvmAllMethodOperations(TJClass e) {
+	def jvmAllMethodOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[jvmAllMethodOperations].flatten
 	}

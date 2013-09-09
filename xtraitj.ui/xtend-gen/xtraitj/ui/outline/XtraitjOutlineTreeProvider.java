@@ -26,6 +26,7 @@ import org.eclipse.xtext.xtype.XImportDeclaration;
 import org.eclipse.xtext.xtype.XImportSection;
 import org.eclipse.xtext.xtype.XtypePackage;
 import xtraitj.jvmmodel.TraitJJvmModelUtil;
+import xtraitj.ui.outline.TraitJProvidesNode;
 import xtraitj.ui.outline.TraitJRequirementsNode;
 import xtraitj.xtraitj.TJClass;
 import xtraitj.xtraitj.TJConstructor;
@@ -97,6 +98,7 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
     this.nodesForTraitReferences(parentNode, c);
     Iterable<JvmOperation> _jvmAllInterfaceMethods = this._traitJJvmModelUtil.jvmAllInterfaceMethods(c);
     this.nodesForRequirements(parentNode, c, _jvmAllInterfaceMethods);
+    this.nodesForProvides(parentNode, c);
     EList<TJField> _fields = c.getFields();
     for (final TJField f : _fields) {
       this.createNode(parentNode, f);
@@ -110,6 +112,7 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
   public void _createChildren(final EObjectNode parentNode, final TJTrait t) {
     this.nodesForTraitReferences(parentNode, t);
     this.nodesForRequirements(parentNode, t);
+    this.nodesForProvides(parentNode, t);
     EList<TJMember> _members = t.getMembers();
     Iterable<TJField> _filter = Iterables.<TJField>filter(_members, TJField.class);
     for (final TJField m : _filter) {
@@ -175,6 +178,23 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
   }
   
+  public void nodesForProvides(final EObjectNode parentNode, final TJDeclaration d) {
+    List<JvmOperation> _emptyList = CollectionLiterals.<JvmOperation>emptyList();
+    this.nodesForProvides(parentNode, d, _emptyList);
+  }
+  
+  public void nodesForProvides(final EObjectNode parentNode, final TJDeclaration d, final Iterable<JvmOperation> interfaceMethods) {
+    final Iterable<JvmOperation> provides = this._traitJJvmModelUtil.jvmAllMethodOperations(d);
+    boolean _isEmpty = IterableExtensions.isEmpty(provides);
+    boolean _not = (!_isEmpty);
+    if (_not) {
+      Image _image = this.images.getImage("externalize.gif");
+      TraitJProvidesNode _traitJProvidesNode = new TraitJProvidesNode(parentNode, _image);
+      final TraitJProvidesNode reqNode = _traitJProvidesNode;
+      this.nodesForProvides(reqNode, provides);
+    }
+  }
+  
   public void nodesForRequirements(final TraitJRequirementsNode reqNode, final Iterable<JvmOperation> requirements) {
     for (final JvmOperation req : requirements) {
       {
@@ -209,6 +229,32 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
           }
         } else {
           this.createNode(reqNode, req);
+        }
+      }
+    }
+  }
+  
+  public void nodesForProvides(final TraitJProvidesNode provNode, final Iterable<JvmOperation> provides) {
+    for (final JvmOperation req : provides) {
+      {
+        final TJMember source = this._traitJJvmModelUtil.originalSource(req);
+        boolean _notEquals = (!Objects.equal(source, null));
+        if (_notEquals) {
+          Image __image = this._image(source);
+          String _simpleName = req.getSimpleName();
+          String _parameters = this.uiStrings.parameters(req);
+          String _plus = (_simpleName + _parameters);
+          StyledString _styledString = new StyledString(_plus);
+          JvmTypeReference _type = source.getType();
+          String _simpleName_1 = _type.getSimpleName();
+          String _plus_1 = (" : " + _simpleName_1);
+          StyledString _styledString_1 = new StyledString(_plus_1, 
+            StyledString.DECORATIONS_STYLER);
+          StyledString _append = _styledString.append(_styledString_1);
+          this.createEObjectNode(provNode, source, __image, _append, 
+            true);
+        } else {
+          this.createNode(provNode, req);
         }
       }
     }

@@ -303,7 +303,7 @@ public class TraitJJvmModelUtil {
     return _filter_1;
   }
   
-  public Iterable<JvmOperation> jvmAllMethodOperations(final TJClass e) {
+  public Iterable<JvmOperation> jvmAllMethodOperations(final TJDeclaration e) {
     TJTraitExpression _traitExpression = e.getTraitExpression();
     List<TJTraitReference> _traitReferences = TraitJModelUtil.traitReferences(_traitExpression);
     final Function1<TJTraitReference,Iterable<JvmOperation>> _function = new Function1<TJTraitReference,Iterable<JvmOperation>>() {

@@ -69,6 +69,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	def _createChildren(EObjectNode parentNode, TJClass c) {
 		nodesForTraitReferences(parentNode, c)
 		nodesForRequirements(parentNode, c, c.jvmAllInterfaceMethods)
+		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {
 			createNode(parentNode, f)
@@ -82,6 +83,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	def _createChildren(EObjectNode parentNode, TJTrait t) {
 		nodesForTraitReferences(parentNode, t)
 		nodesForRequirements(parentNode, t)
+		nodesForProvides(parentNode, t)
 		
 		for (m : t.members.filter(typeof(TJField))) {
 			createNode(parentNode, m)
@@ -120,6 +122,19 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
+	def nodesForProvides(EObjectNode parentNode, TJDeclaration d) {
+		nodesForProvides(parentNode, d, emptyList)
+	}
+
+	def nodesForProvides(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
+		val provides = d.jvmAllMethodOperations
+		
+		if (!provides.empty) {
+			val reqNode = new TraitJProvidesNode(parentNode, images.getImage("externalize.gif"))
+			nodesForProvides(reqNode, provides)
+		}
+	}
+
 	def nodesForRequirements(TraitJRequirementsNode reqNode, Iterable<JvmOperation> requirements) {
 		for (req : requirements) {
 			val source = req.originalSource
@@ -154,6 +169,30 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			}
 			else
 				reqNode.createNode(req)
+		}
+	}
+
+	def nodesForProvides(TraitJProvidesNode provNode, Iterable<JvmOperation> provides) {
+		for (req : provides) {
+			val source = req.originalSource
+			if (source != null) {
+				provNode.createEObjectNode(
+						source,
+						_image(source),
+						new StyledString(
+							req.simpleName 
+							+ uiStrings.parameters(req)
+						).append(
+							new StyledString(" : " + 
+								source.type.simpleName,
+								StyledString::DECORATIONS_STYLER
+							)
+						),
+						true
+					)
+			}
+			else
+				provNode.createNode(req)
 		}
 	}
 	
