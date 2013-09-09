@@ -34,7 +34,14 @@ public class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
           it.getNode("s : String");
           SWTBotTreeItem _node = it.getNode("requirements");
           SWTBotTreeItem _expand = _node.expand();
-          _expand.getNode("s : String");
+          final Procedure1<SWTBotTreeItem> _function = new Procedure1<SWTBotTreeItem>() {
+            public void apply(final SWTBotTreeItem it) {
+              it.getNode("s : String");
+              it.getNode("strings : List<? extends String>");
+              it.getNode("m() : String");
+            }
+          };
+          ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand, _function);
         }
       };
       ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand_1, _function_1);

@@ -3,6 +3,7 @@
 «DEFINE main FOR XtraitjProjectInfo»
 «EXPAND model FOR this»
 «EXPAND javamain FOR this»
+«EXPAND javainterface FOR this»
 «ENDDEFINE»
 
 «DEFINE model FOR XtraitjProjectInfo»
@@ -13,13 +14,34 @@
 
 package my.traits;
 
+import main.CInterface
+import java.util.List
+
 trait T {
 	String s;
-	String m() { this.s; }
+	// you can use full Java generics
+	List<? extends String> strings;
+
+	String m() {
+		if (strings != null)
+			return strings.toString 
+		else
+			return this.s;
+	}
 }
 
-class C uses T {
+class C implements CInterface uses T {
 	String s = "aString";
+	List<? extends String> strings = null;
+	
+	// default constructor
+	C() {}
+	
+	C(Iterable<String> iterable) {
+		// map, toFirstUpper, toList are extension methods
+		// [...] is a lambda expression
+		strings = iterable.map[toFirstUpper].toList
+	}
 }
 «ENDFILE»
 «ENDDEFINE»
@@ -28,13 +50,30 @@ class C uses T {
 «FILE "src/main/Main.java"-»
 package main;
 
+import com.google.common.collect.Lists;
+
 import my.traits.C;
 
 public class Main {
 	public static void main(String[] args) {
+		CInterface c = new C();
+		System.out.println(c.m());
 		System.out.println(new C().m());
+		System.out.println(
+				new C(Lists.newArrayList
+						("first", "second", "third"))
+					.m());
 	}
 }
 «ENDFILE»
 «ENDDEFINE»
 
+«DEFINE javainterface FOR XtraitjProjectInfo»
+«FILE "src/main/CInterface.java"-»
+package main;
+
+public interface CInterface {
+	String m();
+}
+«ENDFILE»
+«ENDDEFINE»
