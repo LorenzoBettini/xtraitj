@@ -20,9 +20,16 @@ import xtraitj.xtraitj.TJTraitReference;
 public class TraitJJvmModelAssociator extends JvmModelAssociator {
   public Set<EObject> getSourceElements(final EObject jvmElement) {
     final Set<EObject> result = super.getSourceElements(jvmElement);
+    boolean _or = false;
     boolean _isEmpty = result.isEmpty();
     boolean _not = (!_isEmpty);
     if (_not) {
+      _or = true;
+    } else {
+      boolean _equals = Objects.equal(jvmElement, null);
+      _or = (_not || _equals);
+    }
+    if (_or) {
       return result;
     }
     try {

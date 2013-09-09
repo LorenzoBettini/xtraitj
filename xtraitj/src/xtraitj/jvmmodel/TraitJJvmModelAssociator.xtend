@@ -12,7 +12,7 @@ class TraitJJvmModelAssociator extends JvmModelAssociator {
 	override getSourceElements(EObject jvmElement) {
 		val result = super.getSourceElements(jvmElement)
 		
-		if (!result.empty)
+		if (!result.empty || jvmElement == null)
 			return result
 		
 		try {
