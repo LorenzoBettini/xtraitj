@@ -191,25 +191,23 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						true
 					)
 			}
-			else
-				provNode.createNode(req)
 		}
 	}
 	
-	def _text(JvmOperation op) {
-		val source = op.originalSource
-		
-		if (source == null) {
-			super._text(op)
-		}
-		
-		if (source instanceof TJField) {
-			op.simpleName.stripGetter + " : " + 
-			op.returnType.getSimpleName()
-		} else {
-			super._text(op)
-		}
-	}
+//	def _text(JvmOperation op) {
+//		val source = op.originalSource
+//		
+//		if (source == null) {
+//			super._text(op)
+//		}
+//		
+//		if (source instanceof TJField) {
+//			op.simpleName.stripGetter + " : " + 
+//			op.returnType.getSimpleName()
+//		} else {
+//			super._text(op)
+//		}
+//	}
 
 	def _isLeaf(TJMember m) {
 		return true;

@@ -253,37 +253,9 @@ public class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
           StyledString _append = _styledString.append(_styledString_1);
           this.createEObjectNode(provNode, source, __image, _append, 
             true);
-        } else {
-          this.createNode(provNode, req);
         }
       }
     }
-  }
-  
-  public Object _text(final JvmOperation op) {
-    Object _xblockexpression = null;
-    {
-      final TJMember source = this._traitJJvmModelUtil.originalSource(op);
-      boolean _equals = Objects.equal(source, null);
-      if (_equals) {
-        super._text(op);
-      }
-      Object _xifexpression = null;
-      if ((source instanceof TJField)) {
-        String _simpleName = op.getSimpleName();
-        String _stripGetter = this._traitJJvmModelUtil.stripGetter(_simpleName);
-        String _plus = (_stripGetter + " : ");
-        JvmTypeReference _returnType = op.getReturnType();
-        String _simpleName_1 = _returnType.getSimpleName();
-        String _plus_1 = (_plus + _simpleName_1);
-        _xifexpression = _plus_1;
-      } else {
-        Object __text = super._text(op);
-        _xifexpression = __text;
-      }
-      _xblockexpression = (_xifexpression);
-    }
-    return _xblockexpression;
   }
   
   public boolean _isLeaf(final TJMember m) {
