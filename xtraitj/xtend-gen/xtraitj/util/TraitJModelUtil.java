@@ -193,20 +193,26 @@ public class TraitJModelUtil {
    * avoiding possible cycles
    */
   public static Iterable<TJTrait> allTraitsDependency(final TJTrait t) {
-    ArrayList<TJTraitReference> _allTraitReferences = null;
-    TJTraitExpression _traitExpression = t.getTraitExpression();
-    if (_traitExpression!=null) {
-      _allTraitReferences=TraitJModelUtil.allTraitReferences(_traitExpression);
-    }
-    Iterable<TJTraitReference> _filter = Iterables.<TJTraitReference>filter(_allTraitReferences, TJTraitReference.class);
-    final Function1<TJTraitReference,TJTrait> _function = new Function1<TJTraitReference,TJTrait>() {
-      public TJTrait apply(final TJTraitReference it) {
-        TJTrait _trait = it.getTrait();
-        return _trait;
+    Iterable<TJTrait> _xblockexpression = null;
+    {
+      TJTraitExpression _traitExpression = t.getTraitExpression();
+      boolean _equals = Objects.equal(_traitExpression, null);
+      if (_equals) {
+        return CollectionLiterals.<TJTrait>emptyList();
       }
-    };
-    Iterable<TJTrait> _map = IterableExtensions.<TJTraitReference, TJTrait>map(_filter, _function);
-    return _map;
+      TJTraitExpression _traitExpression_1 = t.getTraitExpression();
+      ArrayList<TJTraitReference> _allTraitReferences = TraitJModelUtil.allTraitReferences(_traitExpression_1);
+      Iterable<TJTraitReference> _filter = Iterables.<TJTraitReference>filter(_allTraitReferences, TJTraitReference.class);
+      final Function1<TJTraitReference,TJTrait> _function = new Function1<TJTraitReference,TJTrait>() {
+        public TJTrait apply(final TJTraitReference it) {
+          TJTrait _trait = it.getTrait();
+          return _trait;
+        }
+      };
+      Iterable<TJTrait> _map = IterableExtensions.<TJTraitReference, TJTrait>map(_filter, _function);
+      _xblockexpression = (_map);
+    }
+    return _xblockexpression;
   }
   
   public static ArrayList<TJTraitReference> allTraitReferences(final TJTraitExpression e) {

@@ -111,7 +111,10 @@ class TraitJModelUtil {
 	 * avoiding possible cycles
 	 */
 	def static allTraitsDependency(TJTrait t) {
-		t.traitExpression?.allTraitReferences.filter(typeof(TJTraitReference)).
+		if (t.traitExpression == null)
+			return emptyList
+		
+		t.traitExpression.allTraitReferences.filter(typeof(TJTraitReference)).
 			map[trait]
 	}
 
