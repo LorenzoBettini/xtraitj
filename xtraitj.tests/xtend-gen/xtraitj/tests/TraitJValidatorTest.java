@@ -756,6 +756,128 @@ public class TraitJValidatorTest {
   }
   
   @Test
+  public void testFieldConflicts3() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int i;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("}");
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T1");
+          TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "s");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testFieldConflicts4() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int i;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("}");
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T2");
+          TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "s");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testFieldConflicts5() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int i;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String s;");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int i;");
+      _builder.newLine();
+      _builder.append("}");
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertFieldConflict(it, "String s", "T2");
+          TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "s");
+          TraitJValidatorTest.this.assertFieldConflict(it, "int i", "T1");
+          TraitJValidatorTest.this.assertDeclaredFieldConflict(it, "i");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
   public void testRequiredMethodConflicts() {
     try {
       StringConcatenation _builder = new StringConcatenation();
@@ -812,6 +934,131 @@ public class TraitJValidatorTest {
       TJProgram _parse = this._parseHelper.parse(_builder);
       final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
         public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testRequiredMethodConflicts3() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String m(int i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int n(boolean i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String m(int i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testRequiredMethodConflicts4() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String m(int i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int n(boolean i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int n(boolean i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "int n(boolean)", "T2");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
+        }
+      };
+      ObjectExtensions.<TJProgram>operator_doubleArrow(_parse, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
+  public void testRequiredMethodConflicts5() {
+    try {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("trait T1 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String m(int i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int n(boolean i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("trait T3 uses T1, T2 {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("int n(boolean i);");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("String m(int i);");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      TJProgram _parse = this._parseHelper.parse(_builder);
+      final Procedure1<TJProgram> _function = new Procedure1<TJProgram>() {
+        public void apply(final TJProgram it) {
+          TraitJValidatorTest.this.assertMethodConflict(it, "int n(boolean)", "T2");
+          TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "n");
           TraitJValidatorTest.this.assertMethodConflict(it, "String m(int)", "T1");
           TraitJValidatorTest.this.assertDeclaredMethodConflict(it, "m");
         }

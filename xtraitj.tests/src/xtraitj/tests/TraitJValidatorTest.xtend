@@ -414,6 +414,63 @@ class TraitJValidatorTest {
  		]
 	}
 
+	@Test def void testFieldConflicts3() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			int i;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+		}'''.parse => [
+ 			assertFieldConflict("String s", "T1")
+ 			assertDeclaredFieldConflict("s")
+ 		]
+	}
+
+	@Test def void testFieldConflicts4() {
+		'''
+		trait T1 {
+			int i;
+		}
+		
+		trait T2 {
+			String s;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+		}'''.parse => [
+ 			assertFieldConflict("String s", "T2")
+ 			assertDeclaredFieldConflict("s")
+ 		]
+	}
+
+	@Test def void testFieldConflicts5() {
+		'''
+		trait T1 {
+			int i;
+		}
+		
+		trait T2 {
+			String s;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+			int i;
+		}'''.parse => [
+ 			assertFieldConflict("String s", "T2")
+ 			assertDeclaredFieldConflict("s")
+ 			assertFieldConflict("int i", "T1")
+ 			assertDeclaredFieldConflict("i")
+ 		]
+	}
+
 	@Test def void testRequiredMethodConflicts() {
 		'''
 		trait T1 {
@@ -441,6 +498,66 @@ class TraitJValidatorTest {
 			String m(int i);
 		}
  		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("m")
+ 		]
+	}
+
+	@Test def void testRequiredMethodConflicts3() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			String m(int i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("m")
+ 		]
+	}
+
+	@Test def void testRequiredMethodConflicts4() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			int n(boolean i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("int n(boolean)", "T2")
+ 			assertDeclaredMethodConflict("n")
+ 		]
+	}
+
+	@Test def void testRequiredMethodConflicts5() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			int n(boolean i);
+			String m(int i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("int n(boolean)", "T2")
+ 			assertDeclaredMethodConflict("n")
  			assertMethodConflict("String m(int)", "T1")
  			assertDeclaredMethodConflict("m")
  		]

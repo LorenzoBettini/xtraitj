@@ -239,7 +239,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			val conflict = t1.
 				jvmAllRequiredFieldOperations.
 				findFirst[simpleName.stripGetter == f.name]
-			if (t1 != null) {
+			if (conflict != null) {
 				error(
 					"Field conflict '" + 
 					conflict.fieldRepresentation + "' in " +
@@ -269,7 +269,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			val conflict = t1.
 				jvmAllOperations.
 				findFirst[simpleName == m.name]
-			if (t1 != null) {
+			if (conflict != null) {
 				error(
 					"Method conflict '" + 
 					conflict.methodRepresentation + "' in " +
@@ -299,7 +299,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			val conflict = t1.
 				jvmAllMethodOperations.
 				findFirst[simpleName == m.name]
-			if (t1 != null) {
+			if (conflict != null) {
 				error(
 					"Method conflict '" + 
 					conflict.methodRepresentation + "' in " +

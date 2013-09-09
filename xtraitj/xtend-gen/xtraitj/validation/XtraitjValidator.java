@@ -492,7 +492,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
           }
         };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllRequiredFieldOperations, _function);
-        boolean _notEquals = (!Objects.equal(t1, null));
+        boolean _notEquals = (!Objects.equal(conflict, null));
         if (_notEquals) {
           String _fieldRepresentation = this._traitJJvmModelUtil.fieldRepresentation(conflict);
           String _plus = ("Field conflict \'" + _fieldRepresentation);
@@ -535,7 +535,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
           }
         };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllOperations, _function);
-        boolean _notEquals = (!Objects.equal(t1, null));
+        boolean _notEquals = (!Objects.equal(conflict, null));
         if (_notEquals) {
           String _methodRepresentation = this._traitJJvmModelUtil.methodRepresentation(conflict);
           String _plus = ("Method conflict \'" + _methodRepresentation);
@@ -578,7 +578,7 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
           }
         };
         final JvmOperation conflict = IterableExtensions.<JvmOperation>findFirst(_jvmAllMethodOperations, _function);
-        boolean _notEquals = (!Objects.equal(t1, null));
+        boolean _notEquals = (!Objects.equal(conflict, null));
         if (_notEquals) {
           String _methodRepresentation = this._traitJJvmModelUtil.methodRepresentation(conflict);
           String _plus = ("Method conflict \'" + _methodRepresentation);
