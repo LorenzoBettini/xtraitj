@@ -1615,6 +1615,39 @@ public class TraitJInputs {
     return _builder;
   }
   
+  public CharSequence classImplementsAllInterfaceMethodsWithSum() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package tests;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("import xtraitj.input.tests.MyTestInterface");
+    _builder.newLine();
+    _builder.append("import xtraitj.input.tests.MyTestInterface2");
+    _builder.newLine();
+    _builder.append("import java.util.List");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("trait T1 {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("int m(List<String> l) { return l.size }");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("trait T2 {");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("List<Integer> n(int i) { return null; }");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("class C implements MyTestInterface, MyTestInterface2 uses T1, T2 {}");
+    _builder.newLine();
+    return _builder;
+  }
+  
   public CharSequence classWithDefaultEmptyConstructor() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package tests;");

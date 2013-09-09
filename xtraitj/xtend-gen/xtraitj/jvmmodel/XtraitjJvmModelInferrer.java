@@ -148,6 +148,12 @@ public class XtraitjJvmModelInferrer extends AbstractModelInferrer {
       public void apply(final JvmGenericType it) {
         String _documentation = XtraitjJvmModelInferrer.this._jvmTypesBuilder.getDocumentation(c);
         XtraitjJvmModelInferrer.this._jvmTypesBuilder.setDocumentation(it, _documentation);
+        EList<JvmParameterizedTypeReference> _interfaces = c.getInterfaces();
+        for (final JvmParameterizedTypeReference i : _interfaces) {
+          EList<JvmTypeReference> _superTypes = it.getSuperTypes();
+          JvmTypeReference _cloneWithProxies = XtraitjJvmModelInferrer.this._jvmTypesBuilder.cloneWithProxies(i);
+          XtraitjJvmModelInferrer.this._jvmTypesBuilder.<JvmTypeReference>operator_add(_superTypes, _cloneWithProxies);
+        }
         EList<TJField> _fields = c.getFields();
         final Procedure1<TJField> _function = new Procedure1<TJField>() {
           public void apply(final TJField field) {

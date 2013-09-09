@@ -298,6 +298,17 @@ public class TraitJParserTest {
   }
   
   @Test
+  public void testClassImplementsAllInterfaceMethodsWithSum() {
+    try {
+      CharSequence _classImplementsAllInterfaceMethodsWithSum = this._traitJInputs.classImplementsAllInterfaceMethodsWithSum();
+      TJProgram _parse = this._parseHelper.parse(_classImplementsAllInterfaceMethodsWithSum);
+      this._validationTestHelper.assertNoErrors(_parse);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
   public void testClassWithDefaultConstructor() {
     try {
       CharSequence _classWithDefaultConstructor = this._traitJInputs.classWithDefaultConstructor();

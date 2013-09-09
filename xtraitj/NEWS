@@ -3,3 +3,8 @@
 * constructors
 * quickfix for missing required fields
 
+1.0.2
+
+* fixed some NPE which made some errors not detected
+* outline node 'provides'
+* correct Java generation of Xtraitj class' interfaces

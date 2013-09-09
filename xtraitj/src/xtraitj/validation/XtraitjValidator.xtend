@@ -127,7 +127,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		]
 		c.jvmAllInterfaceMethods.forEach[
 			method |
-			if (c.jvmAllMethods.findMatchingMethod(method) == null) {
+			if (c.jvmAllMethodOperations.findMatchingMethod(method) == null) {
 				error(
 					"Class must provide interface method '" +
 						method.methodRepresentation + "'",

@@ -125,6 +125,10 @@ class TraitJParserTest {
 		classImplementsSerializableAndClonable.parse.assertNoErrors
 	}
 
+	@Test def void testClassImplementsAllInterfaceMethodsWithSum() {
+		classImplementsAllInterfaceMethodsWithSum.parse.assertNoErrors
+	}
+
 	@Test def void testClassWithDefaultConstructor() {
 		classWithDefaultConstructor.parse.assertNoErrors
 	}

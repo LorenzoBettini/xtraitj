@@ -96,6 +96,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		
    		acceptor.accept(inferredClass).initializeLater[
    			documentation = c.documentation
+   			
+   			for (i : c.interfaces) {
+   				superTypes += i.cloneWithProxies
+   			}
+   			
    			c.fields.forEach[
    				field |
    				members += field.toField(field.name, field.type) [

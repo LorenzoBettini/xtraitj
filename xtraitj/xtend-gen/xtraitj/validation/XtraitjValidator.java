@@ -282,8 +282,8 @@ public class XtraitjValidator extends AbstractXtraitjValidator {
     Iterable<JvmOperation> _jvmAllInterfaceMethods = this._traitJJvmModelUtil.jvmAllInterfaceMethods(c);
     final Procedure1<JvmOperation> _function_2 = new Procedure1<JvmOperation>() {
       public void apply(final JvmOperation method) {
-        Iterable<JvmOperation> _jvmAllMethods = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethods(c);
-        JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethods, method);
+        Iterable<JvmOperation> _jvmAllMethodOperations = XtraitjValidator.this._traitJJvmModelUtil.jvmAllMethodOperations(c);
+        JvmOperation _findMatchingMethod = XtraitjValidator.this._traitJJvmModelUtil.findMatchingMethod(_jvmAllMethodOperations, method);
         boolean _equals = Objects.equal(_findMatchingMethod, null);
         if (_equals) {
           String _methodRepresentation = XtraitjValidator.this._traitJJvmModelUtil.methodRepresentation(method);

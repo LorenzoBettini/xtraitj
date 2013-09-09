@@ -8600,6 +8600,77 @@ public class TraitJCompilerTest {
   }
   
   @Test
+  public void testClassImplementsAllInterfaceMethodsWithSum() {
+    try {
+      CharSequence _classImplementsAllInterfaceMethodsWithSum = this._traitJInputs.classImplementsAllInterfaceMethodsWithSum();
+      final IAcceptor<Result> _function = new IAcceptor<Result>() {
+        public void accept(final Result it) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("package tests;");
+          _builder.newLine();
+          _builder.newLine();
+          _builder.append("import java.util.List;");
+          _builder.newLine();
+          _builder.append("import tests.traits.T1;");
+          _builder.newLine();
+          _builder.append("import tests.traits.T2;");
+          _builder.newLine();
+          _builder.append("import tests.traits.impl.T1Impl;");
+          _builder.newLine();
+          _builder.append("import tests.traits.impl.T2Impl;");
+          _builder.newLine();
+          _builder.append("import xtraitj.input.tests.MyTestInterface;");
+          _builder.newLine();
+          _builder.append("import xtraitj.input.tests.MyTestInterface2;");
+          _builder.newLine();
+          _builder.newLine();
+          _builder.append("@SuppressWarnings(\"all\")");
+          _builder.newLine();
+          _builder.append("public class C implements MyTestInterface, MyTestInterface2, T1, T2 {");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("private T1Impl _T1 = new T1Impl(this);");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public int m(final List<String> l) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("return _T1._m(l);");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("private T2Impl _T2 = new T2Impl(this);");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("public List<Integer> n(final int i) {");
+          _builder.newLine();
+          _builder.append("    ");
+          _builder.append("return _T2._n(i);");
+          _builder.newLine();
+          _builder.append("  ");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("}");
+          _builder.newLine();
+          TraitJCompilerTest.this.assertJavaClass(it, "tests", "C", _builder);
+          TraitJCompilerTest.this.assertGeneratedJavaCodeCompiles(it);
+        }
+      };
+      this._compilationTestHelper.compile(_classImplementsAllInterfaceMethodsWithSum, _function);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Test
   public void testCompliantRequiredFields() {
     try {
       CharSequence _compliantRequiredFields = this._traitJInputs.compliantRequiredFields();

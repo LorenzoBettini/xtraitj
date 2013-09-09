@@ -331,24 +331,6 @@ class TraitJValidatorTest {
 		'''.parse.assertNoErrors
 	}
 
-	@Test def void testClassImplementsAllInterfaceMethodsWithSum() {
-		'''
-		import xtraitj.input.tests.MyTestInterface
-		import xtraitj.input.tests.MyTestInterface2
-		import java.util.List
-		
-		trait T1 {
-			int m(List<String> l) { return l.size }
-		}
-		
-		trait T2 {
-			List<Integer> n(int i) { return null; }
-		}
-		
-		class C implements MyTestInterface, MyTestInterface2 uses T1, T2 {}
-		'''.parse.assertNoErrors
-	}
-
 	@Test def void testDuplicateTraitReference() {
 		'''
 		trait T {}

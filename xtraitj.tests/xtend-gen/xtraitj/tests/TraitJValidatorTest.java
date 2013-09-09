@@ -584,42 +584,6 @@ public class TraitJValidatorTest {
   }
   
   @Test
-  public void testClassImplementsAllInterfaceMethodsWithSum() {
-    try {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("import xtraitj.input.tests.MyTestInterface");
-      _builder.newLine();
-      _builder.append("import xtraitj.input.tests.MyTestInterface2");
-      _builder.newLine();
-      _builder.append("import java.util.List");
-      _builder.newLine();
-      _builder.newLine();
-      _builder.append("trait T1 {");
-      _builder.newLine();
-      _builder.append("\t");
-      _builder.append("int m(List<String> l) { return l.size }");
-      _builder.newLine();
-      _builder.append("}");
-      _builder.newLine();
-      _builder.newLine();
-      _builder.append("trait T2 {");
-      _builder.newLine();
-      _builder.append("\t");
-      _builder.append("List<Integer> n(int i) { return null; }");
-      _builder.newLine();
-      _builder.append("}");
-      _builder.newLine();
-      _builder.newLine();
-      _builder.append("class C implements MyTestInterface, MyTestInterface2 uses T1, T2 {}");
-      _builder.newLine();
-      TJProgram _parse = this._parseHelper.parse(_builder);
-      this._validationTestHelper.assertNoErrors(_parse);
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  @Test
   public void testDuplicateTraitReference() {
     try {
       StringConcatenation _builder = new StringConcatenation();
