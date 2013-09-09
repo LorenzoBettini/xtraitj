@@ -5,10 +5,12 @@ package xtraitj.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.viewers.StyledString
 import org.eclipse.xtext.common.types.JvmVisibility
-import org.eclipse.xtext.xbase.ui.labeling.XbaseImages
+import org.eclipse.xtext.xbase.ui.labeling.XbaseImages2
 import org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
@@ -17,8 +19,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import org.eclipse.jface.viewers.StyledString
-import xtraitj.xtraitj.TJConstructor
+import org.eclipse.jdt.ui.JavaElementImageDescriptor
 
 /**
  * Provides labels for a EObjects.
@@ -27,7 +28,7 @@ import xtraitj.xtraitj.TJConstructor
  */
 class XtraitjLabelProvider extends XbaseLabelProvider {
 	
-	@Inject XbaseImages images
+	@Inject XbaseImages2 images
 
 	@Inject
 	new(AdapterFactoryLabelProvider delegate) {
@@ -66,7 +67,8 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 	}
 	
 	def image(TJField f) {
-		images.forField(JvmVisibility::PRIVATE, false, false, false);
+		images.forField(
+			JvmVisibility::PRIVATE, 0);
 	}
 	
 	def image(TJMethod m) {
@@ -76,18 +78,17 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 			else
 				JvmVisibility::PUBLIC
 			, 
-			false, false, false);
+			0);
 	}
 
 	def image(TJConstructor c) {
-		images.forConstructor(JvmVisibility::PUBLIC)
+		images.forConstructor(JvmVisibility::PUBLIC, 0)
 	}
 	
 	def image(TJRequiredMethod m) {
 		images.forOperation(
 			JvmVisibility::PUBLIC, 
-			true, // abstract 
-			false, false);
+			JavaElementImageDescriptor::ABSTRACT);
 	}
 	
 	def image(TJTraitReference r) {

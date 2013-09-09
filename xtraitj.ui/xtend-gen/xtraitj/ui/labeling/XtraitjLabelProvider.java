@@ -6,11 +6,12 @@ package xtraitj.ui.labeling;
 import com.google.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jdt.ui.JavaElementImageDescriptor;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmVisibility;
-import org.eclipse.xtext.xbase.ui.labeling.XbaseImages;
+import org.eclipse.xtext.xbase.ui.labeling.XbaseImages2;
 import org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider;
 import xtraitj.util.TraitJModelUtil;
 import xtraitj.xtraitj.TJClass;
@@ -31,7 +32,7 @@ import xtraitj.xtraitj.TJTraitReference;
 @SuppressWarnings("all")
 public class XtraitjLabelProvider extends XbaseLabelProvider {
   @Inject
-  private XbaseImages images;
+  private XbaseImages2 images;
   
   @Inject
   public XtraitjLabelProvider(final AdapterFactoryLabelProvider delegate) {
@@ -83,12 +84,13 @@ public class XtraitjLabelProvider extends XbaseLabelProvider {
     return "class_obj.gif";
   }
   
-  public Image image(final TJField f) {
-    Image _forField = this.images.forField(JvmVisibility.PRIVATE, false, false, false);
+  public ImageDescriptor image(final TJField f) {
+    ImageDescriptor _forField = this.images.forField(
+      JvmVisibility.PRIVATE, 0);
     return _forField;
   }
   
-  public Image image(final TJMethod m) {
+  public ImageDescriptor image(final TJMethod m) {
     JvmVisibility _xifexpression = null;
     boolean _isPrivate = m.isPrivate();
     if (_isPrivate) {
@@ -96,21 +98,20 @@ public class XtraitjLabelProvider extends XbaseLabelProvider {
     } else {
       _xifexpression = JvmVisibility.PUBLIC;
     }
-    Image _forOperation = this.images.forOperation(_xifexpression, 
-      false, false, false);
+    ImageDescriptor _forOperation = this.images.forOperation(_xifexpression, 
+      0);
     return _forOperation;
   }
   
-  public Image image(final TJConstructor c) {
-    Image _forConstructor = this.images.forConstructor(JvmVisibility.PUBLIC);
+  public ImageDescriptor image(final TJConstructor c) {
+    ImageDescriptor _forConstructor = this.images.forConstructor(JvmVisibility.PUBLIC, 0);
     return _forConstructor;
   }
   
-  public Image image(final TJRequiredMethod m) {
-    Image _forOperation = this.images.forOperation(
+  public ImageDescriptor image(final TJRequiredMethod m) {
+    ImageDescriptor _forOperation = this.images.forOperation(
       JvmVisibility.PUBLIC, 
-      true, 
-      false, false);
+      JavaElementImageDescriptor.ABSTRACT);
     return _forOperation;
   }
   
