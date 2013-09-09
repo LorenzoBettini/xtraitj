@@ -42,6 +42,10 @@ class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
 		}
 		'''
 		)
+		outlineTraitNode("T1").expand => [
+			getNode("s : String")
+			getNode("m(String) : int")
+		]
 		outlineTraitNode("T2").expand => [
 			getNode("T1")
 			getNode("requirements").expand => [

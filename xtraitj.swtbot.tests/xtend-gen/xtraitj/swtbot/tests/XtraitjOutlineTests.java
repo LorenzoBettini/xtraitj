@@ -76,9 +76,18 @@ public class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
       _builder.append("}");
       _builder.newLine();
       this.updateEditorContents(_builder);
-      SWTBotTreeItem _outlineTraitNode = this.outlineTraitNode("T2");
+      SWTBotTreeItem _outlineTraitNode = this.outlineTraitNode("T1");
       SWTBotTreeItem _expand = _outlineTraitNode.expand();
       final Procedure1<SWTBotTreeItem> _function = new Procedure1<SWTBotTreeItem>() {
+        public void apply(final SWTBotTreeItem it) {
+          it.getNode("s : String");
+          it.getNode("m(String) : int");
+        }
+      };
+      ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand, _function);
+      SWTBotTreeItem _outlineTraitNode_1 = this.outlineTraitNode("T2");
+      SWTBotTreeItem _expand_1 = _outlineTraitNode_1.expand();
+      final Procedure1<SWTBotTreeItem> _function_1 = new Procedure1<SWTBotTreeItem>() {
         public void apply(final SWTBotTreeItem it) {
           it.getNode("T1");
           SWTBotTreeItem _node = it.getNode("requirements");
@@ -92,7 +101,7 @@ public class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
           ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand, _function);
         }
       };
-      ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand, _function);
+      ObjectExtensions.<SWTBotTreeItem>operator_doubleArrow(_expand_1, _function_1);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
