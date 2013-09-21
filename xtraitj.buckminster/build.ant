@@ -18,6 +18,8 @@
 	<property name="buckminster.home" location="${user.home}/buckminster" />
 	<property name="projects.location" location="${WORKSPACE}" />
 	<property name="commands.file" location="${projects.location}/xtraitj.buckminster/commands.txt" />
+	<property name="build.properties" location="${projects.location}/xtraitj.buckminster/buckminster.properties"/>
+
 	<property name="target.platform" value="target.platform" />
 	
 	<property name="eclipse.download" value="http://download.eclipse.org" />
