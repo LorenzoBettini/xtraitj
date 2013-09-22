@@ -1,0 +1,11 @@
+launch --stderr --stdout -l "xtraitj/XtendCompiler.launch"
+build
+
+launch --stderr --stdout -l "xtraitj.ui/XtendCompiler.launch"
+build
+
+launch --stderr --stdout -l "xtraitj.tests/XtendCompiler.launch"
+build
+
+launch --stderr --stdout -l "xtraitj.swtbot.tests/XtendCompiler.launch"
+build
