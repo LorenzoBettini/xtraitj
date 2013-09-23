@@ -11,7 +11,8 @@ emma -l "xtraitj.tests/xtraitj.ui.tests.launch"  --output "${buckminster.output.
 emma -l "xtraitj.tests/xtraitj.tests.launch" --output "${buckminster.output.root}/test.results/xtraitj.tests.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.xtraitj.tests.launch.exec" --html "${buckminster.output.root}/test.results/coverage.xtraitj.tests.launch.html" --flatXML --stdout --stderr --maxTimeAwaitJunitReport 120 
 
 # Swtbot tests
-emma -l "xtraitj.swtbot.tests/XtraitjSwtbotTests.launch"  --output "${buckminster.output.root}/test.results/xtraitj.XtraitjSwtbotTests.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.exec" --html "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.html" --flatXML
+#emma -l "xtraitj.swtbot.tests/XtraitjSwtbotTests.launch"  --output "${buckminster.output.root}/test.results/xtraitj.XtraitjSwtbotTests.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.exec" --html "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.html" --flatXML
+emma -l "xtraitj.swtbot.tests/XtraitjSwtbotTests.launch"  --output "${buckminster.output.root}/test.results/xtraitj.XtraitjSwtbotTests.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.exec" --html "${buckminster.output.root}/test.results/coverage.XtraitjWizardTests.launch.html" --flatXML
 
 #emma -l "xtraitj.tests/xtraitj.tests.launch" --output "${buckminster.output.root}/test.results/xtraitj.tests.launch.xml" --html "${buckminster.output.root}/test.results/coverage.xtraitj.tests.launch.html" --flatXML --stdout --stderr
 
