@@ -35,10 +35,6 @@ class TraitJModelUtil {
 		t.members.filter(typeof(TJMethod))
 	}
 
-	def static fields(TJTraitReference e) {
-		e.trait?.fields
-	}
-
 	def static methods(TJTraitReference e) {
 		e.trait?.methods
 	}
@@ -54,16 +50,8 @@ class TraitJModelUtil {
 		t.members.filter(typeof(TJRequiredMethod))
 	}
 
-	def static requiredMethods(TJTraitReference e) {
-		e.trait?.requiredMethods
-	}
-
 	def static containingDeclaration(EObject e) {
 		e.getContainerOfType(typeof(TJDeclaration))
-	}
-
-	def static containingTrait(TJTraitReference e) {
-		e.getContainerOfType(typeof(TJTrait))
 	}
 
 	def static containingTrait(TJMember e) {
@@ -80,14 +68,6 @@ class TraitJModelUtil {
 
 	def static containingProgram(TJDeclaration e) {
 		e.getContainerOfType(typeof(TJProgram))
-	}
-
-	def static getOriginalName(TJMember m) {
-		m.name
-	}
-
-	def static getCurrentName(TJMember m) {
-		m.name
 	}
 
 	def static traitReferences(TJDeclaration t) {
