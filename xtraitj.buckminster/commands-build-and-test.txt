@@ -1,4 +1,4 @@
-build
+build --clean
 
 #emma -l "xtraitj.tests/TraitJParserTest.launch" --output "${buckminster.output.root}/test.results/TraitJParserTest.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.TraitJParserTest.launch.exec" --flatXML --stdout --stderr 
 #emma -l "xtraitj.tests/TraitJCompilerTest.launch" --output "${buckminster.output.root}/test.results/TraitJCompilerTest.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.TraitJCompilerTest.launch.exec" --flatXML --stdout --stderr 
