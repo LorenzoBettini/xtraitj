@@ -1,5 +1,7 @@
 build --clean
 
+perform "xtraitj.site#site.p2"
+
 #emma -l "xtraitj.tests/TraitJParserTest.launch" --output "${buckminster.output.root}/test.results/TraitJParserTest.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.TraitJParserTest.launch.exec" --flatXML --stdout --stderr 
 #emma -l "xtraitj.tests/TraitJCompilerTest.launch" --output "${buckminster.output.root}/test.results/TraitJCompilerTest.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.TraitJCompilerTest.launch.exec" --flatXML --stdout --stderr 
 #emma -l "xtraitj.tests/TraitJJvmModelUtilTest.launch" --output "${buckminster.output.root}/test.results/TraitJJvmModelUtilTest.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.TraitJJvmModelUtilTest.launch.exec" --flatXML --stdout --stderr 
@@ -13,4 +15,3 @@ emma -l "xtraitj.swtbot.tests/XtraitjSwtbotTests.launch"  --output "${buckminste
 
 #emma -l "xtraitj.tests/xtraitj.tests.launch" --output "${buckminster.output.root}/test.results/xtraitj.tests.launch.xml" --html "${buckminster.output.root}/test.results/coverage.xtraitj.tests.launch.html" --flatXML --stdout --stderr
 
-perform "xtraitj.site#site.p2"
