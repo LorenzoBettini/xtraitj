@@ -12,7 +12,7 @@
 		commands.file		What to do?
 							Default: ${projects.location}/traitj.buckminster/commands.txt
 -->
-<project name="Buckminster Headless" default="buckminster">
+<project name="Buckminster Headless" default="build">
 	<property name="WORKSPACE" location="${ant.file}/../../" />
 	<property name="build.root" location="${WORKSPACE}/buildroot" />
 	<property name="buckminster.home" location="${user.home}/buckminster" />
@@ -33,92 +33,21 @@
 	<property name="eclipse.p2.mirrors" value="true" />
 	<property name="java.net.preferIPv4Stack" value="true" />
 	
-	<target name="buckminster" depends="cleanup,clean-xtend-gen,install.buckminster.headless" description="description">
-		<antcall target="buckminster-resolve" />
-		<antcall target="buckminster-first-build" />
-		<antcall target="buckminster-xtend-compile" />
-		<antcall target="buckminster-build-and-test" />
-	</target>
-
-	<target name="buckminster-resolve" description="description">
-		<echo message="IMPORTANT: Populating an empty target platform may took over 10 minutes." />
-		<echo message="properties file: ${build.properties}" />
-
-		<run_buckminster commandsfile="${projects.location}/xtraitj.buckminster/commands-resolve.txt" propertiesfile="${build.properties}"/>
-	</target>
-
-	<target name="buckminster-first-build" description="description">
-		<run_buckminster 
-			commandsfile="${projects.location}/xtraitj.buckminster/commands-first-build.txt" 
-			propertiesfile="${build.properties}"
-			failonerror="false"
-		/>
-	</target>
-
-	<target name="buckminster-xtend-compile" description="description">
-		<xtend-compile projectname="xtraitj" />
-		<xtend-compile projectname="xtraitj.ui" />
-		<xtend-compile projectname="xtraitj.tests" />
-		<xtend-compile projectname="xtraitj.swtbot.tests" />
-	</target>
-
-	<target name="buckminster-build-and-test" description="description">
-		<run_buckminster commandsfile="${projects.location}/xtraitj.buckminster/commands-build-and-test.txt" propertiesfile="${build.properties}"/>
+	<target name="build" depends="cleanup,clean-xtend-gen,install.buckminster.headless" description="description">
+		<run_buckminster command="--script" propertiesfile="${build.properties}" >
+			<args>
+				<arg value="${projects.location}/xtraitj.buckminster/commands.txt" />
+			</args>
+		</run_buckminster>
 		<echo message=" " />
-		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/"/>
+		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
 	</target>
-	
-	<macrodef name="xtend-compile">
-		<attribute name="projectname" />
-		<attribute name="launchname" default="XtendCompiler.launch" />
-		<sequential>
-			<run_buckminster_command
-				command="launch --stderr --stdout -l @{projectname}/@{launchname}"
-				failonerror="false"
-			/>
-			<run_buckminster_command
-				command="build"
-				failonerror="false"
-			/>
-		</sequential>
-	</macrodef>
-	
-	<macrodef name="run_buckminster_command">
+
+	<macrodef name="run_buckminster">
 		<attribute name="command" />
 		<attribute name="propertiesfile" default="${build.properties}" />
 		<attribute name="failonerror" default="true" />
-		<sequential>
-			<java fork="true" dir="${buckminster.home}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="@{failonerror}">
-				<classpath>
-					<fileset dir="${buckminster.home}/plugins">
-						<include name="org.eclipse.equinox.launcher_*.jar" />
-					</fileset>
-				</classpath>
-				<arg line='@{command}' />
-				<arg line='-update' />
-				<arg line='-data "${build.root}/buckminster.workspace"' />
-				<arg line='-configuration "${build.root}/configuration"' />
-				<arg line='--properties "@{propertiesfile}"' />
-				<!-- <arg line='-L ant=INFO' />  -->
-				<!-- <arg line='-L DEBUG' /> -->
-				<sysproperty key="projects.location" value="${projects.location}" />
-				<sysproperty key="buckminster.output.root" value="${build.root}/buckminster.output" />
-				<sysproperty key="buckminster.temp.root" value="${build.root}/buckminster.temp" />
-				<sysproperty key="target.platform" value="${build.root}/${target.platform}" />
-				<jvmarg line=" -Xms256m -Xmx512m" />
-			</java>
-		</sequential>
-	</macrodef>
-	
-
-	<!-- = = = = = = = = = = = = = = = = =
-          macrodef: run_buckminster
-          pass the commandsfile to execute      
-         = = = = = = = = = = = = = = = = = -->
-	<macrodef name="run_buckminster">
-		<attribute name="commandsfile" default="default" />
-		<attribute name="propertiesfile" default="default" />
-		<attribute name="failonerror" default="true" />
+		<element name="args" optional="true" />
 		<sequential>
 			<java fork="true" dir="${buckminster.home}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="@{failonerror}">
 				<classpath>
@@ -130,16 +59,14 @@
 				<arg line='-data "${build.root}/buckminster.workspace"' />
 				<arg line='-configuration "${build.root}/configuration"' />
 				<arg line='--properties "@{propertiesfile}"' />
-				<arg line='--script "@{commandsfile}"' />
+				<arg value="@{command}" />
+				<args />
 				<!-- <arg line='-L ant=INFO' />  -->
 				<!-- <arg line='-L DEBUG' /> -->
 				<sysproperty key="projects.location" value="${projects.location}" />
 				<sysproperty key="buckminster.output.root" value="${build.root}/buckminster.output" />
 				<sysproperty key="buckminster.temp.root" value="${build.root}/buckminster.temp" />
 				<sysproperty key="target.platform" value="${build.root}/${target.platform}" />
-				<sysproperty key="eclipse.download" value="http://download.eclipse.org" />
-				<sysproperty key="eclipse.p2.mirrors" value="${eclipse.p2.mirrors}" />
-				<sysproperty key="java.net.preferIPv4Stack" value="${java.net.preferIPv4Stack}" />
 				<jvmarg line=" -Xms256m -Xmx512m" />
 			</java>
 		</sequential>

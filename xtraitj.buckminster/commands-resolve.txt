@@ -1,4 +1,0 @@
-setpref targetPlatformPath="${target.platform}"
-
-resolve "${projects.location}/xtraitj.buckminster/projects-platform.cquery"
-resolve "${projects.location}/xtraitj.buckminster/project.cquery"

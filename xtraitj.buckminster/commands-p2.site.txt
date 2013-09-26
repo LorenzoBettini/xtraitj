@@ -5,6 +5,7 @@ resolve "${projects.location}/xtraitj.buckminster/build.cquery"
 #resolve "${projects.location}/xtraitj.buckminster/projects-platform.cquery"
 #resolve "${projects.location}/xtraitj.buckminster/project.cquery"
 
+# we assume Xtend files have already been compiled
 build
 
 perform "xtraitj.site#site.p2"
