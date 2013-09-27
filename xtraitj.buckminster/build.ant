@@ -33,10 +33,30 @@
 	<property name="eclipse.p2.mirrors" value="true" />
 	<property name="java.net.preferIPv4Stack" value="true" />
 	
-	<target name="build" depends="cleanup,clean-xtend-gen,install.buckminster.headless" description="description">
+	<target name="build" depends="cleanup,clean-xtend-gen,install.buckminster.headless" description="Clean build, tests and site.p2">
 		<run_buckminster command="--script" propertiesfile="${build.properties}" >
 			<args>
 				<arg value="${projects.location}/xtraitj.buckminster/commands.txt" />
+			</args>
+		</run_buckminster>
+		<echo message=" " />
+		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
+	</target>
+
+	<target name="build-site.p2" depends="install.buckminster.headless" description="Only builds site.p2">
+		<run_buckminster command="--script" propertiesfile="${build.properties}" >
+			<args>
+				<arg value="${projects.location}/xtraitj.buckminster/commands-p2.site.txt" />
+			</args>
+		</run_buckminster>
+		<echo message=" " />
+		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
+	</target>
+
+	<target name="build-test-installation" depends="install.buckminster.headless" description="Only builds site.p2 and tests installation">
+		<run_buckminster command="--script" propertiesfile="${build.properties}" >
+			<args>
+				<arg value="${projects.location}/xtraitj.buckminster/commands-test-installation.txt" />
 			</args>
 		</run_buckminster>
 		<echo message=" " />

@@ -1,12 +1,5 @@
 setpref targetPlatformPath="${target.platform}"
-
-resolve "${projects.location}/xtraitj.buckminster/build.cquery"
-
-#resolve "${projects.location}/xtraitj.buckminster/projects-platform.cquery"
-#resolve "${projects.location}/xtraitj.buckminster/project.cquery"
-
 build
-
 #perform "xtraitj.site#eclipse-install-test-indigo"
 #perform "xtraitj.site#eclipse-install-test-juno"
 #perform "xtraitj.site#eclipse-install-test-kepler"
