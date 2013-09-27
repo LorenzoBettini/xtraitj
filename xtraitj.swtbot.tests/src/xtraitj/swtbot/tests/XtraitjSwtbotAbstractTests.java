@@ -18,6 +18,7 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
@@ -177,7 +178,7 @@ public class XtraitjSwtbotAbstractTests {
 		bot.button("Finish").click();
 
 		// creation of a project might require some time
-		bot.waitUntil(shellCloses(shell), 50000);
+		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(TEST_PROJECT));
 
 		waitForAutoBuild();
