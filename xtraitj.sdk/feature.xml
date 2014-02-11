@@ -2,7 +2,7 @@
 <feature
       id="xtraitj.sdk"
       label="Xtraitj SDK Feature "
-      version="1.0.2.qualifier"
+      version="1.1.0.qualifier"
       provider-name="Lorenzo Bettini">
 
    <description url="http://xtraitj.sourceforge.net">
