@@ -54,8 +54,11 @@ public class XtraitjSwtbotAbstractTests {
 		bot.table().select("Plug-in Development");
 		bot.button("OK").click();
 
-		bot.viewByTitle("Error Log").close();
-		bot.viewByTitle("Problems").show();
+		// in SwtBot 2.2.0 we must use part name since the title
+		// of the problems view also contains the items count
+		// see also http://www.eclipse.org/forums/index.php/t/640194/
+		bot.viewByPartName("Error Log").close();
+		bot.viewByPartName("Problems").show();
 	}
 
 	@AfterClass
