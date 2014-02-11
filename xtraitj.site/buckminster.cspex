@@ -32,6 +32,16 @@
                 <cs:attribute name="site.p2" />
             </cs:prerequisites>
         </cs:public>
+        <cs:public name="promote.site.composite" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="packaging.ant"/>
+                <cs:property key="targets" value="composite.add"/>
+            </cs:actorProperties>
+            <cs:prerequisites alias="action.requirements">
+            	<cs:attribute name="manifest" alias="manifest" />
+                <cs:attribute name="site.p2" />
+            </cs:prerequisites>
+        </cs:public>
     </cs:actions>
     <cs:groups>
         <cs:public name="eclipse-install-test">
