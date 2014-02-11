@@ -14,222 +14,32 @@
 -->
 <project name="Buckminster Headless" default="build">
 	<property name="WORKSPACE" location="${ant.file}/../../" />
-	<property name="build.root" location="${WORKSPACE}/buildroot" />
-	<property name="buckminster.home" location="${user.home}/buckminster" />
-	<property name="projects.location" location="${WORKSPACE}" />
-	<property name="commands.file" location="${projects.location}/xtraitj.buckminster/commands.txt" />
-	<property name="build.properties" location="${projects.location}/xtraitj.buckminster/buckminster.properties"/>
-
-	<property name="target.platform" value="target.platform" />
 	
-	<property name="eclipse.download" value="http://download.eclipse.org" />
-
-	<property name="b3.home" location="${user.home}/b3" />
-
-	<property name="director.install.dest" location="${user.home}" />
-	<property name="director.dir" location="${director.install.dest}/director" />
-	<property name="director.url" value="http://download.eclipse.org/tools/buckminster/products/director_latest.zip" />
-
-	<property name="eclipse.p2.mirrors" value="true" />
-	<property name="java.net.preferIPv4Stack" value="true" />
+	<import file="common.ant" />
 	
-	<target name="build" depends="cleanup,clean-xtend-gen,install.buckminster.headless" description="Clean build, tests and site.p2">
-		<run_buckminster command="--script" propertiesfile="${build.properties}" >
-			<args>
-				<arg value="${projects.location}/xtraitj.buckminster/commands.txt" />
-			</args>
-		</run_buckminster>
+	<property name="releng.project" location="${projects.location}/xtraitj.buckminster"/>
+	<property name="commands.file" value="${releng.project}/commands.txt" />
+	<property name="site.p2.commands.file" value="${releng.project}/commands-p2.site.txt" />
+	<property name="test.installation.commands.file" value="${releng.project}/commands-p2.site.txt" />
+
+	<property name="build.properties" location="${releng.project}/buckminster.properties" />
+	
+	<target name="build" depends="common.cleanup,clean-xtend-gen,copy-xtext-grammar-to-bin,install.buckminster.headless" description="Clean build, tests and site.p2">
+		<run_buckminster commandsfile="${commands.file}" propertiesfile="${build.properties}" />
 		<echo message=" " />
 		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
 	</target>
 
 	<target name="build-site.p2" depends="install.buckminster.headless" description="Only builds site.p2">
-		<run_buckminster command="--script" propertiesfile="${build.properties}" >
-			<args>
-				<arg value="${projects.location}/xtraitj.buckminster/commands-p2.site.txt" />
-			</args>
-		</run_buckminster>
+		<run_buckminster commandsfile="site.p2.commands.file" propertiesfile="${build.properties}" />
 		<echo message=" " />
 		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
 	</target>
 
 	<target name="build-test-installation" depends="install.buckminster.headless" description="Only builds site.p2 and tests installation">
-		<run_buckminster command="--script" propertiesfile="${build.properties}" >
-			<args>
-				<arg value="${projects.location}/xtraitj.buckminster/commands-test-installation.txt" />
-			</args>
-		</run_buckminster>
+		<run_buckminster commandsfile="test.installation.commands.file" propertiesfile="${build.properties}" />
 		<echo message=" " />
 		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
-	</target>
-
-	<macrodef name="run_buckminster">
-		<attribute name="command" />
-		<attribute name="propertiesfile" default="${build.properties}" />
-		<attribute name="failonerror" default="true" />
-		<element name="args" optional="true" />
-		<sequential>
-			<java fork="true" dir="${buckminster.home}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="@{failonerror}">
-				<classpath>
-					<fileset dir="${buckminster.home}/plugins">
-						<include name="org.eclipse.equinox.launcher_*.jar" />
-					</fileset>
-				</classpath>
-				<arg line='-update' />
-				<arg line='-data "${build.root}/buckminster.workspace"' />
-				<arg line='-configuration "${build.root}/configuration"' />
-				<arg line='--properties "@{propertiesfile}"' />
-				<arg value="@{command}" />
-				<args />
-				<!-- <arg line='-L ant=INFO' />  -->
-				<!-- <arg line='-L DEBUG' /> -->
-				<sysproperty key="projects.location" value="${projects.location}" />
-				<sysproperty key="buckminster.output.root" value="${build.root}/buckminster.output" />
-				<sysproperty key="buckminster.temp.root" value="${build.root}/buckminster.temp" />
-				<sysproperty key="target.platform" value="${build.root}/${target.platform}" />
-				<jvmarg line=" -Xms256m -Xmx512m" />
-			</java>
-		</sequential>
-	</macrodef>
-
-	<target name="b3_aggregation" depends="install.b3.headless" description="description">
-
-		<property name="build.model" location="${projects.location}/xtraitj.buckminster/aggregator/kepler-xtext-2.4-swtbot-mirror.b3aggr" />
-		
-		<echo message="IMPORTANT: Mirror aggregation may took over 10 minutes." />
-		<echo message="build.model: ${build.model}" />
-
-		<run_b3_aggregator buildmodel="${build.model}" />
-
-		<echo message=" " />
-		<echo message="Aggregated mirror in: ${user.home}/mirror/kepler-xtext-2.4-swtbot/final" />
-	</target>
-	
-	<!-- = = = = = = = = = = = = = = = = =
-          macrodef: run_b3_aggregator
-          pass the commandsfile to execute      
-         = = = = = = = = = = = = = = = = = -->
-	<macrodef name="run_b3_aggregator">
-		<attribute name="buildmodel" default="default" />
-		<sequential>
-			<java fork="true" dir="${b3.home}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="true">
-				<sysproperty key="eclipse.p2.mirrors" value="${eclipse.p2.mirrors}" />
-				<sysproperty key="java.net.preferIPv4Stack" value="${java.net.preferIPv4Stack}" />
-				<classpath>
-					<fileset dir="${b3.home}/plugins">
-						<include name="org.eclipse.equinox.launcher_*.jar" />
-					</fileset>
-				</classpath>
-				<arg line='aggregate' />
-				<arg line='--buildModel "@{buildmodel}"' />
-				<!-- <arg line='-L DEBUG' /> -->
-				<jvmarg line=" -Xms256m -Xmx512m" />
-			</java>
-		</sequential>
-	</macrodef>
-
-	<target name="cleanup">
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${build.root}" defaultexcludes="false">
-				<exclude name="**/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/" />
-				<exclude name="**/${target.platform}/" />
-			</fileset>
-		</delete>
-	</target>
-
-	<target name="clean-xtend-gen">
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${projects.location}" defaultexcludes="false">
-				<include name="**/xtend-gen/**/*.java*" />
-			</fileset>
-		</delete>
-	</target>
-
-	<target name="reset.target-platform">
-		<delete includeemptydirs="true">
-			<fileset dir="${build.root}" defaultexcludes="false">
-				<include name="**/.metadata/.plugins/org.eclipse.pde.core/.bundle_pool/" />
-				<include name="**/${target.platform}/" />
-			</fileset>
-		</delete>
-	</target>
-	
-	<target name="install.buckminster.headless">
-		<condition property="buckminster.headless.installed">
-			<available file="${buckminster.home}/buckminster" />
-		</condition>
-		<antcall target="install.buckminster.headless.internal" />
-	</target>
-
-	<target name="install.buckminster.headless.internal" unless="buckminster.headless.installed" >
-		<antcall target="install.p2.director" />
-		<echo message="" />
-		<echo message="Installing Buckminster Headless into ${buckminster.home}..." />
-		<java fork="true" dir="${director.dir}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="true">
-			<sysproperty key="eclipse.p2.mirrors" value="false" />
-			<classpath>
-				<fileset dir="${director.dir}/plugins">
-					<include name="org.eclipse.equinox.launcher_*.jar" />
-				</fileset>
-			</classpath>
-			<arg line='-data "${director.dir}/workspace"' />
-			<arg line="-r ${eclipse.download}/tools/buckminster/headless-4.3,http://download.cloudsmith.com/buckminster/external-4.3,${eclipse.download}/releases/kepler/" />
-			<arg line='-d "${buckminster.home}"' />
-			<arg line="-p Buckminster" />
-			<arg line="-i org.eclipse.buckminster.cmdline.product" />
-			<arg line="-i org.eclipse.buckminster.core.headless.feature.feature.group" />
-			<arg line="-i org.eclipse.buckminster.pde.headless.feature.feature.group" />
-			<arg line="-i org.eclipse.buckminster.git.headless.feature.feature.group" />
-			<arg line="-i org.eclipse.buckminster.maven.headless.feature.feature.group" />
-			<arg line="-i org.eclipse.buckminster.emma.headless.feature.feature.group" />
-		</java>
-	</target>
-
-	<target name="install.b3.headless">
-		<condition property="b3.headless.installed">
-			<available file="${b3.home}/b3" />
-		</condition>
-		<antcall target="install.b3.headless.internal" />
-	</target>
-
-	<target name="install.b3.headless.internal" unless="b3.headless.installed" >
-		<antcall target="install.p2.director" />
-		<echo message="" />
-		<echo message="Installing B3 Headless into ${b3.home}..." />
-		<java fork="true" dir="${director.dir}" logError="true" classname="org.eclipse.core.launcher.Main" failonerror="true">
-			<sysproperty key="eclipse.p2.mirrors" value="false" />
-			<classpath>
-				<fileset dir="${director.dir}/plugins">
-					<include name="org.eclipse.equinox.launcher_*.jar" />
-				</fileset>
-			</classpath>
-			<arg line='-data "${director.dir}/workspace"' />
-			<arg line="-r ${eclipse.download}/modeling/emft/b3/headless-4.2" />
-			<arg line='-d "${b3.home}"' />
-			<arg line="-p b3" />
-			<arg line="-i org.eclipse.b3.cli.product" />
-			<arg line="-i org.eclipse.b3.aggregator.engine.feature.feature.group" />
-		</java>
-	</target>
-	
-	<target name="install.p2.director">
-		<condition property="p2.director.installed">
-			<available file="${director.dir}" />
-		</condition>
-		<antcall target="install.p2.director.internal" />
-	</target>
-
-	<target name="install.p2.director.internal" unless="p2.director.installed">
-		<echo message="" />
-		<echo message="Installing director from ${director.url}..." />
-		<tempfile destdir="${java.io.tmpdir}"
-						          prefix="director-"
-						          suffix=".zip"
-						          property="director.zip"
-						          deleteonexit="true" />
-		<get src="${director.url}" dest="${director.zip}" />
-		<unzip src="${director.zip}" dest="${director.install.dest}" />
-		<delete file="${director.zip}" />
 	</target>
 
 </project>

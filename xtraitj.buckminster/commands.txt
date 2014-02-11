@@ -5,6 +5,9 @@ setpref targetPlatformPath="${target.platform}"
 resolve "${projects.location}/xtraitj.buckminster/projects-platform.cquery"
 resolve "${projects.location}/xtraitj.buckminster/project.cquery"
 
+# first runs the MWE2 workflows to create Xtext DSL artifacts
+launch --stderr --stdout -l "xtraitj/.launch/Generate Language Infrastructure (xtraitj).launch"
+
 clean
 
 # this first Java build will fail with compilation errors, since Xtend
