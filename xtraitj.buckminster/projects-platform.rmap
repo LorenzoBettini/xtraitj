@@ -5,6 +5,8 @@
   <rm:property key="eclipse.target.platform" value="${eclipse.download}/releases/kepler"/>
   <rm:property key="swtbot.repository"
 		value="${eclipse.download}/technology/swtbot/releases/latest" />
+  <rm:property key="itemis.p2.repository"
+		value="http://download.itemis.de/updates" />
   <!--  
   <rm:property key="swtbot.repository"
 		value="${eclipse.download}/technology/swtbot/snapshots" />
@@ -16,6 +18,7 @@
   <rm:locator pattern="^com\.google.*" searchPathRef="xtext"/>
   <rm:locator pattern="^org\.antlr.*" searchPathRef="xtext"/>
   <rm:locator pattern="javax.inject" searchPathRef="xtext"/>
+  <rm:locator pattern="^de\.itemis(?:\..+)?$" searchPathRef="xtext" />
   <rm:locator pattern="^org\.objectweb\.asm.*" searchPathRef="xtext"/>
   
   <rm:locator pattern="^org\.hamcrest\.*" searchPathRef="swtbot" />
@@ -31,6 +34,13 @@
         <bc:propertyRef key="xtext.p2.repository"/>
       </rm:uri>
     </rm:provider>
+    <rm:provider componentTypes="osgi.bundle,eclipse.feature"
+		readerType="p2" source="false">
+		<rm:property key="buckminster.source" value="false" />
+		<rm:uri format="{0}">
+			<bc:propertyRef key="itemis.p2.repository" />
+		</rm:uri>
+	</rm:provider>
   </rm:searchPath>
   <rm:searchPath name="swtbot">
 	<rm:provider componentTypes="osgi.bundle,eclipse.feature"
