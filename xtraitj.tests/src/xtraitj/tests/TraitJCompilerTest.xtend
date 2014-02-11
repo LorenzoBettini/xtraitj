@@ -258,8 +258,7 @@ public class TImpl implements T {
   
   public Object _n() {
     LinkedList<String> _newLinkedList = CollectionLiterals.<String>newLinkedList("bar");
-    Object _m = this.m(_newLinkedList, "foo");
-    return _m;
+    return this.m(_newLinkedList, "foo");
   }
 }
 ''')
