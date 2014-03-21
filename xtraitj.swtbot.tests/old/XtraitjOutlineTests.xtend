@@ -4,6 +4,11 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * Using SwtBot for testing outline might give synchronization problems,
+ * so we test differently using a Plug-in Junit test
+ * (see project xtraitj.tests)
+ */
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class XtraitjOutlineTests extends XtraitjSwtbotAbstractTests {
 
