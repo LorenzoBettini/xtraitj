@@ -71,4 +71,33 @@ trait T {
 		)
 	}
 
+	@Test def void programWithComments() {
+		// see https://github.com/LorenzoBettini/xtraitj/issues/1
+		// and https://bugs.eclipse.org/bugs/show_bug.cgi?id=407390
+		'''
+		/*
+		 * This is a comment
+		 */
+		
+		package my.traits;
+		
+		trait T {
+			java.util.List<String> l;
+		}
+		'''.assertIsOrganizedTo(
+'''
+/*
+ * This is a comment
+ */
+
+package my.traits;
+
+import java.util.List
+
+trait T {
+	List<String> l;
+}
+'''
+		)
+	}
 }
