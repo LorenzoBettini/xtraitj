@@ -25,7 +25,7 @@
 
 	<property name="build.properties" location="${releng.project}/buckminster.properties" />
 	
-	<target name="build" depends="common.cleanup,clean-xtend-gen,copy-xtext-grammar-to-bin,install.buckminster.headless" description="Clean build, tests and site.p2">
+	<target name="build" depends="common.cleanup,clean-xtend-gen,copy-xtext-grammar-to-bin,install.buckminster.headless,install.findbugs" description="Clean build, tests and site.p2">
 		<run_buckminster commandsfile="${commands.file}" propertiesfile="${build.properties}" />
 		<echo message=" " />
 		<echo message="Updatesite output in: ${build.root}/buckminster.output/xtraitj.site_*-eclipse.feature/site.p2/" />
