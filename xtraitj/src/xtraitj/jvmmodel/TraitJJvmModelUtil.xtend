@@ -147,9 +147,12 @@ class TraitJJvmModelUtil {
 	}
 
 	def jvmAllMethods(TJClass e) {
-		e._associatedClassType?.allFeatures.
-			filter(typeof(JvmOperation)) ?:
-		emptyList
+		val _associatedClassType1 = e._associatedClassType
+		if (_associatedClassType1 != null)
+			_associatedClassType1.allFeatures.
+				filter(typeof(JvmOperation))
+		else
+			emptyList
 	}
 
 	def jvmAllInterfaceMethods(TJClass e) {
