@@ -20,6 +20,6 @@ public class XtraitjProjectCreatorCustom extends XtraitjProjectCreator {
 		return Lists.newArrayList(
 				"org.eclipse.core.runtime",
 				"org.eclipse.ui",
-				"org.eclipse.xtext.xbase.lib");
+				"xtraitj.runtime.requirements");
 	}
 }
