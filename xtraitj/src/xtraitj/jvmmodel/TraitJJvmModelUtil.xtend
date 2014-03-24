@@ -238,11 +238,10 @@ class TraitJJvmModelUtil {
 
 	def memberRepresentation(JvmMember m) {
 		if (m instanceof JvmOperation) {
-			val op = m as JvmOperation
-			if (op.sourceField != null)
-				return op.fieldRepresentation
+			if (m.sourceField != null)
+				return m.fieldRepresentation
 			else
-				return op.methodRepresentation
+				return m.methodRepresentation
 		} else {
 			return m.simpleName
 		}
