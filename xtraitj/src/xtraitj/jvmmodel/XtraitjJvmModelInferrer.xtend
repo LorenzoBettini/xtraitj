@@ -24,6 +24,8 @@ import xtraitj.xtraitj.TJTraitReference
 import static extension xtraitj.util.TraitJModelUtil.*
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJRedirectOperation
+import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -78,6 +80,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	
    	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor) {
    		val inferredClass = c.toClass(c.fullyQualifiedName)
+   		
+   		inferredClass.copyTypeParameters(c.typeParameters)
    		
    		// it is crucial to infer interfaces for trait operation expressions
 		// first, so that when we add methods to this class
@@ -702,5 +706,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		"_" + t.name
 	}
 
+	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
+		for (typeParameter : typeParameters) {
+			val clonedTypeParameter = typeParameter.cloneWithProxies();
+			if (clonedTypeParameter != null) {
+				target.typeParameters += clonedTypeParameter
+			}
+		}
+	}
 }
 

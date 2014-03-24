@@ -902,4 +902,25 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def genericClass() {
+		'''
+		package tests;
+		
+		import java.util.List
+		
+		class C <T extends List<String>, U> {
+			T t;
+			U u;
+			
+			C(T t1, U u1) {
+				t = t1
+				u = u1
+				val String s = t.head // since t is a List
+				val int i = t.size // since t is a List
+				println(i) println(s)
+			}
+		}
+		'''
+	}
 }

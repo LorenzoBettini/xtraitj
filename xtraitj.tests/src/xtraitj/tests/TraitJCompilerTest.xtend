@@ -3891,6 +3891,55 @@ public class C implements MyTestInterface, MyTestInterface2, T1, T2 {
 		]
 	}
 
+	@Test def void testGenericClass() {
+		genericClass.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
+@SuppressWarnings("all")
+public class C<T extends List<String>, U> {
+  private T t;
+  
+  public T getT() {
+    return this.t;
+  }
+  
+  public void setT(final T t) {
+    this.t = t;
+  }
+  
+  private U u;
+  
+  public U getU() {
+    return this.u;
+  }
+  
+  public void setU(final U u) {
+    this.u = u;
+  }
+  
+  public C(final T t1, final U u1) {
+    this.t = t1;
+    this.u = u1;
+    final String s = IterableExtensions.<String>head(this.t);
+    final int i = this.t.size();
+    InputOutput.<Integer>println(Integer.valueOf(i));
+    InputOutput.<String>println(s);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")
