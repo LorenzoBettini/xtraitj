@@ -8,7 +8,6 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
-import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -40,8 +39,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension TraitJJvmModelUtil
-	@Inject
-	private TypesFactory typesFactory
+//	@Inject
+//	private TypesFactory typesFactory
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -541,9 +540,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			newRef.arguments.clear
 		
 			for (typePar : typeRef.arguments) {
-				val type = typesFactory.createJvmGenericType
-				type.setSimpleName(typePar.simpleName)
-				newRef.arguments += newTypeRef(type)
+//				val type = typesFactory.createJvmGenericType
+//				type.setSimpleName(typePar.simpleName)
+				newRef.arguments += newTypeRef(typePar.type)
 			}
 		
 		}

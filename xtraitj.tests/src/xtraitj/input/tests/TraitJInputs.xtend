@@ -935,7 +935,7 @@ class TraitJInputs {
 			
 			/*
 			String m() {
-				return t.head // since t is a List
+				return t.get(0)
 			}
 			*/
 		}
