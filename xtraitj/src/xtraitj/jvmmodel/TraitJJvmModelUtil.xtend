@@ -239,6 +239,10 @@ class TraitJJvmModelUtil {
 		]
 	}
 
+	def associatedTrait(JvmGenericType type) {
+		type.sourceElements.filter(TJTrait).head
+	}
+
 	def memberRepresentation(JvmMember m) {
 		if (m instanceof JvmOperation) {
 			if (m.sourceField != null)

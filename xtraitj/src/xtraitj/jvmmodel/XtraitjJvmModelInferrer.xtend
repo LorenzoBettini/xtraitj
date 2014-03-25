@@ -158,6 +158,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
+   			copyTypeParameters(t.traitTypeParameters)
+   			
    			// it is crucial to insert, at this stage, into the inferred interface all
    			// members which are specified in the trait, so that, later
    			// we also add the members we "inherit" from used traits 
@@ -176,8 +178,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				members += method.toAbstractMethod
 			]
 		]
-		
-		traitInterface.copyTypeParameters(t.traitTypeParameters)
 
 		// it is crucial to infer interfaces for trait operation expressions
 		// first, so that when we add methods to the interface of this
@@ -441,16 +441,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	def void inferTraitClass(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitClass = t.toClass(t.traitClassName)
    		
-   		traitClass.copyTypeParameters(t.traitTypeParameters)
-   		
 		acceptor.accept(traitClass).initializeLater[
+			copyTypeParameters(t.traitTypeParameters)
+
    			documentation = t.documentation
    			val traitInterfaceTypeRef = t.associatedInterface
 			
-			superTypes += traitInterfaceTypeRef.
-				transformTypeParametersIntoTypeArguments(t)
+			val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
+							transformTypeParametersIntoTypeArguments(t)
+			superTypes += transformedTraitInterfaceTypeRef
    			
-   			members += t.toField(delegateFieldName, traitInterfaceTypeRef)
+   			members += t.toField(delegateFieldName, transformedTraitInterfaceTypeRef)
    			
    			t.traitReferences.forEach[
    				traitExp | 
@@ -459,7 +460,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			]
    			
    			members += t.toConstructor[
-   				parameters += t.toParameter("delegate", traitInterfaceTypeRef)
+   				parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
 				body = [
 					it.append('''this.«delegateFieldName» = delegate;''')
 					t.traitExpression.traitReferences.forEach[
@@ -540,7 +541,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			newRef.arguments.clear
 		
 			for (typePar : typeRef.arguments) {
-				println(typePar)
 				val type = typesFactory.createJvmGenericType
 				type.setSimpleName(typePar.simpleName)
 				newRef.arguments += newTypeRef(type)
@@ -578,7 +578,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	def toGetterDelegate(TJMember m, String delegateFieldName) {
    		m.toGetter(m.name, m.type) => [
    			method |
-   			method.body = [append('''return «delegateFieldName».«method.simpleName»();''')]
+   			method.body = [
+   				append('''return «delegateFieldName».«method.simpleName»();''')
+   			]
    		]
    	}
 

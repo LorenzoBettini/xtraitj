@@ -3947,8 +3947,13 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import java.util.List;
+
 @SuppressWarnings("all")
-public interface T1<T, U> {
+public interface T1<T extends List<String>, U> {
+  public abstract T getT();
+  
+  public abstract void setT(final T t);
 }
 '''
 )
@@ -3957,14 +3962,23 @@ assertTraitJavaClass("tests", "T1",
 '''
 package tests.traits.impl;
 
+import java.util.List;
 import tests.traits.T1;
 
 @SuppressWarnings("all")
-public class T1Impl<T, U> implements T1<T,U> {
-  private T1<?,?> _delegate;
+public class T1Impl<T extends List<String>, U> implements T1<T,U> {
+  private T1<T,U> _delegate;
   
-  public T1Impl(final T1<?,?> delegate) {
+  public T1Impl(final T1<T,U> delegate) {
     this._delegate = delegate;
+  }
+  
+  public T getT() {
+    return _delegate.getT();
+  }
+  
+  public void setT(final T t) {
+    _delegate.setT(t);
   }
 }
 '''

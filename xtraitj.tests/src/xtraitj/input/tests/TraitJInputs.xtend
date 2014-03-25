@@ -930,11 +930,10 @@ class TraitJInputs {
 		
 		import java.util.List
 		
-		trait T1 <T, U> {
-			/*
+		trait T1 <T extends List<String>, U> {
 			T t;
-			U u;
 			
+			/*
 			String m() {
 				return t.head // since t is a List
 			}

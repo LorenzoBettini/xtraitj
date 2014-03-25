@@ -5,11 +5,13 @@ package xtraitj;
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
 import org.eclipse.xtext.xbase.imports.IImportsConfiguration;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 
+import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.TraitJOutputConfigurationProvider;
 import xtraitj.imports.XtraitjImportsConfiguration;
 import xtraitj.jvmmodel.TraitJJvmModelAssociator;
@@ -45,5 +47,9 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 
 	public Class<? extends IImportsConfiguration> bindIImportsConfiguration() {
 		return XtraitjImportsConfiguration.class;
+	}
+	
+	public Class<? extends TypeReferenceSerializer> bindTypeReferenceSerializer() {
+		return XtraitjTypeReferenceSerializer.class;
 	}
 }
