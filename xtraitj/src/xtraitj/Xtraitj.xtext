@@ -15,7 +15,9 @@ TJDeclaration:
 ;
 
 TJTrait:
-	'trait' name=ID ('uses' traitExpression=TJTraitExpression)? '{'
+	'trait' name=ID
+	('<' traitTypeParameters+=JvmTypeParameter (',' traitTypeParameters+=JvmTypeParameter)* '>')? 
+	('uses' traitExpression=TJTraitExpression)? '{'
 		members+=TJMember*
 	'}'
 ;

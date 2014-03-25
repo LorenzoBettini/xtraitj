@@ -3940,6 +3940,40 @@ public class C<T extends List<String>, U> {
 		]
 	}
 
+	@Test def void testGenericTrait() {
+		genericTrait.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests.traits;
+
+@SuppressWarnings("all")
+public interface T1<T, U> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl<T, U> implements T1<T,U> {
+  private T1<?,?> _delegate;
+  
+  public T1Impl(final T1<?,?> delegate) {
+    this._delegate = delegate;
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

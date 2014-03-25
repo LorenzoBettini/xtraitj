@@ -923,4 +923,23 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def genericTrait() {
+		'''
+		package tests;
+		
+		import java.util.List
+		
+		trait T1 <T, U> {
+			/*
+			T t;
+			U u;
+			
+			String m() {
+				return t.head // since t is a List
+			}
+			*/
+		}
+		'''
+	}
 }

@@ -4,7 +4,11 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -13,8 +17,10 @@ import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
+import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
+import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
@@ -22,10 +28,6 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import xtraitj.xtraitj.TJMethod
-import xtraitj.xtraitj.TJRedirectOperation
-import org.eclipse.xtext.common.types.JvmTypeParameter
-import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -38,6 +40,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension TraitJJvmModelUtil
+	@Inject
+	private TypesFactory typesFactory
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -172,6 +176,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				members += method.toAbstractMethod
 			]
 		]
+		
+		traitInterface.copyTypeParameters(t.traitTypeParameters)
 
 		// it is crucial to infer interfaces for trait operation expressions
 		// first, so that when we add methods to the interface of this
@@ -433,13 +439,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
    	def void inferTraitClass(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
-   		acceptor.accept(
-   			t.toClass(t.traitClassName)
-   		).initializeLater[
+   		val traitClass = t.toClass(t.traitClassName)
+   		
+   		traitClass.copyTypeParameters(t.traitTypeParameters)
+   		
+		acceptor.accept(traitClass).initializeLater[
    			documentation = t.documentation
    			val traitInterfaceTypeRef = t.associatedInterface
 			
-			superTypes += traitInterfaceTypeRef
+			superTypes += traitInterfaceTypeRef.
+				transformTypeParametersIntoTypeArguments(t)
    			
    			members += t.toField(delegateFieldName, traitInterfaceTypeRef)
    			
@@ -524,6 +533,23 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			]
    		]
    	}
+
+	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
+		val newRef = typeRef.cloneWithProxies 
+		if (newRef instanceof JvmParameterizedTypeReference) {
+			newRef.arguments.clear
+		
+			for (typePar : typeRef.arguments) {
+				println(typePar)
+				val type = typesFactory.createJvmGenericType
+				type.setSimpleName(typePar.simpleName)
+				newRef.arguments += newTypeRef(type)
+			}
+		
+		}
+		
+		newRef
+	}
    	
    	def private underscoreName(String name) {
    		"_" + name
