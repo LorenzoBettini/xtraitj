@@ -4023,6 +4023,122 @@ public class T1Impl<T extends List<String>, U> implements T1<T,U> {
 		]
 	}
 
+	@Test def void testGenericTraitWithRecursiveTypeParameter() {
+		genericTraitWithRecursiveTypeParameter.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests.traits;
+
+@SuppressWarnings("all")
+public interface T1<T extends Comparable<T>> {
+  public abstract T getT();
+  
+  public abstract void setT(final T t);
+  
+  public abstract int compare(final T t1);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl<T extends Comparable<T>> implements T1<T> {
+  private T1<T> _delegate;
+  
+  public T1Impl(final T1<T> delegate) {
+    this._delegate = delegate;
+  }
+  
+  public T getT() {
+    return _delegate.getT();
+  }
+  
+  public void setT(final T t) {
+    _delegate.setT(t);
+  }
+  
+  public int compare(final T t1) {
+    return _delegate.compare(t1);
+  }
+  
+  public int _compare(final T t1) {
+    T _t = this.getT();
+    return _t.compareTo(t1);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testGenericTraitWithRecursiveTypeParameter2() {
+		genericTraitWithRecursiveTypeParameter2.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests.traits;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
+  public abstract T getT();
+  
+  public abstract void setT(final T t);
+  
+  public abstract int compare(final U t1);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl<T extends Comparable<T>, U extends List<? extends T>> implements T1<T,U> {
+  private T1<T,U> _delegate;
+  
+  public T1Impl(final T1<T,U> delegate) {
+    this._delegate = delegate;
+  }
+  
+  public T getT() {
+    return _delegate.getT();
+  }
+  
+  public void setT(final T t) {
+    _delegate.setT(t);
+  }
+  
+  public int compare(final U t1) {
+    return _delegate.compare(t1);
+  }
+  
+  public int _compare(final U t1) {
+    T _t = this.getT();
+    T _get = t1.get(0);
+    return _t.compareTo(_get);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

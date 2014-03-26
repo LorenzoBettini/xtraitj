@@ -950,4 +950,34 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def genericTraitWithRecursiveTypeParameter() {
+		'''
+		package tests;
+		
+		trait T1 <T extends Comparable<T>> {
+			T t;
+			
+			int compare(T t1) {
+				return t.compareTo(t1)
+			}
+		}
+		'''
+	}
+
+	def genericTraitWithRecursiveTypeParameter2() {
+		'''
+		package tests;
+		
+		import java.util.List
+		
+		trait T1 <T extends Comparable<T>, U extends List<? extends T>> {
+			T t;
+			
+			int compare(U t1) {
+				return t.compareTo(t1.get(0))
+			}
+		}
+		'''
+	}
 }
