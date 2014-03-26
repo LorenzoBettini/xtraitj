@@ -4,7 +4,9 @@
 package xtraitj.validation
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.validation.Check
 import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJAliasOperation
@@ -79,6 +81,27 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val WRONG_CONSTRUCTOR_NAME = PREFIX + "WrongConstructorName"
 	
 	@Inject extension TraitJJvmModelUtil
+	
+	/**
+	 * We must override this to avoid the Xbase validator to consider
+	 * a static context also the case when the type parameter of
+	 * an inferred trait interface is used in the inferred method
+	 * of the corresponding inferred trait class.
+	 * The implementation in XbaseJavaValidator looks like this
+	 * 
+	 * <pre>
+	 * if(element instanceof JvmDeclaredType)
+	 *	return ((JvmDeclaredType) element).isStatic() || ((JvmDeclaredType)element).getDeclaringType() == null;
+	 * </pre>
+	 */
+	@Check
+	override protected boolean isStaticContext(EObject element) {
+		if(element instanceof JvmGenericType) {
+			if (element.associatedTrait != null)
+				return element.static;
+		}
+		return super.isStaticContext(element);
+	}
 
 	@Check def void checkDependencyCycle(TJTrait t) {
 		if (t.allTraitsDependency.exists[it == t]) {

@@ -938,6 +938,14 @@ class TraitJInputs {
 				t = t1
 				return t.head
 			}
+			
+			T read_t() {
+				return t
+			}
+			
+			void update_t(T t) {
+				this.t = t
+			}
 		}
 		'''
 	}

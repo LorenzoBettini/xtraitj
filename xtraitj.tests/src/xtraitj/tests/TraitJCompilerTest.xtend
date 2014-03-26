@@ -3956,6 +3956,10 @@ public interface T1<T extends List<String>, U> {
   public abstract void setT(final T t);
   
   public abstract String m();
+  
+  public abstract T read_t();
+  
+  public abstract void update_t(final T t);
 }
 '''
 )
@@ -3993,6 +3997,22 @@ public class T1Impl<T extends List<String>, U> implements T1<T,U> {
     this.setT(t1);
     T _t = this.getT();
     return IterableExtensions.<String>head(_t);
+  }
+  
+  public T read_t() {
+    return _delegate.read_t();
+  }
+  
+  public T _read_t() {
+    return this.getT();
+  }
+  
+  public void update_t(final T t) {
+    _delegate.update_t(t);
+  }
+  
+  public void _update_t(final T t) {
+    this.setT(t);
   }
 }
 '''

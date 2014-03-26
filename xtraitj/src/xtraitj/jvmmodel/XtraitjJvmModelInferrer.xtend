@@ -40,8 +40,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension TraitJJvmModelUtil
-//	@Inject
-//	private TypesFactory typesFactory
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -495,12 +493,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			t.methods.forEach [
    				method |
    				if (method.isPrivate) {
-   					members += method.toTraitMethod(method.name)
+   					members += toTraitMethod(method, method.name)
    				} else {
    					// m() { _delegate.m(); }
 	   				members += method.toMethodDelegate(delegateFieldName)
 	   				// _m() { original m's body }
-	   				members += method.toTraitMethod(method.name.underscoreName)
+	   				members += toTraitMethod(method, method.name.underscoreName)
 				}
    			]
    			
@@ -681,11 +679,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toTraitMethod(TJMethod method, String name) {
-		method.toMethod(name, method.type) [
+	def toTraitMethod(JvmGenericType type, TJMethod method, String name) {
+		method.toMethod(name, method.type.rebindTypeParameters(type)) [
 			documentation = method.documentation
 			for (p : method.params) {
-				parameters += p.toParameter(p.name, p.parameterType)
+				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(type))
 			}
 			body = method.body
 		]
