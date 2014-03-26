@@ -940,7 +940,8 @@ class TraitJInputs {
 			}
 			
 			T read_t() {
-				return t
+				val T t1 = t
+				return t1
 			}
 			
 			void update_t(T t) {

@@ -4004,7 +4004,8 @@ public class T1Impl<T extends List<String>, U> implements T1<T,U> {
   }
   
   public T _read_t() {
-    return this.getT();
+    final T t1 = this.getT();
+    return t1;
   }
   
   public void update_t(final T t) {
