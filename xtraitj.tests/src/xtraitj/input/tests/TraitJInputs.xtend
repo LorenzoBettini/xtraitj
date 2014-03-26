@@ -933,11 +933,9 @@ class TraitJInputs {
 		trait T1 <T extends List<String>, U> {
 			T t;
 			
-			/*
 			String m() {
-				return t.get(0)
+				return t.head
 			}
-			*/
 		}
 		'''
 	}

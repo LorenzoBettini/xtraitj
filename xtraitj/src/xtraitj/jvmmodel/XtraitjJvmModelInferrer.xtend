@@ -3,6 +3,7 @@ package xtraitj.jvmmodel
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
@@ -441,6 +442,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		val traitClass = t.toClass(t.traitClassName)
    		
 		acceptor.accept(traitClass).initializeLater[
+//			val copied = <JvmTypeParameter>newArrayList()
+//			for (par : t.traitTypeParameters) {
+//				val c = par.cloneWithProxies
+//				copied += c
+//			}
+//			
+//			copyTypeParameters(copied)
+
 			copyTypeParameters(t.traitTypeParameters)
 
    			documentation = t.documentation
@@ -474,7 +483,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			t.fields.forEach[
    				field |
-   				members += field.toGetterDelegate
+   				members += toGetterDelegate(field)
    				members += field.toSetterDelegate
    			]
    			
@@ -566,16 +575,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-   	def toGetterDelegate(TJMember m) {
-   		m.toGetterDelegate(delegateFieldName)
-   	}
-
-   	def toSetterDelegate(TJMember m) {
-   		m.toSetterDelegate(delegateFieldName)
-   	}
-
-   	def toGetterDelegate(TJMember m, String delegateFieldName) {
-   		m.toGetter(m.name, m.type) => [
+   	def toGetterDelegate(JvmGenericType type, TJMember m) {
+   		m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [
    			method |
    			method.body = [
    				append('''return «delegateFieldName».«method.simpleName»();''')
@@ -583,7 +584,21 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-   	def toSetterDelegate(TJMember m, String delegateFieldName) {
+	def protected rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
+		val reboundTypeRef = typeRef.cloneWithProxies
+		if (reboundTypeRef instanceof JvmParameterizedTypeReference && reboundTypeRef.type instanceof JvmTypeParameter) {
+			val rebound = reboundTypeRef as JvmParameterizedTypeReference
+			val typePar = target.typeParameters.findFirst[name == rebound.type.simpleName]
+			println(typePar)
+			val cloneWithProxies = typePar.cloneWithProxies
+			rebound.type = cloneWithProxies
+			cloneWithProxies.declarator = target
+			return rebound
+		} else
+			return typeRef
+	}
+
+   	def toSetterDelegate(TJMember m) {
    		m.toSetter(m.name, m.type) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«m.name»);''')]

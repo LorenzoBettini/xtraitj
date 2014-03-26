@@ -3954,6 +3954,8 @@ public interface T1<T extends List<String>, U> {
   public abstract T getT();
   
   public abstract void setT(final T t);
+  
+  public abstract String m();
 }
 '''
 )
@@ -3963,10 +3965,11 @@ assertTraitJavaClass("tests", "T1",
 package tests.traits.impl;
 
 import java.util.List;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import tests.traits.T1;
 
 @SuppressWarnings("all")
-public class T1Impl<T extends List<String>, U> implements T1<T,U> {
+public class T1Impl<T extends List<String>, U, T extends List<String>> implements T1<T,U> {
   private T1<T,U> _delegate;
   
   public T1Impl(final T1<T,U> delegate) {
@@ -3979,6 +3982,15 @@ public class T1Impl<T extends List<String>, U> implements T1<T,U> {
   
   public void setT(final T t) {
     _delegate.setT(t);
+  }
+  
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    T _t = this.getT();
+    return IterableExtensions.<String>head(_t);
   }
 }
 '''
