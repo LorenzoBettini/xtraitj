@@ -584,15 +584,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
+	/**
+	 * It is crucial to rebind the type parameter reference to the
+	 * class inferred for the trait, otherwise the type parameter
+	 * will point to the interface inferred for the trait and we
+	 * get IllegalArgumentException during the typing (the reference owner
+	 * is different)
+	 */
 	def protected rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
 		val reboundTypeRef = typeRef.cloneWithProxies
 		if (reboundTypeRef instanceof JvmParameterizedTypeReference && reboundTypeRef.type instanceof JvmTypeParameter) {
 			val rebound = reboundTypeRef as JvmParameterizedTypeReference
 			val typePar = target.typeParameters.findFirst[name == rebound.type.simpleName]
-			println(typePar)
-			val cloneWithProxies = typePar.cloneWithProxies
-			rebound.type = cloneWithProxies
-			cloneWithProxies.declarator = target
+			rebound.type = typePar
 			return rebound
 		} else
 			return typeRef

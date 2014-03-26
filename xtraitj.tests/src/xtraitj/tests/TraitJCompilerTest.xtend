@@ -3969,7 +3969,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import tests.traits.T1;
 
 @SuppressWarnings("all")
-public class T1Impl<T extends List<String>, U, T extends List<String>> implements T1<T,U> {
+public class T1Impl<T extends List<String>, U> implements T1<T,U> {
   private T1<T,U> _delegate;
   
   public T1Impl(final T1<T,U> delegate) {
