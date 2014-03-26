@@ -3989,6 +3989,8 @@ public class T1Impl<T extends List<String>, U> implements T1<T,U> {
   }
   
   public String _m() {
+    final T t1 = this.getT();
+    this.setT(t1);
     T _t = this.getT();
     return IterableExtensions.<String>head(_t);
   }

@@ -22,6 +22,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -239,7 +240,7 @@ class TraitJJvmModelUtil {
 		]
 	}
 
-	def associatedTrait(JvmGenericType type) {
+	def associatedTrait(JvmTypeParameterDeclarator type) {
 		type.sourceElements.filter(TJTrait).head
 	}
 

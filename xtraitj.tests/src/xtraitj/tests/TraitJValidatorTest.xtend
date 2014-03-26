@@ -731,6 +731,29 @@ class TraitJValidatorTest {
 		]
 	}
 
+	@Test def void testTypeMismatchForTraitTypeParameters() {
+		'''
+		package tests;
+		
+		trait T1 <T, U> {
+			T t;
+			U u;
+			
+			void m() {
+				val t1 = u // type mismatch
+				t = t1
+			}
+		}
+		'''.parse.assertErrorsAsStrings(
+			'''Type mismatch: cannot convert from U to T'''
+		)
+	}
+
+	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
+		expected.toString.trim.assertEquals(
+			o.validate.map[message].join("\n"))
+	}
+
 	def private assertMissingInterfaceMethod(EObject o, String methodRepr) {
 		o.assertError(
 			XtraitjPackage::eINSTANCE.TJClass,

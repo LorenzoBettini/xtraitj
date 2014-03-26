@@ -934,6 +934,8 @@ class TraitJInputs {
 			T t;
 			
 			String m() {
+				val t1 = t
+				t = t1
 				return t.head
 			}
 		}

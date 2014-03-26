@@ -10,6 +10,9 @@ import org.eclipse.xtext.xbase.imports.IImportsConfiguration;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
+import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
+
+import com.google.inject.Binder;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.TraitJOutputConfigurationProvider;
@@ -17,12 +20,20 @@ import xtraitj.imports.XtraitjImportsConfiguration;
 import xtraitj.jvmmodel.TraitJJvmModelAssociator;
 import xtraitj.scoping.TraitJXbaseBatchScopeProvider;
 import xtraitj.scoping.TraitJXbaseScopeProvider;
+import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 
+	@Override
+	public void configure(Binder binder) {
+		super.configure(binder);
+		binder.bind(TypeConformanceComputer.class).to(
+				XtraitjTypeConformanceComputer.class);
+	}
+	
 	@Override
 	public Class<? extends XbaseBatchScopeProvider> bindXbaseBatchScopeProvider() {
 		return TraitJXbaseBatchScopeProvider.class;
@@ -52,4 +63,5 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	public Class<? extends TypeReferenceSerializer> bindTypeReferenceSerializer() {
 		return XtraitjTypeReferenceSerializer.class;
 	}
+
 }
