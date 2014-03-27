@@ -2,11 +2,10 @@ package xtraitj.typesystem.conformance
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer
 import org.eclipse.xtext.xbase.typesystem.references.ParameterizedTypeReference
 import xtraitj.jvmmodel.TraitJJvmModelUtil
-import org.eclipse.xtext.common.types.TypesPackage
-import org.eclipse.xtext.common.types.JvmTypeParameter
 
 /**
  * @author Lorenzo Bettini
@@ -23,8 +22,7 @@ class XtraitjTypeConformanceComputer extends TypeConformanceComputer {
 			// let's see if they are associated to the same trait definition
 			val leftType = left.getType();
 			val rightType = right.getType();
-			if (leftType.eClass() == TypesPackage.Literals.JVM_TYPE_PARAMETER &&
-					rightType.eClass() == TypesPackage.Literals.JVM_TYPE_PARAMETER) {
+			if (leftType instanceof JvmTypeParameter && rightType instanceof JvmTypeParameter) {
 				val leftTypePar = leftType as JvmTypeParameter
 				val rightTypePar = rightType as JvmTypeParameter
 				if (leftTypePar.simpleName == rightTypePar.simpleName &&
