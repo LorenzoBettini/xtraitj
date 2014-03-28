@@ -8,7 +8,6 @@ import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
 import org.eclipse.xtext.xbase.imports.DefaultImportsConfiguration;
 
 public class XtraitjImportsConfiguration extends DefaultImportsConfiguration {
@@ -25,17 +24,13 @@ public class XtraitjImportsConfiguration extends DefaultImportsConfiguration {
 			EObject expectedRuleCall = pathToImportSection.get(currentDepth);
 			AbstractRule ruleInGrammar = GrammarUtil.containingRule(expectedRuleCall);
 			for(INode childNode: currentParentNode.getChildren()) {
-				// otherwise we get a ClassCastException
-				// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=407390
-				if (childNode instanceof HiddenLeafNode) {
-					continue;
-				}
-				
 				EObject elementInNode = childNode.getGrammarElement();
 				if(elementInNode != null) {
 					for(Iterator<EObject> i = ruleInGrammar.eAllContents(); i.hasNext();) {
 						EObject nextInGrammar = i.next();
-						if(nextInGrammar == expectedRuleCall) {
+						// check for type of childNode, otherwise we get a ClassCastException
+						// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=407390
+						if(nextInGrammar == expectedRuleCall && childNode instanceof ICompositeNode) {
 							currentParentNode = (ICompositeNode) childNode;
 							continue OUTER;
 						}
