@@ -4139,6 +4139,52 @@ public class T1Impl<T extends Comparable<T>, U extends List<? extends T>> implem
 		]
 	}
 
+	@Test def void testTraitWithGenericMethod() {
+		traitWithGenericMethod.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests.traits;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface T1 {
+  public abstract <T extends List<String>> String getFirst(final T t);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl implements T1 {
+  private T1 _delegate;
+  
+  public T1Impl(final T1 delegate) {
+    this._delegate = delegate;
+  }
+  
+  public <T extends List<String>> String getFirst(final T t) {
+    return _delegate.getFirst(t);
+  }
+  
+  public <T extends List<String>> String _getFirst(final T t) {
+    return t.get(0);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

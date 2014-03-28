@@ -80,12 +80,15 @@ TJMethodDeclaration:
 ;
 
 TJRequiredMethod:
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
 	type=JvmTypeReference name=ValidID 
 		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')'
 		';' ;
 
 TJMethod:
-	private?='private'? type=JvmTypeReference name=ValidID 
+	private?='private'? 
+		('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
+		type=JvmTypeReference name=ValidID 
 		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')' 
 		body=XBlockExpression;
 

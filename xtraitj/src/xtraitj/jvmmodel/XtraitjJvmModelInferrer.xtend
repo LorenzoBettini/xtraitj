@@ -642,6 +642,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	def toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
+
+			copyTypeParameters(m.typeParameters)
+
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
 			}
@@ -656,6 +659,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	def toAbstractMethod(TJMethodDeclaration m) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
+
+			copyTypeParameters(m.typeParameters)
+
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
 			}
@@ -684,6 +690,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	def toTraitMethod(TJMethod method, String name) {
 		method.toMethod(name, method.type) [
 			documentation = method.documentation
+			
+			copyTypeParameters(method.typeParameters)
+			
 			for (p : method.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
 			}
