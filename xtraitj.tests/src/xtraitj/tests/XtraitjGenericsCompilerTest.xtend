@@ -275,6 +275,8 @@ import java.util.List;
 @SuppressWarnings("all")
 public interface T1 {
   public abstract <T extends List<String>> String getFirst(final T t);
+  
+  public abstract <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2);
 }
 '''
 )
@@ -300,6 +302,15 @@ public class T1Impl implements T1 {
   
   public <T extends List<String>> String _getFirst(final T t) {
     return t.get(0);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2) {
+    return _delegate.compare(t1, t2);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int _compare(final T t1, final U t2) {
+    T _get = t2.get(0);
+    return t1.compareTo(_get);
   }
 }
 '''

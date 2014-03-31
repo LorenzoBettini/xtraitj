@@ -991,6 +991,10 @@ class TraitJInputs {
 			<T extends List<String>> String getFirst(T t) {
 				return t.get(0)
 			}
+			
+			<T extends Comparable<T>, U extends List<? extends T>> int compare(T t1, U t2) {
+				return t1.compareTo(t2.get(0))
+			}
 		}
 		'''
 	}
