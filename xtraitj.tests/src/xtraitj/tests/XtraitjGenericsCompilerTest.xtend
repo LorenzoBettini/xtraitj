@@ -365,4 +365,58 @@ public class T1Impl<T> implements T1<T> {
 			assertGeneratedJavaCodeCompiles
 		]
 	}
+
+	@Test def void testTraitUsesGenericTrait() {
+		traitUsesGenericTrait.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests.traits;
+
+import tests.traits.TGeneric;
+
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<String> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests.traits.impl;
+
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
+  
+  private TGenericImpl<String> _TGeneric;
+  
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGenericImpl(delegate);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import tests.traits.TGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TGeneric<String> {
+  private TGenericImpl<String> _TGeneric = new TGenericImpl(this);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }

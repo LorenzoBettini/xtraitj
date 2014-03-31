@@ -1012,4 +1012,22 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def traitUsesGenericTrait() {
+		'''
+		package tests;
+		
+		trait TGeneric<T> {
+			
+		}
+		
+		trait TUsesGeneric uses TGeneric<String> {
+			
+		}
+		
+		class CUsesGeneric uses TGeneric<String> {
+			
+		}
+		'''
+	}
 }

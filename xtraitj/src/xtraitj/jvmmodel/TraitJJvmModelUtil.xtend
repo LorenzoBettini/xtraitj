@@ -23,6 +23,7 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -35,9 +36,12 @@ class TraitJJvmModelUtil {
 	@Inject extension TypeReferences
 	@Inject extension IJvmModelAssociations
 	@Inject extension TraitJTypingUtil
+	@Inject extension JvmTypesBuilder
 
 	def associatedInterface(TJTraitReference t) {
-		t.associatedInterfaceType?.createTypeRef()
+		t.associatedInterfaceType?.createTypeRef(
+			t.arguments.map[cloneWithProxies]
+		)
 	}
 
 	def associatedInterfaceType(TJTraitReference t) {
@@ -60,7 +64,9 @@ class TraitJJvmModelUtil {
 	}
 
 	def associatedClass(TJTraitReference t) {
-		t.associatedClassType?.createTypeRef()
+		t.associatedClassType?.createTypeRef(
+			t.arguments.map[cloneWithProxies]
+		)
 	}
 
 	def associatedClassType(TJTraitReference t) {

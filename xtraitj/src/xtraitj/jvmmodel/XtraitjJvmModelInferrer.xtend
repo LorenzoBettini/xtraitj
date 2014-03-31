@@ -40,8 +40,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension TraitJJvmModelUtil
-//	@Inject
-//	private TypesFactory typesFactory
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
