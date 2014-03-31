@@ -994,4 +994,18 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def traitWithGenericMethodShadowingTraitTypeParameter() {
+		'''
+		package tests;
+		
+		import java.util.List
+		
+		trait T1 <T> {
+			<T extends List<String>> String getFirst(T t) {
+				return t.get(0)
+			}
+		}
+		'''
+	}
 }

@@ -309,4 +309,49 @@ public class T1Impl implements T1 {
 		]
 	}
 
+	@Test def void testTraitWithGenericMethodShadowingTraitTypeParameter() {
+		traitWithGenericMethodShadowingTraitTypeParameter.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests.traits;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface T1<T> {
+  public abstract <T extends List<String>> String getFirst(final T t);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl<T> implements T1<T> {
+  private T1<T> _delegate;
+  
+  public T1Impl(final T1<T> delegate) {
+    this._delegate = delegate;
+  }
+  
+  public <T extends List<String>> String getFirst(final T t) {
+    return _delegate.getFirst(t);
+  }
+  
+  public <T extends List<String>> String _getFirst(final T t) {
+    return t.get(0);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }
