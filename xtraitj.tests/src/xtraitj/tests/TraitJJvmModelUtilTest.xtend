@@ -22,6 +22,7 @@ import xtraitj.xtraitj.TJTraitReference
 import static extension org.junit.Assert.*
 import static extension xtraitj.util.TraitJModelUtil.*
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.jvmmodel.XtraitjJvmOperation
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -283,9 +284,9 @@ class TraitJJvmModelUtilTest {
 		'''.parse => [
 			classes.head => [
 				fields.assertFoundField
-					(jvmAllRequiredFieldOperations.get(0), fields.get(1))
+					(xtraitjJvmAllRequiredFieldOperations.get(0), fields.get(1))
 				fields.assertFoundField
-					(jvmAllRequiredFieldOperations.get(1), null)
+					(xtraitjJvmAllRequiredFieldOperations.get(1), null)
 			]
 		]
 	}
@@ -294,9 +295,9 @@ class TraitJJvmModelUtilTest {
 		classUsesTraitWithRenamedFields.parse => [
 			classes.head => [
 				fields.assertFoundField
-					(jvmAllRequiredFieldOperations.get(0), fields.get(0))
+					(xtraitjJvmAllRequiredFieldOperations.get(0), fields.get(0))
 				fields.assertFoundField
-					(jvmAllRequiredFieldOperations.get(1), fields.get(1))
+					(xtraitjJvmAllRequiredFieldOperations.get(1), fields.get(1))
 			]
 		]
 	}
@@ -705,10 +706,10 @@ class TraitJJvmModelUtilTest {
 
 	def private assertAllRequiredFieldOperations(TJClass c, String expected) {
 		expected.assertEquals
-			(c.jvmAllRequiredFieldOperations.map[fieldRepresentation].join(", "))
+			(c.xtraitjJvmAllRequiredFieldOperations.map[fieldRepresentation].join(", "))
 	}
 
-	def private assertFoundField(Iterable<? extends TJField> fields, JvmOperation member, TJField expected) {
+	def private assertFoundField(Iterable<? extends TJField> fields, XtraitjJvmOperation member, TJField expected) {
 		expected.assertSame(fields.findMatchingField(member))
 	}
 

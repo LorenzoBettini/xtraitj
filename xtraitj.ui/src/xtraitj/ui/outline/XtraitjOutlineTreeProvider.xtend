@@ -24,6 +24,7 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
+import xtraitj.jvmmodel.XtraitjJvmOperation
 
 /**
  * Customization of the default outline structure.
@@ -111,13 +112,13 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
-		val fieldRequirements = d.jvmAllRequiredFieldOperations
+		val fieldRequirements = d.xtraitjJvmAllRequiredFieldOperations
 		val methodRequirements = d.jvmAllRequiredMethodOperationsFromReferences
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
 			val reqNode = new TraitJRequirementsNode(parentNode, images.getImage("externalize.gif"))
 			nodesForRequirements(reqNode, interfaceMethods)
-			nodesForRequirements(reqNode, fieldRequirements)
+			nodesForRequirements2(reqNode, fieldRequirements)
 			nodesForRequirements(reqNode, methodRequirements)
 		}
 	}
@@ -169,6 +170,43 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			}
 			else
 				reqNode.createNode(req)
+		}
+	}
+
+	def nodesForRequirements2(TraitJRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
+		for (req : requirements) {
+			val source = req.op.originalSource
+			if (source != null) {
+				// use the name from req so that
+				// possible renames are applied
+				// but use the original source as the element
+				// so that we can jump to it
+				if (source instanceof TJField)
+					reqNode.createEObjectNode(
+						source,
+						_image(source),
+						req.op.simpleName.stripGetter +
+						" : " + source.getType().getSimpleName(),
+						true
+					)
+				else
+					reqNode.createEObjectNode(
+						source,
+						_image(source),
+						new StyledString(
+							req.op.simpleName 
+							+ uiStrings.parameters(req.op)
+						).append(
+							new StyledString(" : " + 
+								source.type.simpleName,
+								StyledString::DECORATIONS_STYLER
+							)
+						),
+						true
+					)
+			}
+			else
+				reqNode.createNode(req.op)
 		}
 	}
 

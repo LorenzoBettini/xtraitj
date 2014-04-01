@@ -47,8 +47,8 @@ class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
 			clazz.fields += 
 				XtraitjFactory.eINSTANCE.createTJField => [
 					name = fieldName
-					type = clazz.jvmAllRequiredFieldOperations.findFirst[
-						simpleName.stripGetter == fieldName
+					type = clazz.xtraitjJvmAllRequiredFieldOperations.findFirst[
+						op.simpleName.stripGetter == fieldName
 					].returnType.cloneWithProxies
 				]
 		]

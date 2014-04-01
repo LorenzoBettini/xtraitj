@@ -217,11 +217,6 @@ class TraitJJvmModelUtil {
 			].flatten
 	}
 
-	def jvmAllRequiredFieldOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[jvmAllRequiredFieldOperations].flatten
-	}
-
 	/**
 	 * Do not put the operations corresponding to set methods
 	 * since we want a single operation for each field (while
@@ -311,13 +306,6 @@ class TraitJJvmModelUtil {
 	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
 		candidates.findFirst[
 			name == member.op.fieldName &&
-			type.sameType(member.returnType)
-		]
-	}
-
-	def findMatchingField(Iterable<? extends TJField> candidates, JvmOperation member) {
-		candidates.findFirst[
-			name == member.fieldName &&
 			type.sameType(member.returnType)
 		]
 	}
@@ -423,10 +411,14 @@ class TraitJJvmModelUtil {
 			// from the cloned one
 			if (!arguments.empty) {
 				for (i : 0..arguments.size - 1) {
-					newArguments.set(i, arguments.get(i).replaceTypeParameters(typeArguments))
+					newArguments.set(i, 
+						arguments.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
+					)
 				}
+				return newTypeRef
+			} else {
+				return typeRef
 			}
-			return newTypeRef
 		}
 		
 		return typeRef
