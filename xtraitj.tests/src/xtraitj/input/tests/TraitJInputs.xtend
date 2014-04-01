@@ -1053,6 +1053,7 @@ class TraitJInputs {
 		trait TUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
 			
 		}
+		
 		'''
 	}
 }

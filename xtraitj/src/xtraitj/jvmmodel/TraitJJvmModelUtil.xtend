@@ -2,14 +2,19 @@ package xtraitj.jvmmodel
 
 import com.google.inject.Inject
 import java.beans.Introspector
+import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmFeature
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
+import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.typing.TraitJTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
@@ -22,8 +27,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -107,6 +110,10 @@ class TraitJJvmModelUtil {
 
 	def jvmAllOperations(TJTrait t) {
 		t.jvmAllFeatures.filter(typeof(JvmOperation))
+	}
+
+	def xtraitjJvmAllOperations(TJTraitReference t) {
+		t.jvmAllFeatures.filter(typeof(JvmOperation)).map[createXtraitjJvmOperation(t)]
 	}
 
 	def jvmAllOperations(TJTraitReference t) {
@@ -229,6 +236,10 @@ class TraitJJvmModelUtil {
 
 	def alreadyDefined(Iterable<JvmMember> members, JvmMember m) {
 		members.exists[simpleName == m.simpleName]
+	}
+
+	def isRequired(XtraitjJvmOperation o) {
+		o.op.required
 	}
 
 	def isRequired(JvmMember m) {
@@ -362,5 +373,42 @@ class TraitJJvmModelUtil {
 		!f1.compliant(f2)
 	}
 
+	def createXtraitjJvmOperation(JvmOperation op, TJTraitReference traitReference) {
+		val arguments = traitReference.arguments
+		new XtraitjJvmOperation(
+			op,
+			op.returnType.replaceTypeParameters(arguments),
+			op.parameters.map[
+				parameterType.replaceTypeParameters(arguments)
+			]
+		)
+	}
+
+	def JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {
+		val type = typeRef.type
+		if (type instanceof JvmTypeParameter) {
+			// retrieve the index in the type parameters/arguments list
+			val declarator = type.declarator
+			val pos = declarator.typeParameters.indexOf(type)
+			if (pos < typeArguments.size)
+				return typeArguments.get(pos).replaceTypeParameters(typeArguments)
+		}
+		
+		val newTypeRef = typeRef.cloneWithProxies
+		if (newTypeRef instanceof JvmParameterizedTypeReference) {
+			val arguments = (typeRef as JvmParameterizedTypeReference).arguments
+			val newArguments = newTypeRef.arguments
+			// IMPORTANT: get the argument from the original arguments, not
+			// from the cloned one
+			if (!arguments.empty) {
+				for (i : 0..arguments.size - 1) {
+					newArguments.set(i, arguments.get(i).replaceTypeParameters(typeArguments))
+				}
+			}
+			return newTypeRef
+		}
+		
+		return typeRef
+	}
 }
 

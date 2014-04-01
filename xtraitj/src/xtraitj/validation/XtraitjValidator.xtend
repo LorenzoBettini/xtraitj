@@ -124,8 +124,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	}
 
 	@Check def void checkClassProvidesAllRequirements(TJClass c) {
-		c.jvmAllRequiredFieldOperations.forEach[
-			requiredField |
+		for (requiredField : c.jvmAllRequiredFieldOperations) {
 			if (c.fields.findMatchingField(requiredField) == null) {
 				error(
 					"Class must provide required field '" +
@@ -136,7 +135,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					requiredField.returnType.identifier
 				)
 			}
-		]
+		}
 		c.jvmAllRequiredMethodOperations.forEach[
 			requiredMethod |
 			if (c.jvmAllMethodOperations().findMatchingMethod(requiredMethod) == null) {
