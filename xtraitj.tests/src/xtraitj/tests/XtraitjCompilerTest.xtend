@@ -13,7 +13,7 @@ import xtraitj.xtraitj.TJProgram
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJCompilerTest extends AbstractXtraitjCompilerTest {
+class XtraitjCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension CompilationTestHelper
 	@Inject extension TraitJInputs
