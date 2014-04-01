@@ -487,6 +487,51 @@ public class TUsesGenericImpl implements TUsesGeneric {
 '''
 )
 
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import java.util.Set;
+import tests.traits.TGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TGeneric<List<String>,Set<Integer>> {
+  private List<String> t;
+  
+  public List<String> getT() {
+    return this.t;
+  }
+  
+  public void setT(final List<String> t) {
+    this.t = t;
+  }
+  
+  private Iterable<List<String>> iterableOfStrings;
+  
+  public Iterable<List<String>> getIterableOfStrings() {
+    return this.iterableOfStrings;
+  }
+  
+  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
+    this.iterableOfStrings = iterableOfStrings;
+  }
+  
+  private Iterable<Set<Integer>> iterableOfIntegers;
+  
+  public Iterable<Set<Integer>> getIterableOfIntegers() {
+    return this.iterableOfIntegers;
+  }
+  
+  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
+    this.iterableOfIntegers = iterableOfIntegers;
+  }
+  
+  private TGenericImpl<List<String>,Set<Integer>> _TGeneric = new TGenericImpl(this);
+}
+'''
+)
 			assertGeneratedJavaCodeCompiles
 		]
 	}

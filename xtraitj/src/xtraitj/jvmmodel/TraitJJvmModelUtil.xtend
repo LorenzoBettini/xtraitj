@@ -208,6 +208,20 @@ class TraitJJvmModelUtil {
 				filter[sourceField != null]
 	}
 
+	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
+		e.traitExpression.traitReferences.
+			map[traitRef | 
+				traitRef.jvmAllRequiredFieldOperations.map[
+					createXtraitjJvmOperation(traitRef)
+				]
+			].flatten
+	}
+
+	def jvmAllRequiredFieldOperations(TJDeclaration e) {
+		e.traitExpression.traitReferences.
+			map[jvmAllRequiredFieldOperations].flatten
+	}
+
 	/**
 	 * Do not put the operations corresponding to set methods
 	 * since we want a single operation for each field (while
@@ -215,11 +229,6 @@ class TraitJJvmModelUtil {
 	 */
 	def jvmAllRequiredFieldOperations(TJTraitReference e) {
 		e.jvmAllFieldOperations.filter[!(simpleName.startsWith("set"))]
-	}
-
-	def jvmAllRequiredFieldOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[jvmAllRequiredFieldOperations].flatten
 	}
 
 	def originalSource(JvmMember o) {
@@ -272,6 +281,11 @@ class TraitJJvmModelUtil {
 		}
 	}
 
+	def fieldRepresentation(XtraitjJvmOperation f) {
+		f.returnType?.simpleName + " " + 
+			f.op.fieldName
+	}
+
 	def fieldRepresentation(JvmOperation f) {
 		f.returnType?.simpleName + " " + 
 			f.fieldName
@@ -292,6 +306,13 @@ class TraitJJvmModelUtil {
 	def fieldName(JvmOperation f) {
 		f.simpleName.replaceFirst("get", "").
 			replaceFirst("is", "").toFirstLower
+	}
+
+	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
+		candidates.findFirst[
+			name == member.op.fieldName &&
+			type.sameType(member.returnType)
+		]
 	}
 
 	def findMatchingField(Iterable<? extends TJField> candidates, JvmOperation member) {

@@ -24,7 +24,6 @@ public class XtraitjJvmOperation {
 
 	public XtraitjJvmOperation(JvmOperation op, JvmTypeReference returnType,
 			List<JvmTypeReference> parameters) {
-		super();
 		this.op = op;
 		this.returnType = returnType;
 		this.parametersType = parameters;

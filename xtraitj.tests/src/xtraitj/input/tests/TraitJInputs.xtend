@@ -1054,6 +1054,13 @@ class TraitJInputs {
 			
 		}
 		
+		class CUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
+			List<String> t;
+			
+			Iterable<List<String>> iterableOfStrings;
+			
+			Iterable<Set<Integer>> iterableOfIntegers;
+		}
 		'''
 	}
 }
