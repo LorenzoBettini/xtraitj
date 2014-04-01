@@ -1017,15 +1017,40 @@ class TraitJInputs {
 		'''
 		package tests;
 		
-		trait TGeneric<T> {
+		import java.util.List
+		import java.util.Collection
+		
+		trait TGeneric<T extends Collection<String>> {
 			
 		}
 		
-		trait TUsesGeneric uses TGeneric<String> {
+		trait TUsesGeneric uses TGeneric<List<String>> {
 			
 		}
 		
-		class CUsesGeneric uses TGeneric<String> {
+		class CUsesGeneric uses TGeneric<List<String>> {
+			
+		}
+		'''
+	}
+
+	def traitUsesGenericTraitWithMembers() {
+		'''
+		package tests;
+		
+		import java.util.List
+		import java.util.Collection
+		import java.util.Set
+		
+		trait TGeneric<T extends Collection<String>, U extends Collection<Integer>> {
+			T t;
+			
+			Iterable<T> iterableOfStrings;
+			
+			Iterable<U> iterableOfIntegers;
+		}
+		
+		trait TUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
 			
 		}
 		'''

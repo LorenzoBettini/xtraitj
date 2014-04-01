@@ -521,13 +521,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			t.traitReferences.forEach[
    				traitExp |
+   				val typeArguments = traitExp.arguments
    				// then delegates for required methods
    				traitExp.jvmAllOperations.filter[required].forEach [
    					op |
    					if (!members.alreadyDefined(op)) {
    						members += op.toMethodDelegate(
    							delegateFieldName,
-   							op.simpleName, op.simpleName
+   							op.simpleName, op.simpleName,
+   							typeArguments
    						)
    					}
    				]
@@ -629,6 +631,48 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			else
 				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 		]
+	}
+
+	def toMethodDelegate(JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate, List<JvmTypeReference> typeArguments) {
+		val m = op.originalSource ?: op
+		m.toMethod(methodName, op.returnType.replaceTypeParameters(typeArguments)) [
+			documentation = m.documentation
+			for (p : op.parameters) {
+				parameters += p.toParameter(p.name, p.parameterType.replaceTypeParameters(typeArguments))
+			}
+			val args = op.parameters.map[name].join(", ")
+			if (op.returnType?.simpleName != "void")
+				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+			else
+				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+		]
+	}
+
+	def private JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {
+		val type = typeRef.type
+		if (type instanceof JvmTypeParameter) {
+			// retrieve the index in the type parameters/arguments list
+			val declarator = type.declarator
+			val pos = declarator.typeParameters.indexOf(type)
+			if (pos < typeArguments.size)
+				return typeArguments.get(pos).replaceTypeParameters(typeArguments)
+		}
+		
+		val newTypeRef = typeRef.cloneWithProxies
+		if (newTypeRef instanceof JvmParameterizedTypeReference) {
+			val arguments = (typeRef as JvmParameterizedTypeReference).arguments
+			val newArguments = newTypeRef.arguments
+			// IMPORTANT: get the argument from the original arguments, not
+			// from the cloned one
+			if (!arguments.empty) {
+				for (i : 0..arguments.size - 1) {
+					newArguments.set(i, arguments.get(i).replaceTypeParameters(typeArguments))
+				}
+			}
+			return newTypeRef
+		}
+		
+		return typeRef
 	}
 
 	def toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {

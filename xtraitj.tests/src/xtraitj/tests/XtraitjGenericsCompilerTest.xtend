@@ -373,10 +373,11 @@ assertTraitJavaInterface("tests", "TUsesGeneric",
 '''
 package tests.traits;
 
+import java.util.List;
 import tests.traits.TGeneric;
 
 @SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<String> {
+public interface TUsesGeneric extends TGeneric<List<String>> {
 }
 '''
 )
@@ -385,6 +386,7 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 '''
 package tests.traits.impl;
 
+import java.util.List;
 import tests.traits.TUsesGeneric;
 import tests.traits.impl.TGenericImpl;
 
@@ -392,7 +394,7 @@ import tests.traits.impl.TGenericImpl;
 public class TUsesGenericImpl implements TUsesGeneric {
   private TUsesGeneric _delegate;
   
-  private TGenericImpl<String> _TGeneric;
+  private TGenericImpl<List<String>> _TGeneric;
   
   public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
@@ -406,12 +408,81 @@ assertJavaClass("tests", "CUsesGeneric",
 '''
 package tests;
 
+import java.util.List;
 import tests.traits.TGeneric;
 import tests.traits.impl.TGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TGeneric<String> {
-  private TGenericImpl<String> _TGeneric = new TGenericImpl(this);
+public class CUsesGeneric implements TGeneric<List<String>> {
+  private TGenericImpl<List<String>> _TGeneric = new TGenericImpl(this);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithMembers() {
+		traitUsesGenericTraitWithMembers.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests.traits;
+
+import java.util.List;
+import java.util.Set;
+import tests.traits.TGeneric;
+
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<List<String>,Set<Integer>> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import java.util.Set;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
+  
+  private TGenericImpl<List<String>,Set<Integer>> _TGeneric;
+  
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGenericImpl(delegate);
+  }
+  
+  public List<String> getT() {
+    return _delegate.getT();
+  }
+  
+  public void setT(final List<String> t) {
+    _delegate.setT(t);
+  }
+  
+  public Iterable<List<String>> getIterableOfStrings() {
+    return _delegate.getIterableOfStrings();
+  }
+  
+  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
+    _delegate.setIterableOfStrings(iterableOfStrings);
+  }
+  
+  public Iterable<Set<Integer>> getIterableOfIntegers() {
+    return _delegate.getIterableOfIntegers();
+  }
+  
+  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
+    _delegate.setIterableOfIntegers(iterableOfIntegers);
+  }
 }
 '''
 )
