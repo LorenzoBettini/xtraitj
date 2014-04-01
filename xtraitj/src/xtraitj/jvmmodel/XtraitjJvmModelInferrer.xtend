@@ -525,16 +525,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				traitExp.jvmAllOperations.filter[required].forEach [
    					op |
    					if (!members.alreadyDefined(op)) {
-   						if (op.sourceField != null)
-   							members += op.toMethodDelegate(
-   								delegateFieldName,
-   								op.simpleName, op.simpleName
-   							)
-   						else
-   							members += op.toMethodDelegate(
-   								delegateFieldName,
-   								op.simpleName, op.simpleName
-   							)
+   						members += op.toMethodDelegate(
+   							delegateFieldName,
+   							op.simpleName, op.simpleName
+   						)
    					}
    				]
    			]
