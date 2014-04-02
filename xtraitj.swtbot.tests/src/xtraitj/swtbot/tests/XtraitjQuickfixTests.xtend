@@ -48,4 +48,43 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		
 	}
 
+	@Test
+	def void testQuickfixForMissingFieldWithGeneric() {
+		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		val editor = updateEditorContents(
+		'''
+		package my.traits;
+		
+		trait T<Type> {
+			Type s;
+		}
+		
+		class C uses T<Integer> {
+		}
+		'''
+		).toTextEditor
+		
+		//1.assertEquals(editor.quickFixes.size)
+		
+		editor.selectRange(6, 13, 1)
+		
+		editor.quickfix(0)
+		
+		editor.saveAndWaitForAutoBuild
+		
+		'''
+		package my.traits;
+		
+		trait T<Type> {
+			Type s;
+		}
+		
+		class C uses T<Integer> {
+			Integer s ;
+		}
+		'''.toString.
+		assertEquals(editor.text)
+		
+	}
+
 }
