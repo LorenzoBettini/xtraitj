@@ -137,7 +137,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			}
 		}
 		for (requiredMethod : c.xtraitjJvmAllRequiredMethodOperations) {
-			if (c.xtraitjJvmAllMethodOperations().findMatchingMethod(requiredMethod) == null) {
+			if (c.xtraitjJvmAllMethodOperations.findMatchingMethod(requiredMethod) == null) {
 				error(
 					"Class must provide required method '" +
 						requiredMethod.methodRepresentation + "'",
@@ -146,9 +146,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				)
 			}
 		}
-		c.jvmAllInterfaceMethods.forEach[
-			method |
-			if (c.jvmAllMethodOperations.findMatchingMethod(method) == null) {
+		for (method : c.jvmAllInterfaceMethods) {
+			if (c.xtraitjJvmAllMethodOperations.findMatchingOperation(method) == null) {
 				error(
 					"Class must provide interface method '" +
 						method.methodRepresentation + "'",
@@ -156,7 +155,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					MISSING_INTERFACE_METHOD
 				)
 			}
-		]
+		}
 	}
 
 	@Check def void checkImplementsInterfaces(TJClass c) {

@@ -1118,4 +1118,24 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def classImplementsAllGenericInterfaceMethods() {
+		'''
+		package tests;
+		
+		import xtraitj.input.tests.MyGenericTestInterface
+		import xtraitj.input.tests.MyGenericTestInterface2
+		import java.util.List
+		
+		trait T1 {
+			int m(List<String> l) { return l.size }
+		}
+		
+		trait T2 {
+			List<Integer> n(int i) { return null; }
+		}
+		
+		class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer> uses T1, T2 {}
+		'''
+	}
 }

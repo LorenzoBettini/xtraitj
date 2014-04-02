@@ -671,4 +671,39 @@ public class CUsesGeneric2 implements TGeneric<String>, T2 {
 			assertGeneratedJavaCodeCompiles
 		]
 	}
+
+	@Test def void testClassImplementsAllGenericInterfaceMethods() {
+		classImplementsAllGenericInterfaceMethods.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.List;
+import tests.traits.T1;
+import tests.traits.T2;
+import tests.traits.impl.T1Impl;
+import tests.traits.impl.T2Impl;
+import xtraitj.input.tests.MyGenericTestInterface;
+import xtraitj.input.tests.MyGenericTestInterface2;
+
+@SuppressWarnings("all")
+public class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer>, T1, T2 {
+  private T1Impl _T1 = new T1Impl(this);
+  
+  public int m(final List<String> l) {
+    return _T1._m(l);
+  }
+  
+  private T2Impl _T2 = new T2Impl(this);
+  
+  public List<Integer> n(final int i) {
+    return _T2._n(i);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }
