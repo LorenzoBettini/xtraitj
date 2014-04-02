@@ -1087,6 +1087,9 @@ class TraitJInputs {
 				return t.get(0);
 			}
 		}
+		
+		class CUsesGeneric uses TUsesGeneric {
+		}
 		'''
 	}
 }

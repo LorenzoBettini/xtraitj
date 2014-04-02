@@ -132,7 +132,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				members += traitExp.toTraitField
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
-   				traitExp.jvmAllMethodOperations.forEach [
+   				traitExp.xtraitjJvmAllMethodOperations.forEach [
    					traitMethod |
    					members += traitMethod.toMethodDelegate(traitExp.traitFieldName)
    				]
@@ -600,14 +600,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-	def toMethodDelegate(JvmOperation op, String delegateFieldName) {
-		op.toMethodDelegate(delegateFieldName, op.simpleName, "_"+op.simpleName)
+	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName) {
+		op.toMethodDelegate(delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
 	}
 
 	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
 		val m = op.op.originalSource ?: op.op
 		m.toMethod(methodName, op.returnType) [
 			documentation = m.documentation
+			
+			if (m instanceof TJMethodDeclaration) {
+				copyTypeParameters(m.typeParameters)
+			}
+			
 			val paramTypeIt = op.parametersType.iterator
 			for (p : op.op.parameters) {
 				parameters += p.toParameter(p.name, paramTypeIt.next)
@@ -618,6 +623,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			else
 				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 		]
+	}
+
+	def toMethodDelegate(JvmOperation op, String delegateFieldName) {
+		op.toMethodDelegate(delegateFieldName, op.simpleName, "_"+op.simpleName)
 	}
 
 	def toMethodDelegate(JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {

@@ -116,6 +116,10 @@ class TraitJJvmModelUtil {
 		t.jvmAllFeatures.filter(typeof(JvmOperation)).map[createXtraitjJvmOperation(t)]
 	}
 
+	def xtraitjJvmAllMethodOperations(TJTraitReference t) {
+		t.jvmAllMethodOperations.map[createXtraitjJvmOperation(t)]
+	}
+
 	def jvmAllOperations(TJTraitReference t) {
 		t.jvmAllFeatures.filter(typeof(JvmOperation))
 	}
@@ -263,6 +267,10 @@ class TraitJJvmModelUtil {
 
 	def associatedTrait(JvmTypeParameterDeclarator type) {
 		type.sourceElements.filter(TJTrait).head
+	}
+
+	def associatedTJClass(JvmTypeParameterDeclarator type) {
+		type.sourceElements.filter(TJClass).head
 	}
 
 	def memberRepresentation(JvmMember m) {

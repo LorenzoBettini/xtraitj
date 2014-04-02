@@ -595,6 +595,29 @@ public class TUsesGenericImpl implements TUsesGeneric {
 }
 '''
 )
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TUsesGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TUsesGeneric {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
+  
+  public Iterable<String> iterableOfStrings() {
+    return _TUsesGeneric._iterableOfStrings();
+  }
+  
+  public <V extends List<String>> String getFirst(final V t) {
+    return _TUsesGeneric._getFirst(t);
+  }
+}
+'''
+)
 			assertGeneratedJavaCodeCompiles
 		]
 	}
