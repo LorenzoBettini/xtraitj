@@ -621,4 +621,54 @@ public class CUsesGeneric implements TUsesGeneric {
 			assertGeneratedJavaCodeCompiles
 		]
 	}
+
+	@Test def void testRequiredMethodsWithGenerics() {
+		requiredMethodsWithGenerics.compile[
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import tests.traits.T2;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.T2Impl;
+import tests.traits.impl.TUsesGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TUsesGeneric, T2 {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
+  
+  private T2Impl _T2 = new T2Impl(this);
+  
+  public Iterable<String> iterableOfStrings() {
+    return _T2._iterableOfStrings();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric2",
+'''
+package tests;
+
+import tests.traits.T2;
+import tests.traits.TGeneric;
+import tests.traits.impl.T2Impl;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric2 implements TGeneric<String>, T2 {
+  private TGenericImpl<String> _TGeneric = new TGenericImpl(this);
+  
+  private T2Impl _T2 = new T2Impl(this);
+  
+  public Iterable<String> iterableOfStrings() {
+    return _T2._iterableOfStrings();
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }

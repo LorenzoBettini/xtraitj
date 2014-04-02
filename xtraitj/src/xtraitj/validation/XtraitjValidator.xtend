@@ -136,9 +136,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				)
 			}
 		}
-		c.jvmAllRequiredMethodOperations.forEach[
-			requiredMethod |
-			if (c.jvmAllMethodOperations().findMatchingMethod(requiredMethod) == null) {
+		for (requiredMethod : c.xtraitjJvmAllRequiredMethodOperations) {
+			if (c.xtraitjJvmAllMethodOperations().findMatchingMethod(requiredMethod) == null) {
 				error(
 					"Class must provide required method '" +
 						requiredMethod.methodRepresentation + "'",
@@ -146,7 +145,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					MISSING_REQUIRED_METHOD
 				)
 			}
-		]
+		}
 		c.jvmAllInterfaceMethods.forEach[
 			method |
 			if (c.jvmAllMethodOperations.findMatchingMethod(method) == null) {

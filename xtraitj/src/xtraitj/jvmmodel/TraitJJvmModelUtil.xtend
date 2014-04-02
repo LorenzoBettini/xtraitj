@@ -221,6 +221,29 @@ class TraitJJvmModelUtil {
 			].flatten
 	}
 
+	def xtraitjJvmAllRequiredMethodOperations(TJClass e) {
+		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
+	}
+
+	def xtraitjJvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
+		e.traitExpression.traitReferences.
+			map[
+				traitRef |
+				traitRef.jvmAllRequiredMethodOperations.map[
+					createXtraitjJvmOperation(traitRef)
+				]
+			].flatten
+	}
+
+	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
+		e.traitExpression.traitReferences.
+			map[traitRef | 
+				traitRef.jvmAllMethodOperations.map[
+					createXtraitjJvmOperation(traitRef)
+				]
+			].flatten
+	}
+
 	/**
 	 * Do not put the operations corresponding to set methods
 	 * since we want a single operation for each field (while
@@ -294,6 +317,13 @@ class TraitJJvmModelUtil {
 			f.fieldName
 	}
 
+	def methodRepresentation(XtraitjJvmOperation m) {
+		m.returnType?.simpleName + " " + m.op.simpleName +
+			"(" +
+			m.parametersType.map[simpleName].join(", ")
+			+ ")"
+	}
+
 	def methodRepresentation(JvmOperation m) {
 		m.returnType?.simpleName + " " + m.simpleName +
 			"(" +
@@ -316,6 +346,33 @@ class TraitJJvmModelUtil {
 			name == member.op.fieldName &&
 			type.sameType(member.returnType)
 		]
+	}
+
+	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
+		candidates.findFirst[
+			op.simpleName == member.op.simpleName &&
+			compliant(it, member)
+		]
+	}
+
+	/**
+	 * it's return type must be subtype of member's return type
+	 * and parameters' types must be the same
+	 */
+	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
+		returnType.isSubtype(member.returnType) &&
+		parametersType.size == member.parametersType.size &&
+		{
+			var ok = true
+			val paramIterator = parametersType.iterator
+			val memberParamIterator = member.parametersType.iterator
+			while (paramIterator.hasNext && ok) {
+				if (!paramIterator.next.sameType
+						(memberParamIterator.next))
+					ok = false
+			}
+			ok
+		}
 	}
 
 	def findMatchingMethod(Iterable<? extends JvmOperation> candidates, JvmOperation member) {

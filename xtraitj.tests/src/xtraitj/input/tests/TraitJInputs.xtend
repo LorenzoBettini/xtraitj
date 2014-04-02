@@ -1092,4 +1092,30 @@ class TraitJInputs {
 		}
 		'''
 	}
+
+	def requiredMethodsWithGenerics() {
+		'''
+		package tests;
+		
+		trait TGeneric<T extends String> {
+			Iterable<T> iterableOfStrings();
+		}
+		
+		trait TUsesGeneric uses TGeneric<String> {
+			
+		}
+		
+		trait T2 {
+			Iterable<String> iterableOfStrings() {
+				return newArrayList('foo')
+			}
+		}
+		
+		class CUsesGeneric uses TUsesGeneric, T2 {
+		}
+		
+		class CUsesGeneric2 uses TGeneric<String>, T2 {
+		}
+		'''
+	}
 }
