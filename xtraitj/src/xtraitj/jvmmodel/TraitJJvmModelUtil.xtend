@@ -42,7 +42,23 @@ class TraitJJvmModelUtil {
 	@Inject extension JvmTypesBuilder
 
 	def associatedInterface(TJTraitReference t) {
-		t.associatedInterfaceType?.createTypeRef(
+		val associated = t.associatedInterfaceType
+		if (t.operations.empty)
+			associated?.createTypeRef(
+				t.arguments.map[cloneWithProxies]
+			)
+		else
+			associated?.createTypeRef
+	}
+
+	def associatedTraitInterface(TJTraitReference t) {
+		t.trait.associatedInterfaceType?.createTypeRef(
+			t.arguments.map[cloneWithProxies]
+		)
+	}
+
+	def associatedTraitClass(TJTraitReference t) {
+		t.trait.associatedClassType?.createTypeRef(
 			t.arguments.map[cloneWithProxies]
 		)
 	}
@@ -57,6 +73,7 @@ class TraitJJvmModelUtil {
 		t.associatedInterfaceType?.createTypeRef()
 	}
 
+
 	def associatedInterfaceType(TJTrait t) {
 		t._associatedInterfaceType
 	}
@@ -67,9 +84,13 @@ class TraitJJvmModelUtil {
 	}
 
 	def associatedClass(TJTraitReference t) {
-		t.associatedClassType?.createTypeRef(
-			t.arguments.map[cloneWithProxies]
-		)
+		val associatedType = t.associatedClassType
+		if (t.operations.empty)
+			associatedType?.createTypeRef(
+				t.arguments.map[cloneWithProxies]
+			)
+		else
+			associatedType?.createTypeRef
 	}
 
 	def associatedClassType(TJTraitReference t) {

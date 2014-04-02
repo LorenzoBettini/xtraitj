@@ -1138,4 +1138,38 @@ class TraitJInputs {
 		class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer> uses T1, T2 {}
 		'''
 	}
+
+	def traitUsesGenericTraitWithRename() {
+		'''
+		package tests;
+		
+		import java.util.List
+		import java.util.LinkedList
+		
+		trait TGeneric<T> {
+			List<T> returnList() {
+				return new LinkedList<T>
+			}
+		}
+		
+		trait UsesTGeneric uses 
+			TGeneric<Integer>[rename returnList to returnListOfInteger],
+			TGeneric<List<Integer>>[rename returnList to returnListOfListOfInteger],
+			TGeneric<String> 
+		{
+			String useLists() {
+				val stringList = returnList() => [add("foo")]
+				val intList = returnListOfInteger() => [add(1)]
+				val intListList = returnListOfListOfInteger() => [
+					add(
+						returnListOfInteger() => [ add(2) ]
+					)
+				]
+				(stringList.toString + intList.toString + intListList.toString)
+			}
+		}
+		
+		class C uses UsesTGeneric {}
+		'''
+	}
 }

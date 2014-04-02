@@ -205,8 +205,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// this way, in this interface, the inserted Java methods are
 			// associated to defined methods in the corresponding trait
 			t.traitReferences.forEach[
-				traitExp |
-				traitExp.jvmAllMethodOperations.forEach[
+				traitRef |
+				traitRef.xtraitjJvmAllMethodOperations.forEach[
 					op |
 					members += op.toAbstractMethod
 				]
@@ -228,26 +228,28 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
 				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				
+				val xop = jvmOp.createXtraitjJvmOperation(t)
+				
 				if (relatedOperations.empty) {
-					members += jvmOp.toAbstractMethod(jvmOp.simpleName)
+					members += xop.toAbstractMethod(jvmOp.simpleName)
 				} else {
 					if (renameOperation != null) {
-						members += jvmOp.toAbstractMethod
+						members += xop.toAbstractMethod
 							(jvmOp.simpleName.renameGetterOrSetter(renameOperation.newname))
 					}
 					// hidden methods are simply not inserted in this interface
 					if (aliasOperation != null) {
-						members += jvmOp.toAbstractMethod(aliasOperation.newname)
+						members += xop.toAbstractMethod(aliasOperation.newname)
 						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
 							// we need to add also the original method
-							members += jvmOp.toAbstractMethod(aliasOperation.member.simpleName)
+							members += xop.toAbstractMethod(aliasOperation.member.simpleName)
 						}
 					}
 					// restricted methods are added and associated to the
 					// operation itself
 					if (restrictOperation != null) {
 						members += 
-							restrictOperation.toAbstractMethod(jvmOp, jvmOp.simpleName)
+							restrictOperation.toAbstractMethod(xop, jvmOp.simpleName)
 					}
 				}
 			]
@@ -273,18 +275,20 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(
 			t.toClass(t.traitExpressionClassName)
 		).initializeLater[
-			superTypes += t.associatedInterface
-			superTypes += t.trait.associatedInterface
+			val traitRefAssociatedInterface = t.associatedInterface
+			superTypes += traitRefAssociatedInterface
+			val traitAssociatedInterface = t.associatedTraitInterface
+			superTypes += traitAssociatedInterface
 			
 			val traitFieldName = t.traitFieldNameForOperations
 			
 			members += t.containingDeclaration.
-				toField(delegateFieldName, t.associatedInterface)
+				toField(delegateFieldName, traitRefAssociatedInterface)
 			members += t.
-				toField(traitFieldName, t.trait.associatedClass)
+				toField(traitFieldName, t.associatedTraitClass)
 			
 			members += t.toConstructor[
-   				parameters += t.toParameter("delegate", t.associatedInterface)
+   				parameters += t.toParameter("delegate", traitRefAssociatedInterface)
 				body = [
 					it.append('''this.«delegateFieldName» = delegate;''')
 					newLine.append('''«traitFieldName» = ''')
@@ -305,10 +309,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				val redirectOperation = relatedOperations.filter(typeof(TJRedirectOperation)).head
 				
+				val xop = jvmOp.createXtraitjJvmOperation(t)
+				
 				if (renameOperation == null && hideOperation == null && redirectOperation == null) {
 					// if the method is not removed we must also add the
 					// same forwarding for the original name
-					members += jvmOp.
+					members += xop.
 							toMethodDelegate(delegateFieldName,
 								jvmOp.simpleName,
 								jvmOp.simpleName
@@ -316,7 +322,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// if it's restricted the original version will not
 					// be called.
 					if (!jvmOp.required && restrictOperation == null) {
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(traitFieldName,
 								jvmOp.simpleName.underscoreName,
 								jvmOp.simpleName.underscoreName
@@ -333,36 +339,36 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						val newname = 
 							jvmOp.simpleName.renameGetterOrSetter(renameOperation.newname)
 						// m is forwarded to this.m2()
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								"this",
 								jvmOp.simpleName,
 								newname
 							)
 						// m2 is forwarded to delegate.m2()
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								delegateFieldName,
 								newname,
 								newname
 							)
 					} else {
-						// m is forwared to this.m2
-						members += jvmOp.
+						// m is forwarded to this.m2
+						members += xop.
 						toMethodDelegate(
 							"this",
 							renameOperation.member.simpleName,
 							renameOperation.newname
 						)
 						// m2 is forwarded to delegate.m2
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								delegateFieldName,
 								renameOperation.newname,
 								renameOperation.newname
 							)
 						// _m2 is forwarded to T1._m
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								traitFieldName,
 								renameOperation.newname.underscoreName,
@@ -375,7 +381,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m cannot be required
 					// m is forwarded to T1._m
 					// _m2 is forwarded to T1._m
-					members += jvmOp.
+					members += xop.
 						toMethodDelegate(
 							traitFieldName,
 							hideOperation.member.simpleName,
@@ -386,14 +392,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// example T1[alias m as oldm]
 					// m cannot be required
 					// oldm is forwarded to delegate.oldm
-					members += jvmOp.
+					members += xop.
 						toMethodDelegate(
 							delegateFieldName,
 							aliasOperation.newname,
 							aliasOperation.newname
 						)
 					// _oldm is forwarded to T1._m
-					members += jvmOp.
+					members += xop.
 						toMethodDelegate(
 							traitFieldName,
 							aliasOperation.newname.underscoreName,
@@ -407,7 +413,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						// make sure we take the jvmOp's name
 						// since the members in the redirect operation are bound
 						// to the getter in case of a field
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								delegateFieldName,
 								jvmOp.simpleName,
@@ -416,7 +422,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								)
 							)
 					} else {
-						members += jvmOp.
+						members += xop.
 							toMethodDelegate(
 								delegateFieldName,
 								redirectOperation.member.simpleName,
@@ -430,7 +436,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def void collectSuperInterfaces(List<JvmTypeReference> typeRefs, TJTraitExpression e) {
 		e.traitReferences.forEach[
-			val i = associatedInterface
+			val	i = associatedInterface
 			if (i != null)
 				typeRefs += i
 		]
@@ -438,17 +444,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
    	def void inferTraitClass(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitClass = t.toClass(t.traitClassName)
+		
+		// immediately copy type parameters, otherwise, when processing possible
+		// trait operations involving this trait the corresponding inferred class
+		// does not expose type parameters yet
+		traitClass.copyTypeParameters(t.traitTypeParameters)
    		
 		acceptor.accept(traitClass).initializeLater[
-//			val copied = <JvmTypeParameter>newArrayList()
-//			for (par : t.traitTypeParameters) {
-//				val c = par.cloneWithProxies
-//				copied += c
-//			}
-//			
-//			copyTypeParameters(copied)
-
-			copyTypeParameters(t.traitTypeParameters)
 
    			documentation = t.documentation
    			val traitInterfaceTypeRef = t.associatedInterface
@@ -503,18 +505,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			]
    			
    			t.traitReferences.forEach[
-   				traitExp |
+   				traitRef |
    				// first delegates for implemented methods 
-   				traitExp.jvmAllMethodOperations.forEach [
+   				traitRef.xtraitjJvmAllMethodOperations.forEach [
    					traitMethod |
+   					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
    					members += traitMethod.toMethodDelegate(
-   						delegateFieldName, traitMethod.simpleName, traitMethod.simpleName 
+   						delegateFieldName, methodName, methodName
    					)
    					// _m() { delegate to trait defining the method }
    					members += traitMethod.toMethodDelegate(
-   						traitExp.traitFieldName, traitMethod.simpleName.underscoreName,
-   						traitMethod.simpleName.underscoreName
+   						traitRef.traitFieldName, methodName.underscoreName,
+   						methodName.underscoreName
    					)
    				]
    			]
@@ -625,25 +628,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toMethodDelegate(JvmOperation op, String delegateFieldName) {
-		op.toMethodDelegate(delegateFieldName, op.simpleName, "_"+op.simpleName)
-	}
-
-	def toMethodDelegate(JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-		val m = op.originalSource ?: op
-		m.toMethod(methodName, op.returnType) [
-			documentation = m.documentation
-			for (p : op.parameters) {
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			val args = op.parameters.map[name].join(", ")
-			if (op.returnType?.simpleName != "void")
-				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-			else
-				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-		]
-	}
-
 	def toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
@@ -674,19 +658,20 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toAbstractMethod(JvmOperation m) {
-		m.toAbstractMethod(m.simpleName)
+	def toAbstractMethod(XtraitjJvmOperation m) {
+		m.toAbstractMethod(m.op.simpleName)
 	}
 
-	def toAbstractMethod(JvmOperation m, String name) {
-		m.originalSource.toAbstractMethod(m, name)
+	def toAbstractMethod(XtraitjJvmOperation m, String name) {
+		m.op.originalSource.toAbstractMethod(m, name)
 	}
 
-	def toAbstractMethod(EObject source, JvmOperation m, String name) {
+	def toAbstractMethod(EObject source, XtraitjJvmOperation m, String name) {
 		source.toMethod(name, m.returnType) [
-			documentation = m.documentation
-			for (p : m.parameters) {
-				parameters += p.toParameter(p.name, p.parameterType)
+			documentation = m.op.documentation
+			val paramTypeIt = m.parametersType.iterator
+			for (p : m.op.parameters) {
+				parameters += p.toParameter(p.name, paramTypeIt.next)
 			}
 			abstract = true
 		]
@@ -774,5 +759,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 		}
 	}
+
 }
 
