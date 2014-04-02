@@ -423,8 +423,8 @@ public class CUsesGeneric implements TGeneric<List<String>> {
 		]
 	}
 
-	@Test def void testTraitUsesGenericTraitWithMembers() {
-		traitUsesGenericTraitWithMembers.compile[
+	@Test def void testTraitUsesGenericTraitWithFields() {
+		traitUsesGenericTraitWithFields.compile[
 
 assertTraitJavaInterface("tests", "TUsesGeneric",
 '''
@@ -529,6 +529,69 @@ public class CUsesGeneric implements TGeneric<List<String>,Set<Integer>> {
   }
   
   private TGenericImpl<List<String>,Set<Integer>> _TGeneric = new TGenericImpl(this);
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithRequiredMethods() {
+		traitUsesGenericTraitWithRequiredMethods.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests.traits;
+
+import java.util.List;
+import java.util.Set;
+import tests.traits.TGeneric;
+
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<String,Set<Integer>> {
+  public abstract Iterable<String> iterableOfStrings();
+  
+  public abstract <V extends List<String>> String getFirst(final V t);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import java.util.Set;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
+  
+  private TGenericImpl<String,Set<Integer>> _TGeneric;
+  
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGenericImpl(delegate);
+  }
+  
+  public Iterable<String> iterableOfStrings() {
+    return _delegate.iterableOfStrings();
+  }
+  
+  public Iterable<String> _iterableOfStrings() {
+    return CollectionLiterals.<String>newArrayList("foo");
+  }
+  
+  public <V extends List<String>> String getFirst(final V t) {
+    return _delegate.getFirst(t);
+  }
+  
+  public <V extends List<String>> String _getFirst(final V t) {
+    return t.get(0);
+  }
 }
 '''
 )

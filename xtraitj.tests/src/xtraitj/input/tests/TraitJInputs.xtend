@@ -1034,7 +1034,7 @@ class TraitJInputs {
 		'''
 	}
 
-	def traitUsesGenericTraitWithMembers() {
+	def traitUsesGenericTraitWithFields() {
 		'''
 		package tests;
 		
@@ -1060,6 +1060,32 @@ class TraitJInputs {
 			Iterable<List<String>> iterableOfStrings;
 			
 			Iterable<Set<Integer>> iterableOfIntegers;
+		}
+		'''
+	}
+
+	def traitUsesGenericTraitWithRequiredMethods() {
+		'''
+		package tests;
+		
+		import java.util.List
+		import java.util.Collection
+		import java.util.Set
+		
+		trait TGeneric<T extends String, U extends Collection<Integer>> {
+			Iterable<T> iterableOfStrings();
+			
+			<V extends List<String>> String getFirst(V t);
+		}
+		
+		trait TUsesGeneric uses TGeneric<String, Set<Integer>> {
+			Iterable<String> iterableOfStrings() {
+				return newArrayList('foo')
+			}
+			
+			<V extends List<String>> String getFirst(V t) {
+				return t.get(0);
+			}
 		}
 		'''
 	}
