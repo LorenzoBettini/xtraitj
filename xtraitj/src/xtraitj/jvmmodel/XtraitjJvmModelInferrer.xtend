@@ -601,18 +601,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
 	def toMethodDelegate(JvmOperation op, String delegateFieldName) {
-		val m = op.originalSource ?: op
-		m.toMethod(op.simpleName, op.returnType) [
-			documentation = m.documentation
-			for (p : op.parameters) {
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			val args = op.parameters.map[name].join(", ")
-			if (op.returnType?.simpleName != "void")
-				body = [append('''return «delegateFieldName»._«op.simpleName»(«args»);''')]
-			else
-				body = [append('''«delegateFieldName»._«op.simpleName»(«args»);''')]
-		]
+		op.toMethodDelegate(delegateFieldName, op.simpleName, "_"+op.simpleName)
 	}
 
 	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
