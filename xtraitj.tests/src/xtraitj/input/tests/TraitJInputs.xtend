@@ -1218,7 +1218,7 @@ trait TGeneric<T> {
 }
 
 trait TUsesGeneric uses TGeneric<String> {
-	String updatedAndReturn() {
+	String updateAndReturn() {
 		addToListOfT(myL, "foo")
 		addToListOfT(myL, "bar")
 		searchInList(myL, "foo")

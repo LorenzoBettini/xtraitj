@@ -995,7 +995,7 @@ import tests.traits.TGeneric;
 
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<String> {
-  public abstract String updatedAndReturn();
+  public abstract String updateAndReturn();
   
   public abstract List<? extends String> returnListOfT();
   
@@ -1025,11 +1025,11 @@ public class TUsesGenericImpl implements TUsesGeneric {
     _TGeneric = new TGenericImpl(delegate);
   }
   
-  public String updatedAndReturn() {
-    return _delegate.updatedAndReturn();
+  public String updateAndReturn() {
+    return _delegate.updateAndReturn();
   }
   
-  public String _updatedAndReturn() {
+  public String _updateAndReturn() {
     String _xblockexpression = null;
     {
       List<String> _myL = this.getMyL();
@@ -1100,8 +1100,8 @@ public class C implements TUsesGeneric {
   
   private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
   
-  public String updatedAndReturn() {
-    return _TUsesGeneric._updatedAndReturn();
+  public String updateAndReturn() {
+    return _TUsesGeneric._updateAndReturn();
   }
   
   public List<? extends String> returnListOfT() {
@@ -1118,7 +1118,7 @@ public class C implements TUsesGeneric {
 }
 '''
 )
-			assertGeneratedJavaCodeCompiles
+			executeGeneratedJavaClassMethodAndAssert("C", "updateAndReturn", "foo")
 		]
 	}
 }
