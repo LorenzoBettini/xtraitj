@@ -508,6 +508,9 @@ class TraitJJvmModelUtil {
 	}
 
 	def JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {
+		if (typeRef == null)
+			return null
+		
 		val type = typeRef.type
 		if (type instanceof JvmTypeParameter) {
 			// retrieve the index in the type parameters/arguments list
