@@ -598,10 +598,6 @@ public class CUsesGeneric implements TUsesGeneric {
   public String searchInList(final List<String> l, final String arg) {
     return _TUsesGeneric._searchInList(l, arg);
   }
-  
-  public T searchInList(final List<T> l, final T arg) {
-    return _TUsesGeneric._searchInList(l, arg);
-  }
 }
 '''
 )
@@ -1116,15 +1112,7 @@ public class C implements TUsesGeneric {
     return _TUsesGeneric._searchInList(l, arg);
   }
   
-  public T searchInList(final List<? extends T> l, final T arg) {
-    return _TUsesGeneric._searchInList(l, arg);
-  }
-  
   public void addToListOfT(final List<? super String> l, final String arg) {
-    _TUsesGeneric._addToListOfT(l, arg);
-  }
-  
-  public void addToListOfT(final List<? super T> l, final T arg) {
     _TUsesGeneric._addToListOfT(l, arg);
   }
 }

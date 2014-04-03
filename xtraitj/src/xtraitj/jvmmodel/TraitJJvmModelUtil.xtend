@@ -12,6 +12,7 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
@@ -27,7 +28,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -135,11 +135,11 @@ class TraitJJvmModelUtil {
 	}
 
 	def xtraitjJvmAllOperations(TJTraitReference t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation)).map[createXtraitjJvmOperation(t)]
+		t.jvmAllFeatures.filter(typeof(JvmOperation)).createXtraitjJvmOperations(t)
 	}
 
 	def xtraitjJvmAllMethodOperations(TJTraitReference t) {
-		t.jvmAllMethodOperations.map[createXtraitjJvmOperation(t)]
+		t.jvmAllMethodOperations.createXtraitjJvmOperations(t)
 	}
 
 	def jvmAllOperations(TJTraitReference t) {
@@ -237,9 +237,8 @@ class TraitJJvmModelUtil {
 	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.jvmAllRequiredFieldOperations.map[
-					createXtraitjJvmOperation(traitRef)
-				]
+				traitRef.jvmAllRequiredFieldOperations.
+					createXtraitjJvmOperations(traitRef)
 			].flatten
 	}
 
@@ -251,18 +250,16 @@ class TraitJJvmModelUtil {
 		e.traitExpression.traitReferences.
 			map[
 				traitRef |
-				traitRef.jvmAllRequiredMethodOperations.map[
-					createXtraitjJvmOperation(traitRef)
-				]
+				traitRef.jvmAllRequiredMethodOperations.
+					createXtraitjJvmOperations(traitRef)
 			].flatten
 	}
 
 	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.jvmAllMethodOperations.map[
-					createXtraitjJvmOperation(traitRef)
-				]
+				traitRef.jvmAllMethodOperations.
+					createXtraitjJvmOperations(traitRef)
 			].flatten
 	}
 
@@ -494,6 +491,15 @@ class TraitJJvmModelUtil {
 		f1 != f2 && 
 		f1.simpleName == f2.simpleName &&
 		!f1.compliant(f2)
+	}
+
+	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, TJTraitReference traitReference) {
+		ops.map[createXtraitjJvmOperation(traitReference)].filter[
+			// we must discard elements where type parameters are still present
+			// this happens if we redefined a method with type params in a trait
+			// interface using a method with type params already instantiated
+			!hasTypeParametersDeclaredInJvmType
+		]
 	}
 
 	def createXtraitjJvmOperation(JvmOperation op, TJTraitReference traitReference) {
