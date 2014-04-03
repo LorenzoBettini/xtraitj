@@ -27,6 +27,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -527,6 +528,24 @@ class TraitJJvmModelUtil {
 					newArguments.set(i, 
 						arguments.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
 					)
+				}
+				return newTypeRef
+			} else {
+				return typeRef
+			}
+		}
+		
+		if (newTypeRef instanceof JvmWildcardTypeReference) {
+			val constraints = (typeRef as JvmWildcardTypeReference).constraints
+			val newConstraints = newTypeRef.constraints
+			// IMPORTANT: get the constraint from the original constraints, not
+			// from the cloned one
+			if (!constraints.empty) {
+				for (i : 0..constraints.size - 1) {
+					newConstraints.get(i).typeReference = 
+						constraints.get(i).typeReference.
+							replaceTypeParameters(typeArguments).
+								cloneWithProxies
 				}
 				return newTypeRef
 			} else {

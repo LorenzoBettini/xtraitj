@@ -1172,4 +1172,27 @@ class TraitJInputs {
 		class C uses UsesTGeneric {}
 		'''
 	}
+
+	def traitUsesGenericTraitWithWildCard() {
+		'''
+		package tests;
+		
+		import java.util.LinkedList
+		import java.util.List
+		
+		trait TGeneric<T> {
+			
+			List<? extends T> returnT() {
+				return new LinkedList<T>()
+			}
+		}
+		
+		trait TUsesGeneric uses TGeneric<String> {
+			void useReturnT() {
+				val l = returnT()
+				println(l)
+			}
+		}
+		'''
+	}
 }

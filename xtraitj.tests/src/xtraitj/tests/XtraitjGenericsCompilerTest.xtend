@@ -913,4 +913,66 @@ public class C implements UsesTGeneric {
 			executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[foo][1][[2]]")
 		]
 	}
+
+	@Test def void testTraitUsesGenericTraitWithWildCard() {
+		traitUsesGenericTraitWithWildCard.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.TGeneric;
+
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<String> {
+  public abstract void useReturnT();
+  
+  public abstract List<? extends String> returnT();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
+  
+  private TGenericImpl<String> _TGeneric;
+  
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGenericImpl(delegate);
+  }
+  
+  public void useReturnT() {
+    _delegate.useReturnT();
+  }
+  
+  public void _useReturnT() {
+    final List<? extends String> l = this.returnT();
+    InputOutput.<List<? extends String>>println(l);
+  }
+  
+  public List<? extends String> returnT() {
+    return _delegate.returnT();
+  }
+  
+  public List<? extends String> _returnT() {
+    return _TGeneric._returnT();
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }
