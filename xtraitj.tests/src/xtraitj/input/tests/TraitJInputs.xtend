@@ -1034,6 +1034,26 @@ class TraitJInputs {
 		'''
 	}
 
+	def traitUsesGenericTraitWithDefinedMethod() {
+		'''
+package tests;
+
+import java.util.List
+
+trait TGeneric<T> {
+	T searchInList(List<T> l, T arg) {
+		return l.findFirst[it === arg]
+	}
+}
+
+trait TUsesGeneric uses TGeneric<String> {
+}
+
+class CUsesGeneric uses TUsesGeneric {
+}
+		'''
+	}
+
 	def traitUsesGenericTraitWithFields() {
 		'''
 		package tests;
@@ -1175,24 +1195,39 @@ class TraitJInputs {
 
 	def traitUsesGenericTraitWithWildCard() {
 		'''
-		package tests;
-		
-		import java.util.LinkedList
-		import java.util.List
-		
-		trait TGeneric<T> {
-			
-			List<? extends T> returnT() {
-				return new LinkedList<T>()
-			}
-		}
-		
-		trait TUsesGeneric uses TGeneric<String> {
-			void useReturnT() {
-				val l = returnT()
-				println(l)
-			}
-		}
+package tests;
+
+import java.util.ArrayList
+import java.util.List
+
+trait TGeneric<T> {
+	
+	List<T> myL;
+	
+	List<? extends T> returnListOfT() {
+		return myL
+	}
+	
+	T searchInList(List<? extends T> l, T arg) {
+		return l.findFirst[it === arg]
+	}
+	
+	void addToListOfT(List<? super T> l, T arg) {
+		l.add(arg)
+	}
+}
+
+trait TUsesGeneric uses TGeneric<String> {
+	String updatedAndReturn() {
+		addToListOfT(myL, "foo")
+		addToListOfT(myL, "bar")
+		searchInList(myL, "foo")
+	}
+}
+
+class C uses TUsesGeneric {
+	List<String> myL = new ArrayList<String>;
+}
 		'''
 	}
 }

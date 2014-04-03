@@ -536,6 +536,79 @@ public class CUsesGeneric implements TGeneric<List<String>,Set<Integer>> {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTraitWithDefinedMethods() {
+		traitUsesGenericTraitWithDefinedMethod.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.TGeneric;
+
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<String> {
+  public abstract String searchInList(final List<String> l, final String arg);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
+  
+  private TGenericImpl<String> _TGeneric;
+  
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGenericImpl(delegate);
+  }
+  
+  public String searchInList(final List<String> l, final String arg) {
+    return _delegate.searchInList(l, arg);
+  }
+  
+  public String _searchInList(final List<String> l, final String arg) {
+    return _TGeneric._searchInList(l, arg);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TUsesGenericImpl;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TUsesGeneric {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
+  
+  public String searchInList(final List<String> l, final String arg) {
+    return _TUsesGeneric._searchInList(l, arg);
+  }
+  
+  public T searchInList(final List<T> l, final T arg) {
+    return _TUsesGeneric._searchInList(l, arg);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithRequiredMethods() {
 		traitUsesGenericTraitWithRequiredMethods.compile[
 
@@ -926,9 +999,13 @@ import tests.traits.TGeneric;
 
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<String> {
-  public abstract void useReturnT();
+  public abstract String updatedAndReturn();
   
-  public abstract List<? extends String> returnT();
+  public abstract List<? extends String> returnListOfT();
+  
+  public abstract String searchInList(final List<? extends String> l, final String arg);
+  
+  public abstract void addToListOfT(final List<? super String> l, final String arg);
 }
 '''
 )
@@ -938,7 +1015,6 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 package tests.traits.impl;
 
 import java.util.List;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import tests.traits.TUsesGeneric;
 import tests.traits.impl.TGenericImpl;
 
@@ -953,21 +1029,103 @@ public class TUsesGenericImpl implements TUsesGeneric {
     _TGeneric = new TGenericImpl(delegate);
   }
   
-  public void useReturnT() {
-    _delegate.useReturnT();
+  public String updatedAndReturn() {
+    return _delegate.updatedAndReturn();
   }
   
-  public void _useReturnT() {
-    final List<? extends String> l = this.returnT();
-    InputOutput.<List<? extends String>>println(l);
+  public String _updatedAndReturn() {
+    String _xblockexpression = null;
+    {
+      List<String> _myL = this.getMyL();
+      this.addToListOfT(_myL, "foo");
+      List<String> _myL_1 = this.getMyL();
+      this.addToListOfT(_myL_1, "bar");
+      List<String> _myL_2 = this.getMyL();
+      _xblockexpression = this.searchInList(_myL_2, "foo");
+    }
+    return _xblockexpression;
   }
   
-  public List<? extends String> returnT() {
-    return _delegate.returnT();
+  public List<? extends String> returnListOfT() {
+    return _delegate.returnListOfT();
   }
   
-  public List<? extends String> _returnT() {
-    return _TGeneric._returnT();
+  public List<? extends String> _returnListOfT() {
+    return _TGeneric._returnListOfT();
+  }
+  
+  public String searchInList(final List<? extends String> l, final String arg) {
+    return _delegate.searchInList(l, arg);
+  }
+  
+  public String _searchInList(final List<? extends String> l, final String arg) {
+    return _TGeneric._searchInList(l, arg);
+  }
+  
+  public void addToListOfT(final List<? super String> l, final String arg) {
+    _delegate.addToListOfT(l, arg);
+  }
+  
+  public void _addToListOfT(final List<? super String> l, final String arg) {
+    _TGeneric._addToListOfT(l, arg);
+  }
+  
+  public List<String> getMyL() {
+    return _delegate.getMyL();
+  }
+  
+  public void setMyL(final List<String> myL) {
+    _delegate.setMyL(myL);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.ArrayList;
+import java.util.List;
+import tests.traits.TUsesGeneric;
+import tests.traits.impl.TUsesGenericImpl;
+
+@SuppressWarnings("all")
+public class C implements TUsesGeneric {
+  private List<String> myL = new ArrayList<String>();
+  
+  public List<String> getMyL() {
+    return this.myL;
+  }
+  
+  public void setMyL(final List<String> myL) {
+    this.myL = myL;
+  }
+  
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
+  
+  public String updatedAndReturn() {
+    return _TUsesGeneric._updatedAndReturn();
+  }
+  
+  public List<? extends String> returnListOfT() {
+    return _TUsesGeneric._returnListOfT();
+  }
+  
+  public String searchInList(final List<? extends String> l, final String arg) {
+    return _TUsesGeneric._searchInList(l, arg);
+  }
+  
+  public T searchInList(final List<? extends T> l, final T arg) {
+    return _TUsesGeneric._searchInList(l, arg);
+  }
+  
+  public void addToListOfT(final List<? super String> l, final String arg) {
+    _TUsesGeneric._addToListOfT(l, arg);
+  }
+  
+  public void addToListOfT(final List<? super T> l, final T arg) {
+    _TUsesGeneric._addToListOfT(l, arg);
   }
 }
 '''
