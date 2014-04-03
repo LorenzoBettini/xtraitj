@@ -69,7 +69,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val DUPLICATE_DECLARATION = PREFIX + "DuplicateDeclaration"
 
 	public static val DUPLICATE_CONSTRUCTOR = PREFIX + "DuplicateConstructor"
-	
+
 	public static val FIELD_CONFLICT = PREFIX + "FieldConflict"
 	
 	public static val METHOD_CONFLICT = PREFIX + "MethodConflict"
@@ -324,7 +324,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	 * operations) to the same trait (which would be useless and
 	 * would cause Java compiler errors).
 	 */
-	@Check def void checkDuplicateTraitReference(TJClass c) {
+	@Check def void checkDuplicateTraitReference(TJDeclaration c) {
 		val referencesWithNoOperations = 
 			c.traitExpression.traitReferences.filter[
 				operations.empty
