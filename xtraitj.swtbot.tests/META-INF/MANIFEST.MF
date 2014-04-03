@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Xtraitj Swtbot Tests
 Bundle-SymbolicName: xtraitj.swtbot.tests
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.1.2.qualifier
 Bundle-Activator: xtraitj.swtbot.tests.Activator
 Bundle-Vendor: Lorenzo Bettini
 Require-Bundle: org.eclipse.swtbot.go;bundle-version="2.1.0",
