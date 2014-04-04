@@ -672,8 +672,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def toAbstractMethod(EObject source, XtraitjJvmOperation m, String name) {
+		val op = m.op
 		source.toMethod(name, m.returnType) [
 			documentation = m.op.documentation
+			
+			copyTypeParameters(op.typeParameters)
+			
 			val paramTypeIt = m.parametersType.iterator
 			for (p : m.op.parameters) {
 				parameters += p.toParameter(p.name, paramTypeIt.next)

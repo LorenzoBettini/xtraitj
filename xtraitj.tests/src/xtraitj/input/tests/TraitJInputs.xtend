@@ -996,6 +996,12 @@ class TraitJInputs {
 				return t1.compareTo(t2.get(0))
 			}
 		}
+		
+		trait T2 uses T1 {}
+		
+		class C uses T2 {}
+		
+		class C2 uses T1 {}
 		'''
 	}
 

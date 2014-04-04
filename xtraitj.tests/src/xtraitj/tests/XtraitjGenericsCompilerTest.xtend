@@ -316,6 +316,60 @@ public class T1Impl implements T1 {
 '''
 )
 
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public interface T2 extends T1 {
+  public abstract <T extends List<String>> String getFirst(final T t);
+  
+  public abstract <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T2;
+import tests.traits.impl.T1Impl;
+
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private T1Impl _T1;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+  }
+  
+  public <T extends List<String>> String getFirst(final T t) {
+    return _delegate.getFirst(t);
+  }
+  
+  public <T extends List<String>> String _getFirst(final T t) {
+    return _T1._getFirst(t);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2) {
+    return _delegate.compare(t1, t2);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int _compare(final T t1, final U t2) {
+    return _T1._compare(t1, t2);
+  }
+}
+'''
+)
+
 			assertGeneratedJavaCodeCompiles
 		]
 	}
