@@ -80,16 +80,16 @@ C
 	@Test
 	def void testOutlineForRequirements() {
 		'''
-		package my.traits
-		
-		trait T1 {
-			String s;
-			int m(String a);
-		}
-		
-		trait T2 uses T1 {
-			
-		}
+package my.traits
+
+trait T1 {
+	String s;
+	int m(String a);
+}
+
+trait T2 uses T1 {
+	
+}
 		'''.assertAllLabels(
 '''
 my.traits
@@ -108,24 +108,24 @@ T2
 	@Test
 	def void testOutlineForProvides() {
 		'''
-		package my.traits;
-		
-		trait T1 {
-			String s;
-			int m(String a) { return 0; }
-		}
-		
-		trait T2 uses T1 {
-			String n(int i) { return ""; }
-		}
-		
-		trait T3 uses T2 {
-			
-		}
-		
-		class C uses T3 {
-			String s;
-		}
+package my.traits;
+
+trait T1 {
+	String s;
+	int m(String a) { return 0; }
+}
+
+trait T2 uses T1 {
+	String n(int i) { return ""; }
+}
+
+trait T3 uses T2 {
+	
+}
+
+class C uses T3 {
+	String s;
+}
 		'''.assertAllLabels(
 '''
 my.traits
@@ -161,13 +161,13 @@ C
 	@Test
 	def void testOutlineForConstructors() {
 		'''
-		package my.traits;
-		
-		class C {
-			String s;
-			C() {}
-			C(int i, String s) {}
-		}
+package my.traits;
+
+class C {
+	String s;
+	C() {}
+	C(int i, String s) {}
+}
 		'''.assertAllLabels(
 '''
 my.traits
