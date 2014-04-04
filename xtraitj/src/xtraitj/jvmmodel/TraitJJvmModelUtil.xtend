@@ -28,6 +28,8 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import xtraitj.xtraitj.TJMethodDeclaration
+import org.eclipse.xtext.common.types.JvmType
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -142,6 +144,10 @@ class TraitJJvmModelUtil {
 		t.jvmAllMethodOperations.createXtraitjJvmOperations(t)
 	}
 
+	def xtraitjJvmAllMethodDeclarationOperations(TJTraitReference t) {
+		t.jvmAllMethodDeclarationOperations.createXtraitjJvmOperations(t)
+	}
+
 	def jvmAllOperations(TJTraitReference t) {
 		t.jvmAllFeatures.filter(typeof(JvmOperation))
 	}
@@ -152,6 +158,10 @@ class TraitJJvmModelUtil {
 
 	def sourceMethod(JvmFeature f) {
 		f.sourceElements.findFirst[(it instanceof TJMethod)] as TJMethod
+	}
+
+	def sourceMethodDeclaration(JvmFeature f) {
+		f.sourceElements.findFirst[(it instanceof TJMethodDeclaration)] as TJMethodDeclaration
 	}
 
 	def sourceRequiredMethod(JvmFeature f) {
@@ -179,6 +189,12 @@ class TraitJJvmModelUtil {
 			filter(typeof(JvmOperation)).
 				filter[sourceMethod != null]
 			// filter[sourceField == null && sourceMethod != null]
+	}
+
+	def jvmAllMethodDeclarationOperations(TJTraitReference e) {
+		e._jvmAllOperations.
+			filter(typeof(JvmOperation)).
+				filter[sourceMethodDeclaration != null]
 	}
 
 	def jvmAllMethodOperations(TJDeclaration e) {
@@ -521,9 +537,12 @@ class TraitJJvmModelUtil {
 		if (type instanceof JvmTypeParameter) {
 			// retrieve the index in the type parameters/arguments list
 			val declarator = type.declarator
-			val pos = declarator.typeParameters.indexOf(type)
-			if (pos < typeArguments.size)
-				return typeArguments.get(pos).replaceTypeParameters(typeArguments)
+			// don't substitute type parameters of the method itself
+			if (declarator instanceof JvmType) {
+				val pos = declarator.typeParameters.indexOf(type)
+				if (pos < typeArguments.size)
+					return typeArguments.get(pos).replaceTypeParameters(typeArguments)
+			}
 		}
 		
 		val newTypeRef = typeRef.cloneWithProxies

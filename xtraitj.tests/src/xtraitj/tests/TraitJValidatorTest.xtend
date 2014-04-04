@@ -761,6 +761,26 @@ class TraitJValidatorTest {
 		)
 	}
 
+	@Test def void testClassMissingRequiredMethodWithGeneric() {
+		'''
+		trait TGeneric<T> {
+			T required(T t);
+		} 
+		
+		trait TUsesGeneric uses TGeneric<String> {
+		}
+		
+		class CUsesGeneric uses TUsesGeneric {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJClass,
+				XtraitjValidator::MISSING_REQUIRED_METHOD,
+				"Class must provide required method 'String required(String)'"
+			)
+		]
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEquals(
 			o.validate.map[message].join("\n"))

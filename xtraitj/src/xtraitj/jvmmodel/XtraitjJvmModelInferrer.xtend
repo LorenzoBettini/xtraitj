@@ -204,13 +204,18 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// (it is safe to do so, since they have the same signature)
 			// this way, in this interface, the inserted Java methods are
 			// associated to defined methods in the corresponding trait
-			t.traitReferences.forEach[
-				traitRef |
-				traitRef.xtraitjJvmAllMethodOperations.forEach[
-					op |
-					members += op.toAbstractMethod
-				]
-			]
+			for (traitRef : t.traitReferences) {
+				if (traitRef.arguments.empty)
+					for (op: traitRef.xtraitjJvmAllMethodOperations) {
+						members += op.toAbstractMethod
+					}
+				else
+					for (op: traitRef.xtraitjJvmAllMethodDeclarationOperations) {
+						if (!members.alreadyDefined(op.op))
+							members += op.toAbstractMethod
+					} // in the presence of generics also inserts
+					// required methods with type parameters instantiated
+			}
 		]
 				
 		traitInterface
