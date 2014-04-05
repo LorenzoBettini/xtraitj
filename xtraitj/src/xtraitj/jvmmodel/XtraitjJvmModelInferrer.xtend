@@ -9,9 +9,6 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
-import org.eclipse.xtext.common.types.JvmUpperBound
-import org.eclipse.xtext.common.types.TypesFactory
-import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -43,8 +40,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension TraitJJvmModelUtil
-	@Inject extension TypeReferences
-	@Inject	private TypesFactory typesFactory
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -630,7 +625,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			documentation = m.documentation
 			
 			if (m instanceof TJMethodDeclaration) {
-				copyAndFixTypeParameters(op.op.typeParameters)
+				copyTypeParameters(op.op.typeParameters)
 			}
 			
 			val paramTypeIt = op.parametersType.iterator
@@ -649,7 +644,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
-			copyAndFixTypeParameters(m.typeParameters)
+			copyTypeParameters(m.typeParameters)
 
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
@@ -666,7 +661,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
-			copyAndFixTypeParameters(m.typeParameters)
+			copyTypeParameters(m.typeParameters)
 
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
@@ -688,7 +683,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		source.toMethod(name, m.returnType) [
 			documentation = m.op.documentation
 			
-			copyAndFixTypeParameters(op.typeParameters)
+			copyTypeParameters(op.typeParameters)
 			
 			val paramTypeIt = m.parametersType.iterator
 			for (p : m.op.parameters) {
@@ -702,7 +697,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		method.toMethod(name, method.type) [
 			documentation = method.documentation
 			
-			copyAndFixTypeParameters(method.typeParameters)
+			copyTypeParameters(method.typeParameters)
 			
 			for (p : method.params) {
 				parameters += p.toParameter(p.name, p.parameterType)
@@ -772,40 +767,31 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		"_" + t.name
 	}
 
-	def protected void copyAndFixTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
-		target.copyTypeParameters(typeParameters)
-		//target.fixTypeParameters
-	}
+//	def protected void copyAndFixTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
+//		target.copyTypeParameters(typeParameters)
+//		//target.fixTypeParameters
+//	}
 
 	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
 		for (typeParameter : typeParameters) {
 			val clonedTypeParameter = typeParameter.cloneWithProxies();
 			if (clonedTypeParameter != null) {
 				target.typeParameters += clonedTypeParameter
-				//typeParameter.associate(clonedTypeParameter);
 			}
 		}
 	}
 
-	def protected void createTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
-		for (typeParameter : typeParameters) {
-			val createTypeParameter = typesFactory.createJvmTypeParameter
-			createTypeParameter.name = typeParameter.name
-			target.typeParameters += createTypeParameter
-		}
-	}
-	
-	def protected void fixTypeParameters(JvmTypeParameterDeclarator target) {
-		for (typeParameter : target.getTypeParameters()) {
-			var upperBoundSeen = 
-				typeParameter.constraints.exists[it instanceof JvmUpperBound]
-			if (!upperBoundSeen) {
-				val upperBound = typesFactory.createJvmUpperBound();
-				upperBound.setTypeReference(Object.getTypeForName(target));
-				typeParameter.getConstraints().add(upperBound);
-			}
-		}
-	}
+//	def protected void fixTypeParameters(JvmTypeParameterDeclarator target) {
+//		for (typeParameter : target.getTypeParameters()) {
+//			var upperBoundSeen = 
+//				typeParameter.constraints.exists[it instanceof JvmUpperBound]
+//			if (!upperBoundSeen) {
+//				val upperBound = typesFactory.createJvmUpperBound();
+//				upperBound.setTypeReference(Object.getTypeForName(target));
+//				typeParameter.getConstraints().add(upperBound);
+//			}
+//		}
+//	}
 
 }
 
