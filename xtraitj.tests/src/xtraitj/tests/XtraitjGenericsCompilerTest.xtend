@@ -393,11 +393,11 @@ public class T1Impl implements T1 {
     this._delegate = delegate;
   }
   
-  public <T extends java.lang.Object> T identity(final T t) {
+  public <T> T identity(final T t) {
     return _delegate.identity(t);
   }
   
-  public <T extends java.lang.Object> T _identity(final T t) {
+  public <T> T _identity(final T t) {
     return t;
   }
   
@@ -410,16 +410,35 @@ public class T1Impl implements T1 {
     final Integer i = this.<Integer>identity(Integer.valueOf(0));
     ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
     final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
-    String _string = s.toString();
-    String _plus = (_string + i);
-    String _string_1 = l.toString();
-    return (_plus + _string_1);
+    return ((((s + ",") + i) + ",") + l);
   }
 }
 '''
 )
 
-			assertGeneratedJavaCodeCompiles
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.traits.T1;
+import tests.traits.impl.T1Impl;
+
+@SuppressWarnings("all")
+public class C implements T1 {
+  private T1Impl _T1 = new T1Impl(this);
+  
+  public <T> T identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  public String useIdentity() {
+    return _T1._useIdentity();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
 		]
 	}
 

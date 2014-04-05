@@ -507,6 +507,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				if (method.isPrivate) {
    					members += method.toTraitMethod(method.name)
    				} else {
+   					// first infer the method with the original body to make
+   					// type parameters work correctly
+   					
 	   				// _m() { original m's body }
 	   				val actualMethod = method.toTraitMethod(method.name.underscoreName)
    					
@@ -623,16 +626,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
 		val m = op.op.originalSource ?: op.op
-		m.toMethod(methodName, op.returnType) [
+		op.op.toMethod(methodName, op.returnType) [
 			documentation = m.documentation
 			
 			if (m instanceof TJMethodDeclaration) {
-				copyAndFixTypeParameters(m.typeParameters)
+				copyAndFixTypeParameters(op.op.typeParameters)
 			}
 			
 			val paramTypeIt = op.parametersType.iterator
 			for (p : op.op.parameters) {
-				parameters += p.toParameter(p.name, paramTypeIt.next)
+				parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
 			}
 			val args = op.op.parameters.map[name].join(", ")
 			if (op.returnType?.simpleName != "void")
@@ -771,7 +774,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def protected void copyAndFixTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
 		target.copyTypeParameters(typeParameters)
-		target.fixTypeParameters
+		//target.fixTypeParameters
 	}
 
 	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
@@ -779,8 +782,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			val clonedTypeParameter = typeParameter.cloneWithProxies();
 			if (clonedTypeParameter != null) {
 				target.typeParameters += clonedTypeParameter
-				typeParameter.associate(clonedTypeParameter);
+				//typeParameter.associate(clonedTypeParameter);
 			}
+		}
+	}
+
+	def protected void createTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
+		for (typeParameter : typeParameters) {
+			val createTypeParameter = typesFactory.createJvmTypeParameter
+			createTypeParameter.name = typeParameter.name
+			target.typeParameters += createTypeParameter
 		}
 	}
 	

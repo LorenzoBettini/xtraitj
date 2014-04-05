@@ -1020,11 +1020,11 @@ class TraitJInputs {
 				val s = identity("foo")
 				val i = identity(0)
 				val l = identity(newArrayList(true, false))
-				return s.toString + i + l.toString
+				return s + "," + i + "," + l
 			}
 		}
 		
-		//class C uses T1 {}
+		class C uses T1 {}
 		'''
 	}
 
