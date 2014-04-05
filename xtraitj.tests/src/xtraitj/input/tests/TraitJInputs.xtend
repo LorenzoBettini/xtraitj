@@ -1005,6 +1005,29 @@ class TraitJInputs {
 		'''
 	}
 
+	def traitUsingGenericMethod() {
+		'''
+		package tests;
+		
+		//import java.util.ArrayList;
+		
+		trait T1 {
+			<T> T identity(T t) {
+				return t
+			}
+			
+			String useIdentity() {
+				val s = identity("foo")
+				val i = identity(0)
+				val l = identity(newArrayList(true, false))
+				return s.toString + i + l.toString
+			}
+		}
+		
+		//class C uses T1 {}
+		'''
+	}
+
 	def traitWithGenericMethodShadowingTraitTypeParameter() {
 		'''
 		package tests;

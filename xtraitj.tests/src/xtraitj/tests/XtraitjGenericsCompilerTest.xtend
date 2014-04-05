@@ -374,6 +374,55 @@ public class T2Impl implements T2 {
 		]
 	}
 
+	@Test def void testTraitUsingGenericMethod() {
+		traitUsingGenericMethod.compile[
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests.traits.impl;
+
+import java.util.ArrayList;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public class T1Impl implements T1 {
+  private T1 _delegate;
+  
+  public T1Impl(final T1 delegate) {
+    this._delegate = delegate;
+  }
+  
+  public <T extends java.lang.Object> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T extends java.lang.Object> T _identity(final T t) {
+    return t;
+  }
+  
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    final String s = this.<String>identity("foo");
+    final Integer i = this.<Integer>identity(Integer.valueOf(0));
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
+    String _string = s.toString();
+    String _plus = (_string + i);
+    String _string_1 = l.toString();
+    return (_plus + _string_1);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitWithGenericMethodShadowingTraitTypeParameter() {
 		traitWithGenericMethodShadowingTraitTypeParameter.compile[
 
