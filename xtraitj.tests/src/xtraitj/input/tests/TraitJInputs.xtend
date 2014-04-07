@@ -1006,26 +1006,35 @@ class TraitJInputs {
 	}
 
 	def traitUsingGenericMethod() {
-		'''
-		package tests;
-		
-		//import java.util.ArrayList;
-		
-		trait T1 {
-			<T> T identity(T t) {
-				return t
-			}
-			
-			String useIdentity() {
-				val s = identity("foo")
-				val i = identity(0)
-				val l = identity(newArrayList(true, false))
-				return s + "," + i + "," + l
-			}
-		}
-		
-		class C uses T1 {}
-		'''
+'''
+package tests;
+
+//import java.util.ArrayList;
+
+trait T1 {
+	<T> T identity(T t) {
+		return t
+	}
+	
+	String useIdentity() {
+		val s = identity("foo")
+		val i = identity(0)
+		val l = identity(newArrayList(true, false))
+		return s + "," + i + "," + l
+	}
+}
+
+trait T2 uses T1 {
+	String useIdentity2() {
+		val s = identity("bar")
+		return s + "," + useIdentity()
+	}
+}
+
+class C uses T1 {}
+
+class C2 uses T2 {}
+'''
 	}
 
 	def traitWithGenericMethodShadowingTraitTypeParameter() {

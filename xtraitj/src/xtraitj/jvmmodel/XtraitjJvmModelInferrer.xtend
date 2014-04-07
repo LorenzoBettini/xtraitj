@@ -627,7 +627,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			if (m instanceof TJMethodDeclaration) {
 				copyTypeParameters(op.op.typeParameters)
 			}
-			
+
+			returnType = returnType.rebindTypeParameters(it)
+
 			val paramTypeIt = op.parametersType.iterator
 			for (p : op.op.parameters) {
 				parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
@@ -767,11 +769,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		"_" + t.name
 	}
 
-//	def protected void copyAndFixTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
-//		target.copyTypeParameters(typeParameters)
-//		//target.fixTypeParameters
-//	}
-
 	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
 		for (typeParameter : typeParameters) {
 			val clonedTypeParameter = typeParameter.cloneWithProxies();
@@ -780,18 +777,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 		}
 	}
-
-//	def protected void fixTypeParameters(JvmTypeParameterDeclarator target) {
-//		for (typeParameter : target.getTypeParameters()) {
-//			var upperBoundSeen = 
-//				typeParameter.constraints.exists[it instanceof JvmUpperBound]
-//			if (!upperBoundSeen) {
-//				val upperBound = typesFactory.createJvmUpperBound();
-//				upperBound.setTypeReference(Object.getTypeForName(target));
-//				typeParameter.getConstraints().add(upperBound);
-//			}
-//		}
-//	}
 
 }
 

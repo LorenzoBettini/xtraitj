@@ -416,6 +416,53 @@ public class T1Impl implements T1 {
 '''
 )
 
+assertTraitJavaClass("tests", "T2",
+'''
+package tests.traits.impl;
+
+import tests.traits.T2;
+import tests.traits.impl.T1Impl;
+
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private T1Impl _T1;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+  }
+  
+  public String useIdentity2() {
+    return _delegate.useIdentity2();
+  }
+  
+  public String _useIdentity2() {
+    final String s = this.<String>identity("bar");
+    String _useIdentity = this.useIdentity();
+    return ((s + ",") + _useIdentity);
+  }
+  
+  public <T> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T> T _identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    return _T1._useIdentity();
+  }
+}
+'''
+)
+
 assertJavaClass("tests", "C",
 '''
 package tests;
@@ -439,6 +486,7 @@ public class C implements T1 {
 )
 
 			executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentity2", "bar,foo,0,[true, false]")
 		]
 	}
 

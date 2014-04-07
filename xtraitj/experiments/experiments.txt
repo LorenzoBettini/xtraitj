@@ -1,0 +1,17 @@
+	def protected void copyAndFixTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
+		target.copyTypeParameters(typeParameters)
+		//target.fixTypeParameters
+	}
+
+	def protected void fixTypeParameters(JvmTypeParameterDeclarator target) {
+		for (typeParameter : target.getTypeParameters()) {
+			var upperBoundSeen = 
+				typeParameter.constraints.exists[it instanceof JvmUpperBound]
+			if (!upperBoundSeen) {
+				val upperBound = typesFactory.createJvmUpperBound();
+				upperBound.setTypeReference(Object.getTypeForName(target));
+				typeParameter.getConstraints().add(upperBound);
+			}
+		}
+	}
+	
