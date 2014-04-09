@@ -599,7 +599,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	
 				returnType = returnType.rebindTypeParameters(it)
 	
-				val paramTypeIt = op.parametersType.iterator
+				val paramTypeIt = op.parametersTypes.iterator
 				for (p : o.parameters) {
 					parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
 				}
@@ -613,7 +613,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			m.toMethod(methodName, op.returnType) [
 				documentation = m.documentation
 				
-				val paramTypeIt = op.parametersType.iterator
+				val paramTypeIt = op.parametersTypes.iterator
 				for (p : o.parameters) {
 					parameters += p.toParameter(p.name, paramTypeIt.next)
 				}
@@ -670,7 +670,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			copyTypeParameters(op.typeParameters)
 			
-			val paramTypeIt = m.parametersType.iterator
+			val paramTypeIt = m.parametersTypes.iterator
 			for (p : m.op.parameters) {
 				parameters += p.toParameter(p.name, paramTypeIt.next)
 			}

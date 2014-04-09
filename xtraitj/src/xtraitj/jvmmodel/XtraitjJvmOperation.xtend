@@ -19,12 +19,12 @@ class XtraitjJvmOperation {
 
 	private JvmTypeReference returnType;
 
-	private List<JvmTypeReference> parametersType;
+	private List<JvmTypeReference> parametersTypes;
 
-	new(JvmOperation op, JvmTypeReference returnType, List<JvmTypeReference> parameters) {
+	new(JvmOperation op, JvmTypeReference returnType, List<JvmTypeReference> parametersTypes) {
 		this.op = op;
 		this.returnType = returnType;
-		this.parametersType = parameters;
+		this.parametersTypes = parametersTypes;
 	}
 
 	def getOp() {
@@ -35,8 +35,8 @@ class XtraitjJvmOperation {
 		return returnType;
 	}
 
-	def getParametersType() {
-		return parametersType;
+	def getParametersTypes() {
+		return parametersTypes;
 	}
 
 	/**
@@ -44,7 +44,7 @@ class XtraitjJvmOperation {
 	 * of a method)
 	 */
 	def hasTypeParametersDeclaredInJvmType() {
-		(returnType.hasTypeParameterInJvmType || parametersType.exists[hasTypeParameterInJvmType])
+		(returnType.hasTypeParameterInJvmType || parametersTypes.exists[hasTypeParameterInJvmType])
 	}
 
 	def boolean hasTypeParameterInJvmType(JvmTypeReference ref) {

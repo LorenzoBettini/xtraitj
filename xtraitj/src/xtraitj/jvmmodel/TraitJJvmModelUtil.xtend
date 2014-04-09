@@ -358,7 +358,7 @@ class TraitJJvmModelUtil {
 	def methodRepresentation(XtraitjJvmOperation m) {
 		m.returnType?.simpleName + " " + m.op.simpleName +
 			"(" +
-			m.parametersType.map[simpleName].join(", ")
+			m.parametersTypes.map[simpleName].join(", ")
 			+ ")"
 	}
 
@@ -406,11 +406,11 @@ class TraitJJvmModelUtil {
 	 */
 	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
 		returnType.isSubtype(member.returnType) &&
-		parametersType.size == member.parametersType.size &&
+		parametersTypes.size == member.parametersTypes.size &&
 		{
 			var ok = true
-			val paramIterator = parametersType.iterator
-			val memberParamIterator = member.parametersType.iterator
+			val paramIterator = parametersTypes.iterator
+			val memberParamIterator = member.parametersTypes.iterator
 			while (paramIterator.hasNext && ok) {
 				if (!paramIterator.next.sameType
 						(memberParamIterator.next))
@@ -426,10 +426,10 @@ class TraitJJvmModelUtil {
 	 */
 	def compliant(XtraitjJvmOperation it, JvmOperation member) {
 		returnType.isSubtype(member.returnType) &&
-		parametersType.size == member.parameters.size &&
+		parametersTypes.size == member.parameters.size &&
 		{
 			var ok = true
-			val paramIterator = parametersType.iterator
+			val paramIterator = parametersTypes.iterator
 			val memberParamIterator = member.parameters.iterator
 			while (paramIterator.hasNext && ok) {
 				if (!paramIterator.next.sameType
