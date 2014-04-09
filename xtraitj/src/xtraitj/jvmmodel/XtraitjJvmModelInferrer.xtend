@@ -67,17 +67,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 *            <code>true</code>.
 	 */
    	def dispatch void infer(TJProgram p, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
-		p.elements.filter(typeof(TJTrait)).forEach[
-			inferTraitInterface(acceptor)
-		]
+		val traits = p.traits
+		for (t : traits)
+			t.inferTraitInterface(acceptor)
 
-		p.elements.filter(typeof(TJTrait)).forEach[
-			inferTraitClass(acceptor)
-		]
+		for (t : traits)
+			t.inferTraitClass(acceptor)
 		
-		p.elements.filter(typeof(TJClass)).forEach[
-			inferClass(acceptor)
-		]
+		for (c : p.classes)
+			c.inferClass(acceptor)
    	}
    	
    	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor) {
