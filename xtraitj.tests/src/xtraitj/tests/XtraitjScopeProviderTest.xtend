@@ -21,7 +21,7 @@ import xtraitj.XtraitjInjectorProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJScopeProviderTest {
+class XtraitjScopeProviderTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension TraitJInputs
 	@Inject extension TraitJXbaseBatchScopeProvider
