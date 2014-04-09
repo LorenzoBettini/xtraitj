@@ -280,9 +280,6 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	}
 
 	@Check def void checkConflicts(TJRequiredMethod m) {
-		if (m.containingTrait == null)
-			return;
-		
 		// a required method conflicts with any declared method
 		// of the used traits
 		for (t1 : m.containingTrait.traitReferences) {
@@ -310,9 +307,6 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	}
 
 	@Check def void checkConflicts(TJMethod m) {
-		if (m.containingTrait == null)
-			return;
-		
 		// a defined method conflicts with any defined method
 		// of the used traits
 		for (t1 : m.containingTrait.traitReferences) {
@@ -449,7 +443,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 
 	@Check
 	def void checkConstructorName(TJConstructor cons) {
-		if (cons.containingDeclaration?.name != cons.name) {
+		if (cons.containingDeclaration.name != cons.name) {
 			error(
 				"Wrong constructor name '" + cons.name + "'",
 				XtraitjPackage.eINSTANCE.TJConstructor_Name,
@@ -461,7 +455,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	@Check
 	def void checkDuplicateConstructors(TJConstructor cons) {
 		val consRepresentation = cons.constructorRepresentation
-		if (cons.containingClass?.constructors.exists[
+		if (cons.containingClass.constructors.exists[
 			it != cons && 
 			it.constructorRepresentation == consRepresentation
 		]) {

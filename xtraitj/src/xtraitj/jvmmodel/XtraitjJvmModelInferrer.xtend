@@ -142,10 +142,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toTraitFieldDeclaration(TJTraitReference e) {
-		e.toField(e.traitFieldName, e.associatedInterface)
-	}
-   	
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
    			copyTypeParameters(t.traitTypeParameters)
@@ -689,14 +685,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 			body = method.body
 		]
-	}
-
-	def traitInterfaceName(TJTraitReference e) {
-		e.trait?.traitInterfaceName
-	}
-
-	def traitClassName(TJTraitReference e) {
-		e.trait?.traitClassName
 	}
 
    	def traitInterfaceName(TJTrait t) {
