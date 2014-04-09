@@ -5,14 +5,14 @@ package xtraitj;
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
 import org.eclipse.xtext.xbase.imports.IImportsConfiguration;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
+import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
-
-import com.google.inject.Binder;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.TraitJOutputConfigurationProvider;
@@ -20,7 +20,11 @@ import xtraitj.imports.XtraitjImportsConfiguration;
 import xtraitj.jvmmodel.TraitJJvmModelAssociator;
 import xtraitj.scoping.TraitJXbaseBatchScopeProvider;
 import xtraitj.scoping.TraitJXbaseScopeProvider;
+import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
+
+import com.google.inject.Binder;
+import com.google.inject.name.Names;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -52,6 +56,10 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		return TraitJJvmModelAssociator.class;
 	}
 
+	public Class<? extends JvmModelAssociator> bindJvmModelAssociator() {
+		return TraitJJvmModelAssociator.class;
+	}
+
 	public Class<? extends IJvmModelAssociations> bindIJvmModelAssociations() {
 		return TraitJJvmModelAssociator.class;
 	}
@@ -64,4 +72,9 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		return XtraitjTypeReferenceSerializer.class;
 	}
 
+	@Override
+	public void configureIScopeProviderDelegate(Binder binder) {
+		binder.bind(IScopeProvider.class).annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
+				.to(XtraitjImportedNamespaceScopeProvider.class);
+	}
 }

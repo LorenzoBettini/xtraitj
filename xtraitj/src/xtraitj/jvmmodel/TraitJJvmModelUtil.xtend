@@ -9,12 +9,13 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.typing.TraitJTypingUtil
 import xtraitj.xtraitj.TJClass
@@ -22,14 +23,15 @@ import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
+import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import xtraitj.xtraitj.TJMethodDeclaration
-import org.eclipse.xtext.common.types.JvmType
+import java.util.Set
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -40,9 +42,10 @@ import org.eclipse.xtext.common.types.JvmType
 class TraitJJvmModelUtil {
 
 	@Inject extension TypeReferences
-	@Inject extension IJvmModelAssociations
+	@Inject extension JvmModelAssociator
 	@Inject extension TraitJTypingUtil
 	@Inject extension JvmTypesBuilder
+	@Inject extension IQualifiedNameProvider
 
 	def associatedInterface(TJTraitReference t) {
 		val associated = t.associatedInterfaceType
@@ -583,5 +586,42 @@ class TraitJJvmModelUtil {
 		
 		return typeRef
 	}
+
+	def associateToTraitMethodAsPrimary(JvmOperation op, TJMethod method) {
+		method.associatePrimary(op)
+	}
+
+	/**
+	 * Retrieve the main inferred method, i.e., the one with the same name
+	 * of the original method, in the class inferred for the trait, without the
+	 * underscore (since that is the one that will be linked in method invocations
+	 * in other methods).
+	 */
+	def primaryInferredElement(TJMethod m, Set<EObject> elements) {
+		val methodNameToSearch = m.containingTrait.traitClassName + "." + m.name
+		
+		elements.filter(typeof(JvmOperation)).
+			findFirst[
+				((if (eContainer != null)
+					eContainer.fullyQualifiedName + "."
+				else 
+					"") + simpleName) == 
+				methodNameToSearch
+			]
+	}
+
+	def allJvmElements(EObject o) {
+		o.jvmElements
+	}
+	
+	def underscoreName(String name) {
+   		"_" + name
+   	}
+
+	def traitClassName(TJTrait t) {
+   		val n = t.fullyQualifiedName
+   		n.skipLast(1).append("traits").append("impl").
+   			append(n.lastSegment).toString + "Impl"
+   	}
 }
 

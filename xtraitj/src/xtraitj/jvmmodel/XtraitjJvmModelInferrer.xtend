@@ -563,10 +563,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		newRef
 	}
    	
-   	def private underscoreName(String name) {
-   		"_" + name
-   	}
-   	
    	def toGetterAbstract(TJMember m) {
    		m.toGetter(m.name, m.type) => [
    			abstract = true
@@ -621,7 +617,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		val o = op.op
 		val m = o.originalSource ?: o
 		if (!o.typeParameters.empty)
-			o.toMethod(methodName, op.returnType) [
+			m.toMethod(methodName, op.returnType) [
 				documentation = m.documentation
 				
 				if (m instanceof TJMethodDeclaration) {
@@ -710,7 +706,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def toTraitMethod(TJMethod method, String name) {
-		method.toMethod(name, method.type) [
+		val op = method.toMethod(name, method.type) [
 			documentation = method.documentation
 			
 			copyTypeParameters(method.typeParameters)
@@ -720,6 +716,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 			body = method.body
 		]
+		//op.associateToTraitMethodAsPrimary(method)
+		op
 	}
 
 	def traitInterfaceName(TJTraitReference e) {
@@ -757,12 +755,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		t.trait.name + "_" +
 		t.containingDeclaration.traitOperationExpressions.indexOf(t)
 	}
-
-   	def traitClassName(TJTrait t) {
-   		val n = t.fullyQualifiedName
-   		n.skipLast(1).append("traits").append("impl").
-   			append(n.lastSegment).toString + "Impl"
-   	}
 
 	def delegateFieldName() {
 		"_delegate"
