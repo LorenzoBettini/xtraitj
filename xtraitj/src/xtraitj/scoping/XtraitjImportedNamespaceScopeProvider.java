@@ -75,7 +75,7 @@ public class XtraitjImportedNamespaceScopeProvider extends
 		Set<EObject> elements = jvmModelUtil.allJvmElements(context);
 		if (context instanceof TJMethod) {
 			EObject primaryElement = jvmModelUtil.traitClassInferredMethod((TJMethod) context, elements);
-			if (primaryElement != null);
+			if (primaryElement != null)
 				elements = Sets.newHashSet(primaryElement);
 		}
 		
