@@ -89,14 +89,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// by the trait operation expressions (possibly after renaming)
 
 		// infer interfaces first for trait operation expressions		
-		c.traitOperationExpressions.forEach[
+		for (it : c.traitOperationExpressions)
 			inferTraitExpressionInterface(acceptor)
-		]
 
 		// then we can infer the corresponding classes
-		c.traitOperationExpressions.forEach[
+		for (it : c.traitOperationExpressions)
 			inferTraitExpressionClass(acceptor)
-		]
    		
    		acceptor.accept(inferredClass).initializeLater[
    			documentation = c.documentation
@@ -105,15 +103,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				superTypes += i.cloneWithProxies
    			}
    			
-   			c.fields.forEach[
-   				field |
+   			for (field : c.fields) {
    				members += field.toField(field.name, field.type) [
    					if (field.init != null)
    						initializer = field.init
    				]
 				members += field.toGetter(field.name, field.type)
 				members += field.toSetter(field.name, field.type)
-   			]
+   			}
    			
    			for (cons : c.constructors) {
    				members += cons.toConstructor[
@@ -124,17 +121,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				]
    			}
    			
-   			c.traitExpression.traitReferences.forEach[
-   				traitExp | 
+   			for (traitExp : c.traitExpression.traitReferences) {
    				superTypes += traitExp.associatedInterface
    				members += traitExp.toTraitField
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
-   				traitExp.xtraitjJvmAllMethodOperations.forEach [
-   					traitMethod |
+   				for (traitMethod : traitExp.xtraitjJvmAllMethodOperations)
    					members += traitMethod.toMethodDelegate(traitExp.traitFieldName)
-   				]
-   			]
+   			}
    		]
    	}
 
@@ -159,20 +153,18 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			// it is crucial to insert, at this stage, into the inferred interface all
    			// members which are specified in the trait, so that, later
    			// we also add the members we "inherit" from used traits 
-			t.fields.forEach[
-				field |
+			for (field : t.fields) {
 				members += field.toGetterAbstract
 				members += field.toSetterAbstract
-			]
-			t.methods.forEach[
-				method |
+			}
+			
+			for (method : t.methods) {
 				if (!method.isPrivate)
 					members += method.toAbstractMethod
-			]
-			t.requiredMethods.forEach[
-				method |
+			}
+			
+			for (method : t.requiredMethods)
 				members += method.toAbstractMethod
-			]
 		]
 
 		// it is crucial to infer interfaces for trait operation expressions
@@ -181,21 +173,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// by the trait operation expressions (possibly after renaming)
 
 		// infer interfaces first for trait operation expressions		
-		t.traitOperationExpressions.forEach[
+		for (it : t.traitOperationExpressions)
 			inferTraitExpressionInterface(acceptor)
-		]
 
 		// then we can infer the corresponding classes
-		t.traitOperationExpressions.forEach[
+		for (it : t.traitOperationExpressions)
 			inferTraitExpressionClass(acceptor)
-		]
 
 		acceptor.accept(traitInterface).initializeLater [
 			if (t.traitExpression != null)
-				(newArrayList => [collectSuperInterfaces(t.traitExpression)]).forEach [ 
-					superInterface |
+				for (superInterface : (newArrayList => [collectSuperInterfaces(t.traitExpression)])) 
 					superTypes += superInterface
-				]
 			
 			// methods which are defined in any of the used traits
 			// must be explicitly inserted in the interface, even if inherited
@@ -223,8 +211,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(
 			t.toInterface(t.traitExpressionInterfaceName) []
 		).initializeLater[
-			t.trait.jvmAllOperations.forEach [
-				jvmOp |
+			for (jvmOp : t.trait.jvmAllOperations) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
 				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
 				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
@@ -255,7 +242,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							restrictOperation.toAbstractMethod(xop, jvmOp.simpleName)
 					}
 				}
-			]
+			}
 		]
 	}
 
@@ -302,9 +289,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			]
 			
 			// operations of the referred trait in this trait operation
-			t.trait.jvmAllOperations.forEach [
-				jvmOp |
-				
+			for (jvmOp : t.trait.jvmAllOperations) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
 				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
 				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
@@ -433,16 +418,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							)
 					}
 				}
-			]
+			}
 		]
 	}
 
 	def void collectSuperInterfaces(List<JvmTypeReference> typeRefs, TJTraitExpression e) {
-		e.traitReferences.forEach[
+		for (it : e.traitReferences) {
 			val	i = associatedInterface
 			if (i != null)
 				typeRefs += i
-		]
+		}
 	}
 
    	def void inferTraitClass(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
@@ -464,39 +449,32 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			members += t.toField(delegateFieldName, transformedTraitInterfaceTypeRef)
    			
-   			t.traitReferences.forEach[
-   				traitExp | 
+   			for (traitExp : t.traitReferences)
    				members += traitExp.toField
    					(traitExp.traitFieldName, traitExp.associatedClass)
-   			]
    			
    			members += t.toConstructor[
    				parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
 				body = [
 					it.append('''this.«delegateFieldName» = delegate;''')
-					t.traitExpression.traitReferences.forEach[
-		   				traitExp |
+					for (traitExp : t.traitExpression.traitReferences) {
 		   				newLine.append('''«traitExp.traitFieldName» = ''')
 		   				append('''new ''')
 						append(traitExp.associatedClass.type)
 						append("(delegate);")
-					]
+					}
 	   			]
 			]
    			
-   			t.fields.forEach[
-   				field |
+   			for (field : t.fields) {
    				members += toGetterDelegate(field)
    				members += field.toSetterDelegate
-   			]
+   			}
    			
-   			t.requiredMethods.forEach [
-   				aMethod |
+   			for (aMethod : t.requiredMethods)
    				members += aMethod.toMethodDelegate(delegateFieldName)
-   			]
    			
-   			t.methods.forEach [
-   				method |
+   			for (method : t.methods) {
    				if (method.isPrivate) {
    					members += method.toTraitMethod(method.name)
    				} else {
@@ -512,13 +490,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   				members += delegateMethod
 	   				members += actualMethod
 				}
-   			]
+   			}
    			
-   			t.traitReferences.forEach[
-   				traitRef |
+   			for (traitRef : t.traitReferences) {
    				// first delegates for implemented methods 
-   				traitRef.xtraitjJvmAllMethodOperations.forEach [
-   					traitMethod |
+   				for (traitMethod : traitRef.xtraitjJvmAllMethodOperations) {
    					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
    					members += traitMethod.toMethodDelegate(
@@ -529,21 +505,18 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    						traitRef.traitFieldName, methodName.underscoreName,
    						methodName.underscoreName
    					)
-   				]
-   			]
+   				}
+   			}
    			
-   			t.traitReferences.forEach[
-   				traitRef |
+   			for (traitRef : t.traitReferences) {
    				// then delegates for required methods
-   				traitRef.xtraitjJvmAllOperations.filter[required].forEach [
-   					op |
+   				for (op : traitRef.xtraitjJvmAllOperations.filter[required])
    					if (!members.alreadyDefined(op.op)) {
    						members += op.toMethodDelegate(
    							delegateFieldName,
    							op.op.simpleName, op.op.simpleName)
    					}
-   				]
-   			]
+   			}
    		]
    	}
 
