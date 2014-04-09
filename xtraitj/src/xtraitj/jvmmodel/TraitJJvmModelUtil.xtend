@@ -593,7 +593,7 @@ class TraitJJvmModelUtil {
 	 * underscore (since that is the one that will be linked in method invocations
 	 * in other methods).
 	 */
-	def primaryInferredElement(TJMethod m, Set<EObject> elements) {
+	def traitClassInferredMethod(TJMethod m, Set<EObject> elements) {
 		val methodNameToSearch = m.containingTrait.traitClassName + "." + m.name
 		
 		elements.filter(typeof(JvmOperation)).

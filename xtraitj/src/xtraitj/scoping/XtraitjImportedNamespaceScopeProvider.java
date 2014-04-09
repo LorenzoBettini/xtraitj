@@ -70,11 +70,11 @@ public class XtraitjImportedNamespaceScopeProvider extends
 		}
 		
 		// scope for jvm elements
-		/* This is the modified part, to retrieve the JvmOperation that actually
-		 * corresponds to the original method */
+		/* This is the modified part, to retrieve the JvmOperation in the class
+		 * inferred for the trait that corresponds to the original method */
 		Set<EObject> elements = jvmModelUtil.allJvmElements(context);
 		if (context instanceof TJMethod) {
-			EObject primaryElement = jvmModelUtil.primaryInferredElement((TJMethod) context, elements);
+			EObject primaryElement = jvmModelUtil.traitClassInferredMethod((TJMethod) context, elements);
 			if (primaryElement != null);
 				elements = Sets.newHashSet(primaryElement);
 		}
