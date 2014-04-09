@@ -383,6 +383,7 @@ package tests.traits.impl;
 
 import java.util.ArrayList;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import tests.traits.T1;
 
 @SuppressWarnings("all")
@@ -412,52 +413,40 @@ public class T1Impl implements T1 {
     final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
     return ((((s + ",") + i) + ",") + l);
   }
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T2",
-'''
-package tests.traits.impl;
-
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-
-@SuppressWarnings("all")
-public class T2Impl implements T2 {
-  private T2 _delegate;
   
-  private T1Impl _T1;
-  
-  public T2Impl(final T2 delegate) {
-    this._delegate = delegate;
-    _T1 = new T1Impl(delegate);
+  public <V> V recursive(final V v) {
+    return _delegate.recursive(v);
   }
   
-  public String useIdentity2() {
-    return _delegate.useIdentity2();
+  public <V> V _recursive(final V v) {
+    V _recursive = this.<V>recursive(v);
+    return this.<V>recursive(_recursive);
   }
   
-  public String _useIdentity2() {
-    final String s = this.<String>identity("bar");
-    String _useIdentity = this.useIdentity();
-    return ((s + ",") + _useIdentity);
+  public void useRecursive() {
+    _delegate.useRecursive();
   }
   
-  public <T> T identity(final T t) {
-    return _delegate.identity(t);
+  public void _useRecursive() {
+    Integer _recursive = this.<Integer>recursive(Integer.valueOf(0));
+    String _recursive_1 = this.<String>recursive("foo");
+    String _plus = (_recursive + _recursive_1);
+    InputOutput.<String>println(_plus);
   }
   
-  public <T> T _identity(final T t) {
-    return _T1._identity(t);
+  public String useIdentityNested() {
+    return _delegate.useIdentityNested();
   }
   
-  public String useIdentity() {
-    return _delegate.useIdentity();
-  }
-  
-  public String _useIdentity() {
-    return _T1._useIdentity();
+  public String _useIdentityNested() {
+    String _identity = this.<String>identity("foo");
+    final String s = this.<String>identity(_identity);
+    Integer _identity_1 = this.<Integer>identity(Integer.valueOf(0));
+    final Integer i = this.<Integer>identity(_identity_1);
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    ArrayList<Boolean> _identity_2 = this.<ArrayList<Boolean>>identity(_newArrayList);
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_identity_2);
+    return ((((s + ",") + i) + ",") + l);
   }
 }
 '''
@@ -481,12 +470,27 @@ public class C implements T1 {
   public String useIdentity() {
     return _T1._useIdentity();
   }
+  
+  public <V> V recursive(final V v) {
+    return _T1._recursive(v);
+  }
+  
+  public void useRecursive() {
+    _T1._useRecursive();
+  }
+  
+  public String useIdentityNested() {
+    return _T1._useIdentityNested();
+  }
 }
 '''
 )
 
 			executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
 			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentity2", "bar,foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested2", "bar,foo,0,[true, false]")
 		]
 	}
 

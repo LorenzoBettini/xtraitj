@@ -1022,12 +1022,32 @@ trait T1 {
 		val l = identity(newArrayList(true, false))
 		return s + "," + i + "," + l
 	}
+
+	<V> V recursive(V v) {
+		return recursive(recursive(v))
+	}
+
+	void useRecursive() {
+		println(recursive(0) + recursive("foo"))
+	}
+
+	String useIdentityNested() {
+		val s = identity(identity("foo"))
+		val i = identity(identity(0))
+		val l = identity(identity(newArrayList(true, false)))
+		return s + "," + i + "," + l
+	}
 }
 
 trait T2 uses T1 {
 	String useIdentity2() {
 		val s = identity("bar")
 		return s + "," + useIdentity()
+	}
+	
+	String useIdentityNested2() {
+		val s = identity(identity("bar"))
+		return s + "," + useIdentityNested()
 	}
 }
 
