@@ -1027,6 +1027,10 @@ trait T1 {
 		return recursive(recursive(v))
 	}
 
+	<U> void noReturn(U u) {
+		println(u)
+	}
+
 	void useRecursive() {
 		println(recursive(0) + recursive("foo"))
 	}
@@ -1036,6 +1040,11 @@ trait T1 {
 		val i = identity(identity(0))
 		val l = identity(identity(newArrayList(true, false)))
 		return s + "," + i + "," + l
+	}
+	
+	void useNoReturn() {
+		noReturn("foo")
+		noReturn(0)
 	}
 }
 
@@ -1048,6 +1057,11 @@ trait T2 uses T1 {
 	String useIdentityNested2() {
 		val s = identity(identity("bar"))
 		return s + "," + useIdentityNested()
+	}
+	
+	void useNoReturn2() {
+		noReturn("foo")
+		noReturn(0)
 	}
 }
 

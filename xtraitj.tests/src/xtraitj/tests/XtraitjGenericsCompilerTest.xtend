@@ -423,6 +423,14 @@ public class T1Impl implements T1 {
     return this.<V>recursive(_recursive);
   }
   
+  public <U> void noReturn(final U u) {
+    _delegate.noReturn(u);
+  }
+  
+  public <U> void _noReturn(final U u) {
+    InputOutput.<Object>println(u);
+  }
+  
   public void useRecursive() {
     _delegate.useRecursive();
   }
@@ -447,6 +455,15 @@ public class T1Impl implements T1 {
     ArrayList<Boolean> _identity_2 = this.<ArrayList<Boolean>>identity(_newArrayList);
     final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_identity_2);
     return ((((s + ",") + i) + ",") + l);
+  }
+  
+  public void useNoReturn() {
+    _delegate.useNoReturn();
+  }
+  
+  public void _useNoReturn() {
+    this.<String>noReturn("foo");
+    this.<Integer>noReturn(Integer.valueOf(0));
   }
 }
 '''
@@ -475,12 +492,20 @@ public class C implements T1 {
     return _T1._recursive(v);
   }
   
+  public <U> void noReturn(final U u) {
+    _T1._noReturn(u);
+  }
+  
   public void useRecursive() {
     _T1._useRecursive();
   }
   
   public String useIdentityNested() {
     return _T1._useIdentityNested();
+  }
+  
+  public void useNoReturn() {
+    _T1._useNoReturn();
   }
 }
 '''
