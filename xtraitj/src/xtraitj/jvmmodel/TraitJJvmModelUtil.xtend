@@ -3,6 +3,7 @@ package xtraitj.jvmmodel
 import com.google.inject.Inject
 import java.beans.Introspector
 import java.util.List
+import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmFeature
 import org.eclipse.xtext.common.types.JvmGenericType
@@ -15,7 +16,8 @@ import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
-import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.typing.TraitJTypingUtil
 import xtraitj.xtraitj.TJClass
@@ -30,8 +32,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import java.util.Set
-import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -42,7 +42,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 class TraitJJvmModelUtil {
 
 	@Inject extension TypeReferences
-	@Inject extension JvmModelAssociator
+	@Inject extension IJvmModelAssociations
 	@Inject extension TraitJTypingUtil
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
@@ -585,10 +585,6 @@ class TraitJJvmModelUtil {
 		}
 		
 		return typeRef
-	}
-
-	def associateToTraitMethodAsPrimary(JvmOperation op, TJMethod method) {
-		method.associatePrimary(op)
 	}
 
 	/**

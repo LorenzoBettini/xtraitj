@@ -706,7 +706,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def toTraitMethod(TJMethod method, String name) {
-		val op = method.toMethod(name, method.type) [
+		method.toMethod(name, method.type) [
 			documentation = method.documentation
 			
 			copyTypeParameters(method.typeParameters)
@@ -716,8 +716,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 			body = method.body
 		]
-		//op.associateToTraitMethodAsPrimary(method)
-		op
 	}
 
 	def traitInterfaceName(TJTraitReference e) {

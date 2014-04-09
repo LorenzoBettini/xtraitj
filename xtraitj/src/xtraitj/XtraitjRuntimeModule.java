@@ -10,7 +10,6 @@ import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
 import org.eclipse.xtext.xbase.imports.IImportsConfiguration;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
-import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 
@@ -53,10 +52,6 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
     }
 	
 	public Class<? extends IJvmModelAssociator> bindIJvmModelAssociator() {
-		return TraitJJvmModelAssociator.class;
-	}
-
-	public Class<? extends JvmModelAssociator> bindJvmModelAssociator() {
 		return TraitJJvmModelAssociator.class;
 	}
 
