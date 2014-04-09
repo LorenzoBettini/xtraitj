@@ -1182,6 +1182,141 @@ public class C implements UsesTGeneric {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTraitWithAlias() {
+		traitUsesGenericTraitWithAlias.compile[
+
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests.traits;
+
+import tests.traits.T2_T1_0_Adapter;
+
+@SuppressWarnings("all")
+public interface T2 extends T2_T1_0_Adapter {
+  public abstract String p();
+  
+  /**
+   * original version of m
+   */
+  public abstract String oldm();
+  
+  /**
+   * original version of m
+   */
+  public abstract String m();
+  
+  public abstract String n();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T2;
+import tests.traits.impl.T2_T1_0_AdapterImpl;
+
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private T2_T1_0_AdapterImpl _T2_T1_0;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _T2_T1_0 = new T2_T1_0_AdapterImpl(delegate);
+  }
+  
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    String _m = this.m();
+    String _oldm = this.oldm();
+    return (_m + _oldm);
+  }
+  
+  /**
+   * original version of m
+   */
+  public String oldm() {
+    return _delegate.oldm();
+  }
+  
+  /**
+   * original version of m
+   */
+  public String _oldm() {
+    return _T2_T1_0._oldm();
+  }
+  
+  /**
+   * original version of m
+   */
+  public String m() {
+    return _delegate.m();
+  }
+  
+  /**
+   * original version of m
+   */
+  public String _m() {
+    return _T2_T1_0._m();
+  }
+  
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_T1_0._n();
+  }
+  
+  public List<String> getL() {
+    return _delegate.getL();
+  }
+  
+  public void setL(final List<String> l) {
+    _delegate.setL(l);
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "T2_T1_0",
+'''
+package tests.traits;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface T2_T1_0_Adapter {
+  public abstract List<String> getL();
+  
+  public abstract void setL(final List<String> l);
+  
+  /**
+   * original version of m
+   */
+  public abstract String oldm();
+  
+  /**
+   * original version of m
+   */
+  public abstract String m();
+  
+  public abstract String n();
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "p", "foofoo")
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 

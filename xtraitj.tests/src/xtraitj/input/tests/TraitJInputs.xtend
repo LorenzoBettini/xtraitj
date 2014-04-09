@@ -566,31 +566,31 @@ class TraitJInputs {
 
 	def traitAlias() {
 		'''
-		package tests;
-		
-		trait T1 {
-			String s;
-			/* original version of m */
-			String m() { return "T1.m;"; }
-			String n() { return m(); }
-		}
-		
-		trait T2 uses T1 {
-			String p() { return m(); }
-		}
-		
-		trait T3 uses T2[ alias m as oldm ] {
-			String callN() { 
-				return n() + p();
-			}
-			String callM() { 
-				return m() + oldm();
-			}
-		}
-		
-		class C uses T3 {
-			String s = "";
-		}
+package tests;
+
+trait T1 {
+	String s;
+	/* original version of m */
+	String m() { return "T1.m;"; }
+	String n() { return m(); }
+}
+
+trait T2 uses T1 {
+	String p() { return m(); }
+}
+
+trait T3 uses T2[ alias m as oldm ] {
+	String callN() { 
+		return n() + p();
+	}
+	String callM() { 
+		return m() + oldm();
+	}
+}
+
+class C uses T3 {
+	String s = "";
+}
 		'''
 	}
 
@@ -1233,35 +1233,77 @@ class CUsesGeneric uses TUsesGeneric {
 
 	def traitUsesGenericTraitWithRename() {
 		'''
-		package tests;
-		
-		import java.util.List
-		import java.util.LinkedList
-		
-		trait TGeneric<T> {
-			List<T> returnList() {
-				return new LinkedList<T>
-			}
-		}
-		
-		trait UsesTGeneric uses 
-			TGeneric<Integer>[rename returnList to returnListOfInteger],
-			TGeneric<List<Integer>>[rename returnList to returnListOfListOfInteger],
-			TGeneric<String> 
-		{
-			String useLists() {
-				val stringList = returnList() => [add("foo")]
-				val intList = returnListOfInteger() => [add(1)]
-				val intListList = returnListOfListOfInteger() => [
-					add(
-						returnListOfInteger() => [ add(2) ]
-					)
-				]
-				(stringList.toString + intList.toString + intListList.toString)
-			}
-		}
-		
-		class C uses UsesTGeneric {}
+package tests;
+
+import java.util.List
+import java.util.LinkedList
+
+trait TGeneric<T> {
+	List<T> returnList() {
+		return new LinkedList<T>
+	}
+}
+
+trait UsesTGeneric uses 
+	TGeneric<Integer>[rename returnList to returnListOfInteger],
+	TGeneric<List<Integer>>[rename returnList to returnListOfListOfInteger],
+	TGeneric<String> 
+{
+	String useLists() {
+		val stringList = returnList() => [add("foo")]
+		val intList = returnListOfInteger() => [add(1)]
+		val intListList = returnListOfListOfInteger() => [
+			add(
+				returnListOfInteger() => [ add(2) ]
+			)
+		]
+		(stringList.toString + intList.toString + intListList.toString)
+	}
+}
+
+class C uses UsesTGeneric {}
+		'''
+	}
+
+	def traitUsesGenericTraitWithAlias() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> l;
+	/* original version of m */
+	T m() { 
+		return l.get(0);
+	}
+	T n() { 
+		return m();
+	}
+}
+
+trait T2 uses T1<String>[ alias m as oldm ] {
+	String p() { 
+		return m() + oldm();
+	}
+}
+
+class C uses T2 {
+	List < String > l = newArrayList("foo", "bar");
+}
+
+//trait T3 uses T2[ alias m as oldm ] {
+//	String callN() { 
+//		return n() + p();
+//	}
+//	String callM() { 
+//		return m() + oldm();
+//	}
+//}
+
+//class C uses T3 {
+//	String s = "";
+//}
 		'''
 	}
 
