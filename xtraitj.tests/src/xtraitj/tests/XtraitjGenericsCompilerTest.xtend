@@ -635,9 +635,21 @@ import tests.traits.TGeneric;
 
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<List<String>,Set<Integer>> {
+  public abstract List<String> getT();
+  
+  public abstract void setT(final List<String> t);
+  
+  public abstract Iterable<List<String>> getIterableOfStrings();
+  
+  public abstract void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings);
+  
+  public abstract Iterable<Set<Integer>> getIterableOfIntegers();
+  
+  public abstract void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers);
 }
 '''
 )
+
 
 assertTraitJavaClass("tests", "TUsesGeneric",
 '''
@@ -657,6 +669,53 @@ public class TUsesGenericImpl implements TUsesGeneric {
   public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
     _TGeneric = new TGenericImpl(delegate);
+  }
+  
+  public List<String> getT() {
+    return _delegate.getT();
+  }
+  
+  public void setT(final List<String> t) {
+    _delegate.setT(t);
+  }
+  
+  public Iterable<List<String>> getIterableOfStrings() {
+    return _delegate.getIterableOfStrings();
+  }
+  
+  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
+    _delegate.setIterableOfStrings(iterableOfStrings);
+  }
+  
+  public Iterable<Set<Integer>> getIterableOfIntegers() {
+    return _delegate.getIterableOfIntegers();
+  }
+  
+  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
+    _delegate.setIterableOfIntegers(iterableOfIntegers);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import java.util.Set;
+import tests.traits.T2;
+import tests.traits.impl.TUsesGenericImpl;
+
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private TUsesGenericImpl _TUsesGeneric;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _TUsesGeneric = new TUsesGenericImpl(delegate);
   }
   
   public List<String> getT() {
@@ -1189,6 +1248,7 @@ assertTraitJavaInterface("tests", "T2",
 '''
 package tests.traits;
 
+import java.util.List;
 import tests.traits.T2_T1_0_Adapter;
 
 @SuppressWarnings("all")
@@ -1206,6 +1266,10 @@ public interface T2 extends T2_T1_0_Adapter {
   public abstract String m();
   
   public abstract String n();
+  
+  public abstract List<String> getL();
+  
+  public abstract void setL(final List<String> l);
 }
 '''
 )
@@ -1336,6 +1400,10 @@ public interface TUsesGeneric extends TGeneric<String> {
   public abstract String searchInList(final List<? extends String> l, final String arg);
   
   public abstract void addToListOfT(final List<? super String> l, final String arg);
+  
+  public abstract List<String> getMyL();
+  
+  public abstract void setMyL(final List<String> myL);
 }
 '''
 )

@@ -139,8 +139,14 @@ class TraitJJvmModelUtil {
 		t.jvmAllFeatures.filter(typeof(JvmOperation))
 	}
 
-	def xtraitjJvmAllOperations(TJTraitReference t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation)).createXtraitjJvmOperations(t)
+	def xtraitjJvmAllFieldOperations(TJTraitReference t) {
+		t.jvmAllFeatures.filter(typeof(JvmOperation)).
+			filter[sourceField != null].createXtraitjJvmOperations(t)
+	}
+
+	def xtraitjJvmAllRequiredOperations(TJTraitReference t) {
+		t.jvmAllFeatures.filter(typeof(JvmOperation)).
+			filter[required].createXtraitjJvmOperations(t)
 	}
 
 	def xtraitjJvmAllMethodOperations(TJTraitReference t) {

@@ -1128,31 +1128,43 @@ class CUsesGeneric uses TUsesGeneric {
 
 	def traitUsesGenericTraitWithFields() {
 		'''
-		package tests;
-		
-		import java.util.List
-		import java.util.Collection
-		import java.util.Set
-		
-		trait TGeneric<T extends Collection<String>, U extends Collection<Integer>> {
-			T t;
-			
-			Iterable<T> iterableOfStrings;
-			
-			Iterable<U> iterableOfIntegers;
-		}
-		
-		trait TUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
-			
-		}
-		
-		class CUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
-			List<String> t;
-			
-			Iterable<List<String>> iterableOfStrings;
-			
-			Iterable<Set<Integer>> iterableOfIntegers;
-		}
+package tests;
+
+import java.util.List
+import java.util.Collection
+import java.util.Set
+
+trait TGeneric<T extends Collection<String>, U extends Collection<Integer>> {
+	T t;
+	
+	Iterable<T> iterableOfStrings;
+	
+	Iterable<U> iterableOfIntegers;
+}
+
+trait TUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
+	
+}
+
+trait T2 uses TUsesGeneric {
+	
+}
+
+class CUsesGeneric uses TGeneric<List<String>, Set<Integer>> {
+	List<String> t;
+	
+	Iterable<List<String>> iterableOfStrings;
+	
+	Iterable<Set<Integer>> iterableOfIntegers;
+}
+
+class CUsesGeneric2 uses T2 {
+	List<String> t;
+	
+	Iterable<List<String>> iterableOfStrings;
+	
+	Iterable<Set<Integer>> iterableOfIntegers;
+}
 		'''
 	}
 

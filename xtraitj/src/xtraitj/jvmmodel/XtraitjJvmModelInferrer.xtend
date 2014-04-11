@@ -191,12 +191,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					for (op: traitRef.xtraitjJvmAllMethodOperations) {
 						members += op.toAbstractMethod
 					}
-				else
+				else {
 					for (op: traitRef.xtraitjJvmAllMethodDeclarationOperations) {
 						if (!members.alreadyDefined(op.op))
 							members += op.toAbstractMethod
 					} // in the presence of generics also inserts
 					// required methods with type parameters instantiated
+					
+					// and also getters/setters with type parameters instantiated
+					for (op: traitRef.xtraitjJvmAllFieldOperations) {
+						if (!members.alreadyDefined(op.op))
+							members += op.toAbstractMethod
+					}
+				}
 			}
 		]
 				
@@ -506,7 +513,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (traitRef : t.traitReferences) {
    				// then delegates for required methods
-   				for (op : traitRef.xtraitjJvmAllOperations.filter[required])
+   				for (op : traitRef.xtraitjJvmAllRequiredOperations)
    					if (!members.alreadyDefined(op.op)) {
    						members += op.toMethodDelegate(
    							delegateFieldName,
