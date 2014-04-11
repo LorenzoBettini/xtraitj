@@ -1385,6 +1385,14 @@ public interface T2_T1_0_Adapter {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTraitWithHide() {
+		traitUsesGenericTraitWithHide.compile[
+
+			executeGeneratedJavaClassMethodAndAssert("C", "callN", "foofoo")
+			executeGeneratedJavaClassMethodAndAssert("C", "callM", "10")
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 

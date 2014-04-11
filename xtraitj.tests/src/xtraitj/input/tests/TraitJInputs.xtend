@@ -532,35 +532,35 @@ class TraitJInputs {
 
 	def traitHide() {
 		'''
-		package tests;
-		
-		trait T1 {
-			String s;
-			/* original version of m */
-			String m() { return "T1.m;"; }
-			String n() { return m(); }
-		}
-		
-		trait T2 uses T1 {
-			String p() { return m(); }
-		}
-		
-		trait T3 uses T2[ hide m ] {
-			/* independent new version of m */
-			int m(int i) {
-				return i;
-			}
-			String callN() { 
-				return n() + p();
-			}
-			int callM() { 
-				return m(10);
-			}
-		}
-		
-		class C uses T3 {
-			String s = "";
-		}
+package tests;
+
+trait T1 {
+	String s;
+	/* original version of m */
+	String m() { return "T1.m;"; }
+	String n() { return m(); }
+}
+
+trait T2 uses T1 {
+	String p() { return m(); }
+}
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+
+class C uses T3 {
+	String s = "";
+}
 		'''
 	}
 
@@ -1320,6 +1320,44 @@ class C2 uses T4 {
 	List < String > l = newArrayList("foo", "bar");
 }
 '''
+	}
+	
+	def traitUsesGenericTraitWithHide() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	List<T> l;
+	/* original version of m */
+	T m() { 
+		return l.get(0);
+	}
+	T n() { 
+		return m();
+	}
+}
+
+trait T2 uses T1<String> {
+	String p() { return m(); }
+}
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+
+class C uses T3 {
+	List < String > l = newArrayList("foo", "bar");
+}
+		'''
 	}
 
 	def traitUsesGenericTraitWithWildCard() {
