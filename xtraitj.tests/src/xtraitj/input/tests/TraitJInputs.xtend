@@ -1294,7 +1294,19 @@ trait T1<T> {
 	}
 }
 
+/* alias on a directly instantiated type parameter */
 trait T2 uses T1<String>[ alias m as oldm ] {
+	String p() { 
+		return m() + oldm();
+	}
+}
+
+trait T3 uses T1<String> {
+	
+}
+
+/* alias on a indirectly instantiated type parameter */
+trait T4 uses T3[ alias m as oldm ] {
 	String p() { 
 		return m() + oldm();
 	}
@@ -1304,19 +1316,10 @@ class C uses T2 {
 	List < String > l = newArrayList("foo", "bar");
 }
 
-//trait T3 uses T2[ alias m as oldm ] {
-//	String callN() { 
-//		return n() + p();
-//	}
-//	String callM() { 
-//		return m() + oldm();
-//	}
-//}
-
-//class C uses T3 {
-//	String s = "";
-//}
-		'''
+class C2 uses T4 {
+	List < String > l = newArrayList("foo", "bar");
+}
+'''
 	}
 
 	def traitUsesGenericTraitWithWildCard() {

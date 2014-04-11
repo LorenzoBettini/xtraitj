@@ -1282,6 +1282,9 @@ import java.util.List;
 import tests.traits.T2;
 import tests.traits.impl.T2_T1_0_AdapterImpl;
 
+/**
+ * alias on a directly instantiated type parameter
+ */
 @SuppressWarnings("all")
 public class T2Impl implements T2 {
   private T2 _delegate;
@@ -1378,6 +1381,7 @@ public interface T2_T1_0_Adapter {
 )
 
 			executeGeneratedJavaClassMethodAndAssert("C", "p", "foofoo")
+			executeGeneratedJavaClassMethodAndAssert("C2", "p", "foofoo")
 		]
 	}
 
