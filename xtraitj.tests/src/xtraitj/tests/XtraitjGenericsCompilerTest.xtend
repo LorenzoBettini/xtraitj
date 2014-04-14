@@ -1390,6 +1390,10 @@ public interface T2_T1_0_Adapter {
 
 			executeGeneratedJavaClassMethodAndAssert("C", "callN", "foofoo")
 			executeGeneratedJavaClassMethodAndAssert("C", "callM", "10")
+			
+			// in this case we call the new m(10)
+			executeGeneratedJavaClassMethodAndAssert("C2", "callN", "foo10")
+			executeGeneratedJavaClassMethodAndAssert("C2", "callM", "10")
 		]
 	}
 

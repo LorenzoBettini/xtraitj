@@ -1354,7 +1354,24 @@ trait T3 uses T2[ hide m ] {
 	}
 }
 
+trait T4 uses T1<String>[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + m(10);
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+
 class C uses T3 {
+	List < String > l = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
 	List < String > l = newArrayList("foo", "bar");
 }
 		'''
