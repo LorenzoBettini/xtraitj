@@ -1393,6 +1393,21 @@ public interface T2_T1_0_Adapter {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTraitWithRedirect() {
+		traitUsesGenericTraitWithRedirect.compile[
+
+			// originally return s1 which is redirected to s2
+			executeGeneratedJavaClassMethodAndAssert("C", "useField", "foo")
+			
+			// callReq calls the required method req, which was
+			// redirected to prov
+			executeGeneratedJavaClassMethodAndAssert("C", "callReq", "foo")
+			
+			executeGeneratedJavaClassMethodAndAssert("C2", "useField", "foo")
+			executeGeneratedJavaClassMethodAndAssert("C2", "callReq", "foo")
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 

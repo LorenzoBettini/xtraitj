@@ -1360,6 +1360,41 @@ class C uses T3 {
 		'''
 	}
 
+	def traitUsesGenericTraitWithRedirect() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s1;
+	List<T> s2;
+	T req();
+	T prov() { return s2.get(0); }
+	T callReq() { return req(); }
+}
+
+trait T2 uses T1<String> {
+	String useField() { return s1.get(0); }
+}
+
+trait T3 uses T2[ redirect s1 to s2, redirect req to prov ] {
+}
+
+trait T4 uses T1<String>[ redirect s1 to s2, redirect req to prov ] {
+	String useField() { return s2.get(0); }
+}
+
+class C uses T3 {
+	List < String > s2 = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	List < String > s2 = newArrayList("foo", "bar");
+}
+		'''
+	}
+
 	def traitUsesGenericTraitWithWildCard() {
 		'''
 package tests;
