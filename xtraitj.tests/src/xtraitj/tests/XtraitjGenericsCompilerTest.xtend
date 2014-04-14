@@ -1444,6 +1444,24 @@ public interface T2_T1_0_Adapter {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTraitWithAliasRenameHide() {
+		traitUsesGenericTraitWithAliasRenameHide.compile[
+
+			// call the new alias version of m, oldm
+			executeGeneratedJavaClassMethodAndAssert("C", "oldm", "foo")
+			
+			// call the renamed version of m, m1
+			executeGeneratedJavaClassMethodAndAssert("C", "m1", "foo")
+			
+			// call callM which calls both m1 and oldm
+			executeGeneratedJavaClassMethodAndAssert("C", "callM", "foofoo")
+			
+			// call callN which calls the new version of n and p
+			// which in turns calls the original versions of m and n
+			executeGeneratedJavaClassMethodAndAssert("C", "callN", "foo10 - foofoo")
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 

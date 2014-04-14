@@ -1518,6 +1518,61 @@ class C2 uses T4 {
 		'''
 	}
 
+	def traitUsesGenericTraitWithAliasRenameHide() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s;
+	/* original version of m */
+	T m() { return s.get(0); }
+	T n() { return m(); }
+}
+
+trait T2 uses T1<String> {
+	String p() { return m() + n(); }
+}
+
+trait T3 uses T2[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10) + p();
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+
+trait T4 uses T1<String>[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10);
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+
+class C uses T3 {
+	List < String > s = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	List < String > s = newArrayList("foo", "bar");
+}
+'''
+	}
+
 	def traitUsesGenericTraitWithWildCard() {
 		'''
 package tests;
