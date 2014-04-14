@@ -781,6 +781,22 @@ class TraitJValidatorTest {
 		]
 	}
 
+	@Test def void testWrongReferenceToTypeParameter() {
+		'''
+		package tests;
+				
+		trait TFirst<T> {
+			
+		}
+		
+		trait T2 {
+			T m() { return null; }
+		}
+		'''.parse.assertErrorsAsStrings(
+			'''Cannot make a static reference to the non-static type T'''
+		)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEquals(
 			o.validate.map[message].join("\n"))

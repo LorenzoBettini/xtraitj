@@ -28,6 +28,11 @@ import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
+import org.eclipse.xtext.common.types.TypesPackage
+import org.eclipse.xtext.xbase.validation.IssueCodes
 
 /**
  * Custom validation rules. 
@@ -82,6 +87,9 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	
 	@Inject extension TraitJJvmModelUtil
 	
+	@Inject
+	private ILogicalContainerProvider logicalContainerProvider
+	
 	/**
 	 * We must override this to avoid the Xbase validator to consider
 	 * a static context also the case when the type parameter of
@@ -100,6 +108,40 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				return element.static;
 		}
 		return super.isStaticContext(element);
+	}
+
+	/**
+	 * This is an additional check we have to perform, since for a trait we infer
+	 * several Java elements; the Xbase implementation of checkTypeParameterNotUsedInStaticContext
+	 * seems to assume that the type parameter is declared in one place only.
+	 */
+	@Check 
+	def void checkTypeParameterRefersToContainerTrait(JvmTypeReference ref) {
+		val type = ref.type
+		if(type instanceof JvmTypeParameter) {
+			val declaringTrait = type.eContainer
+			
+			if (!(declaringTrait instanceof TJTrait))
+				return; // nothing to check
+			
+			var EObject currentParent = logicalContainerProvider.getNearestLogicalContainer(ref);
+			while(currentParent != null) {
+				if(currentParent == type.eContainer())
+					return;
+				
+				// check that this inferred type is associated to the same trait of the container
+				// of the type parameter
+				if (currentParent instanceof JvmGenericType) {
+					val associatedTrait = currentParent.associatedTrait
+					if (associatedTrait != null) {
+						if (associatedTrait !== declaringTrait)
+							error("Cannot make a static reference to the non-static type " + type.getName(), 
+								ref, TypesPackage.Literals.JVM_PARAMETERIZED_TYPE_REFERENCE__TYPE, -1, IssueCodes.STATIC_ACCESS_TO_INSTANCE_MEMBER);
+					}
+				}
+				currentParent = currentParent.eContainer();
+			}
+		}
 	}
 
 	@Check def void checkDependencyCycle(TJTrait t) {
