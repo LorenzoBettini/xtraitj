@@ -214,6 +214,7 @@ package my.traits;
 trait T1<T> {
 	T s;
 	T m(T a);
+	T n(T i) { return i; }
 }
 
 trait T2 uses T1<String> {
@@ -225,11 +226,14 @@ my.traits
 T1
   s : T
   m(T) : T
+  n(T) : T
 T2
   T1
   requirements
     s : String
     m(String) : String
+  provides
+    n(String) : String
 '''
 		)
 	}

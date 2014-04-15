@@ -129,7 +129,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForProvides(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
-		val provides = d.jvmAllMethodOperations
+		val provides = d.xtraitjJvmAllMethodOperations
 		
 		if (!provides.empty) {
 			val reqNode = new XtraitjProvidesNode(parentNode, images.getImage("externalize.gif"))
@@ -184,19 +184,19 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		"(" + parameterTypes.map[uiStrings.referenceToString(it, "[null]")].join(", ") + ")"
 	}
 
-	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<JvmOperation> provides) {
+	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<XtraitjJvmOperation> provides) {
 		for (req : provides) {
-			val source = req.originalSource
+			val source = req.op.originalSource
 			if (source != null) {
 				provNode.createEObjectNode(
 						source,
 						_image(source),
 						new StyledString(
-							req.simpleName 
-							+ uiStrings.parameters(req)
+							req.op.simpleName 
+							+ req.parametersTypes.parameterTypesToString
 						).append(
 							new StyledString(" : " + 
-								source.type.simpleName,
+								req.returnType.simpleName,
 								StyledString::DECORATIONS_STYLER
 							)
 						),
