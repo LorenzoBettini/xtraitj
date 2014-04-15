@@ -139,38 +139,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<JvmOperation> requirements) {
 		for (req : requirements) {
-			val source = req.originalSource
-			if (source != null) {
-				// use the name from req so that
-				// possible renames are applied
-				// but use the original source as the element
-				// so that we can jump to it
-				if (source instanceof TJField)
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						req.simpleName.stripGetter +
-						" : " + source.type.simpleName,
-						true
-					)
-				else
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						new StyledString(
-							req.simpleName 
-							+ uiStrings.parameters(req)
-						).append(
-							new StyledString(" : " + 
-								source.type.simpleName,
-								StyledString::DECORATIONS_STYLER
-							)
-						),
-						true
-					)
-			}
-			else
-				reqNode.createNode(req)
+			reqNode.createNode(req)
 		}
 	}
 

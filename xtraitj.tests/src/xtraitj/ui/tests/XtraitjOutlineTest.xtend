@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
 import xtraitj.ui.internal.XtraitjActivator
+import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
@@ -101,6 +102,32 @@ T2
   requirements
     s : String
     m(String) : int
+'''
+		)
+	}
+
+	@Test
+	def void testOutlineOfRequirementsFromInterface() {
+		IResourcesSetupUtil.createFile(TEST_PROJECT + "/src/CInterface.java",
+'''
+public interface CInterface {
+	String m(String s);
+}
+'''.toString);
+
+		IResourcesSetupUtil.waitForAutoBuild
+		
+		'''
+package my.traits;
+
+class C implements CInterface {
+}
+		'''.assertAllLabels(
+'''
+my.traits
+C
+  requirements
+    m(String) : String
 '''
 		)
 	}
