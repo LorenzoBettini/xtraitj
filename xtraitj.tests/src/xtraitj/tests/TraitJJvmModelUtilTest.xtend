@@ -9,9 +9,12 @@ import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
+import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.TraitJInputs
 import xtraitj.jvmmodel.TraitJJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJProgram
@@ -21,8 +24,6 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.junit.Assert.*
 import static extension xtraitj.util.TraitJModelUtil.*
-import xtraitj.XtraitjInjectorProvider
-import xtraitj.jvmmodel.XtraitjJvmOperation
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -557,12 +558,12 @@ class TraitJJvmModelUtilTest {
 	
 	@Test def void testClassJvmAllMethods() {
 		classUsesTraitWithDependencies.parse.classes.head.
-			jvmAllMethods.map[simpleName].toList => [
+			xtraitjJvmAllMethodOperations.map[op.simpleName].toList => [
 				contains("m").assertTrue
 				contains("t1").assertTrue
-				// and the ones from Object 
-				contains("notify").assertTrue
-				contains("wait").assertTrue
+				// nothing is taken from Object 
+				contains("notify").assertFalse
+				contains("wait").assertFalse
 			]
 	}
 
@@ -747,4 +748,10 @@ class TraitJJvmModelUtilTest {
 		)
 	}
 
+	def private jvmAllMethodOperations(TJDeclaration e) {
+		e.traitExpression.traitReferences.
+			map[jvmAllMethodOperations].flatten
+	}
+
+	
 }
