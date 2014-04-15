@@ -797,6 +797,18 @@ class TraitJValidatorTest {
 		)
 	}
 
+	@Test def void testWrongInstantiationOfTypeParameter() {
+		'''
+		package tests;
+				
+		trait TFirst<T> {
+			T m() { return new T; }
+		}
+		'''.parse.assertErrorsAsStrings(
+			'''Cannot instantiate the type parameter T'''
+		)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEquals(
 			o.validate.map[message].join("\n"))
