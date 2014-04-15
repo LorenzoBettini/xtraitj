@@ -4,7 +4,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.swt.graphics.Image
 
-class TraitJProvidesNode extends AbstractOutlineNode {
+class XtraitjProvidesNode extends AbstractOutlineNode {
 	
 	protected new(IOutlineNode parent, Image image) {
 		super(parent, image, "provides", false)

@@ -116,7 +116,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		val methodRequirements = d.jvmAllRequiredMethodOperationsFromReferences
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
-			val reqNode = new TraitJRequirementsNode(parentNode, images.getImage("externalize.gif"))
+			val reqNode = new XtraitjRequirementsNode(parentNode, images.getImage("externalize.gif"))
 			nodesForRequirements(reqNode, interfaceMethods)
 			nodesForRequirements2(reqNode, fieldRequirements)
 			nodesForRequirements(reqNode, methodRequirements)
@@ -131,12 +131,12 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		val provides = d.jvmAllMethodOperations
 		
 		if (!provides.empty) {
-			val reqNode = new TraitJProvidesNode(parentNode, images.getImage("externalize.gif"))
+			val reqNode = new XtraitjProvidesNode(parentNode, images.getImage("externalize.gif"))
 			nodesForProvides(reqNode, provides)
 		}
 	}
 
-	def nodesForRequirements(TraitJRequirementsNode reqNode, Iterable<JvmOperation> requirements) {
+	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<JvmOperation> requirements) {
 		for (req : requirements) {
 			val source = req.originalSource
 			if (source != null) {
@@ -173,7 +173,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForRequirements2(TraitJRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
+	def nodesForRequirements2(XtraitjRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
 		for (req : requirements) {
 			val source = req.op.originalSource
 			if (source != null) {
@@ -210,7 +210,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForProvides(TraitJProvidesNode provNode, Iterable<JvmOperation> provides) {
+	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<JvmOperation> provides) {
 		for (req : provides) {
 			val source = req.originalSource
 			if (source != null) {
