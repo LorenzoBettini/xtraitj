@@ -1595,6 +1595,10 @@ trait TGeneric<T> {
 	void addToListOfT(List<? super T> l, T arg) {
 		l.add(arg)
 	}
+	
+	void addToListOfTDefault(List<? super T> l) {
+		l.add(myL.get(0))
+	}
 }
 
 trait TUsesGeneric uses TGeneric<String> {

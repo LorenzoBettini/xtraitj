@@ -48,21 +48,21 @@ class XtraitjJvmOperation {
 	}
 
 	def boolean hasTypeParameterInJvmType(JvmTypeReference ref) {
-		switch (ref) {
-			JvmParameterizedTypeReference: {
-				ref.typeParameterDeclaredInJvmType ||
-				ref.arguments.exists[typeParameterDeclaredInJvmType]
-			}
-			JvmWildcardTypeReference: {
-				ref.constraints.exists[typeReference.hasTypeParameterInJvmType]
-			}
-			default: false
+		if (ref instanceof JvmParameterizedTypeReference) {
+			ref.typeParameterDeclaredInJvmType ||
+			ref.arguments.exists[typeParameterDeclaredInJvmType]
+		} else {
+			false
 		}
 	}
 
 	def boolean typeParameterDeclaredInJvmType(JvmTypeReference ref) {
 		if (ref == null)
 			return false
+		
+		if (ref instanceof JvmWildcardTypeReference) {
+			return ref.constraints.exists[typeReference.hasTypeParameterInJvmType]
+		}
 		
 		val type = ref.type
 		if (type instanceof JvmTypeParameter) {

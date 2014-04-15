@@ -1482,6 +1482,8 @@ public interface TUsesGeneric extends TGeneric<String> {
   
   public abstract void addToListOfT(final List<? super String> l, final String arg);
   
+  public abstract void addToListOfTDefault(final List<? super String> l);
+  
   public abstract List<String> getMyL();
   
   public abstract void setMyL(final List<String> myL);
@@ -1549,6 +1551,14 @@ public class TUsesGenericImpl implements TUsesGeneric {
     _TGeneric._addToListOfT(l, arg);
   }
   
+  public void addToListOfTDefault(final List<? super String> l) {
+    _delegate.addToListOfTDefault(l);
+  }
+  
+  public void _addToListOfTDefault(final List<? super String> l) {
+    _TGeneric._addToListOfTDefault(l);
+  }
+  
   public List<String> getMyL() {
     return _delegate.getMyL();
   }
@@ -1597,6 +1607,10 @@ public class C implements TUsesGeneric {
   
   public void addToListOfT(final List<? super String> l, final String arg) {
     _TUsesGeneric._addToListOfT(l, arg);
+  }
+  
+  public void addToListOfTDefault(final List<? super String> l) {
+    _TUsesGeneric._addToListOfTDefault(l);
   }
 }
 '''
