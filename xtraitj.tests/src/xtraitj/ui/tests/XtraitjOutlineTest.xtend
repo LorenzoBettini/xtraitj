@@ -178,4 +178,32 @@ C
 '''
 		)
 	}
+
+	@Test
+	def void testOutlineForInstantiatedGenerics() {
+		'''
+package my.traits;
+
+trait T1<T> {
+	T s;
+	T m(T a);
+}
+
+trait T2 uses T1<String> {
+	
+}
+		'''.assertAllLabels(
+'''
+my.traits
+T1
+  s : T
+  m(T) : T
+T2
+  T1
+  requirements
+    s : String
+    m(String) : String
+'''
+		)
+	}
 }

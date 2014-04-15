@@ -25,6 +25,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
 import xtraitj.jvmmodel.XtraitjJvmOperation
+import org.eclipse.xtext.common.types.JvmTypeReference
 
 /**
  * Customization of the default outline structure.
@@ -113,13 +114,13 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
 		val fieldRequirements = d.xtraitjJvmAllRequiredFieldOperations
-		val methodRequirements = d.jvmAllRequiredMethodOperationsFromReferences
+		val methodRequirements = d.xtraitjJvmAllRequiredMethodOperationsFromReferences
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
 			val reqNode = new XtraitjRequirementsNode(parentNode, images.getImage("externalize.gif"))
 			nodesForRequirements(reqNode, interfaceMethods)
 			nodesForRequirements2(reqNode, fieldRequirements)
-			nodesForRequirements(reqNode, methodRequirements)
+			nodesForRequirements2(reqNode, methodRequirements)
 		}
 	}
 
@@ -149,7 +150,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						source,
 						_image(source),
 						req.simpleName.stripGetter +
-						" : " + source.getType().getSimpleName(),
+						" : " + source.type.simpleName,
 						true
 					)
 				else
@@ -186,7 +187,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						source,
 						_image(source),
 						req.op.simpleName.stripGetter +
-						" : " + source.getType().getSimpleName(),
+						" : " + req.returnType.simpleName,
 						true
 					)
 				else
@@ -195,10 +196,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						_image(source),
 						new StyledString(
 							req.op.simpleName 
-							+ uiStrings.parameters(req.op)
+							+ req.parametersTypes.parameterTypesToString
 						).append(
 							new StyledString(" : " + 
-								source.type.simpleName,
+								req.returnType.simpleName,
 								StyledString::DECORATIONS_STYLER
 							)
 						),
@@ -208,6 +209,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			else
 				reqNode.createNode(req.op)
 		}
+	}
+
+	def private parameterTypesToString(Iterable<JvmTypeReference> parameterTypes) {
+		"(" + parameterTypes.map[uiStrings.referenceToString(it, "[null]")].join(", ") + ")"
 	}
 
 	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<JvmOperation> provides) {
