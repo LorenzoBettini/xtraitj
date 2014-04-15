@@ -175,8 +175,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						true
 					)
 			}
-			else
-				reqNode.createNode(req.op)
+			// the else will not happen anymore since we separated the case for
+			// interface methods
+//			else
+//				reqNode.createNode(req.op)
 		}
 	}
 
