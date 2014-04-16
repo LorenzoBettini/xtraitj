@@ -2,7 +2,7 @@
 <feature
       id="xtraitj.examples.feature"
       label="Xtraitj Examples"
-      version="1.0.0.qualifier">
+      version="1.1.2.qualifier">
 
    <description url="http://xtraitj.sourceforge.net">
       Xtraitj Example projects.
@@ -111,5 +111,12 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <includes
          id="xtraitj.sdk"
          version="0.0.0"/>
+
+   <plugin
+         id="xtraitj.ui.examples"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

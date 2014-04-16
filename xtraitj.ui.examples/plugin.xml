@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.ui.newWizards">
+		<category id="xtraitj.ui.Examples" 
+				  name="Xtraitj Examples" 
+				  parentCategory="org.eclipse.ui.Examples" />
+	</extension>
+	<extension point="org.eclipse.ui.newWizards">
+		<category id="xtraitj.project.Examples" 
+				  name="Examples" 
+				  parentCategory="xtraitj.ui.category" />
+	</extension>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard	id="xtraitj.examples.XtraitjExampleWizard" 
+			name="Some Xtraitj Examples" 
+			class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard" 
+			category="org.eclipse.ui.Examples/xtraitj.ui.Examples"
+			icon="icons/genproject.gif" 
+			project="true">
+			<description>Some Xtraitj Examples</description>
+		</wizard>
+	</extension>
+
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard	id="xtraitj.examples.XtraitjExampleWizard" 
+			name="Some Xtraitj Examples" 
+			class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard" 
+			category="xtraitj.dsl.wizards.category/xtraitj.project.Examples"
+			icon="icons/genproject.gif" 
+			project="true">
+			<description>Some Xtraitj Examples</description>
+		</wizard>
+	</extension>
+
+   <extension
+         point="org.eclipse.emf.common.ui.examples">
+      <example
+            pageImage="icons/genproject.gif"
+            wizardID="xtraitj.examples.XtraitjExampleWizard">
+         <projectDescriptor
+               contentURI="contents/xtraitj.example.examples.zip"
+               description="Some Xtraij Examples"
+               name="xtraitj.example.examples">
+         </projectDescriptor>
+      </example>
+   </extension>
+
+</plugin>
