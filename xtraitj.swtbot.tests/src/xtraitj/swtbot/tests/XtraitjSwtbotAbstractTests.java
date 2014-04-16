@@ -188,6 +188,26 @@ public class XtraitjSwtbotAbstractTests {
 		assertErrorsInProject(0);
 	}
 
+	protected void importExampleProjectAndAssertNoErrorMarker(String projectType,
+			String mainProjectId) throws CoreException {
+		bot.menu("File").menu("New").menu("Other...").click();
+
+		SWTBotShell shell = bot.shell("New");
+		shell.activate();
+		bot.tree().expandNode("Examples").expandNode("Xtraitj Examples")
+				.select(projectType);
+		bot.button("Next >").click();
+
+		bot.button("Finish").click();
+
+		// creation of a project might require some time
+		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
+		assertTrue("Project doesn't exist", isProjectCreated(mainProjectId));
+		
+		waitForAutoBuild();
+		assertErrorsInProject(0);
+	}
+
 	protected SWTBotView outline() {
 		return bot.viewByTitle("Outline");
 	}

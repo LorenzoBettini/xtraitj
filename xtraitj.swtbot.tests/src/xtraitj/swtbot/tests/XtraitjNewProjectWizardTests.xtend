@@ -5,7 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(typeof(SWTBotJunit4ClassRunner))
-class XtraitjWizardTests extends XtraitjSwtbotAbstractTests {
+class XtraitjNewProjectWizardTests extends XtraitjSwtbotAbstractTests {
 
 	@Test
 	def void canCreateANewXtraitjProject() {

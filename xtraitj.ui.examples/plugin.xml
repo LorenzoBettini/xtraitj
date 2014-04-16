@@ -27,7 +27,7 @@
 		<wizard	id="xtraitj.examples.XtraitjExampleWizard" 
 			name="Some Xtraitj Examples" 
 			class="org.eclipse.emf.common.ui.wizard.ExampleInstallerWizard" 
-			category="xtraitj.dsl.wizards.category/xtraitj.project.Examples"
+			category="xtraitj.ui.category/xtraitj.project.Examples"
 			icon="icons/genproject.gif" 
 			project="true">
 			<description>Some Xtraitj Examples</description>
