@@ -1,9 +1,9 @@
-package xtraitj.examples.example.stack.traits;
+package xtraitj.example.examples.lifo.traits;
 
 import java.util.List;
 
 @SuppressWarnings("all")
-public interface TStack {
+public interface TLifo_TStack_0_Adapter {
   public abstract List<Object> getCollection();
   
   public abstract void setCollection(final List<Object> collection);
@@ -11,6 +11,4 @@ public interface TStack {
   public abstract boolean isEmpty();
   
   public abstract void push(final Object o);
-  
-  public abstract Object pop();
 }

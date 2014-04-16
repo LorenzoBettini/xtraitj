@@ -1,9 +1,9 @@
-package xtraitj.examples.example.lifo.traits.impl;
+package xtraitj.example.examples.lifo.traits.impl;
 
 import java.util.List;
-import xtraitj.examples.example.lifo.traits.TLifo_TStack_0_Adapter;
-import xtraitj.examples.example.stack.traits.TStack;
-import xtraitj.examples.example.stack.traits.impl.TStackImpl;
+import xtraitj.example.examples.lifo.traits.TLifo_TStack_0_Adapter;
+import xtraitj.example.examples.stack.traits.TStack;
+import xtraitj.example.examples.stack.traits.impl.TStackImpl;
 
 @SuppressWarnings("all")
 public class TLifo_TStack_0_AdapterImpl implements TLifo_TStack_0_Adapter, TStack {

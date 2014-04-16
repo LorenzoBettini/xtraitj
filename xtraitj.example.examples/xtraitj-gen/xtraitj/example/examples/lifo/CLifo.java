@@ -1,11 +1,11 @@
-package xtraitj.examples.example.lifo;
+package xtraitj.example.examples.lifo;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import xtraitj.example.examples.lifo.ILifo;
-import xtraitj.examples.example.lifo.traits.TLifo;
-import xtraitj.examples.example.lifo.traits.impl.TLifoImpl;
+import xtraitj.example.examples.lifo.traits.TLifo;
+import xtraitj.example.examples.lifo.traits.impl.TLifoImpl;
 
 @SuppressWarnings("all")
 public class CLifo implements ILifo, TLifo {

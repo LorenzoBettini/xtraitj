@@ -1,11 +1,11 @@
-package xtraitj.examples.example.stack;
+package xtraitj.example.examples.stack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import xtraitj.example.examples.stack.IStack;
-import xtraitj.examples.example.stack.traits.TStack;
-import xtraitj.examples.example.stack.traits.impl.TStackImpl;
+import xtraitj.example.examples.stack.traits.TStack;
+import xtraitj.example.examples.stack.traits.impl.TStackImpl;
 
 @SuppressWarnings("all")
 public class CStack implements IStack, TStack {

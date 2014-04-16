@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import xtraitj.example.examples.lifo.CLifo;
 import xtraitj.example.examples.lifo.ILifo;
-import xtraitj.examples.example.lifo.CLifo;
 
 public class LifoTest {
 	

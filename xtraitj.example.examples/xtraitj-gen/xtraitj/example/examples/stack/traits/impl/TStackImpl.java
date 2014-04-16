@@ -1,7 +1,7 @@
-package xtraitj.examples.example.stack.traits.impl;
+package xtraitj.example.examples.stack.traits.impl;
 
 import java.util.List;
-import xtraitj.examples.example.stack.traits.TStack;
+import xtraitj.example.examples.stack.traits.TStack;
 
 @SuppressWarnings("all")
 public class TStackImpl implements TStack {

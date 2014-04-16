@@ -1,6 +1,6 @@
-package xtraitj.examples.example.lifo.traits;
+package xtraitj.example.examples.lifo.traits;
 
-import xtraitj.examples.example.lifo.traits.TLifo_TStack_0_Adapter;
+import xtraitj.example.examples.lifo.traits.TLifo_TStack_0_Adapter;
 
 @SuppressWarnings("all")
 public interface TLifo extends TLifo_TStack_0_Adapter {

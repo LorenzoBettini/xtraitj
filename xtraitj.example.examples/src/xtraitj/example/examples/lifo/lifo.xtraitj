@@ -1,11 +1,11 @@
-package xtraitj.examples.example.lifo;
+package xtraitj.example.examples.lifo;
 
 import java.util.ArrayList
 import java.util.Collection
 import java.util.List
 import xtraitj.example.examples.lifo.ILifo
 
-trait TLifo uses xtraitj.examples.example.stack.TStack[hide pop] {
+trait TLifo uses xtraitj.example.examples.stack.TStack[hide pop] {
 	void pop() { 
 		if (!isEmpty)
 			collection.remove(0)

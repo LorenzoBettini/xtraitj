@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import xtraitj.example.examples.stack.CStack;
 import xtraitj.example.examples.stack.IStack;
-import xtraitj.examples.example.stack.CStack;
 
 public class StackTest {
 	

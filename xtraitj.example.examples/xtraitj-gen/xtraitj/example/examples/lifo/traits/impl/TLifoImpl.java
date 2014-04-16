@@ -1,8 +1,8 @@
-package xtraitj.examples.example.lifo.traits.impl;
+package xtraitj.example.examples.lifo.traits.impl;
 
 import java.util.List;
-import xtraitj.examples.example.lifo.traits.TLifo;
-import xtraitj.examples.example.lifo.traits.impl.TLifo_TStack_0_AdapterImpl;
+import xtraitj.example.examples.lifo.traits.TLifo;
+import xtraitj.example.examples.lifo.traits.impl.TLifo_TStack_0_AdapterImpl;
 
 @SuppressWarnings("all")
 public class TLifoImpl implements TLifo {

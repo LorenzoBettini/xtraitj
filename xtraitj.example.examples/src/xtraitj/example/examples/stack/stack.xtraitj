@@ -1,4 +1,4 @@
-package xtraitj.examples.example.stack;
+package xtraitj.example.examples.stack;
 
 import java.util.List
 import xtraitj.example.examples.stack.IStack
