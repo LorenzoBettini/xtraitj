@@ -1,0 +1,9 @@
+package xtraitj.example.examples.extensions;
+
+class StringListWithExtensions uses TIterableExtensions<String> {
+	Iterable<String> iterable;
+	
+	StringListWithExtensions(Iterable<String> iterable) {
+		this.iterable = iterable
+	}
+}

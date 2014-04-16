@@ -1,0 +1,50 @@
+package xtraitj.example.examples.extensions;
+
+import java.util.List
+import java.util.SortedSet
+
+trait TIterableExtensions<T> {
+	
+	Iterable<T> iterable;
+	
+	T head() {
+		val iterator = iterable.iterator
+		if (iterator.hasNext)
+			return iterator.next
+		return null
+	}
+	
+	T last() {
+		// optimized according to the iterable type
+		if (iterable instanceof List<?>) {
+			val list = iterable as List<T>
+			if (list.isEmpty())
+				return null;
+			return list.get(list.size() - 1);
+		} else if (iterable instanceof SortedSet<?>) {
+			val sortedSet = iterable as SortedSet<T>;
+			if (sortedSet.isEmpty())
+				return null;
+			return sortedSet.last();
+		} else {
+			var T result = null;
+			for (T t : iterable) {
+				result = t;
+			}
+			return result;
+		}
+	}
+
+	String join(CharSequence separator) {
+		val result = new StringBuilder();
+		val iterator = iterable.iterator();
+		while (iterator.hasNext()) {
+			val T next = iterator.next();
+			val elementToString = next.toString;
+			result.append(elementToString);
+			if (iterator.hasNext())
+				result.append(separator);
+		}
+		return result.toString();
+	} 
+}
