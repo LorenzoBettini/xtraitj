@@ -1,0 +1,28 @@
+package xtraitj.examples.example.lifo;
+
+import java.util.ArrayList
+import java.util.Collection
+import java.util.List
+import xtraitj.example.examples.lifo.ILifo
+
+trait TLifo uses xtraitj.examples.example.stack.TStack[hide pop] {
+	void pop() { 
+		if (!isEmpty)
+			collection.remove(0)
+	}
+	Object top() {
+		if (isEmpty)
+			return null
+		return collection.get(0)
+	}
+}
+
+class CLifo implements ILifo uses TLifo {
+	List<Object> collection = new ArrayList();
+	
+	CLifo() {}
+	
+	CLifo(Collection<Object> c) {
+		collection.addAll(c);
+	}
+}

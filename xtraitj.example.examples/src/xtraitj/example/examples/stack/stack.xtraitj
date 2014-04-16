@@ -1,0 +1,28 @@
+package xtraitj.examples.example.stack;
+
+import java.util.List
+import xtraitj.example.examples.stack.IStack
+import java.util.ArrayList
+import java.util.Collection
+
+trait TStack {
+	List<Object> collection;
+	
+	boolean isEmpty() { return collection.size == 0; }
+	void push(Object o) { collection.add(0, o) }
+	Object pop() { 
+		if (isEmpty)
+			return null
+		return collection.remove(0)
+	}
+}
+
+class CStack implements IStack uses TStack {
+	List<Object> collection = new ArrayList();
+	
+	CStack() {}
+	
+	CStack(Collection<Object> c) {
+		collection.addAll(c);
+	}
+}

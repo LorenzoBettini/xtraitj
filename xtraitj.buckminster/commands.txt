@@ -37,6 +37,9 @@ emma -l "xtraitj.tests/xtraitj.tests.launch" --output "${buckminster.output.root
 # Swtbot tests
 emma -l "xtraitj.swtbot.tests/XtraitjSwtbotTests.launch"  --output "${buckminster.output.root}/test.results/xtraitj.XtraitjSwtbotTests.launch.xml" --exec "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.exec" --html "${buckminster.output.root}/test.results/coverage.XtraitjSwtbotTests.launch.html" --flatXML
 
+# Examples tests
+junit -l "xtraitj.example.examples/xtraitj.example.examples.tests.launch"  --output "${buckminster.output.root}/test.results/xtraitj.example.examples.tests.launch.xml" --flatXML
+
 perform "xtraitj.site#site.p2"
 
 perform "xtraitj.site#run.findbugs"
