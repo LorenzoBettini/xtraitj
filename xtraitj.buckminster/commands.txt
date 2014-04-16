@@ -42,4 +42,4 @@ junit -l "xtraitj.example.examples/xtraitj.example.examples.tests.launch"  --out
 
 perform "xtraitj.site#site.p2"
 
-perform "xtraitj.site#run.findbugs"
+perform "xtraitj.analysis.feature#run.findbugs"

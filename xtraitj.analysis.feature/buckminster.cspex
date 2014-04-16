@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cs:cspecExtension xmlns:com="http://www.eclipse.org/buckminster/Common-1.0" xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0">
+    <cs:actions>
+        <cs:public name="run.findbugs" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFile" value="findbugs.ant"/>
+                <cs:property key="targets" value="findbugs"/>
+            </cs:actorProperties>
+            <cs:prerequisites>
+                <cs:attribute name="site.p2" alias="site.p2.repository" />
+            </cs:prerequisites>
+            <cs:products alias="action.output" base="${buckminster.output.root}/findbugs/"/>
+        </cs:public>
+    </cs:actions>
+</cs:cspecExtension>

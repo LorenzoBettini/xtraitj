@@ -3,6 +3,7 @@
 	<cs:dependencies>
 		<cs:dependency name="xtraitj.tests" componentType="osgi.bundle" />
 		<cs:dependency name="xtraitj.swtbot.tests.feature" componentType="eclipse.feature" />
+		<cs:dependency name="xtraitj.analysis.feature" componentType="eclipse.feature" />
 	</cs:dependencies>
     <cs:actions>
         <cs:public name="eclipse-install-test-indigo" actor="ant">
