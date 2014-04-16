@@ -1614,4 +1614,27 @@ class C uses TUsesGeneric {
 }
 		'''
 	}
+
+	def passTypeParameterAsTypeArgument() {
+'''
+package tests;
+
+trait T1<T> {
+	T s;
+	T m() { return s }
+}
+
+trait T2<W> uses T1<W> { // <- StackOverflow
+	
+}
+
+class C1<U> uses T2<U> {
+	U s;
+}
+
+class C uses T2<String> {
+	String s = "foo";
+}
+'''
+	}
 }

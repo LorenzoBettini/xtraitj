@@ -1618,4 +1618,65 @@ public class C implements TUsesGeneric {
 			executeGeneratedJavaClassMethodAndAssert("C", "updateAndReturn", "foo")
 		]
 	}
+
+	@Test def void testPassTypeParameterAsTypeArgument() {
+		passTypeParameterAsTypeArgument.compile[
+
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests.traits;
+
+import tests.traits.T1;
+
+@SuppressWarnings("all")
+public interface T2<W> extends T1<W> {
+  public abstract W m();
+  
+  public abstract W getS();
+  
+  public abstract void setS(final W s);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests.traits.impl;
+
+import tests.traits.T2;
+import tests.traits.impl.T1Impl;
+
+@SuppressWarnings("all")
+public class T2Impl<W> implements T2<W> {
+  private T2<W> _delegate;
+  
+  private T1Impl<W> _T1;
+  
+  public T2Impl(final T2<W> delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+  }
+  
+  public W m() {
+    return _delegate.m();
+  }
+  
+  public W _m() {
+    return _T1._m();
+  }
+  
+  public W getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final W s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "foo")	
+		]
+	}
 }

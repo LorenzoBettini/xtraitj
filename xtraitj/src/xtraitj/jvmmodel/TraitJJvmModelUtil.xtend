@@ -506,10 +506,11 @@ class TraitJJvmModelUtil {
 
 	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, TJTraitReference traitReference) {
 		ops.map[createXtraitjJvmOperation(traitReference)].filter[
-			// we must discard elements where type parameters are still present
+			// we must discard elements where type parameters (excluding the ones occurring
+			// in the type arguments) are still present
 			// this happens if we redefined a method with type params in a trait
 			// interface using a method with type params already instantiated
-			!hasTypeParametersDeclaredInJvmType
+			!hasTypeParametersDeclaredInJvmType(traitReference.arguments)
 		]
 	}
 
@@ -536,7 +537,7 @@ class TraitJJvmModelUtil {
 			if (declarator instanceof JvmType) {
 				val pos = declarator.typeParameters.indexOf(type)
 				if (pos < typeArguments.size)
-					return typeArguments.get(pos).replaceTypeParameters(typeArguments)
+					return typeArguments.get(pos)
 			}
 		}
 		

@@ -41,32 +41,48 @@ class XtraitjJvmOperation {
 
 	/**
 	 * Whether some type parameters are still left (excluding the type parameters
-	 * of a method)
+	 * of a method and the ones that appear in type arguments).
+	 * 
+	 * We need to exclude type parameters occurring in type arguments, since those
+	 * must be considered instantiated, e.g.,
+	 * 
+	 * <pre>
+	 * trait T1&lt;U&gt;
+	 * 
+	 * trait T2&lt;T&gt; uses T1&lt;T&gt;
+	 * </pre>
+	 * 
+	 * In this case occurrences of U should be considered type parameters not instantiated
+	 * while occurrences of T should be considered instantiated
+	 * 
 	 */
-	def hasTypeParametersDeclaredInJvmType() {
-		(returnType.hasTypeParameterInJvmType || parametersTypes.exists[hasTypeParameterInJvmType])
+	def hasTypeParametersDeclaredInJvmType(List<JvmTypeReference> typeArguments) {
+		(returnType.hasTypeParameterInJvmType(typeArguments) 
+			|| parametersTypes.exists[hasTypeParameterInJvmType(typeArguments)]
+		)
 	}
 
-	def boolean hasTypeParameterInJvmType(JvmTypeReference ref) {
+	def boolean hasTypeParameterInJvmType(JvmTypeReference ref, List<JvmTypeReference> typeArguments) {
 		if (ref instanceof JvmParameterizedTypeReference) {
-			ref.typeParameterDeclaredInJvmType ||
-			ref.arguments.exists[typeParameterDeclaredInJvmType]
+			ref.typeParameterDeclaredInJvmType(typeArguments) ||
+			ref.arguments.exists[typeParameterDeclaredInJvmType(typeArguments)]
 		} else {
 			false
 		}
 	}
 
-	def boolean typeParameterDeclaredInJvmType(JvmTypeReference ref) {
+	def boolean typeParameterDeclaredInJvmType(JvmTypeReference ref, List<JvmTypeReference> typeArguments) {
 		if (ref == null)
 			return false
 		
 		if (ref instanceof JvmWildcardTypeReference) {
-			return ref.constraints.exists[typeReference.hasTypeParameterInJvmType]
+			return ref.constraints.exists[typeReference.hasTypeParameterInJvmType(typeArguments)]
 		}
 		
 		val type = ref.type
 		if (type instanceof JvmTypeParameter) {
-			type.declarator instanceof JvmType
+			type.declarator instanceof JvmType &&
+			!typeArguments.exists[it.type === type]
 		} else {
 			false
 		}
