@@ -1,0 +1,26 @@
+package xtraitj.example.examples.lifo;
+
+import java.util.ArrayList
+import java.util.List
+
+trait TLifoAlt uses xtraitj.example.examples.stack.TStack
+				[rename pop to old_pop] {
+	void pop() { 
+		old_pop()
+	}
+	Object top() {
+		if (isEmpty)
+			return null
+		return collection.get(0)
+	}
+}
+
+class CLifoAlt implements ILifo uses TLifoAlt, 
+		xtrait.example.examples.util.TNegate
+			[rename op to isEmpty, rename notOp to isNotEmpty] {
+	// the required method isNotEmpty from the interface ILifo
+	// is obtained through the TNegate trait (after renaming its methods);
+	// the TNegate's required method op, renamed to isEmpty, is
+	// provided by TLifo
+	List<Object> collection = new ArrayList();
+}

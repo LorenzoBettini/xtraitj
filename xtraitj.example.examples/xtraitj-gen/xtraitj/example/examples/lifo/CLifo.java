@@ -1,14 +1,15 @@
 package xtraitj.example.examples.lifo;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import xtraitj.example.examples.lifo.ILifo;
 import xtraitj.example.examples.lifo.traits.TLifo;
+import xtraitj.example.examples.lifo.traits.TNegateIsEmpty;
 import xtraitj.example.examples.lifo.traits.impl.TLifoImpl;
+import xtraitj.example.examples.lifo.traits.impl.TNegateIsEmptyImpl;
 
 @SuppressWarnings("all")
-public class CLifo implements ILifo, TLifo {
+public class CLifo implements ILifo, TLifo, TNegateIsEmpty {
   private List<Object> collection = new ArrayList<Object>();
   
   public List<Object> getCollection() {
@@ -17,13 +18,6 @@ public class CLifo implements ILifo, TLifo {
   
   public void setCollection(final List<Object> collection) {
     this.collection = collection;
-  }
-  
-  public CLifo() {
-  }
-  
-  public CLifo(final Collection<Object> c) {
-    this.collection.addAll(c);
   }
   
   private TLifoImpl _TLifo = new TLifoImpl(this);
@@ -42,5 +36,11 @@ public class CLifo implements ILifo, TLifo {
   
   public void push(final Object o) {
     _TLifo._push(o);
+  }
+  
+  private TNegateIsEmptyImpl _TNegateIsEmpty = new TNegateIsEmptyImpl(this);
+  
+  public boolean isNotEmpty() {
+    return _TNegateIsEmpty._isNotEmpty();
   }
 }
