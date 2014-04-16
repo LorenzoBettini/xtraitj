@@ -6,6 +6,12 @@
    <feature id="xtraitj.sdk.source" version="0.0.0">
       <category name="main.source"/>
    </feature>
+   <feature id="xtraitj.examples.feature" version="0.0.0">
+      <category name="main"/>
+   </feature>
+   <feature id="xtraitj.examples.source.feature" version="0.0.0">
+      <category name="main.source"/>
+   </feature>
    <feature id="xtraitj.runtime.requirements.feature" version="0.0.0">
       <category name="main"/>
    </feature>

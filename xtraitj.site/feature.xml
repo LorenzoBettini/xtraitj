@@ -13,4 +13,8 @@
          id="xtraitj.runtime.requirements.feature"
          version="0.0.0"/>
 
+   <includes
+         id="xtraitj.examples.feature"
+         version="0.0.0"/>
+
 </feature>

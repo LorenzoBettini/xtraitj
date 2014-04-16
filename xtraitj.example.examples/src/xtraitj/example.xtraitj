@@ -1,0 +1,35 @@
+/*
+ * This is an example Xtraitj program
+ */
+
+package my.traits;
+
+import main.CInterface
+import java.util.List
+
+trait T {
+	String s;
+	// you can use full Java generics
+	List<? extends String> strings;
+
+	String m() {
+		if (strings != null)
+			return strings.toString 
+		else
+			return this.s;
+	}
+}
+
+class C implements CInterface uses T {
+	String s = "aString";
+	List<? extends String> strings = null;
+	
+	// default constructor
+	C() {}
+	
+	C(Iterable<String> iterable) {
+		// map, toFirstUpper, toList are extension methods
+		// [...] is a lambda expression
+		strings = iterable.map[toFirstUpper].toList
+	}
+}
