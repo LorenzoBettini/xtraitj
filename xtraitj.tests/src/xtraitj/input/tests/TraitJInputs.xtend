@@ -1615,6 +1615,39 @@ class C uses TUsesGeneric {
 		'''
 	}
 
+	def genericFunctionType() {
+		'''
+package tests;
+
+import java.util.List
+import java.util.ArrayList
+
+trait TGenericExtensions<T> {
+	Iterable<T> iterable;
+	
+	<R> List<R> mapToList((T) => R mapper) {
+		val result = new ArrayList<R>()
+		for (e : iterable) {
+			result += mapper.apply(e)
+		}
+		return result
+	}
+	
+	List<T> mapToList2((T) => T mapper) {
+		val result = new ArrayList<T>()
+		for (e : iterable) {
+			result += mapper.apply(e)
+		}
+		return result
+	}
+}
+
+trait TStringExtensions uses TGenericExtensions<String> {
+	
+}
+		'''
+	}
+
 	def passTypeParameterAsTypeArgument() {
 '''
 package tests;

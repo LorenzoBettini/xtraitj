@@ -32,6 +32,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -561,6 +562,25 @@ class TraitJJvmModelUtil {
 			} else {
 				return typeRef
 			}
+		}
+		
+		if (newTypeRef instanceof XFunctionTypeRef) {
+			val funTypeRef = (typeRef as XFunctionTypeRef)
+			
+			newTypeRef.returnType = funTypeRef.returnType.
+				replaceTypeParameters(typeArguments).cloneWithProxies
+			
+			val paramTypes = funTypeRef.paramTypes
+			val newParamTypes = newTypeRef.paramTypes
+			if (!paramTypes.empty) {
+				for (i : 0..paramTypes.size - 1) {
+					newParamTypes.set(
+						i,
+						paramTypes.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
+					)
+				}
+			}
+			return newTypeRef
 		}
 		
 		if (newTypeRef instanceof JvmWildcardTypeReference) {

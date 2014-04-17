@@ -1619,6 +1619,34 @@ public class C implements TUsesGeneric {
 		]
 	}
 
+	@Test def void testGenericFunctionType() {
+		genericFunctionType.compile[
+
+assertTraitJavaInterface("tests", "TStringExtensions",
+'''
+package tests.traits;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.traits.TGenericExtensions;
+
+@SuppressWarnings("all")
+public interface TStringExtensions extends TGenericExtensions<String> {
+  public abstract <R> List<R> mapToList(final Function1<? super String,? extends R> mapper);
+  
+  public abstract List<String> mapToList2(final Function1<? super String,? extends String> mapper);
+  
+  public abstract Iterable<String> getIterable();
+  
+  public abstract void setIterable(final Iterable<String> iterable);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testPassTypeParameterAsTypeArgument() {
 		passTypeParameterAsTypeArgument.compile[
 
