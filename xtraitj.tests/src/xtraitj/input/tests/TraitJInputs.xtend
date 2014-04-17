@@ -1648,6 +1648,34 @@ trait TStringExtensions uses TGenericExtensions<String> {
 		'''
 	}
 
+	def genericFunctionAsField() {
+		'''
+package tests;
+
+import java.util.Iterator
+
+/**
+ * Acts as a wrapper for a Java Iterator
+ */
+trait TIterator<E> {
+	Iterator<E> iterator;
+	
+	boolean hasNext() { return iterator.hasNext(); }
+	E next() { return iterator.next(); }
+	void remove() { iterator.remove(); }
+}
+
+trait TTransformerIterator<T,R> uses TIterator<T>[rename next to origNext] {
+	(T) => R function;
+	
+	R next() {
+		val T o = origNext();
+		return function.apply(o);
+	}
+}
+		'''
+	}
+
 	def passTypeParameterAsTypeArgument() {
 '''
 package tests;

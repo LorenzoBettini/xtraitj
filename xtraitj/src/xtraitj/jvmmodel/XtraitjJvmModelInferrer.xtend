@@ -28,6 +28,7 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -571,15 +572,23 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 * get IllegalArgumentException during the typing (the reference owner
 	 * is different)
 	 */
-	def protected rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
+	def protected JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
 		val reboundTypeRef = typeRef.cloneWithProxies
+		
 		if (reboundTypeRef instanceof JvmParameterizedTypeReference && reboundTypeRef.type instanceof JvmTypeParameter) {
 			val rebound = reboundTypeRef as JvmParameterizedTypeReference
 			val typePar = target.typeParameters.findFirst[name == rebound.type.simpleName]
 			rebound.type = typePar
 			return rebound
-		} else
-			return typeRef
+		}
+		
+		if (reboundTypeRef instanceof XFunctionTypeRef) {
+			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(target)
+			reboundTypeRef.returnType = reboundReturnTypeRef
+			return reboundTypeRef
+		}
+		
+		return typeRef
 	}
 
    	def toSetterDelegate(TJMember m) {
