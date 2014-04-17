@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import xtraitj.example.examples.extensions.TransformerIterator;
 import xtraitj.example.examples.extensions.traits.TIterableExtensions;
 
 @SuppressWarnings("all")
@@ -112,5 +113,20 @@ public class TIterableExtensionsImpl<T> implements TIterableExtensions<T> {
       result.add(_apply);
     }
     return result;
+  }
+  
+  public <R> Iterable<R> map(final Function1<? super T,? extends R> mapper) {
+    return _delegate.map(mapper);
+  }
+  
+  public <R> Iterable<R> _map(final Function1<? super T,? extends R> mapper) {
+    final Iterable<R> _function = new Iterable<R>() {
+      public Iterator<R> iterator() {
+        Iterable<T> _iterable = TIterableExtensionsImpl.this.getIterable();
+        Iterator<T> _iterator = _iterable.iterator();
+        return new TransformerIterator<T, R>(_iterator, mapper);
+      }
+    };
+    return _function;
   }
 }

@@ -13,11 +13,24 @@ trait TIterator<E> {
 	void remove() { iterator.remove(); }
 }
 
-//trait TTransformerIterator<T,R> uses TIterator<T>[rename next to origNext] {
-//	(T) => R function;
-//	
-//	R next() {
-//		val T o = origNext();
-//		return function.apply(o);
-//	}
-//}
+trait TTransformerIterator<T,R> uses TIterator<T>[rename next to origNext] {
+	(T) => R function;
+	
+	R next() {
+		val T o = origNext();
+		return function.apply(o);
+	}
+}
+
+class TransformerIterator<T,R> 
+		implements Iterator<R>
+		uses TTransformerIterator<T,R> {
+
+	Iterator<T> iterator;
+	(T) => R function ;
+	
+	TransformerIterator(Iterator<T> iterator, (T) => R function) {
+		this.iterator = iterator
+		this.function = function
+	}
+}

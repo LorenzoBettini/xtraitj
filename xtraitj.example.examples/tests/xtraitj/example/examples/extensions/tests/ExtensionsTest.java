@@ -56,4 +56,15 @@ public class ExtensionsTest {
 		});
 		assertEquals("[5, 6, 5]", lengths.toString());
 	}
+
+	@Test
+	public void testMap() {
+		Iterable<Integer> lengths = list.map(new Functions.Function1<String, Integer>() {
+			public Integer apply(String p) {
+				return p.length();
+			}
+		});
+		assertEquals("[5, 6, 5]", 
+				Lists.newArrayList(lengths).toString());
+	}
 }

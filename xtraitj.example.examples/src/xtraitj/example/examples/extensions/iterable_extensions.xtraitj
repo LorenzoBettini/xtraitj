@@ -3,6 +3,7 @@ package xtraitj.example.examples.extensions;
 import java.util.List
 import java.util.SortedSet
 import java.util.ArrayList
+import xtraitj.example.examples.extensions.TransformerIterator
 
 trait TIterableExtensions<T> {
 	
@@ -55,5 +56,11 @@ trait TIterableExtensions<T> {
 			result += mapper.apply(e)
 		}
 		return result
+	}
+
+	<R> Iterable<R> map((T) => R mapper) {
+		return [| new TransformerIterator(
+			iterable.iterator, mapper
+		)]
 	}
 }
