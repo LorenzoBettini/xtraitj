@@ -1626,6 +1626,10 @@ trait T1<T> {
 	T m() { return s }
 }
 
+trait TWithOp<Z> uses T1<Z>[hide m] {
+	
+}
+
 trait T2<W> uses T1<W> {
 	
 }
@@ -1644,6 +1648,10 @@ class C uses T2<String> {
 
 class C3 uses T3<String> {
 	List<String> s = newArrayList("foo", "bar");
+}
+
+class CWithOp<Z> uses T1<Z>[hide m] {
+	Z s;
 }
 '''
 	}

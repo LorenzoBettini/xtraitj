@@ -104,7 +104,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	 */
 	override protected boolean isStaticContext(EObject element) {
 		if(element instanceof JvmGenericType) {
-			if (element.associatedTrait != null)
+			if (element.associatedTrait != null ||
+					element.associatedTraitReference != null)
 				return element.static;
 		}
 		return super.isStaticContext(element);

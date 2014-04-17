@@ -212,7 +212,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def void inferTraitExpressionInterface(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor) {
 		acceptor.accept(
-			t.toInterface(t.traitExpressionInterfaceName) []
+			t.toInterface(t.traitExpressionInterfaceName) [
+				copyTypeParameters(t.containingDeclaration.typeParameters)
+			]
 		).initializeLater[
 			for (jvmOp : t.trait.jvmAllOperations) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
@@ -265,9 +267,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def void inferTraitExpressionClass(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor) {
-		acceptor.accept(
-			t.toClass(t.traitExpressionClassName)
-		).initializeLater[
+		val traitReferenceClass = t.toClass(t.traitExpressionClassName)
+		
+		traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
+		
+		acceptor.accept(traitReferenceClass).initializeLater[
 			val traitRefAssociatedInterface = t.associatedInterface
 			superTypes += traitRefAssociatedInterface
 			val traitAssociatedInterface = t.associatedTraitInterface

@@ -25,7 +25,9 @@ class XtraitjTypeReferenceSerializer extends TypeReferenceSerializer {
 		 */
 		
 		if (context instanceof JvmGenericType) {
-			if (context.associatedTrait != null || context.associatedTJClass != null)
+			if (context.associatedTrait != null 
+					|| context.associatedTJClass != null
+					|| context.associatedTraitReference != null)
 				return true;
 		}
 		

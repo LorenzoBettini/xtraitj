@@ -1639,6 +1639,82 @@ public interface T2<W> extends T1<W> {
 '''
 )
 
+assertTraitAdapterJavaInterface("tests", "TWithOp_T1_0",
+'''
+package tests.traits;
+
+@SuppressWarnings("all")
+public interface TWithOp_T1_0_Adapter<Z> {
+  public abstract Z getS();
+  
+  public abstract void setS(final Z s);
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "TWithOp_T1_0",
+'''
+package tests.traits.impl;
+
+import tests.traits.T1;
+import tests.traits.TWithOp_T1_0_Adapter;
+import tests.traits.impl.T1Impl;
+
+@SuppressWarnings("all")
+public class TWithOp_T1_0_AdapterImpl<Z> implements TWithOp_T1_0_Adapter<Z>, T1<Z> {
+  private TWithOp_T1_0_Adapter<Z> _delegate;
+  
+  private T1Impl<Z> _T1_0;
+  
+  public TWithOp_T1_0_AdapterImpl(final TWithOp_T1_0_Adapter<Z> delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1Impl(this);
+  }
+  
+  public Z getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final Z s) {
+    _delegate.setS(s);
+  }
+  
+  public Z m() {
+    return _T1_0._m();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TWithOp",
+'''
+package tests.traits.impl;
+
+import tests.traits.TWithOp;
+import tests.traits.impl.TWithOp_T1_0_AdapterImpl;
+
+@SuppressWarnings("all")
+public class TWithOpImpl<Z> implements TWithOp<Z> {
+  private TWithOp<Z> _delegate;
+  
+  private TWithOp_T1_0_AdapterImpl<Z> _TWithOp_T1_0;
+  
+  public TWithOpImpl(final TWithOp<Z> delegate) {
+    this._delegate = delegate;
+    _TWithOp_T1_0 = new TWithOp_T1_0_AdapterImpl(delegate);
+  }
+  
+  public Z getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final Z s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
 assertTraitJavaClass("tests", "T2",
 '''
 package tests.traits.impl;

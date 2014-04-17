@@ -322,6 +322,10 @@ class TraitJJvmModelUtil {
 		type.sourceElements.filter(TJTrait).head
 	}
 
+	def associatedTraitReference(JvmTypeParameterDeclarator type) {
+		type.sourceElements.filter(TJTraitReference).head
+	}
+
 	def associatedTJClass(JvmTypeParameterDeclarator type) {
 		type.sourceElements.filter(TJClass).head
 	}
