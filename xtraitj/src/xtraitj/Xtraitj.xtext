@@ -24,7 +24,7 @@ TJTrait:
 
 TJClass:
 	'class' name=ID 
-		('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')? 
+		('<' classTypeParameters+=JvmTypeParameter (',' classTypeParameters+=JvmTypeParameter)* '>')? 
 			('implements'
 				interfaces += JvmParameterizedTypeReference
 				(',' interfaces += JvmParameterizedTypeReference)*
