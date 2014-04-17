@@ -1,8 +1,8 @@
 package xtraitj.example.examples.lifo;
 
-public interface ILifo {
+public interface ILifo<T> {
 	boolean isNotEmpty();
-	void push(Object o);
+	void push(T o);
 	void pop();
-	Object top();
+	T top();
 }

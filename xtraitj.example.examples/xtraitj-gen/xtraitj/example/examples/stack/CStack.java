@@ -8,35 +8,35 @@ import xtraitj.example.examples.stack.traits.TStack;
 import xtraitj.example.examples.stack.traits.impl.TStackImpl;
 
 @SuppressWarnings("all")
-public class CStack implements IStack, TStack {
-  private List<Object> collection = new ArrayList<Object>();
+public class CStack<T> implements IStack<T>, TStack<T> {
+  private List<T> collection = new ArrayList<T>();
   
-  public List<Object> getCollection() {
+  public List<T> getCollection() {
     return this.collection;
   }
   
-  public void setCollection(final List<Object> collection) {
+  public void setCollection(final List<T> collection) {
     this.collection = collection;
   }
   
   public CStack() {
   }
   
-  public CStack(final Collection<Object> c) {
+  public CStack(final Collection<T> c) {
     this.collection.addAll(c);
   }
   
-  private TStackImpl _TStack = new TStackImpl(this);
+  private TStackImpl<T> _TStack = new TStackImpl(this);
   
   public boolean isEmpty() {
     return _TStack._isEmpty();
   }
   
-  public void push(final Object o) {
+  public void push(final T o) {
     _TStack._push(o);
   }
   
-  public Object pop() {
+  public T pop() {
     return _TStack._pop();
   }
 }

@@ -5,12 +5,12 @@ import xtraitj.example.examples.lifo.traits.TLifo;
 import xtraitj.example.examples.lifo.traits.impl.TLifo_TStack_0_AdapterImpl;
 
 @SuppressWarnings("all")
-public class TLifoImpl implements TLifo {
-  private TLifo _delegate;
+public class TLifoImpl<V> implements TLifo<V> {
+  private TLifo<V> _delegate;
   
-  private TLifo_TStack_0_AdapterImpl _TLifo_TStack_0;
+  private TLifo_TStack_0_AdapterImpl<V> _TLifo_TStack_0;
   
-  public TLifoImpl(final TLifo delegate) {
+  public TLifoImpl(final TLifo<V> delegate) {
     this._delegate = delegate;
     _TLifo_TStack_0 = new TLifo_TStack_0_AdapterImpl(delegate);
   }
@@ -23,21 +23,21 @@ public class TLifoImpl implements TLifo {
     boolean _isEmpty = this.isEmpty();
     boolean _not = (!_isEmpty);
     if (_not) {
-      List<Object> _collection = this.getCollection();
+      List<V> _collection = this.getCollection();
       _collection.remove(0);
     }
   }
   
-  public Object top() {
+  public V top() {
     return _delegate.top();
   }
   
-  public Object _top() {
+  public V _top() {
     boolean _isEmpty = this.isEmpty();
     if (_isEmpty) {
       return null;
     }
-    List<Object> _collection = this.getCollection();
+    List<V> _collection = this.getCollection();
     return _collection.get(0);
   }
   
@@ -49,19 +49,19 @@ public class TLifoImpl implements TLifo {
     return _TLifo_TStack_0._isEmpty();
   }
   
-  public void push(final Object o) {
+  public void push(final V o) {
     _delegate.push(o);
   }
   
-  public void _push(final Object o) {
+  public void _push(final V o) {
     _TLifo_TStack_0._push(o);
   }
   
-  public List<Object> getCollection() {
+  public List<V> getCollection() {
     return _delegate.getCollection();
   }
   
-  public void setCollection(final List<Object> collection) {
+  public void setCollection(final List<V> collection) {
     _delegate.setCollection(collection);
   }
 }

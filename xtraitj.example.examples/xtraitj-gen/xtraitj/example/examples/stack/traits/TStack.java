@@ -3,14 +3,14 @@ package xtraitj.example.examples.stack.traits;
 import java.util.List;
 
 @SuppressWarnings("all")
-public interface TStack {
-  public abstract List<Object> getCollection();
+public interface TStack<T> {
+  public abstract List<T> getCollection();
   
-  public abstract void setCollection(final List<Object> collection);
+  public abstract void setCollection(final List<T> collection);
   
   public abstract boolean isEmpty();
   
-  public abstract void push(final Object o);
+  public abstract void push(final T o);
   
-  public abstract Object pop();
+  public abstract T pop();
 }

@@ -3,13 +3,13 @@ package xtraitj.example.examples.lifo;
 import java.util.ArrayList
 import java.util.List
 
-trait TLifo uses xtraitj.example.examples.stack.TStack
+trait TLifo<V> uses xtraitj.example.examples.stack.TStack<V>
 				[hide pop] {
 	void pop() { 
 		if (!isEmpty)
 			collection.remove(0)
 	}
-	Object top() {
+	V top() {
 		if (isEmpty)
 			return null
 		return collection.get(0)
@@ -21,10 +21,10 @@ trait TNegateIsEmpty {
 	boolean isNotEmpty() { return !isEmpty }
 }
 
-class CLifo implements ILifo uses TLifo, TNegateIsEmpty {
+class CLifo<T> implements ILifo<T> uses TLifo<T>, TNegateIsEmpty {
 	// the required method isNotEmpty from the interface ILifo
 	// is obtained through the TNegateIsEmpty trait;
 	// the TNegateIsEmpty's required method isEmpty is
 	// provided by TLifo
-	List<Object> collection = new ArrayList();
+	List<T> collection = new ArrayList();
 }

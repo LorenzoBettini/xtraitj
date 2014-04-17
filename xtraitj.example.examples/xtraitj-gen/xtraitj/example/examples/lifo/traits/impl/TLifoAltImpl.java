@@ -5,12 +5,12 @@ import xtraitj.example.examples.lifo.traits.TLifoAlt;
 import xtraitj.example.examples.lifo.traits.impl.TLifoAlt_TStack_0_AdapterImpl;
 
 @SuppressWarnings("all")
-public class TLifoAltImpl implements TLifoAlt {
-  private TLifoAlt _delegate;
+public class TLifoAltImpl<T> implements TLifoAlt<T> {
+  private TLifoAlt<T> _delegate;
   
-  private TLifoAlt_TStack_0_AdapterImpl _TLifoAlt_TStack_0;
+  private TLifoAlt_TStack_0_AdapterImpl<T> _TLifoAlt_TStack_0;
   
-  public TLifoAltImpl(final TLifoAlt delegate) {
+  public TLifoAltImpl(final TLifoAlt<T> delegate) {
     this._delegate = delegate;
     _TLifoAlt_TStack_0 = new TLifoAlt_TStack_0_AdapterImpl(delegate);
   }
@@ -23,16 +23,16 @@ public class TLifoAltImpl implements TLifoAlt {
     this.old_pop();
   }
   
-  public Object top() {
+  public T top() {
     return _delegate.top();
   }
   
-  public Object _top() {
+  public T _top() {
     boolean _isEmpty = this.isEmpty();
     if (_isEmpty) {
       return null;
     }
-    List<Object> _collection = this.getCollection();
+    List<T> _collection = this.getCollection();
     return _collection.get(0);
   }
   
@@ -44,27 +44,27 @@ public class TLifoAltImpl implements TLifoAlt {
     return _TLifoAlt_TStack_0._isEmpty();
   }
   
-  public void push(final Object o) {
+  public void push(final T o) {
     _delegate.push(o);
   }
   
-  public void _push(final Object o) {
+  public void _push(final T o) {
     _TLifoAlt_TStack_0._push(o);
   }
   
-  public Object old_pop() {
+  public T old_pop() {
     return _delegate.old_pop();
   }
   
-  public Object _old_pop() {
+  public T _old_pop() {
     return _TLifoAlt_TStack_0._old_pop();
   }
   
-  public List<Object> getCollection() {
+  public List<T> getCollection() {
     return _delegate.getCollection();
   }
   
-  public void setCollection(final List<Object> collection) {
+  public void setCollection(final List<T> collection) {
     _delegate.setCollection(collection);
   }
 }

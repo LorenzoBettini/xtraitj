@@ -1,7 +1,7 @@
 package xtraitj.example.examples.stack;
 
-public interface IStack {
+public interface IStack<T> {
 	boolean isEmpty();
-	void push(Object o);
-	Object pop();
+	void push(T o);
+	T pop();
 }

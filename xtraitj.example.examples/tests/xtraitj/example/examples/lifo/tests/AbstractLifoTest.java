@@ -1,6 +1,5 @@
 package xtraitj.example.examples.lifo.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
@@ -9,11 +8,11 @@ import org.junit.Test;
 
 import xtraitj.example.examples.lifo.ILifo;
 
-public abstract class AbstractLifoTest {
+public abstract class AbstractLifoTest<T> {
 	
-	ILifo lifo;
+	ILifo<T> lifo;
 	
-	protected abstract ILifo createLifo();
+	protected abstract ILifo<T> createLifo();
 	
 	@Before
 	public void setUp() {
@@ -31,16 +30,4 @@ public abstract class AbstractLifoTest {
 		lifo.pop();
 	}
 	
-	@Test
-	public void testPushAndPop() {
-		lifo.push("foo");
-		lifo.push(10);
-		
-		assertEquals(10, lifo.top());
-		
-		lifo.pop();
-		
-		assertEquals("foo", lifo.top());
-	}
-
 }

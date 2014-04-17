@@ -9,24 +9,24 @@ import xtraitj.example.examples.lifo.traits.impl.TLifoImpl;
 import xtraitj.example.examples.lifo.traits.impl.TNegateIsEmptyImpl;
 
 @SuppressWarnings("all")
-public class CLifo implements ILifo, TLifo, TNegateIsEmpty {
-  private List<Object> collection = new ArrayList<Object>();
+public class CLifo<T> implements ILifo<T>, TLifo<T>, TNegateIsEmpty {
+  private List<T> collection = new ArrayList<T>();
   
-  public List<Object> getCollection() {
+  public List<T> getCollection() {
     return this.collection;
   }
   
-  public void setCollection(final List<Object> collection) {
+  public void setCollection(final List<T> collection) {
     this.collection = collection;
   }
   
-  private TLifoImpl _TLifo = new TLifoImpl(this);
+  private TLifoImpl<T> _TLifo = new TLifoImpl(this);
   
   public void pop() {
     _TLifo._pop();
   }
   
-  public Object top() {
+  public T top() {
     return _TLifo._top();
   }
   
@@ -34,7 +34,7 @@ public class CLifo implements ILifo, TLifo, TNegateIsEmpty {
     return _TLifo._isEmpty();
   }
   
-  public void push(final Object o) {
+  public void push(final T o) {
     _TLifo._push(o);
   }
   

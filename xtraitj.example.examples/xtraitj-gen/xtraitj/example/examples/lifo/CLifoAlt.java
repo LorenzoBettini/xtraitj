@@ -9,24 +9,24 @@ import xtraitj.example.examples.lifo.traits.impl.CLifoAlt_TNegate_0_AdapterImpl;
 import xtraitj.example.examples.lifo.traits.impl.TLifoAltImpl;
 
 @SuppressWarnings("all")
-public class CLifoAlt implements ILifo, TLifoAlt, CLifoAlt_TNegate_0_Adapter {
-  private List<Object> collection = new ArrayList<Object>();
+public class CLifoAlt<T> implements ILifo<T>, TLifoAlt<T>, CLifoAlt_TNegate_0_Adapter<T> {
+  private List<T> collection = new ArrayList<T>();
   
-  public List<Object> getCollection() {
+  public List<T> getCollection() {
     return this.collection;
   }
   
-  public void setCollection(final List<Object> collection) {
+  public void setCollection(final List<T> collection) {
     this.collection = collection;
   }
   
-  private TLifoAltImpl _TLifoAlt = new TLifoAltImpl(this);
+  private TLifoAltImpl<T> _TLifoAlt = new TLifoAltImpl(this);
   
   public void pop() {
     _TLifoAlt._pop();
   }
   
-  public Object top() {
+  public T top() {
     return _TLifoAlt._top();
   }
   
@@ -34,15 +34,15 @@ public class CLifoAlt implements ILifo, TLifoAlt, CLifoAlt_TNegate_0_Adapter {
     return _TLifoAlt._isEmpty();
   }
   
-  public void push(final Object o) {
+  public void push(final T o) {
     _TLifoAlt._push(o);
   }
   
-  public Object old_pop() {
+  public T old_pop() {
     return _TLifoAlt._old_pop();
   }
   
-  private CLifoAlt_TNegate_0_AdapterImpl _CLifoAlt_TNegate_0 = new CLifoAlt_TNegate_0_AdapterImpl(this);
+  private CLifoAlt_TNegate_0_AdapterImpl<T> _CLifoAlt_TNegate_0 = new CLifoAlt_TNegate_0_AdapterImpl(this);
   
   public boolean isNotEmpty() {
     return _CLifoAlt_TNegate_0._isNotEmpty();
