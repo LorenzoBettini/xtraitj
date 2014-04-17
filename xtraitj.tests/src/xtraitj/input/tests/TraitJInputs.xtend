@@ -1619,12 +1619,18 @@ class C uses TUsesGeneric {
 '''
 package tests;
 
+import java.util.List
+
 trait T1<T> {
 	T s;
 	T m() { return s }
 }
 
-trait T2<W> uses T1<W> { // <- StackOverflow
+trait T2<W> uses T1<W> {
+	
+}
+
+trait T3<V> uses T2<List<V>> {
 	
 }
 
@@ -1634,6 +1640,10 @@ class C1<U> uses T2<U> {
 
 class C uses T2<String> {
 	String s = "foo";
+}
+
+class C3 uses T3<String> {
+	List<String> s = newArrayList("foo", "bar");
 }
 '''
 	}

@@ -1676,7 +1676,64 @@ public class T2Impl<W> implements T2<W> {
 '''
 )
 
-			executeGeneratedJavaClassMethodAndAssert("C", "m", "foo")	
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T2;
+
+@SuppressWarnings("all")
+public interface T3<V> extends T2<List<V>> {
+  public abstract List<V> m();
+  
+  public abstract List<V> getS();
+  
+  public abstract void setS(final List<V> s);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.T3;
+import tests.traits.impl.T2Impl;
+
+@SuppressWarnings("all")
+public class T3Impl<V> implements T3<V> {
+  private T3<V> _delegate;
+  
+  private T2Impl<List<V>> _T2;
+  
+  public T3Impl(final T3<V> delegate) {
+    this._delegate = delegate;
+    _T2 = new T2Impl(delegate);
+  }
+  
+  public List<V> m() {
+    return _delegate.m();
+  }
+  
+  public List<V> _m() {
+    return _T2._m();
+  }
+  
+  public List<V> getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final List<V> s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "foo")
+			executeGeneratedJavaClassMethodAndAssert("C3", "m", "[foo, bar]")
 		]
 	}
 }

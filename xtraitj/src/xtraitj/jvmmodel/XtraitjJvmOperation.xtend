@@ -82,9 +82,21 @@ class XtraitjJvmOperation {
 		val type = ref.type
 		if (type instanceof JvmTypeParameter) {
 			type.declarator instanceof JvmType &&
-			!typeArguments.exists[it.type === type]
+			!ref.occursInTypeArguments(typeArguments)
 		} else {
 			false
 		}
+	}
+
+	def boolean occursInTypeArguments(JvmTypeReference ref, List<JvmTypeReference> typeArguments) {
+		for (typeArgRef : typeArguments) {
+			if (typeArgRef.type === ref.type)
+				return true
+			
+			if (typeArgRef instanceof JvmParameterizedTypeReference)
+				if (ref.occursInTypeArguments(typeArgRef.arguments))
+					return true
+		}
+		return false
 	}
 }
