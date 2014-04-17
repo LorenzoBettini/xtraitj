@@ -2,6 +2,7 @@ package xtraitj.example.examples.extensions;
 
 import java.util.List
 import java.util.SortedSet
+import java.util.ArrayList
 
 trait TIterableExtensions<T> {
 	
@@ -46,5 +47,13 @@ trait TIterableExtensions<T> {
 				result.append(separator);
 		}
 		return result.toString();
-	} 
+	}
+
+	<R> List<R> mapToList((T) => R mapper) {
+		val result = new ArrayList<R>()
+		for (e : iterable) {
+			result += mapper.apply(e)
+		}
+		return result
+	}
 }

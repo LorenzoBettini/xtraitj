@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.xtext.xbase.lib.Functions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,5 +45,15 @@ public class ExtensionsTest {
 	public void testJoin() {
 		assertEquals("first, second, third", list.join(", "));
 		assertEquals("first - second - third", list.join(" - "));
+	}
+
+	@Test
+	public void testMapToList() {
+		List<Integer> lengths = list.mapToList(new Functions.Function1<String, Integer>() {
+			public Integer apply(String p) {
+				return p.length();
+			}
+		});
+		assertEquals("[5, 6, 5]", lengths.toString());
 	}
 }

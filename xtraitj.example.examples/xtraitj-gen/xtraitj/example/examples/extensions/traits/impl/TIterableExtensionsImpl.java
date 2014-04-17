@@ -1,8 +1,10 @@
 package xtraitj.example.examples.extensions.traits.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.example.examples.extensions.traits.TIterableExtensions;
 
 @SuppressWarnings("all")
@@ -96,5 +98,19 @@ public class TIterableExtensionsImpl<T> implements TIterableExtensions<T> {
       _while = _hasNext_1;
     }
     return result.toString();
+  }
+  
+  public <R> List<R> mapToList(final Function1<? super T,? extends R> mapper) {
+    return _delegate.mapToList(mapper);
+  }
+  
+  public <R> List<R> _mapToList(final Function1<? super T,? extends R> mapper) {
+    final ArrayList<R> result = new ArrayList<R>();
+    Iterable<T> _iterable = this.getIterable();
+    for (final T e : _iterable) {
+      R _apply = mapper.apply(e);
+      result.add(_apply);
+    }
+    return result;
   }
 }

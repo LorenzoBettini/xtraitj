@@ -1,5 +1,7 @@
 package xtraitj.example.examples.extensions;
 
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.example.examples.extensions.traits.TIterableExtensions;
 import xtraitj.example.examples.extensions.traits.impl.TIterableExtensionsImpl;
 
@@ -31,5 +33,9 @@ public class StringListWithExtensions implements TIterableExtensions<String> {
   
   public String join(final CharSequence separator) {
     return _TIterableExtensions._join(separator);
+  }
+  
+  public <R> List<R> mapToList(final Function1<? super String,? extends R> mapper) {
+    return _TIterableExtensions._mapToList(mapper);
   }
 }
