@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import xtraitj.example.examples.stack.CStack;
+import xtraitj.example.examples.stack.CStackUtilities;
 import xtraitj.example.examples.stack.IStack;
 
 public class IntegerStackTest extends AbstractStackTest<Integer> {
@@ -22,5 +23,12 @@ public class IntegerStackTest extends AbstractStackTest<Integer> {
 		assertEquals(new Integer(0), stack.pop());
 	}
 
+	@Test
+	public void testStackUtilities() {
+		stack.push(0);
+		stack.push(10);
+		assertEquals("10\n0\n", 
+				new CStackUtilities().toString(stack));
+	}
 
 }

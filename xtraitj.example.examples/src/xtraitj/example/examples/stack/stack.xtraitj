@@ -26,3 +26,18 @@ class CStack<T> implements IStack<T> uses TStack<T> {
 		collection.addAll(c);
 	}
 }
+
+trait TStackUtilities {
+	<U> String toString(IStack<U> stack) {
+		val buffer = new StringBuffer();
+		while (!stack.isEmpty()) {
+			buffer.append(stack.pop().toString())
+			buffer.append("\n")
+		}
+		return buffer.toString();
+	}
+}
+
+class CStackUtilities uses TStackUtilities {
+	
+}
