@@ -4,6 +4,7 @@ import java.util.List
 import xtraitj.example.examples.stack.IStack
 import java.util.ArrayList
 import java.util.Collection
+import java.util.Set
 
 trait TStack<T> {
 	List<T> collection;
@@ -27,6 +28,11 @@ class CStack<T> implements IStack<T> uses TStack<T> {
 	}
 }
 
+class CStackOfSetsOfComparable<T extends Comparable<T>> 
+				implements IStack<Set<T>> uses TStack<Set<T>> {
+	List<Set<T>> collection = new ArrayList();
+}
+
 trait TStackUtilities {
 	<U> String toString(IStack<U> stack) {
 		val buffer = new StringBuffer();
@@ -39,5 +45,10 @@ trait TStackUtilities {
 }
 
 class CStackUtilities uses TStackUtilities {
+	
+}
+
+trait TCollectionStack<T extends Collection<U>, U> 
+		uses TStack<Collection<U>> {
 	
 }

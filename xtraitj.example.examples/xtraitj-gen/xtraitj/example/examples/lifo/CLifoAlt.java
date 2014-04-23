@@ -3,13 +3,13 @@ package xtraitj.example.examples.lifo;
 import java.util.ArrayList;
 import java.util.List;
 import xtraitj.example.examples.lifo.ILifo;
-import xtraitj.example.examples.lifo.traits.CLifoAlt_TNegate_0_Adapter;
-import xtraitj.example.examples.lifo.traits.TLifoAlt;
-import xtraitj.example.examples.lifo.traits.impl.CLifoAlt_TNegate_0_AdapterImpl;
-import xtraitj.example.examples.lifo.traits.impl.TLifoAltImpl;
+import xtraitj.example.examples.lifo.traits.CLifoAlt_TLifoAlt_0_Adapter;
+import xtraitj.example.examples.lifo.traits.CLifoAlt_TNegate_1_Adapter;
+import xtraitj.example.examples.lifo.traits.impl.CLifoAlt_TLifoAlt_0_AdapterImpl;
+import xtraitj.example.examples.lifo.traits.impl.CLifoAlt_TNegate_1_AdapterImpl;
 
 @SuppressWarnings("all")
-public class CLifoAlt<T> implements ILifo<T>, TLifoAlt<T>, CLifoAlt_TNegate_0_Adapter<T> {
+public class CLifoAlt<T> implements ILifo<T>, CLifoAlt_TLifoAlt_0_Adapter<T>, CLifoAlt_TNegate_1_Adapter<T> {
   private List<T> collection = new ArrayList<T>();
   
   public List<T> getCollection() {
@@ -20,31 +20,27 @@ public class CLifoAlt<T> implements ILifo<T>, TLifoAlt<T>, CLifoAlt_TNegate_0_Ad
     this.collection = collection;
   }
   
-  private TLifoAltImpl<T> _TLifoAlt = new TLifoAltImpl(this);
+  private CLifoAlt_TLifoAlt_0_AdapterImpl<T> _CLifoAlt_TLifoAlt_0 = new CLifoAlt_TLifoAlt_0_AdapterImpl(this);
   
   public void pop() {
-    _TLifoAlt._pop();
+    _CLifoAlt_TLifoAlt_0._pop();
   }
   
   public T top() {
-    return _TLifoAlt._top();
+    return _CLifoAlt_TLifoAlt_0._top();
   }
   
   public boolean isEmpty() {
-    return _TLifoAlt._isEmpty();
+    return _CLifoAlt_TLifoAlt_0._isEmpty();
   }
   
   public void push(final T o) {
-    _TLifoAlt._push(o);
+    _CLifoAlt_TLifoAlt_0._push(o);
   }
   
-  public T old_pop() {
-    return _TLifoAlt._old_pop();
-  }
-  
-  private CLifoAlt_TNegate_0_AdapterImpl<T> _CLifoAlt_TNegate_0 = new CLifoAlt_TNegate_0_AdapterImpl(this);
+  private CLifoAlt_TNegate_1_AdapterImpl<T> _CLifoAlt_TNegate_1 = new CLifoAlt_TNegate_1_AdapterImpl(this);
   
   public boolean isNotEmpty() {
-    return _CLifoAlt_TNegate_0._isNotEmpty();
+    return _CLifoAlt_TNegate_1._isNotEmpty();
   }
 }

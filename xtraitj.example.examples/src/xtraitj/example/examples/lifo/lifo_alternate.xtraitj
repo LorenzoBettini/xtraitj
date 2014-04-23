@@ -16,7 +16,7 @@ trait TLifoAlt<T>
 	}
 }
 
-class CLifoAlt<T> implements ILifo<T> uses TLifoAlt<T>, 
+class CLifoAlt<T> implements ILifo<T> uses TLifoAlt<T>[hide old_pop], 
 		xtrait.example.examples.util.TNegate
 			[rename op to isEmpty, rename notOp to isNotEmpty] {
 	// the required method isNotEmpty from the interface ILifo
