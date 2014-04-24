@@ -1717,9 +1717,11 @@ class CWithOp<Z> uses T1<Z>[hide m] {
 '''
 	}
 
-	def annotatedMethods() {
+	def annotatedElements() {
 '''
 package tests;
+
+import com.google.inject.Inject
 
 trait T1 {
 	String s;
@@ -1735,6 +1737,7 @@ trait T2 {
 }
 
 class C uses T1, T2 {
+	@Inject
 	String s = "bar";
 }
 '''

@@ -16,7 +16,7 @@ class XtraitjAnnotationsCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension TraitJInputs
 	
 	@Test def void testAnnotatedMethods() {
-		annotatedMethods.compile[
+		annotatedElements.compile[
 
 assertTraitJavaInterface("tests", "T1",
 '''
@@ -78,6 +78,7 @@ assertJavaClass("tests", "C",
 '''
 package tests;
 
+import com.google.inject.Inject;
 import tests.traits.T1;
 import tests.traits.T2;
 import tests.traits.impl.T1Impl;
@@ -85,6 +86,7 @@ import tests.traits.impl.T2Impl;
 
 @SuppressWarnings("all")
 public class C implements T1, T2 {
+  @Inject
   private String s = "bar";
   
   public String getS() {

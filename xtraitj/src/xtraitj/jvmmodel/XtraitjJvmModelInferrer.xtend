@@ -111,6 +111,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				members += field.toField(field.name, field.type) [
    					if (field.init != null)
    						initializer = field.init
+   					translateAnnotations(field.annotations)
    				]
 				members += field.toGetter(field.name, field.type)
 				members += field.toSetter(field.name, field.type)

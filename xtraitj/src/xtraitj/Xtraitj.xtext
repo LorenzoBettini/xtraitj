@@ -74,6 +74,7 @@ TJMember:
 	=>TJField | TJMethodDeclaration;
 
 TJField:
+	annotations+=XAnnotation*
 	type=JvmTypeReference name=ValidID ('=' init=XExpression)? ';' ;
 
 TJMethodDeclaration:
