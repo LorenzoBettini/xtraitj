@@ -85,6 +85,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 
 	public static val WRONG_CONSTRUCTOR_NAME = PREFIX + "WrongConstructorName"
 	
+	public static val ANNOTATION_ON_TRAIT_FIELD = PREFIX + "AnnotationOnTraitField"
+	
 	@Inject extension TraitJJvmModelUtil
 	
 	@Inject
@@ -155,14 +157,23 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		}
 	}
 
-	@Check def void checkFieldInitialization(TJField f) {
-		if (f.init != null && f.eContainer instanceof TJTrait) {
-			error(
-				"Traits cannot initialize fields",
-				XtraitjPackage::eINSTANCE.TJField_Init,
-				TRAIT_INITIALIZES_FIELD
-			)
-		}	
+	@Check def void checkField(TJField f) {
+		if (f.eContainer instanceof TJTrait) {
+			if (f.init != null) {
+				error(
+					"Traits cannot initialize fields",
+					XtraitjPackage::eINSTANCE.TJField_Init,
+					TRAIT_INITIALIZES_FIELD
+				)
+			}
+			if (!f.annotations.empty) {
+				error(
+					"Traits cannot annotate fields",
+					XtraitjPackage::eINSTANCE.TJField_Annotations,
+					ANNOTATION_ON_TRAIT_FIELD
+				)
+			}
+		}
 	}
 
 	@Check def void checkClassProvidesAllRequirements(TJClass c) {

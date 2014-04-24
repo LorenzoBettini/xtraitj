@@ -809,6 +809,21 @@ class TraitJValidatorTest {
 		)
 	}
 
+	@Test def void testInvalidAnnotationOnTraitField() {
+		'''
+		package tests;
+				
+		trait T {
+			@SuppressWarnings("all")
+			String f;
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJField,
+				XtraitjValidator.ANNOTATION_ON_TRAIT_FIELD,
+				"Traits cannot annotate fields"
+			)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEquals(
 			o.validate.map[message].join("\n"))
