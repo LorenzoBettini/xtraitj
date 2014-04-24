@@ -1,4 +1,4 @@
-grammar xtraitj.Xtraitj with org.eclipse.xtext.xbase.Xbase
+grammar xtraitj.Xtraitj with org.eclipse.xtext.xbase.annotations.XbaseWithAnnotations
 
 import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
 

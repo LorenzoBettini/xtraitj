@@ -6,7 +6,7 @@ package xtraitj.scoping
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider
+import org.eclipse.xtext.xbase.annotations.typesystem.XbaseWithAnnotationsBatchScopeProvider
 
 /**
  * This class contains custom scoping description.
@@ -15,7 +15,7 @@ import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider
  * on how and when to use it 
  *
  */
-class TraitJXbaseBatchScopeProvider extends XbaseBatchScopeProvider {
+class TraitJXbaseBatchScopeProvider extends XbaseWithAnnotationsBatchScopeProvider {
 	@Inject extension TraitJScopeProviderUtil
 	
 	override getScope(EObject context, EReference reference) {
