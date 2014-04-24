@@ -1727,10 +1727,16 @@ trait T1 {
 	@SuppressWarnings("all")
 	String m() { return s }
 	
-	@SuppressWarnings("checked")
 	String req();
 }
 
+trait T2 {
+	String req() { return "foo" }
+}
+
+class C uses T1, T2 {
+	String s = "bar";
+}
 '''
 	}
 }

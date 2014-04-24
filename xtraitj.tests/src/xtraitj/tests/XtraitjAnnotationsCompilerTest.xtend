@@ -28,6 +28,7 @@ public interface T1 {
   
   public abstract void setS(final String s);
   
+  @SuppressWarnings("all")
   public abstract String m();
   
   public abstract String req();
@@ -57,7 +58,6 @@ public class T1Impl implements T1 {
     _delegate.setS(s);
   }
   
-  @SuppressWarnings("checked")
   public String req() {
     return _delegate.req();
   }
@@ -69,6 +69,43 @@ public class T1Impl implements T1 {
   
   public String _m() {
     return this.getS();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.traits.T1;
+import tests.traits.T2;
+import tests.traits.impl.T1Impl;
+import tests.traits.impl.T2Impl;
+
+@SuppressWarnings("all")
+public class C implements T1, T2 {
+  private String s = "bar";
+  
+  public String getS() {
+    return this.s;
+  }
+  
+  public void setS(final String s) {
+    this.s = s;
+  }
+  
+  private T1Impl _T1 = new T1Impl(this);
+  
+  @SuppressWarnings("all")
+  public String m() {
+    return _T1._m();
+  }
+  
+  private T2Impl _T2 = new T2Impl(this);
+  
+  public String req() {
+    return _T2._req();
   }
 }
 '''

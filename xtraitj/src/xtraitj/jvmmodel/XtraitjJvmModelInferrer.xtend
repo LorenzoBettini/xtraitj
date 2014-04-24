@@ -3,6 +3,8 @@ package xtraitj.jvmmodel
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.common.types.JvmAnnotationTarget
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
@@ -10,9 +12,11 @@ import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJHideOperation
@@ -28,9 +32,6 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
-import org.eclipse.xtext.xtype.XFunctionTypeRef
-import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
-import org.eclipse.xtext.common.types.JvmAnnotationTarget
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -130,7 +131,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
    				for (traitMethod : traitExp.xtraitjJvmAllMethodOperations)
-   					members += traitMethod.toMethodDelegate(traitExp.traitFieldName)
+   					members += traitMethod.toMethodDelegate(traitExp.traitFieldName) => [
+   						copyAnnotationsFrom(traitMethod)
+   					]
    			}
    		]
    	}
@@ -161,11 +164,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			for (method : t.methods) {
 				if (!method.isPrivate)
-					members += method.toAbstractMethod
+					members += method.toAbstractMethod => [
+	   					translateAnnotations(method.annotations)
+	   				]
 			}
 			
 			for (method : t.requiredMethods)
-				members += method.toAbstractMethod
+				members += method.toAbstractMethod => [
+   					translateAnnotations(method.annotations)
+   				]
 		]
 
 		// it is crucial to infer interfaces for trait operation expressions
@@ -485,13 +492,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (aMethod : t.requiredMethods)
    				members += aMethod.toMethodDelegate(delegateFieldName) => [
-   					translateAnnotationsTo(aMethod.annotations)
+   					translateAnnotations(aMethod.annotations)
    				]
    			
    			for (method : t.methods) {
    				if (method.isPrivate) {
    					members += method.toTraitMethod(method.name) => [
-	   					translateAnnotationsTo(method.annotations)
+	   					translateAnnotations(method.annotations)
 	   				]
    				} else {
    					// first infer the method with the original body to make
@@ -503,7 +510,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					// m() { _delegate.m(); }
    					val delegateMethod = method.toMethodDelegate(delegateFieldName)
    					
-   					delegateMethod.translateAnnotationsTo(method.annotations)
+   					delegateMethod.translateAnnotations(method.annotations)
    					
 	   				members += delegateMethod
 	   				members += actualMethod
@@ -773,8 +780,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-	def protected void translateAnnotationsTo(JvmAnnotationTarget target, List<XAnnotation> annotations) {
+	def protected void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
 		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
+	}
+
+	def protected void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
+		target.annotations += xop.op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 }
 
