@@ -29,6 +29,8 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
+import org.eclipse.xtext.common.types.JvmAnnotationTarget
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -146,6 +148,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
    			copyTypeParameters(t.traitTypeParameters)
+   			
+   			
    			
    			// it is crucial to insert, at this stage, into the inferred interface all
    			// members which are specified in the trait, so that, later
@@ -480,11 +484,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			}
    			
    			for (aMethod : t.requiredMethods)
-   				members += aMethod.toMethodDelegate(delegateFieldName)
+   				members += aMethod.toMethodDelegate(delegateFieldName) => [
+   					translateAnnotationsTo(aMethod.annotations)
+   				]
    			
    			for (method : t.methods) {
    				if (method.isPrivate) {
-   					members += method.toTraitMethod(method.name)
+   					members += method.toTraitMethod(method.name) => [
+	   					translateAnnotationsTo(method.annotations)
+	   				]
    				} else {
    					// first infer the method with the original body to make
    					// type parameters work correctly
@@ -494,6 +502,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					
    					// m() { _delegate.m(); }
    					val delegateMethod = method.toMethodDelegate(delegateFieldName)
+   					
+   					delegateMethod.translateAnnotationsTo(method.annotations)
    					
 	   				members += delegateMethod
 	   				members += actualMethod
@@ -763,5 +773,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
+	def protected void translateAnnotationsTo(JvmAnnotationTarget target, List<XAnnotation> annotations) {
+		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
+	}
 }
 

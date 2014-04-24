@@ -1716,4 +1716,21 @@ class CWithOp<Z> uses T1<Z>[hide m] {
 }
 '''
 	}
+
+	def annotatedMethods() {
+'''
+package tests;
+
+trait T1 {
+	String s;
+	
+	@SuppressWarnings("all")
+	String m() { return s }
+	
+	@SuppressWarnings("checked")
+	String req();
+}
+
+'''
+	}
 }
