@@ -170,9 +170,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 			
 			for (method : t.requiredMethods)
-				members += method.toAbstractMethod => [
-   					translateAnnotations(method.annotations)
-   				]
+				members += method.toAbstractMethod
 		]
 
 		// it is crucial to infer interfaces for trait operation expressions
@@ -491,9 +489,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			}
    			
    			for (aMethod : t.requiredMethods)
-   				members += aMethod.toMethodDelegate(delegateFieldName) => [
-   					translateAnnotations(aMethod.annotations)
-   				]
+   				members += aMethod.toMethodDelegate(delegateFieldName)
    			
    			for (method : t.methods) {
    				if (method.isPrivate) {

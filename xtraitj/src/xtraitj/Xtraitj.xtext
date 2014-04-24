@@ -81,7 +81,6 @@ TJMethodDeclaration:
 ;
 
 TJRequiredMethod:
-	annotations+=XAnnotation*
 	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
 	type=JvmTypeReference name=ValidID 
 		'(' (params+=FullJvmFormalParameter (',' params+=FullJvmFormalParameter)*)? ')'
