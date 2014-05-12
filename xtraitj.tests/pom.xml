@@ -25,10 +25,37 @@
 	        <groupId>org.eclipse.tycho</groupId>
 	        <artifactId>tycho-surefire-plugin</artifactId>
 	        <version>${tycho-version}</version>
-	        <configuration>
-	          <useUIHarness>false</useUIHarness>
-	          <useUIThread>false</useUIThread>
-	        </configuration>
+	        <executions>
+				<execution>
+					<id>TychoSurefireTest</id>
+					<phase>test</phase>
+					<configuration>
+						<useUIHarness>false</useUIHarness>
+						<useUIThread>false</useUIThread>
+						<includes>
+							<include>**/xtraitj/tests/*Test.java</include>
+						</includes>
+					</configuration>
+					<goals>
+						<goal>test</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>TychoSurefirePluginTest</id>
+					<phase>test</phase>
+					<configuration>
+						<useUIHarness>true</useUIHarness>
+						<useUIThread>true</useUIThread>
+						<argLine>${memoryArgs}</argLine>
+						<includes>
+							<include>**/xtraitj/ui/tests/*Test.java</include>
+						</includes>
+					</configuration>
+					<goals>
+						<goal>test</goal>
+					</goals>
+				</execution>
+			</executions>
 	    </plugin>
   	</plugins>
   </build>
