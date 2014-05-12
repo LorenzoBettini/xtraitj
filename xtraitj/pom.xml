@@ -77,12 +77,12 @@
 					<dependency>
 						<groupId>org.eclipse.xtext</groupId>
 						<artifactId>org.eclipse.xtext.xtext</artifactId>
-						<version>2.5.0</version>
+						<version>${xtext.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.eclipse.xtext</groupId>
 						<artifactId>org.eclipse.xtext.xbase</artifactId>
-						<version>2.5.0</version>
+						<version>${xtext.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
