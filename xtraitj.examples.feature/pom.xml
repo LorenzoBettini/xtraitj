@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../xtraitj.releng/pom.xml</relativePath>
+		<groupId>xtraitj</groupId>
+		<artifactId>xtraitj.releng</artifactId>
+		<version>1.1.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>xtraitj.examples.feature</artifactId>
+	<packaging>eclipse-feature</packaging>
+</project>
