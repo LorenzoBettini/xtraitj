@@ -7,12 +7,11 @@ import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.TraitJInputs
 import xtraitj.xtraitj.TJProgram
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(XtraitjInjectorProvider))
+@InjectWith(typeof(InjectorProviderCustom))
 class XtraitjCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension CompilationTestHelper

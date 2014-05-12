@@ -6,11 +6,10 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.TraitJInputs
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(XtraitjInjectorProvider))
+@InjectWith(typeof(InjectorProviderCustom))
 class XtraitjGenericsCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension CompilationTestHelper
 	@Inject extension TraitJInputs
