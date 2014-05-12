@@ -3,11 +3,14 @@ bin/
 *~
 logs.zip
 *.orig
-# we need xtend generated Java files for tycho building in Jenkins
-# xtend-gen/
-target/
 *.java._trace
 *.smap
+
 src-gen/
+xtend-gen/
 
 buildroot
+
+target
+generated
+generated-sources
