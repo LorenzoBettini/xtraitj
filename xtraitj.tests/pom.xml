@@ -33,7 +33,9 @@
 			<version>${maven-surefire-plugin.version}</version>
 	       	<executions>
 				<execution>
-					<id>default-test</id>
+					<!-- The execution id default-test must be left to tycho-surefire-plugin
+						since it will execute it anyway -->
+					<id>MavenSurefirePluginTest</id>
 					<phase>test</phase>
 					<configuration>
 						<argLine>${memoryArgs}</argLine>
@@ -41,6 +43,9 @@
 						<includes>
 							<include>**/xtraitj/tests/*Test.java</include>
 						</includes>
+						<excludes>
+							<exclude>**/xtraitj/tests/*CompilerTest.java</exclude>
+						</excludes>
 					</configuration>
 					<goals>
 						<goal>test</goal>
@@ -54,8 +59,24 @@
 	        <artifactId>tycho-surefire-plugin</artifactId>
 	        <version>${tycho-version}</version>
 	        <executions>
+	        	<execution>
+	        		<!--  compiler tests need an OSGI environment, but no UI  -->
+					<id>default-test</id>
+					<phase>test</phase>
+					<configuration>
+						<useUIHarness>false</useUIHarness>
+						<useUIThread>false</useUIThread>
+						<argLine>${memoryArgs}</argLine>
+						<includes>
+							<include>**/xtraitj/tests/*CompilerTest.java</include>
+						</includes>
+					</configuration>
+					<goals>
+						<goal>test</goal>
+					</goals>
+				</execution>
 				<execution>
-					<id>TychoSurefirePluginTest</id>
+					<id>TychoSurefirePluginUiTest</id>
 					<phase>test</phase>
 					<configuration>
 						<useUIHarness>true</useUIHarness>
