@@ -11,6 +11,7 @@
 		<module>../xtraitj.runtime.requirements</module>
 		<module>../xtraitj.runtime.requirements.feature</module>
 		<module>../xtraitj.sdk</module>
+		<module>../xtraitj.site</module>
 	</modules>
 
 	<properties>
