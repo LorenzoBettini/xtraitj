@@ -28,6 +28,17 @@
 			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
 		</repository>
 	</repositories>
+	
+	<pluginRepositories>
+		<!-- Repository to resolve fornax-oaw-m2-plugin -->
+		<pluginRepository>
+			<id>fornax.plugin.repository</id>
+			<name>Fornax Plugin Repository</name>
+			<url>http://www.fornax-platform.org/m2/repository</url>
+		</pluginRepository>
+
+	</pluginRepositories>
+	
 	<build>
 		<pluginManagement>
 			<plugins>
