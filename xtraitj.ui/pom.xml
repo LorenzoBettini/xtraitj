@@ -12,7 +12,7 @@
 	<artifactId>xtraitj.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-	<name>Xtraitj UI</name>
+	<!-- <name>Xtraitj UI</name> -->
   
   <build>
   	<plugins>
