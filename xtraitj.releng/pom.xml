@@ -25,11 +25,13 @@
 		<maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
 		<junit-version>4.11</junit-version>
 		<jacoco-version>0.5.8.201207111220</jacoco-version>
+		<findbugs-version>2.5.3</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<xtext.version>2.5.4</xtext.version>
 		
 		<jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath>
+		<!-- <findbugs.reportPath>../target/findbugs</findbugs.reportPath>  -->
 	</properties>
 
 	<repositories>
@@ -70,6 +72,25 @@
 						<outputDirectory>xtend-gen</outputDirectory>
 					</configuration>
 				</plugin>
+				
+				<plugin>
+		          <groupId>org.codehaus.mojo</groupId>
+		          <artifactId>findbugs-maven-plugin</artifactId>
+		          <version>${findbugs-version}</version>
+		          <configuration>
+		            <findbugsXmlOutput>true</findbugsXmlOutput>
+		            <failOnError>false</failOnError>
+		            <!-- <findbugsXmlOutputDirectory>${findbugs.reportPath}</findbugsXmlOutputDirectory>  -->
+		          </configuration>
+		          <executions>
+		            <execution>
+		              <goals>
+		                <goal>check</goal>
+		              </goals>
+		            </execution>
+		          </executions>
+		        </plugin>
+
 			</plugins>
 		</pluginManagement>
 		
