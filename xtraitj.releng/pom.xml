@@ -6,6 +6,7 @@
 	<version>1.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+		<module>../xtraitj.targetplatform</module>
 		<module>../xtraitj</module>
 		<module>../xtraitj.ui</module>
 		<module>../xtraitj.runtime.requirements</module>
@@ -127,6 +128,21 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>xtraitj</groupId>
+							<artifactId>xtraitj.targetplatform</artifactId>
+							<version>1.1.2-SNAPSHOT</version>
+						</artifact>
+					</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
