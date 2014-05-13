@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+	<relativePath>../xtraitj.releng/pom.xml</relativePath>
+	<groupId>xtraitj</groupId>
+	<artifactId>xtraitj.releng</artifactId>
+	<version>1.1.2-SNAPSHOT</version>
+  </parent>
+
+	<artifactId>xtraitj.swtbot.tests</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>xtend-maven-plugin</artifactId>
+		</plugin>
+		
+		<plugin>
+	        <groupId>org.eclipse.tycho</groupId>
+	        <artifactId>tycho-surefire-plugin</artifactId>
+	        <version>${tycho-version}</version>
+			<configuration>
+				<useUIHarness>true</useUIHarness>
+				<useUIThread>false</useUIThread>
+				<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
+				<argLine>${tycho.testArgLine} ${memoryArgs} -Dorg.eclipse.swtbot.search.timeout=150000</argLine>
+				<testSuite>xtraitj.swtbot.tests</testSuite>
+				<testClass>xtraitj.swtbot.tests.AllSWTBotTests</testClass>
+				<dependencies>
+					<dependency>
+					  <type>p2-installable-unit</type>
+					  <artifactId>org.eclipse.pde.feature.group</artifactId>
+					  <version>${platform-version}</version>
+					</dependency>
+					<dependency>
+					  <type>p2-installable-unit</type>
+					  <artifactId>xtraitj.sdk.feature.group</artifactId>
+					  <version>0.0.0</version>
+					</dependency>
+				</dependencies>
+			</configuration>
+	    </plugin>
+  	</plugins>
+  </build>
+</project>
