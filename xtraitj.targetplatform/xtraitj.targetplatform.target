@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+
+<target name="xtraitj.targetplatform" sequenceNumber="10">
+<locations>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.1.1.v201405091103"/>
+<repository location="http://download.itemis.de/updates"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.ide.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.forms.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.2.1.201402241301"/>
+<unit id="org.eclipse.swtbot.generator.feature.feature.group" version="2.2.1.201402241301"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/latest"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.9.2.v20140221-1700"/>
+<unit id="org.eclipse.pde.feature.group" version="3.9.1.v20140221-1700"/>
+<unit id="org.eclipse.platform.feature.group" version="4.3.2.v20140221-1852"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.5.1.v201402030750"/>
+<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.5.1.v201402030544"/>
+<unit id="org.eclipse.xtend.sdk.feature.group" version="2.5.4.v201404100756"/>
+<unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.3.1.v201402030544"/>
+<unit id="org.eclipse.xpand.feature.group" version="1.4.0.v201306110406"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.5.4.v201404100756"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.2.v20140203-1126"/>
+<repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+</location>
+</locations>
+</target>
