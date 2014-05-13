@@ -5,9 +5,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * This is intended to be run during the Tycho build.
+ * 
+ * @author Lorenzo Bettini
+ *
+ */
 @RunWith(Suite.class)
 @SuiteClasses({
-	XtraitjQuickfixTests.class
+	XtraitjQuickfixTests.class,
+	XtraitjImportExampleWizardTests.class,
+	XtraitjNewProjectWizardTests.class
 })
 public class AllSWTBotTests {
 	
