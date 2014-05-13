@@ -163,6 +163,19 @@
 							<includes>
 								<include>xtraitj.*</include>
 							</includes>
+							<excludes>
+								<exclude>**/src-gen/**/*.java</exclude>
+								<exclude>**/org/eclipse/**/*.java</exclude>
+								<exclude>**.antlr**</exclude>
+								<exclude>**.parseTree**</exclude>
+								<exclude>**Abstract*RuntimeModule.java</exclude>
+								<exclude>**/*SetupGenerated*.java</exclude>
+								<exclude>**/Abstract*Validator.java</exclude>
+								<exclude>**/*GrammarAccess.java</exclude>
+								<exclude>**/Abstract*UiModule.java</exclude>
+								<exclude>**/Abstract*ProposalProvider.java</exclude>
+								<exclude>**/*Test.java</exclude>
+							</excludes>
 							<append>true</append>
 						</configuration>
 					</execution>
