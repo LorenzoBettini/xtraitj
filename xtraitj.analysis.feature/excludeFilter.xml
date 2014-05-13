@@ -98,5 +98,11 @@
 			<Bug code="IJU" />
 		</Not>
 	</Match> -->
+	
+	<Match>
+		<Class
+			name="~.*\.impl\..*Impl" />
+		<Bug pattern="EC_UNRELATED_TYPES_USING_POINTER_EQUALITY" />
+	</Match>
 
 </FindBugsFilter>
