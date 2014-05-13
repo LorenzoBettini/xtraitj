@@ -38,7 +38,8 @@
 					<id>MavenSurefirePluginTest</id>
 					<phase>test</phase>
 					<configuration>
-						<argLine>${memoryArgs}</argLine>
+						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
+						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
 						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
 						<includes>
 							<include>**/xtraitj/tests/*Test.java</include>
@@ -66,7 +67,8 @@
 					<configuration>
 						<useUIHarness>false</useUIHarness>
 						<useUIThread>false</useUIThread>
-						<argLine>${memoryArgs}</argLine>
+						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
+						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
 						<includes>
 							<include>**/xtraitj/tests/*CompilerTest.java</include>
 						</includes>
@@ -81,7 +83,8 @@
 					<configuration>
 						<useUIHarness>true</useUIHarness>
 						<useUIThread>true</useUIThread>
-						<argLine>${memoryArgs}</argLine>
+						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
+						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
 						<includes>
 							<include>**/xtraitj/ui/tests/*Test.java</include>
 						</includes>

@@ -24,9 +24,12 @@
 		<tycho-extras-version>0.19.0</tycho-extras-version>
 		<maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
 		<junit-version>4.11</junit-version>
+		<jacoco-version>0.5.8.201207111220</jacoco-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<xtext.version>2.5.4</xtext.version>
+		
+		<jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath>
 	</properties>
 
 	<repositories>
@@ -143,6 +146,27 @@
 						</artifact>
 					</target>
 				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+							<configuration>
+							<!-- Where to put jacoco coverage report -->
+							<destFile>${jacoco.reportPath}</destFile>
+							<includes>
+								<include>xtraitj.*</include>
+							</includes>
+							<append>true</append>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
