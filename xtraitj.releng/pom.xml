@@ -81,6 +81,8 @@
 		            <findbugsXmlOutput>true</findbugsXmlOutput>
 		            <failOnError>false</failOnError>
 		            <!-- <findbugsXmlOutputDirectory>${findbugs.reportPath}</findbugsXmlOutputDirectory>  -->
+		            <jvmArgs>-Xmx1024m</jvmArgs>
+		            <excludeFilterFile>${basedir}/../xtraitj.analysis.feature/excludeFilter.xml</excludeFilterFile>
 		          </configuration>
 		          <executions>
 		            <execution>
