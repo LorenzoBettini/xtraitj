@@ -38,7 +38,17 @@
 					</dependency>
 					<dependency>
 					  <type>p2-installable-unit</type>
+					  <artifactId>org.eclipse.xtext.sdk.feature.group</artifactId>
+					  <version>${xtext.version}</version>
+					</dependency>
+					<dependency>
+					  <type>p2-installable-unit</type>
 					  <artifactId>xtraitj.sdk.feature.group</artifactId>
+					  <version>0.0.0</version>
+					</dependency>
+					<dependency>
+					  <type>p2-installable-unit</type>
+					  <artifactId>xtraitj.examples.feature.feature.group</artifactId>
 					  <version>0.0.0</version>
 					</dependency>
 				</dependencies>
