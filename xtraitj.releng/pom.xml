@@ -14,6 +14,7 @@
 		<module>../xtraitj.ui.examples</module>
 		<module>../xtraitj.example.examples</module>
 		<module>../xtraitj.tests</module>
+		<module>../xtraitj.swtbot.tests.feature</module>
 		<module>../xtraitj.swtbot.tests</module>
 		<module>../xtraitj.examples.feature</module>
 		<module>../xtraitj.sdk</module>
@@ -146,10 +147,16 @@
 						</goals>
 						<configuration>
 							<excludes>
+								<!-- These are bundles and feature that do not have a corresponding
+									source version; NOT the ones that we do not want source versions -->
 								<plugin id="xtraitj.runtime.requirements"/>
-								<feature id="xtraitj.runtime.requirements.feature"/>
 								<plugin id="xtraitj.ui.examples"/>
-								<feature id="xtraitj.examples.feature"/>
+
+								<feature id="org.eclipse.swtbot.ide"/>
+								<feature id="org.eclipse.xtext.sdk"/>
+								<feature id="org.eclipse.pde"/>
+								<feature id="org.eclipse.emf.mwe2.language.sdk"/>
+								<feature id="org.eclipse.emf.mwe2.runtime.sdk"/>
 							</excludes>
 						</configuration>
 					</execution>

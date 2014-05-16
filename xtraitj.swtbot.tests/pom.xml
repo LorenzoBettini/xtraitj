@@ -33,27 +33,7 @@
 				<dependencies>
 					<dependency>
 					  <type>p2-installable-unit</type>
-					  <artifactId>org.eclipse.pde.feature.group</artifactId>
-					  <version>${platform-version}</version>
-					</dependency>
-					<dependency>
-					  <type>p2-installable-unit</type>
-					  <artifactId>org.eclipse.xtext.sdk.feature.group</artifactId>
-					  <version>${xtext.version}</version>
-					</dependency>
-					<dependency>
-					  <type>p2-installable-unit</type>
-					  <artifactId>org.eclipse.emf.mwe.sdk.feature.group</artifactId>
-					  <version>1.3.1</version>
-					</dependency>
-					<dependency>
-					  <type>p2-installable-unit</type>
-					  <artifactId>xtraitj.sdk.feature.group</artifactId>
-					  <version>0.0.0</version>
-					</dependency>
-					<dependency>
-					  <type>p2-installable-unit</type>
-					  <artifactId>xtraitj.examples.feature.feature.group</artifactId>
+					  <artifactId>xtraitj.swtbot.tests.feature.feature.group</artifactId>
 					  <version>0.0.0</version>
 					</dependency>
 				</dependencies>
