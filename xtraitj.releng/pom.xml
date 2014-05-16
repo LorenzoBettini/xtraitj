@@ -34,8 +34,17 @@
 		<xtext.version>2.5.4</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
 		
-		<jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath>
+		<!-- <jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath> -->
 		<!-- <findbugs.reportPath>../target/findbugs</findbugs.reportPath>  -->
+		
+		<!-- Sonar -->
+		<sonar.language>java</sonar.language>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.junit.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.junit.reportsPath>
+		<sonar.skippedModules>xtraitj.tests,xtraitj.swtbot.tests,xtraitj.example.examples</sonar.skippedModules>
+		<sonar.exclusions>file:**/src-gen/**</sonar.exclusions>
 		
 		<findbugs.skip>false</findbugs.skip>
 	</properties>
@@ -204,7 +213,7 @@
 						</goals>
 							<configuration>
 							<!-- Where to put jacoco coverage report -->
-							<destFile>${jacoco.reportPath}</destFile>
+							<destFile>${sonar.jacoco.reportPath}</destFile>
 							<includes>
 								<include>xtraitj.*</include>
 							</includes>
