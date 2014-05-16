@@ -35,6 +35,8 @@
 		
 		<jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath>
 		<!-- <findbugs.reportPath>../target/findbugs</findbugs.reportPath>  -->
+		
+		<findbugs.skip>false</findbugs.skip>
 	</properties>
 
 	<repositories>
@@ -81,6 +83,7 @@
 		          <artifactId>findbugs-maven-plugin</artifactId>
 		          <version>${findbugs-version}</version>
 		          <configuration>
+		          	<skip>${findbugs.skip}</skip>
 		            <findbugsXmlOutput>true</findbugsXmlOutput>
 		            <failOnError>false</failOnError>
 		            <!-- <findbugsXmlOutputDirectory>${findbugs.reportPath}</findbugsXmlOutputDirectory>  -->
