@@ -19,6 +19,11 @@ import static extension org.eclipse.xtext.EcoreUtil2.*
 import xtraitj.xtraitj.TJConstructor
 
 class TraitJModelUtil {
+	
+	protected new() {
+		
+	}
+	
 	def static traits(TJProgram p) {
 		p.elements.filter(typeof(TJTrait))
 	}
