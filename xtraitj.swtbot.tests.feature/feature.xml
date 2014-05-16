@@ -22,50 +22,31 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.platform"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.xtext.sdk"
          version="0.0.0"/>
 
-   <plugin
-         id="xtraitj"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <includes
+         id="org.eclipse.pde"
+         version="0.0.0"/>
 
-   <plugin
-         id="xtraitj.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <includes
+         id="xtraitj.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="xtraitj.examples.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.mwe2.language.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.mwe2.runtime.sdk"
+         version="0.0.0"/>
 
    <plugin
          id="xtraitj.swtbot.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="xtraitj.runtime.requirements"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="xtraitj.example.examples"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="xtraitj.ui.examples"
          download-size="0"
          install-size="0"
          version="0.0.0"

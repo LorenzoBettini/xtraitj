@@ -39,12 +39,6 @@
 <setEntry value="org.eclipse.e4.rcp:default"/>
 <setEntry value="org.eclipse.emf.common:default"/>
 <setEntry value="org.eclipse.emf.ecore:default"/>
-<setEntry value="org.eclipse.emf.mwe.core.source:default"/>
-<setEntry value="org.eclipse.emf.mwe.core:default"/>
-<setEntry value="org.eclipse.emf.mwe.doc:default"/>
-<setEntry value="org.eclipse.emf.mwe.sdk:default"/>
-<setEntry value="org.eclipse.emf.mwe.ui.source:default"/>
-<setEntry value="org.eclipse.emf.mwe.ui:default"/>
 <setEntry value="org.eclipse.emf.mwe2.language.sdk.source:default"/>
 <setEntry value="org.eclipse.emf.mwe2.language.sdk:default"/>
 <setEntry value="org.eclipse.emf.mwe2.runtime.sdk.source:default"/>
@@ -54,6 +48,8 @@
 <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.user.ui:default"/>
 <setEntry value="org.eclipse.help:default"/>
+<setEntry value="org.eclipse.jdt:default"/>
+<setEntry value="org.eclipse.pde:default"/>
 <setEntry value="org.eclipse.platform:default"/>
 <setEntry value="org.eclipse.rcp:default"/>
 <setEntry value="org.eclipse.swtbot.generator.feature:default"/>
@@ -73,6 +69,9 @@
 <setEntry value="org.eclipse.xtext.xbase:default"/>
 <setEntry value="org.eclipse.xtext.xtext.ui.source:default"/>
 <setEntry value="org.eclipse.xtext.xtext.ui:default"/>
+<setEntry value="xtraitj.examples.feature:default"/>
+<setEntry value="xtraitj.runtime.requirements.feature:default"/>
+<setEntry value="xtraitj.sdk:default"/>
 <setEntry value="xtraitj.swtbot.tests.feature:default"/>
 </setAttribute>
 <booleanAttribute key="show_selected_only" value="false"/>
