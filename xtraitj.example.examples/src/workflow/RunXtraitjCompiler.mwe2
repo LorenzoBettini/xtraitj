@@ -1,0 +1,36 @@
+module GenerateXtraitjJavaArtifacts
+
+import org.eclipse.emf.mwe.utils.*
+
+var modelPath = 'src/xtraitj'
+var targetDir = 'xtraitj-gen'
+
+// WARNING: make sure your workspace encoding is set to ISO-8859-1.
+
+Workflow {
+
+    component = org.eclipse.xtext.mwe.Reader {
+        // lookup all resources on the classpath
+        //useJavaClassPath = true
+
+        // or define search scope explicitly
+        path = modelPath
+
+		//register = org.eclipse.xtext.xbase.annotations.XbaseWithAnnotationsStandaloneSetup {}
+        register = xtraitj.XtraitjStandaloneSetup {}
+
+        loadResource = {
+            slot = 'model'
+            uri = ".*\\.xtraitj$"
+            //uri = 'src/xtraitj/example.xtraitj'
+        }
+    }
+
+    component = org.eclipse.xtext.generator.GeneratorComponent {
+        register = xtraitj.XtraitjStandaloneSetup {}
+        slot = 'model'
+        outlet = {
+            path = targetDir
+        }
+    }
+}
