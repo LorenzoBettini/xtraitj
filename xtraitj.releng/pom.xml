@@ -49,18 +49,6 @@
 		<findbugs.skip>false</findbugs.skip>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>kepler</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/kepler</url>
-		</repository>
-		<repository>
-			<id>Xtext Update Site</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
-		</repository>
-	</repositories>
 	<build>
 		<pluginManagement>
 			<plugins>
