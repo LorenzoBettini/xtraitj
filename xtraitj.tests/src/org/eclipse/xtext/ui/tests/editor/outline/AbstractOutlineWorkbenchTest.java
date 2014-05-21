@@ -92,7 +92,7 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractEditorTest {
 	 * @param expected
 	 */
 	protected void assertAllLabels(IOutlineNode rootNode, CharSequence expected) {
-		assertEquals(expected.toString().trim(),
+		assertEquals(expected.toString().trim().replaceAll("\r", ""),
 				outlineStringRepresentation(rootNode).trim());
 	}
 

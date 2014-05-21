@@ -4,8 +4,6 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static extension org.junit.Assert.*
-
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 
@@ -44,7 +42,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 			String s ;
 		}
 		'''.toString.
-		assertEquals(editor.text)
+		assertEqualsStrings(editor.text)
 		
 	}
 
@@ -83,8 +81,9 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 			Integer s ;
 		}
 		'''.toString.
-		assertEquals(editor.text)
+		assertEqualsStrings(editor.text)
 		
 	}
+
 
 }
