@@ -31,7 +31,7 @@
 		<findbugs-version>2.5.4-SNAPSHOT</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<xtext.version>2.5.4</xtext.version>
+		<xtext.version>2.6.0</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
 		
 		<!-- <jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath> -->
@@ -148,9 +148,12 @@
 									source version; NOT the ones that we do not want source versions -->
 								<plugin id="xtraitj.runtime.requirements"/>
 								<plugin id="xtraitj.ui.examples"/>
+								
+								<feature id="xtraitj.swtbot.tests.feature"/>
 
 								<feature id="org.eclipse.swtbot.ide"/>
 								<feature id="org.eclipse.xtext.sdk"/>
+								<feature id="org.eclipse.xtend.sdk"/>
 								<feature id="org.eclipse.pde"/>
 								<feature id="org.eclipse.emf.mwe2.language.sdk"/>
 								<feature id="org.eclipse.emf.mwe2.runtime.sdk"/>
