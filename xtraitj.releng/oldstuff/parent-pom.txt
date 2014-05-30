@@ -33,7 +33,6 @@
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<xtext.version>2.6.0</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
-		<fornax-oaw-m2-plugin-version>3.4.0</fornax-oaw-m2-plugin-version>
 		
 		<!-- <jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath> -->
 		<!-- <findbugs.reportPath>../target/findbugs</findbugs.reportPath>  -->
@@ -244,22 +243,6 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
-		</pluginRepository>
-		
-		<!-- Repository to resolve fornax-oaw-m2-plugin -->
-		<!-- in case of SSL certificates errors, use
-			-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -->
-		<pluginRepository>
-			<id>fornax.plugin.repository</id>
-			<name>Fornax Plugin Repository</name>
-			<url>http://www.fornax-platform.org/m2/repository</url>
-			<!--  <url>http://www.fornax-platform.org/nexus/content/groups/public</url> -->
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 

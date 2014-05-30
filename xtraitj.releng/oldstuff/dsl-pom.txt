@@ -15,25 +15,12 @@
 	<!-- <name>Xtraitj</name> -->
 
 	<build>
-		<!-- The following is required so that the mwe2 workflow finds the .xtext 
-			grammar file -->
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<includes>
-					<include>**/*.xtext</include>
-				</includes>
-			</resource>
-		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-					<skip>${mwe2.skip}</skip>
 					<filesets>
 						<fileset>
 							<directory>${basedir}/src-gen</directory>
@@ -48,34 +35,56 @@
 						<fileset>
 							<directory>${basedir}/../${project.artifactId}.ui/xtend-gen</directory>
 						</fileset>
-						<!-- clean test fragment as well -->
+						<!-- clean test fragment as well 
 						<fileset>
 							<directory>${basedir}/../${project.artifactId}.tests/src-gen</directory>
 						</fileset>
 						<fileset>
 							<directory>${basedir}/../${project.artifactId}.tests/xtend-gen</directory>
 						</fileset>
+						-->
 					</filesets>
 				</configuration>
 			</plugin>
 
 			<plugin>
-				<groupId>org.fornax.toolsupport</groupId>
-				<artifactId>fornax-oaw-m2-plugin</artifactId>
-				<version>${fornax-oaw-m2-plugin-version}</version>
-				<configuration>
-					<skip>${mwe2.skip}</skip>
-					<workflowEngine>mwe2</workflowEngine>
-					<workflowDescriptor>src/xtraitj/GenerateXtraitj.mwe2</workflowDescriptor>
-				</configuration>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
 						<goals>
-							<goal>run-workflow</goal>
+							<goal>java</goal>
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<includeProjectDependencies>false</includeProjectDependencies>
+					<includePluginDependencies>true</includePluginDependencies>
+					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
+					<arguments>
+						<argument>file://${project.basedir}/src/xtraitj/GenerateXtraitj.mwe2</argument>
+						<argument>
+							-p
+						</argument>
+						<argument>
+							runtimeProject=/${project.basedir}
+						</argument>
+					</arguments>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.xtext</groupId>
+						<artifactId>org.eclipse.xtext.xtext</artifactId>
+						<version>${xtext.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.xtext</groupId>
+						<artifactId>org.eclipse.xtext.xbase</artifactId>
+						<version>${xtext.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
@@ -84,9 +93,9 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-			</plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>findbugs-maven-plugin</artifactId>
+	      	</plugin>
 		</plugins>
 	</build>
 </project>
