@@ -19,7 +19,6 @@
 		<module>../xtraitj.examples.feature</module>
 		<module>../xtraitj.sdk</module>
 		<module>../xtraitj.site</module>
-		<module>../xtraitj.ide</module>
 	</modules>
 
 	<properties>
@@ -50,6 +49,19 @@
 		
 		<findbugs.skip>false</findbugs.skip>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>build-ide</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<modules>
+				<module>../xtraitj.ide</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<build>
 		<pluginManagement>
