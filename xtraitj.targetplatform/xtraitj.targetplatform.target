@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="xtraitj.targetplatform" sequenceNumber="17">
+<target name="xtraitj.targetplatform" sequenceNumber="19">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.1.1.v201405091103"/>
@@ -16,18 +16,17 @@
 <repository location="http://download.eclipse.org/technology/swtbot/releases/latest"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.draw2d.sdk.feature.group" version="3.9.1.201308190730"/>
-<unit id="org.eclipse.sdk.feature.group" version="4.3.2.v20140221-1852"/>
-<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20140117-1004"/>
-<repository location="http://download.eclipse.org/releases/kepler"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.6.0.v201405200714"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.6.0.v201405210727"/>
 <unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.6.0.v201405200939"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.9.2.v20140203-1126"/>
 <unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.3.2.v201405200714"/>
 <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20140117-1004"/>
+<unit id="org.eclipse.sdk.feature.group" version="4.3.2.v20140221-1852"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 </locations>
 </target>
