@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project name="project">
+
+	<!-- Given a version x.y.z returns x.y -->
+	<macrodef name="extractFeatureVersionMajorMinor">
+		<attribute name="file" />
+		<attribute name="property" />
+		<sequential>
+			<loadfile property="@{property}" srcfile="@{file}">
+				<filterchain>
+					<striplinebreaks />
+					<replaceregex pattern="^.*&lt;feature[^&gt;]*version=&quot;([^&quot;\.]+\.[^&quot;\.]+)\.[^&quot;]*&quot;.*$" replace="\1" />
+				</filterchain>
+			</loadfile>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="extractFeatureLabel">
+		<attribute name="file" />
+		<attribute name="property" />
+		<sequential>
+			<loadfile property="@{property}" srcfile="@{file}">
+				<filterchain>
+					<striplinebreaks />
+					<replaceregex pattern="^.*&lt;feature[^&gt;]*label=&quot;([^&quot;]*)&quot;.*$" replace="\1" />
+				</filterchain>
+			</loadfile>
+		</sequential>
+	</macrodef>
+
+	<target name="compute.child.repository.data">
+		<property name="feature.xml" location="feature.xml"/>
+		<property name="feature.version" value="${unqualifiedVersion}.${buildQualifier}" />
+
+		<extractFeatureVersionMajorMinor file="${feature.xml}" property="feature.major.minor.version" />
+		<extractFeatureLabel file="${feature.xml}" property="feature.label" />
+
+		<property name="software.download.area" location="${user.home}/p2.repositories" />
+		<property name="updates.dir" value="updates" />
+
+		<property name="site.composite.name" value="${feature.label} ${feature.major.minor.version}" />
+
+		<property name="composite.repository.directory" location="${software.download.area}/${updates.dir}/${feature.major.minor.version}/" />
+		<property name="child.repository" value="${feature.version}" />
+		<property name="child.repository.directory" value="${composite.repository.directory}/${child.repository}/" />
+	</target>
+
+	<target name="p2.composite.add" depends="compute.child.repository.data">
+		<property name="source.repository" location="${project.build.directory}/repository"/>
+
+		<echo message=" " />
+
+		<echo message="Source repository path: ${source.repository}" />
+
+		<echo message="Copying to ${child.repository.directory}..." />
+
+		<mkdir dir="${child.repository.directory}"/>
+		<copy todir="${child.repository.directory}" overwrite="true">
+			<fileset dir="${source.repository}" />
+		</copy>
+
+		<echo message=" " />
+		<echo message="Composite repository       : ${composite.repository.directory}" />
+		<echo message="Composite name             : ${site.composite.name}" />
+		<echo message="Child repository directory : ${child.repository.directory}" />
+		<echo message="Adding child repository    : ${child.repository}" />
+
+		<p2.composite.repository>
+			<repository
+				compressed="false"
+				location="${composite.repository.directory}" 
+				name="${site.composite.name}" />
+			<add>
+				<repository location="${child.repository}" />
+			</add>
+		</p2.composite.repository>
+		
+<echo file="${composite.repository.directory}/p2.index">version=1
+metadata.repository.factory.order=compositeContent.xml,\!
+artifact.repository.factory.order=compositeArtifacts.xml,\!
+</echo>
+
+	</target>
+
+</project>
