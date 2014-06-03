@@ -14,8 +14,10 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-XX:MaxPermSize=256m -Xms512m -Xmx1024m</vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+      <vmArgs>-XX:MaxPermSize=256m -Xms512m -Xmx1024m
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="eclipse16.gif" i32="eclipse32.gif" i48="eclipse48.gif" i64="eclipse16.png" i128="eclipse32.png" i256="eclipse48.png"/>
@@ -32,7 +34,6 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
@@ -40,9 +41,11 @@
    </plugins>
 
    <features>
-      <feature id="xtraitj.sdk" version="1.1.2.qualifier"/>
-      <feature id="org.eclipse.rcp" version="4.3.2.v20140221-1700"/>
+      <feature id="xtraitj.sdk"/>
+      <feature id="xtraitj.sdk.source"/>
+      <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.sdk"/>
+      <feature id="xtraitj.examples.feature"/>
    </features>
 
    <configurations>
