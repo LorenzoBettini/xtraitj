@@ -44,6 +44,7 @@
 					<products>
 						<product>
 							<id>xtraitj.ide.product</id>
+							<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
 						</product>
 					</products>
 				</configuration>

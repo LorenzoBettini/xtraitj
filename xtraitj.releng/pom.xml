@@ -56,6 +56,10 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			
+			<properties>
+				<findbugs.skip>true</findbugs.skip>
+			</properties>
 
 			<modules>
 				<module>../xtraitj.ide</module>
@@ -236,6 +240,15 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<format>'v'yyyyMMdd'-'HHmm</format>
 				</configuration>
 			</plugin>
 			
