@@ -44,11 +44,11 @@
    </plugins>
 
    <features>
-      <feature id="xtraitj.sdk"/>
-      <feature id="xtraitj.sdk.source"/>
+      <feature id="xtraitj.sdk" installMode="root"/>
+      <feature id="xtraitj.sdk.source" installMode="root"/>
       <feature id="org.eclipse.rcp"/>
-      <feature id="org.eclipse.sdk"/>
-      <feature id="xtraitj.examples.feature"/>
+      <feature id="org.eclipse.sdk" installMode="root"/>
+      <feature id="xtraitj.examples.feature" installMode="root"/>
    </features>
 
    <configurations>
