@@ -7,7 +7,6 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
-import org.eclipse.xtext.xbase.imports.IImportsConfiguration;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
@@ -15,11 +14,10 @@ import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.XtraitjOutputConfigurationProvider;
-import xtraitj.imports.XtraitjImportsConfiguration;
 import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
+import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.scoping.XtraitjXbaseScopeProvider;
-import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 
 import com.google.inject.Binder;
@@ -59,10 +57,6 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		return XtraitjJvmModelAssociator.class;
 	}
 
-	public Class<? extends IImportsConfiguration> bindIImportsConfiguration() {
-		return XtraitjImportsConfiguration.class;
-	}
-	
 	public Class<? extends TypeReferenceSerializer> bindTypeReferenceSerializer() {
 		return XtraitjTypeReferenceSerializer.class;
 	}
