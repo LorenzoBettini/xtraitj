@@ -91,7 +91,7 @@ Workflow {
     
     		// generator API
     		fragment = generator.GeneratorFragment auto-inject {
-    			generateXtendMain=true
+    			//generateXtendMain=true
     		}
     
     		// formatter API
