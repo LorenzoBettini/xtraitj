@@ -8,15 +8,15 @@ import com.google.inject.Inject
 import org.eclipse.xtext.junit4.util.ParseHelper
 import xtraitj.xtraitj.TJProgram
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
-import xtraitj.input.tests.TraitJInputs
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJParserTest {
+class XtraitjParserTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
-	@Inject extension TraitJInputs
+	@Inject extension XtraitjInputs
 	
 	@Test def void simpleProgram() {
 		'''

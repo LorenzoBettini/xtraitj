@@ -9,7 +9,7 @@ import xtraitj.XtraitjUiInjectorProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
-class TraitJContentAssistTest extends AbstractContentAssistTest {
+class XtraitjContentAssistTest extends AbstractContentAssistTest {
 
 	val T = '''
 		trait T {

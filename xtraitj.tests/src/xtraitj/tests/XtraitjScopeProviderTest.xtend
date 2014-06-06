@@ -8,7 +8,6 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.input.tests.TraitJInputs
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.XtraitjPackage
@@ -18,12 +17,13 @@ import xtraitj.scoping.TraitJXbaseBatchScopeProvider
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjScopeProviderTest {
 	@Inject extension ParseHelper<TJProgram>
-	@Inject extension TraitJInputs
+	@Inject extension XtraitjInputs
 	@Inject extension TraitJXbaseBatchScopeProvider
 
 	val memberFeature = XtraitjPackage::eINSTANCE.TJTraitOperation_Member

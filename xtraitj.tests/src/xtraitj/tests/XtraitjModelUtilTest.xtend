@@ -17,7 +17,7 @@ import xtraitj.XtraitjInjectorProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJModelUtilTest {
+class XtraitjModelUtilTest {
 	@Inject extension ParseHelper<TJProgram>
 
 	@Test def void testMethodsForAtomicTraitExpression() {

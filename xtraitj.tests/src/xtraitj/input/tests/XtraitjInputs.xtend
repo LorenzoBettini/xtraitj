@@ -1,6 +1,6 @@
 package xtraitj.input.tests
 
-class TraitJInputs {
+class XtraitjInputs {
 	def traitSum() {
 		'''
 		package tests;

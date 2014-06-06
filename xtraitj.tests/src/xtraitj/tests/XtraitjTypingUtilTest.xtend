@@ -17,7 +17,7 @@ import xtraitj.XtraitjInjectorProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJTypingUtilTest {
+class XtraitjTypingUtilTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension TraitJTypingUtil
 

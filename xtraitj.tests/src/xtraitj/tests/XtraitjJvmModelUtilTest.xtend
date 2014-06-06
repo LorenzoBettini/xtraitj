@@ -10,7 +10,6 @@ import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.input.tests.TraitJInputs
 import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.xtraitj.TJClass
@@ -24,13 +23,14 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.junit.Assert.*
 import static extension xtraitj.util.TraitJModelUtil.*
+import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class TraitJJvmModelUtilTest {
+class XtraitjJvmModelUtilTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
-	@Inject extension TraitJInputs
+	@Inject extension XtraitjInputs
 	@Inject extension TraitJJvmModelUtil
 
 	@Test def void testAssociations() {

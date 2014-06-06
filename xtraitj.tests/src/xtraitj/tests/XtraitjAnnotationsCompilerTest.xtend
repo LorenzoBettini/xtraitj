@@ -6,13 +6,13 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.input.tests.TraitJInputs
+import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(InjectorProviderCustom))
 class XtraitjAnnotationsCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension CompilationTestHelper
-	@Inject extension TraitJInputs
+	@Inject extension XtraitjInputs
 	
 	@Test def void testAnnotatedMethods() {
 		annotatedElements.compile[
