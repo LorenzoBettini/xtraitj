@@ -15,8 +15,8 @@ import org.eclipse.xtext.xbase.annotations.typesystem.XbaseWithAnnotationsBatchS
  * on how and when to use it 
  *
  */
-class TraitJXbaseBatchScopeProvider extends XbaseWithAnnotationsBatchScopeProvider {
-	@Inject extension TraitJScopeProviderUtil
+class XtraitjXbaseBatchScopeProvider extends XbaseWithAnnotationsBatchScopeProvider {
+	@Inject extension XtraitjScopeProviderUtil
 	
 	override getScope(EObject context, EReference reference) {
 		val scope = context.createCustomScope(reference)

@@ -18,8 +18,8 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
-import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.jdt.ui.JavaElementImageDescriptor
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * Provides labels for a EObjects.

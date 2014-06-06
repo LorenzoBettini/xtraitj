@@ -19,7 +19,6 @@ import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import xtraitj.typing.TraitJTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
@@ -31,8 +30,9 @@ import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
-import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import xtraitj.typing.XtraitjTypingUtil
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -40,11 +40,11 @@ import org.eclipse.xtext.xtype.XFunctionTypeRef
  * <p>The JVM model should contain all elements that would appear in the Java code 
  * which is generated from the source model. Other models link against the JVM model rather than the source model.</p>     
  */
-class TraitJJvmModelUtil {
+class XtraitjJvmModelUtil {
 
 	@Inject extension TypeReferences
 	@Inject extension IJvmModelAssociations
-	@Inject extension TraitJTypingUtil
+	@Inject extension XtraitjTypingUtil
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 

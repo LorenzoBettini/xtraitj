@@ -13,18 +13,18 @@ import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.junit.Assert.*
-import xtraitj.scoping.TraitJXbaseBatchScopeProvider
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.XtraitjInputs
+import xtraitj.scoping.XtraitjXbaseBatchScopeProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjScopeProviderTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension XtraitjInputs
-	@Inject extension TraitJXbaseBatchScopeProvider
+	@Inject extension XtraitjXbaseBatchScopeProvider
 
 	val memberFeature = XtraitjPackage::eINSTANCE.TJTraitOperation_Member
 

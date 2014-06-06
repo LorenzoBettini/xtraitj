@@ -8,7 +8,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.validation.Check
-import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
@@ -27,12 +26,13 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
-import static extension xtraitj.util.TraitJModelUtil.*
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.xbase.validation.IssueCodes
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * Custom validation rules. 
@@ -87,7 +87,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	
 	public static val ANNOTATION_ON_TRAIT_FIELD = PREFIX + "AnnotationOnTraitField"
 	
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider

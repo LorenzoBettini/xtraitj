@@ -2,7 +2,7 @@ package xtraitj.ui.wizard;
 
 import java.util.List;
 
-import xtraitj.generator.TraitJOutputConfigurationProvider;
+import xtraitj.generator.XtraitjOutputConfigurationProvider;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -12,7 +12,7 @@ public class XtraitjProjectCreatorCustom extends XtraitjProjectCreator {
 	@Override
 	protected List<String> getAllFolders() {
 		return ImmutableList.of(SRC_ROOT,
-				TraitJOutputConfigurationProvider.TRAITJ_GEN);
+				XtraitjOutputConfigurationProvider.TRAITJ_GEN);
 	}
 	
 	@Override

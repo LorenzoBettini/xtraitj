@@ -24,7 +24,7 @@ import org.eclipse.xtext.scoping.impl.ScopeBasedSelectable;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.scoping.XImportSectionNamespaceScopeProvider;
 
-import xtraitj.jvmmodel.TraitJJvmModelUtil;
+import xtraitj.jvmmodel.XtraitjJvmModelUtil;
 import xtraitj.xtraitj.TJMethod;
 
 import com.google.common.collect.Lists;
@@ -43,7 +43,7 @@ import com.google.inject.Inject;
 public class XtraitjImportedNamespaceScopeProvider extends
 		XImportSectionNamespaceScopeProvider {
 	
-	@Inject private TraitJJvmModelUtil jvmModelUtil;
+	@Inject private XtraitjJvmModelUtil jvmModelUtil;
 
 	/**
 	 * This is copied from the base class, with a fix for the type parameters

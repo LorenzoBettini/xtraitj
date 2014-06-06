@@ -12,8 +12,8 @@ import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTraitExpression
 
 import static extension org.junit.Assert.*
-import static extension xtraitj.util.TraitJModelUtil.*
 import xtraitj.XtraitjInjectorProvider
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))

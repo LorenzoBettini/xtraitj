@@ -14,11 +14,11 @@ import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
-import xtraitj.generator.TraitJOutputConfigurationProvider;
+import xtraitj.generator.XtraitjOutputConfigurationProvider;
 import xtraitj.imports.XtraitjImportsConfiguration;
-import xtraitj.jvmmodel.TraitJJvmModelAssociator;
-import xtraitj.scoping.TraitJXbaseBatchScopeProvider;
-import xtraitj.scoping.TraitJXbaseScopeProvider;
+import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
+import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
+import xtraitj.scoping.XtraitjXbaseScopeProvider;
 import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 
@@ -39,24 +39,24 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	
 	@Override
 	public Class<? extends XbaseBatchScopeProvider> bindXbaseBatchScopeProvider() {
-		return TraitJXbaseBatchScopeProvider.class;
+		return XtraitjXbaseBatchScopeProvider.class;
 	}
 	
 	@Override
 	public Class<? extends IScopeProvider> bindIScopeProvider() {
-		return TraitJXbaseScopeProvider.class;
+		return XtraitjXbaseScopeProvider.class;
 	}
 
 	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
-        return TraitJOutputConfigurationProvider.class;
+        return XtraitjOutputConfigurationProvider.class;
     }
 	
 	public Class<? extends IJvmModelAssociator> bindIJvmModelAssociator() {
-		return TraitJJvmModelAssociator.class;
+		return XtraitjJvmModelAssociator.class;
 	}
 
 	public Class<? extends IJvmModelAssociations> bindIJvmModelAssociations() {
-		return TraitJJvmModelAssociator.class;
+		return XtraitjJvmModelAssociator.class;
 	}
 
 	public Class<? extends IImportsConfiguration> bindIImportsConfiguration() {

@@ -9,13 +9,13 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
-import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import static extension xtraitj.util.TraitJModelUtil.*
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * For the moment Xbase uses two different scope providers, one for
@@ -25,8 +25,8 @@ import static extension xtraitj.util.TraitJModelUtil.*
  * see http://www.eclipse.org/forums/index.php/mv/msg/476486/1041675/#msg_1041675
  *
  */
-class TraitJScopeProviderUtil {
-	@Inject extension TraitJJvmModelUtil
+class XtraitjScopeProviderUtil {
+	@Inject extension XtraitjJvmModelUtil
 
 	def IScope createCustomScope(EObject context, EReference reference) {
 		if (reference == XtraitjPackage::eINSTANCE.TJTraitOperation_Member ||

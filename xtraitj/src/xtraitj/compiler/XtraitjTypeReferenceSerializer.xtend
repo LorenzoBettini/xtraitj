@@ -4,15 +4,15 @@ import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import com.google.inject.Inject
-import xtraitj.jvmmodel.TraitJJvmModelUtil
 import org.eclipse.xtext.common.types.JvmGenericType
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
 /**
  * @author Lorenzo Bettini
  */
 class XtraitjTypeReferenceSerializer extends TypeReferenceSerializer {
 	
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 	
 	override isLocalTypeParameter(EObject context, JvmTypeParameter parameter) {
 		/*

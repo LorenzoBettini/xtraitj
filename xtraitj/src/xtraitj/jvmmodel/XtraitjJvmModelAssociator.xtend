@@ -7,7 +7,7 @@ import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJTraitReference
 
 @Singleton
-class TraitJJvmModelAssociator extends JvmModelAssociator {
+class XtraitjJvmModelAssociator extends JvmModelAssociator {
 	
 	override getSourceElements(EObject jvmElement) {
 		val result = super.getSourceElements(jvmElement)

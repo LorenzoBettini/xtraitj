@@ -9,10 +9,10 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.validation.XtraitjValidator
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.XtraitjFactory
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
 //import org.eclipse.xtext.ui.editor.quickfix.Fix
 //import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
@@ -26,7 +26,7 @@ import xtraitj.xtraitj.XtraitjFactory
 class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
 	
 	@Inject extension JvmTypesBuilder
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 
 	@Fix(XtraitjValidator::MISSING_REQUIRED_FIELD)
 	def addMissingRequiredField(Issue issue, IssueResolutionAcceptor acceptor) {

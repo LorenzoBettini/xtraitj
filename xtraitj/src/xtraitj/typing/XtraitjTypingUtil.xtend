@@ -7,7 +7,7 @@ import org.eclipse.xtext.xbase.typesystem.references.OwnedConverter
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
 import org.eclipse.xtext.common.types.util.Primitives
 
-class TraitJTypingUtil {
+class XtraitjTypingUtil {
 	
 	@Inject CommonTypeComputationServices services;
 	@Inject extension Primitives

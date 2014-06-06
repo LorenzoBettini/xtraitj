@@ -12,7 +12,6 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
-import xtraitj.jvmmodel.TraitJJvmModelUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -26,6 +25,7 @@ import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import org.eclipse.xtext.common.types.JvmTypeReference
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
 /**
  * Customization of the default outline structure.
@@ -38,7 +38,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	@Inject UIStrings uiStrings
 	
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 	
 	def _createChildren(DocumentRootNode parentNode, TJProgram p) {
 		if (p.name != null) {

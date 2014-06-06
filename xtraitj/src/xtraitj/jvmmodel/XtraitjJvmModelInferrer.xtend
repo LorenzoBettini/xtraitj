@@ -31,7 +31,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
-import static extension xtraitj.util.TraitJModelUtil.*
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -43,7 +43,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the

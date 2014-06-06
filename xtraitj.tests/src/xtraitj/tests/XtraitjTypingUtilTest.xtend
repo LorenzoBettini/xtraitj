@@ -8,18 +8,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJProgram
-import xtraitj.typing.TraitJTypingUtil
 
 import static org.junit.Assert.*
 
-import static extension xtraitj.util.TraitJModelUtil.*
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.typing.XtraitjTypingUtil
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjTypingUtilTest {
 	@Inject extension ParseHelper<TJProgram>
-	@Inject extension TraitJTypingUtil
+	@Inject extension XtraitjTypingUtil
 
 	@Test def void testSameType() {
 		'''

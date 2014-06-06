@@ -18,7 +18,7 @@ import xtraitj.xtraitj.TJTraitReference
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import xtraitj.xtraitj.TJConstructor
 
-class TraitJModelUtil {
+class XtraitjModelUtil {
 	
 	protected new() {
 		

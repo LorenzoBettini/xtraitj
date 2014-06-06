@@ -15,8 +15,8 @@ import org.eclipse.xtext.xbase.annotations.scoping.XbaseWithAnnotationsScopeProv
  * on how and when to use it 
  *
  */
-class TraitJXbaseScopeProvider extends XbaseWithAnnotationsScopeProvider {
-	@Inject extension TraitJScopeProviderUtil
+class XtraitjXbaseScopeProvider extends XbaseWithAnnotationsScopeProvider {
+	@Inject extension XtraitjScopeProviderUtil
 	
 	override getScope(EObject context, EReference reference) {
 		val scope = context.createCustomScope(reference)

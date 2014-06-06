@@ -5,7 +5,7 @@ import com.google.inject.Singleton
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer
 import org.eclipse.xtext.xbase.typesystem.references.ParameterizedTypeReference
-import xtraitj.jvmmodel.TraitJJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
 /**
  * @author Lorenzo Bettini
@@ -13,7 +13,7 @@ import xtraitj.jvmmodel.TraitJJvmModelUtil
 @Singleton
 class XtraitjTypeConformanceComputer extends TypeConformanceComputer {
 	
-	@Inject extension TraitJJvmModelUtil
+	@Inject extension XtraitjJvmModelUtil
 	
 	override doIsConformant(ParameterizedTypeReference left, ParameterizedTypeReference right, int flags) {
 		val result = super.doIsConformant(left, right, flags)
