@@ -300,10 +300,6 @@ class XtraitjJvmModelUtil {
 		members.exists[simpleName == m.simpleName]
 	}
 
-	def isRequired(XtraitjJvmOperation o) {
-		o.op.required
-	}
-
 	def isRequired(JvmMember m) {
 		m.sourceElements.exists[
 			(it instanceof TJRequiredMethod) ||
