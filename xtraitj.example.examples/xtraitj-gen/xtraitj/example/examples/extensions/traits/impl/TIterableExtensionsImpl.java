@@ -101,11 +101,11 @@ public class TIterableExtensionsImpl<T> implements TIterableExtensions<T> {
     return result.toString();
   }
   
-  public <R> List<R> mapToList(final Function1<? super T,? extends R> mapper) {
+  public <R> List<R> mapToList(final Function1<? super T, ? extends R> mapper) {
     return _delegate.mapToList(mapper);
   }
   
-  public <R> List<R> _mapToList(final Function1<? super T,? extends R> mapper) {
+  public <R> List<R> _mapToList(final Function1<? super T, ? extends R> mapper) {
     final ArrayList<R> result = new ArrayList<R>();
     Iterable<T> _iterable = this.getIterable();
     for (final T e : _iterable) {
@@ -115,11 +115,11 @@ public class TIterableExtensionsImpl<T> implements TIterableExtensions<T> {
     return result;
   }
   
-  public <R> Iterable<R> map(final Function1<? super T,? extends R> mapper) {
+  public <R> Iterable<R> map(final Function1<? super T, ? extends R> mapper) {
     return _delegate.map(mapper);
   }
   
-  public <R> Iterable<R> _map(final Function1<? super T,? extends R> mapper) {
+  public <R> Iterable<R> _map(final Function1<? super T, ? extends R> mapper) {
     final Iterable<R> _function = new Iterable<R>() {
       public Iterator<R> iterator() {
         Iterable<T> _iterable = TIterableExtensionsImpl.this.getIterable();

@@ -15,7 +15,7 @@ public interface TIterableExtensions<T> {
   
   public abstract String join(final CharSequence separator);
   
-  public abstract <R> List<R> mapToList(final Function1<? super T,? extends R> mapper);
+  public abstract <R> List<R> mapToList(final Function1<? super T, ? extends R> mapper);
   
-  public abstract <R> Iterable<R> map(final Function1<? super T,? extends R> mapper);
+  public abstract <R> Iterable<R> map(final Function1<? super T, ? extends R> mapper);
 }

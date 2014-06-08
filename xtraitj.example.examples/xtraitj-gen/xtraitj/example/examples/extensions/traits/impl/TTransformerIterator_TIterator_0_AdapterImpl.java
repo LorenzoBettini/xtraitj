@@ -6,12 +6,12 @@ import xtraitj.example.examples.extensions.traits.TTransformerIterator_TIterator
 import xtraitj.example.examples.extensions.traits.impl.TIteratorImpl;
 
 @SuppressWarnings("all")
-public class TTransformerIterator_TIterator_0_AdapterImpl<T, R> implements TTransformerIterator_TIterator_0_Adapter<T,R>, TIterator<T> {
-  private TTransformerIterator_TIterator_0_Adapter<T,R> _delegate;
+public class TTransformerIterator_TIterator_0_AdapterImpl<T, R> implements TTransformerIterator_TIterator_0_Adapter<T, R>, TIterator<T> {
+  private TTransformerIterator_TIterator_0_Adapter<T, R> _delegate;
   
   private TIteratorImpl<T> _TIterator_0;
   
-  public TTransformerIterator_TIterator_0_AdapterImpl(final TTransformerIterator_TIterator_0_Adapter<T,R> delegate) {
+  public TTransformerIterator_TIterator_0_AdapterImpl(final TTransformerIterator_TIterator_0_Adapter<T, R> delegate) {
     this._delegate = delegate;
     _TIterator_0 = new TIteratorImpl(this);
   }

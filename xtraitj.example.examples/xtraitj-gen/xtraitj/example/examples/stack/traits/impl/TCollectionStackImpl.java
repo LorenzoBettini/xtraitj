@@ -6,12 +6,12 @@ import xtraitj.example.examples.stack.traits.TCollectionStack;
 import xtraitj.example.examples.stack.traits.impl.TStackImpl;
 
 @SuppressWarnings("all")
-public class TCollectionStackImpl<T extends Collection<U>, U> implements TCollectionStack<T,U> {
-  private TCollectionStack<T,U> _delegate;
+public class TCollectionStackImpl<T extends Collection<U>, U> implements TCollectionStack<T, U> {
+  private TCollectionStack<T, U> _delegate;
   
   private TStackImpl<Collection<U>> _TStack;
   
-  public TCollectionStackImpl(final TCollectionStack<T,U> delegate) {
+  public TCollectionStackImpl(final TCollectionStack<T, U> delegate) {
     this._delegate = delegate;
     _TStack = new TStackImpl(delegate);
   }

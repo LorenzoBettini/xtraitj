@@ -35,11 +35,11 @@ public class StringListWithExtensions implements TIterableExtensions<String> {
     return _TIterableExtensions._join(separator);
   }
   
-  public <R> List<R> mapToList(final Function1<? super String,? extends R> mapper) {
+  public <R> List<R> mapToList(final Function1<? super String, ? extends R> mapper) {
     return _TIterableExtensions._mapToList(mapper);
   }
   
-  public <R> Iterable<R> map(final Function1<? super String,? extends R> mapper) {
+  public <R> Iterable<R> map(final Function1<? super String, ? extends R> mapper) {
     return _TIterableExtensions._map(mapper);
   }
 }

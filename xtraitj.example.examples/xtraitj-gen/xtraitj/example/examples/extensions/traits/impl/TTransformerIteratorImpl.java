@@ -6,21 +6,21 @@ import xtraitj.example.examples.extensions.traits.TTransformerIterator;
 import xtraitj.example.examples.extensions.traits.impl.TTransformerIterator_TIterator_0_AdapterImpl;
 
 @SuppressWarnings("all")
-public class TTransformerIteratorImpl<T, R> implements TTransformerIterator<T,R> {
-  private TTransformerIterator<T,R> _delegate;
+public class TTransformerIteratorImpl<T, R> implements TTransformerIterator<T, R> {
+  private TTransformerIterator<T, R> _delegate;
   
-  private TTransformerIterator_TIterator_0_AdapterImpl<T,R> _TTransformerIterator_TIterator_0;
+  private TTransformerIterator_TIterator_0_AdapterImpl<T, R> _TTransformerIterator_TIterator_0;
   
-  public TTransformerIteratorImpl(final TTransformerIterator<T,R> delegate) {
+  public TTransformerIteratorImpl(final TTransformerIterator<T, R> delegate) {
     this._delegate = delegate;
     _TTransformerIterator_TIterator_0 = new TTransformerIterator_TIterator_0_AdapterImpl(delegate);
   }
   
-  public Function1<? super T,? extends R> getFunction() {
+  public Function1<? super T, ? extends R> getFunction() {
     return _delegate.getFunction();
   }
   
-  public void setFunction(final Function1<? super T,? extends R> function) {
+  public void setFunction(final Function1<? super T, ? extends R> function) {
     _delegate.setFunction(function);
   }
   
@@ -30,7 +30,7 @@ public class TTransformerIteratorImpl<T, R> implements TTransformerIterator<T,R>
   
   public R _next() {
     final T o = this.origNext();
-    Function1<? super T,? extends R> _function = this.getFunction();
+    Function1<? super T, ? extends R> _function = this.getFunction();
     return _function.apply(o);
   }
   

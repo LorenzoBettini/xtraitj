@@ -5,10 +5,10 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.example.examples.extensions.traits.TTransformerIterator_TIterator_0_Adapter;
 
 @SuppressWarnings("all")
-public interface TTransformerIterator<T, R> extends TTransformerIterator_TIterator_0_Adapter<T,R> {
-  public abstract Function1<? super T,? extends R> getFunction();
+public interface TTransformerIterator<T, R> extends TTransformerIterator_TIterator_0_Adapter<T, R> {
+  public abstract Function1<? super T, ? extends R> getFunction();
   
-  public abstract void setFunction(final Function1<? super T,? extends R> function);
+  public abstract void setFunction(final Function1<? super T, ? extends R> function);
   
   public abstract R next();
   

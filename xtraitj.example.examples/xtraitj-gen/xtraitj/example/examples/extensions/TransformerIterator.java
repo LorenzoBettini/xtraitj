@@ -6,7 +6,7 @@ import xtraitj.example.examples.extensions.traits.TTransformerIterator;
 import xtraitj.example.examples.extensions.traits.impl.TTransformerIteratorImpl;
 
 @SuppressWarnings("all")
-public class TransformerIterator<T, R> implements Iterator<R>, TTransformerIterator<T,R> {
+public class TransformerIterator<T, R> implements Iterator<R>, TTransformerIterator<T, R> {
   private Iterator<T> iterator;
   
   public Iterator<T> getIterator() {
@@ -17,22 +17,22 @@ public class TransformerIterator<T, R> implements Iterator<R>, TTransformerItera
     this.iterator = iterator;
   }
   
-  private Function1<? super T,? extends R> function;
+  private Function1<? super T, ? extends R> function;
   
-  public Function1<? super T,? extends R> getFunction() {
+  public Function1<? super T, ? extends R> getFunction() {
     return this.function;
   }
   
-  public void setFunction(final Function1<? super T,? extends R> function) {
+  public void setFunction(final Function1<? super T, ? extends R> function) {
     this.function = function;
   }
   
-  public TransformerIterator(final Iterator<T> iterator, final Function1<? super T,? extends R> function) {
+  public TransformerIterator(final Iterator<T> iterator, final Function1<? super T, ? extends R> function) {
     this.iterator = iterator;
     this.function = function;
   }
   
-  private TTransformerIteratorImpl<T,R> _TTransformerIterator = new TTransformerIteratorImpl(this);
+  private TTransformerIteratorImpl<T, R> _TTransformerIterator = new TTransformerIteratorImpl(this);
   
   public R next() {
     return _TTransformerIterator._next();
