@@ -375,7 +375,7 @@ class XtraitjJvmModelUtil {
 	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
 		candidates.findFirst[
 			name == member.op.fieldName &&
-			type.sameType(member.returnType)
+			it.sameType(type, member.returnType)
 		]
 	}
 

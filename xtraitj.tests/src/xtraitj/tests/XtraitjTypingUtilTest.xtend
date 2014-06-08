@@ -110,7 +110,7 @@ class XtraitjTypingUtilTest {
 		val t2 = m2.type
 		assertEquals(
 			'''failed expected: «mustBeTheSame» - «t1.simpleName», «t2.simpleName»''',
-			mustBeTheSame, t1.sameType(t2)
+			mustBeTheSame, m1.sameType(t1, t2)
 		)
 	}
 

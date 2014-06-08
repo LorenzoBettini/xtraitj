@@ -73,11 +73,75 @@ class XtraitjValidatorTest {
 		
 		class C uses T {}
 		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
-				XtraitjValidator::MISSING_REQUIRED_FIELD,
-				"Class must provide required field 'String s'"
-			)
+			assertMissingRequiredField('String s')
+		]
+	}
+
+	@Test def void testClassMissingFieldWithCorrectTypeArgument() {
+		'''
+import java.util.List
+
+trait T {
+	List<Integer> integers;
+}
+
+class C uses T {
+	List <String > integers ;
+}
+		'''.parse => [
+			assertMissingRequiredField('List<Integer> integers')
+		]
+	}
+
+	@Test def void testClassMissingFieldInThePresenceOfTypeArguments() {
+		'''
+trait T {
+	String s;
+	List<String> strings;
+}
+
+trait T1 {
+	int i;
+}
+
+class C uses T, T1 {
+	String s ;
+	List <String > strings ;
+}
+		'''.parse => [
+			assertMissingRequiredField('int i')
+		]
+	}
+
+	@Test def void testClassMissingFieldAfterTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T<String> {
+	List<Integer> r ;
+}
+		'''.parse => [
+			assertMissingRequiredField('List<String> r')
+		]
+	}
+
+	@Test def void testClassProvidesFieldAfterTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T<String> {
+	List<String> r ;
+}
+		'''.parse => [
+			assertNoErrors
 		]
 	}
 
@@ -834,6 +898,14 @@ class XtraitjValidatorTest {
 			XtraitjPackage::eINSTANCE.TJClass,
 			XtraitjValidator::MISSING_INTERFACE_METHOD,
 			"Class must provide interface method '" + methodRepr + "'"
+		)
+	}
+
+	def private assertMissingRequiredField(EObject o, String fieldRepr) {
+		o.assertError(
+			XtraitjPackage::eINSTANCE.TJClass,
+			XtraitjValidator::MISSING_REQUIRED_FIELD,
+			"Class must provide required field '" + fieldRepr + "'"
 		)
 	}
 

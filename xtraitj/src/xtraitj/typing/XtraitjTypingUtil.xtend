@@ -6,6 +6,7 @@ import org.eclipse.xtext.xbase.typesystem.legacy.StandardTypeReferenceOwner
 import org.eclipse.xtext.xbase.typesystem.references.OwnedConverter
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
 import org.eclipse.xtext.common.types.util.Primitives
+import org.eclipse.emf.ecore.EObject
 
 class XtraitjTypingUtil {
 	
@@ -27,6 +28,21 @@ class XtraitjTypingUtil {
 		return type1.isAssignableFrom(type2) && type2.isAssignableFrom(type1)
 	}
 
+	def sameType(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
+		if (t1 == null || t2 == null)
+			return false
+		// for primitive types, they must be considered the
+		// same only if they refer to the same type
+		// otherwise int is considered the same as Integer
+		// but in Java method signatures they are not the same!
+		if (t1.primitive || t2.primitive)
+			return t1.type == t2.type
+		
+		val type1 = t1.toLightweightTypeReference(context)
+		val type2 = t2.toLightweightTypeReference(context)
+		return type1.isAssignableFrom(type2) && type2.isAssignableFrom(type1)
+	}
+
 	def isSubtype(JvmTypeReference t1, JvmTypeReference t2) {
 		if (t1 == null || t2 == null)
 			return false
@@ -44,6 +60,11 @@ class XtraitjTypingUtil {
 	
 	def toLightweightTypeReference(JvmTypeReference typeRef) {
 		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, typeRef))
+		converter.toLightweightReference(typeRef)
+	}
+
+	def toLightweightTypeReference(JvmTypeReference typeRef, EObject context) {
+		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, context))
 		converter.toLightweightReference(typeRef)
 	}
 

@@ -102,6 +102,19 @@ class XtraitjInputs {
 		'''
 	}
 
+	def classUsesTraitWithParameterizedFields() {
+		'''
+import java.util.List
+
+trait T {
+	List<Integer> integers;
+}
+
+class C uses T {
+}
+		'''
+	}
+
 	def classWithTraitSum() {
 		'''
 		package tests;

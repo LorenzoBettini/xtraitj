@@ -233,6 +233,12 @@ class XtraitjJvmModelUtilTest {
 			("boolean b, String s")
 	}
 
+	@Test def void testClassTypeParameterizedRequiredFields() {
+		classUsesTraitWithParameterizedFields.parse.classes.head.
+		assertAllRequiredFieldOperations
+			("List<Integer> integers")
+	}
+
 	@Test def void testTraitAllJvmRequiredMethods() {
 		'''
 		trait T uses T1 {}
