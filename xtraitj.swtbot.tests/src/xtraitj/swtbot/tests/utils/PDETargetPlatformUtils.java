@@ -1,16 +1,4 @@
-/*
- * Copyright (c) 2005, 2010 Borland Software Corporation and others
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Artem Tikhomirov (Borland) - initial API and implementation
- *    Mickael Istria (EBM Websourcing) - Support for target platform creation
- */
-package xtraitj.swtbot.tests;
+package xtraitj.swtbot.tests.utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,11 +20,16 @@ import org.osgi.framework.Bundle;
 /**
  * Implements workaround suggested here:
  * https://bugs.eclipse.org/bugs/show_bug.cgi?id=343156
+ * This is required when running SwtBot tests in Tycho
+ * that requires the PDE, for example, for testing that the
+ * imported projects compile fine, or if they use the DSL, which
+ * requires PDE projects dependencies.
  * 
- * @author artem
  * @author Lorenzo Bettini - some adaptations
  */
-public class Utils {
+public class PDETargetPlatformUtils {
+	
+	private static boolean targetPlatformAlreadySet = false;
 
 	/**
 	 * Sets a target platform in the test platform to get workspace builds OK
@@ -45,6 +38,18 @@ public class Utils {
 	 * @throws Exception
 	 */
 	public static void setTargetPlatform() throws Exception {
+		if (System.getProperty("buildingWithTycho") != null) {
+			if (targetPlatformAlreadySet) {
+				System.out.println("Target platform already set");
+				return;
+			}
+			targetPlatformAlreadySet = true;
+			System.out.println("Generating a target platform");
+		} else {
+			System.out.println("Using the Workbench's target platform");
+			return;
+		}
+		
 		ITargetPlatformService tpService = TargetPlatformService.getDefault();
 		ITargetDefinition targetDef = tpService.newTarget();
 		targetDef.setName("Tycho platform");
@@ -65,6 +70,7 @@ public class Utils {
 				bundleContainers.add(tpService.newDirectoryLocation(folder.getAbsolutePath()));
 			}
 		}
+		System.out.println("");
 		System.out.println("Bundles added the target platform.");
 		targetDef.setTargetLocations(bundleContainers.toArray(new ITargetLocation[bundleContainers.size()]));
 		targetDef.setArch(Platform.getOSArch());

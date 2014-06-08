@@ -28,6 +28,8 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import xtraitj.swtbot.tests.utils.PDETargetPlatformUtils;
+
 public class XtraitjSwtbotAbstractTests {
 
 	protected static final String PROJECT_TYPE = "Xtraitj Project";
@@ -36,6 +38,8 @@ public class XtraitjSwtbotAbstractTests {
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		PDETargetPlatformUtils.setTargetPlatform();
+		
 		bot = new SWTWorkbenchBot();
 //		try {
 //			bot.viewByTitle("Welcome").close();
