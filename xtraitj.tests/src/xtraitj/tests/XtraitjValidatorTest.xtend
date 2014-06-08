@@ -445,6 +445,40 @@ class C uses T<String> {
 		]
 	}
 
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics4() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface2
+		
+		trait T1<T> {
+			T n(int i) { return null; }
+		}
+		
+		// required List<T> n(int i) provided T n(int i)
+		class C implements MyGenericTestInterface2<String> uses T1<String> {}
+		'''.parse => [
+			assertMissingInterfaceMethod("List<String> n(int)")
+		]
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenericsWithCovariantReturnType() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface2
+		import java.util.ArrayList
+		
+		trait T1<T> {
+			ArrayList<T> n(int i) { return null; }
+		}
+		
+		// required List<T> n(int i) provided ArrayList<T> n(int i)
+		// OK: covariant return type
+		class C implements MyGenericTestInterface2<String> uses T1<String> {}
+		'''.parse => [
+			assertNoErrors
+		]
+	}
+
 	@Test def void testDuplicateTraitReference() {
 		'''
 		trait T {}

@@ -1284,6 +1284,36 @@ class CUsesGeneric2 uses T2 {
 		'''
 	}
 
+	def classImplementsAllGenericInterfaceMethodsWithCovariantReturnType() {
+		'''
+		package tests;
+		
+		import xtraitj.input.tests.MyGenericTestInterface2
+		import java.util.ArrayList
+		
+		trait T1<U> {
+			ArrayList<U> n(int i) { return null; }
+		}
+		
+		class C<U> implements MyGenericTestInterface2<U> uses T1<U> {}
+		'''
+	}
+
+	def classImplementsAllGenericInterfaceMethodsWithCovariantReturnType2() {
+		'''
+		package tests;
+		
+		import xtraitj.input.tests.MyGenericTestInterface2
+		import java.util.ArrayList
+		
+		trait T1<U> {
+			ArrayList<U> n(int i) { return null; }
+		}
+		
+		class C implements MyGenericTestInterface2<String> uses T1<String> {}
+		'''
+	}
+
 	def traitUsesGenericTraitWithRename() {
 		'''
 package tests;

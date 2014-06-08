@@ -57,6 +57,21 @@ class XtraitjTypingUtil {
 		val type2 = t2.toLightweightTypeReference
 		type2.isAssignableFrom(type1)
 	}
+
+	def isSubtype(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
+		if (t1 == null || t2 == null)
+			return false
+		// for primitive types, they must be considered the
+		// subtype only if they refer to the same type
+		// otherwise int is considered subtype of Integer
+		// but in Java method signatures they are different!
+		if (t1.primitive || t2.primitive)
+			return t1.type == t2.type
+
+		val type1 = t1.toLightweightTypeReference(context)
+		val type2 = t2.toLightweightTypeReference(context)
+		type2.isAssignableFrom(type1)
+	}
 	
 	def toLightweightTypeReference(JvmTypeReference typeRef) {
 		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, typeRef))

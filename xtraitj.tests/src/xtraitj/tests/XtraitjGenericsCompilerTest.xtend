@@ -1083,6 +1083,58 @@ public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
 		]
 	}
 
+	@Test def void testClassImplementsAllGenericInterfaceMethodsWithCovariantReturnType() {
+		classImplementsAllGenericInterfaceMethodsWithCovariantReturnType.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.ArrayList;
+import tests.traits.T1;
+import tests.traits.impl.T1Impl;
+import xtraitj.input.tests.MyGenericTestInterface2;
+
+@SuppressWarnings("all")
+public class C<U> implements MyGenericTestInterface2<U>, T1<U> {
+  private T1Impl<U> _T1 = new T1Impl(this);
+  
+  public ArrayList<U> n(final int i) {
+    return _T1._n(i);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testClassImplementsAllGenericInterfaceMethodsWithCovariantReturnType2() {
+		classImplementsAllGenericInterfaceMethodsWithCovariantReturnType2.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.ArrayList;
+import tests.traits.T1;
+import tests.traits.impl.T1Impl;
+import xtraitj.input.tests.MyGenericTestInterface2;
+
+@SuppressWarnings("all")
+public class C implements MyGenericTestInterface2<String>, T1<String> {
+  private T1Impl<String> _T1 = new T1Impl(this);
+  
+  public ArrayList<String> n(final int i) {
+    return _T1._n(i);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithRename() {
 		traitUsesGenericTraitWithRename.compile[
 

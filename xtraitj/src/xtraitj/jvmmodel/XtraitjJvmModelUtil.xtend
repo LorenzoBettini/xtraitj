@@ -413,14 +413,15 @@ class XtraitjJvmModelUtil {
 	 * and parameters' types must be the same
 	 */
 	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
-		returnType.isSubtype(member.returnType) &&
+		val context = it.op
+		context.isSubtype(returnType, member.returnType) &&
 		parametersTypes.size == member.parametersTypes.size &&
 		{
 			var ok = true
 			val paramIterator = parametersTypes.iterator
 			val memberParamIterator = member.parametersTypes.iterator
 			while (paramIterator.hasNext && ok) {
-				if (!it.op.sameType
+				if (!context.sameType
 						(paramIterator.next, memberParamIterator.next))
 					ok = false
 			}
