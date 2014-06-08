@@ -813,6 +813,24 @@ class C uses T<String> {
  		]
 	}
 
+	@Test def void testMethodConflictsWithAlias2() {
+		'''
+trait TFirst {
+	String s() { return ""; }
+}
+
+trait T1 uses TFirst[alias s as s2] {
+	
+}
+
+trait T2 uses T1[alias s as s2] {
+	
+}
+ 		'''.parse => [
+ 			assertAlreadyExistingMember("s2", XtraitjPackage::eINSTANCE.TJAliasOperation)
+ 		]
+	}
+
 	@Test def void testDuplicateDeclarations() {
 		'''
 		trait T {}

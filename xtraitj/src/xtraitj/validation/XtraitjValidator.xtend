@@ -443,8 +443,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 
 	def private errorForAlterationToExistingMember(TJTraitOperation op, 
 				String newname, EStructuralFeature feature) {
-		if (op.containingTraitOperationExpression.trait.members.
-			exists[name == newname]
+		if (op.containingTraitOperationExpression.trait.jvmAllOperations.
+			exists[simpleName == newname]
 		) {
 			error(
 				"Member already exists '" +
