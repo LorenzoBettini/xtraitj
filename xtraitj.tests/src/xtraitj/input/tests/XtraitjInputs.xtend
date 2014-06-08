@@ -1256,6 +1256,34 @@ class CUsesGeneric2 uses T2 {
 		'''
 	}
 
+	def classImplementsAllGenericInterfaceMethods2() {
+		'''
+		package tests;
+		
+		import xtraitj.input.tests.MyGenericTestInterface3
+		
+		trait T1 {
+			Integer n(int i) { return null; }
+		}
+		
+		class C implements MyGenericTestInterface3<Integer> uses T1 {}
+		'''
+	}
+
+	def classImplementsAllGenericInterfaceMethods3() {
+		'''
+		package tests;
+		
+		import xtraitj.input.tests.MyGenericTestInterface3
+		
+		trait T1<U> {
+			U n(int i) { return null; }
+		}
+		
+		class C<U> implements MyGenericTestInterface3<U> uses T1<U> {}
+		'''
+	}
+
 	def traitUsesGenericTraitWithRename() {
 		'''
 package tests;

@@ -208,9 +208,16 @@ class XtraitjJvmModelUtil {
 	}
 
 	def jvmAllInterfaceMethods(TJClass e) {
-		e.interfaces.map[type].filter(typeof(JvmGenericType)).
-			map[allFeatures].flatten.filter(typeof(JvmOperation)).
+		e.interfaces.map[jvmAllInterfaceMethods].flatten
+	}
+
+	def jvmAllInterfaceMethods(JvmParameterizedTypeReference e) {
+		val type = e.type
+		if (type instanceof JvmGenericType) {
+			return type.allFeatures.filter(typeof(JvmOperation)).
 				filter[declaringType.identifier != "java.lang.Object"]
+		}
+		return emptyList
 	}
 
 	def jvmAllRequiredMethodOperations(TJTraitReference e) {
@@ -272,6 +279,14 @@ class XtraitjJvmModelUtil {
 			map[traitRef | 
 				traitRef.jvmAllMethodOperations.
 					createXtraitjJvmOperations(traitRef)
+			].flatten
+	}
+
+	def xtraitjJvmAllInterfaceMethods(TJClass e) {
+		e.interfaces.
+			map[interf | 
+				interf.jvmAllInterfaceMethods.
+					createXtraitjJvmOperations(interf)
 			].flatten
 	}
 
@@ -393,6 +408,13 @@ class XtraitjJvmModelUtil {
 		]
 	}
 
+	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
+		candidates.findFirst[
+			op.simpleName == member.op.simpleName &&
+			compliant(it, member)
+		]
+	}
+
 	/**
 	 * it's return type must be subtype of member's return type
 	 * and parameters' types must be the same
@@ -503,6 +525,20 @@ class XtraitjJvmModelUtil {
 		f1 != f2 && 
 		f1.simpleName == f2.simpleName &&
 		!f1.compliant(f2)
+	}
+
+	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, JvmParameterizedTypeReference ref) {
+		ops.map[
+			op |
+			val arguments = ref.arguments
+			new XtraitjJvmOperation(
+				op,
+				op.returnType.replaceTypeParameters(arguments),
+				op.parameters.map[
+					parameterType.replaceTypeParameters(arguments)
+				]
+			)
+		]
 	}
 
 	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, TJTraitReference traitReference) {

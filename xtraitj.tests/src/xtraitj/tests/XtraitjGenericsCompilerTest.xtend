@@ -1033,6 +1033,56 @@ public class C implements MyGenericTestInterface<String>, MyGenericTestInterface
 		]
 	}
 
+	@Test def void testClassImplementsAllGenericInterfaceMethods2() {
+		classImplementsAllGenericInterfaceMethods2.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.traits.T1;
+import tests.traits.impl.T1Impl;
+import xtraitj.input.tests.MyGenericTestInterface3;
+
+@SuppressWarnings("all")
+public class C implements MyGenericTestInterface3<Integer>, T1 {
+  private T1Impl _T1 = new T1Impl(this);
+  
+  public Integer n(final int i) {
+    return _T1._n(i);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testClassImplementsAllGenericInterfaceMethods3() {
+		classImplementsAllGenericInterfaceMethods3.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.traits.T1;
+import tests.traits.impl.T1Impl;
+import xtraitj.input.tests.MyGenericTestInterface3;
+
+@SuppressWarnings("all")
+public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
+  private T1Impl<U> _T1 = new T1Impl(this);
+  
+  public U n(final int i) {
+    return _T1._n(i);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithRename() {
 		traitUsesGenericTraitWithRename.compile[
 
