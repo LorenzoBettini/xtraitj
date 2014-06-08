@@ -412,6 +412,39 @@ class C uses T<String> {
 		]
 	}
 
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics2() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface
+		
+		trait T1<T> {
+			int m(T l) { return 0; }
+		}
+		
+		// required m(List<T>) provided m(T)
+		class C implements MyGenericTestInterface<String> uses T1<String> {}
+		'''.parse => [
+			assertMissingInterfaceMethod("int m(List<String>)")
+		]
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics3() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface
+		import java.util.ArrayList
+		
+		trait T1<T> {
+			int m(ArrayList<T> l) { return 0; }
+		}
+		
+		// required m(List<T>) provided m(ArrayList<T>)
+		class C implements MyGenericTestInterface<String> uses T1<String> {}
+		'''.parse => [
+			assertMissingInterfaceMethod("int m(List<String>)")
+		]
+	}
+
 	@Test def void testDuplicateTraitReference() {
 		'''
 		trait T {}

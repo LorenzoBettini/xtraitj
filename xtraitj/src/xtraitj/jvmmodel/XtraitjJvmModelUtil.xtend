@@ -401,13 +401,6 @@ class XtraitjJvmModelUtil {
 		]
 	}
 
-	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, JvmOperation member) {
-		candidates.findFirst[
-			op.simpleName == member.simpleName &&
-			compliant(it, member)
-		]
-	}
-
 	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
 		candidates.findFirst[
 			op.simpleName == member.op.simpleName &&
@@ -427,28 +420,8 @@ class XtraitjJvmModelUtil {
 			val paramIterator = parametersTypes.iterator
 			val memberParamIterator = member.parametersTypes.iterator
 			while (paramIterator.hasNext && ok) {
-				if (!paramIterator.next.sameType
-						(memberParamIterator.next))
-					ok = false
-			}
-			ok
-		}
-	}
-
-	/**
-	 * it's return type must be subtype of member's return type
-	 * and parameters' types must be the same
-	 */
-	def compliant(XtraitjJvmOperation it, JvmOperation member) {
-		returnType.isSubtype(member.returnType) &&
-		parametersTypes.size == member.parameters.size &&
-		{
-			var ok = true
-			val paramIterator = parametersTypes.iterator
-			val memberParamIterator = member.parameters.iterator
-			while (paramIterator.hasNext && ok) {
-				if (!paramIterator.next.sameType
-						(memberParamIterator.next.parameterType))
+				if (!it.op.sameType
+						(paramIterator.next, memberParamIterator.next))
 					ok = false
 			}
 			ok
