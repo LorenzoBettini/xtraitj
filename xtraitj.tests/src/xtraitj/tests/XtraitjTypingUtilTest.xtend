@@ -119,7 +119,7 @@ class XtraitjTypingUtilTest {
 		val t2 = m2.type
 		assertEquals(
 			'''failed expected: «mustBeSubtype» - «t1.simpleName» <: «t2.simpleName»''',
-			mustBeSubtype, t1.isSubtype(t2)
+			mustBeSubtype, m1.isSubtype(t1, t2)
 		)
 	}
 }

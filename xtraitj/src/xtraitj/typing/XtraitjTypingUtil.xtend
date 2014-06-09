@@ -13,21 +13,6 @@ class XtraitjTypingUtil {
 	@Inject CommonTypeComputationServices services;
 	@Inject extension Primitives
 	
-	def sameType(JvmTypeReference t1, JvmTypeReference t2) {
-		if (t1 == null || t2 == null)
-			return false
-		// for primitive types, they must be considered the
-		// same only if they refer to the same type
-		// otherwise int is considered the same as Integer
-		// but in Java method signatures they are not the same!
-		if (t1.primitive || t2.primitive)
-			return t1.type == t2.type
-		
-		val type1 = t1.toLightweightTypeReference
-		val type2 = t2.toLightweightTypeReference
-		return type1.isAssignableFrom(type2) && type2.isAssignableFrom(type1)
-	}
-
 	def sameType(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
 		if (t1 == null || t2 == null)
 			return false
@@ -41,21 +26,6 @@ class XtraitjTypingUtil {
 		val type1 = t1.toLightweightTypeReference(context)
 		val type2 = t2.toLightweightTypeReference(context)
 		return type1.isAssignableFrom(type2) && type2.isAssignableFrom(type1)
-	}
-
-	def isSubtype(JvmTypeReference t1, JvmTypeReference t2) {
-		if (t1 == null || t2 == null)
-			return false
-		// for primitive types, they must be considered the
-		// subtype only if they refer to the same type
-		// otherwise int is considered subtype of Integer
-		// but in Java method signatures they are different!
-		if (t1.primitive || t2.primitive)
-			return t1.type == t2.type
-
-		val type1 = t1.toLightweightTypeReference
-		val type2 = t2.toLightweightTypeReference
-		type2.isAssignableFrom(type1)
 	}
 
 	def isSubtype(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
@@ -73,11 +43,6 @@ class XtraitjTypingUtil {
 		type2.isAssignableFrom(type1)
 	}
 	
-	def toLightweightTypeReference(JvmTypeReference typeRef) {
-		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, typeRef))
-		converter.toLightweightReference(typeRef)
-	}
-
 	def toLightweightTypeReference(JvmTypeReference typeRef, EObject context) {
 		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, context))
 		converter.toLightweightReference(typeRef)
