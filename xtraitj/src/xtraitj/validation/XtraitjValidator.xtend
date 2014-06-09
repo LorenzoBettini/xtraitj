@@ -106,8 +106,11 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	 */
 	override protected boolean isStaticContext(EObject element) {
 		if(element instanceof JvmGenericType) {
-			if (element.associatedTrait != null ||
-					element.associatedTraitReference != null)
+			if (element.associatedTrait != null
+					||
+					element.associatedTraitReference != null
+					||
+					element.associatedTJClass!= null)
 				return element.static;
 		}
 		return super.isStaticContext(element);
@@ -116,15 +119,16 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	/**
 	 * This is an additional check we have to perform, since for a trait we infer
 	 * several Java elements; the Xbase implementation of checkTypeParameterNotUsedInStaticContext
-	 * seems to assume that the type parameter is declared in one place only.
+	 * seems to assume that the type parameter is declared in one place only; we
+	 * need to do the same even for our classes.
 	 */
 	@Check 
-	def void checkTypeParameterRefersToContainerTrait(JvmTypeReference ref) {
+	def void checkTypeParameterRefersToContainerTraitOrClass(JvmTypeReference ref) {
 		val type = ref.type
 		if(type instanceof JvmTypeParameter) {
-			val declaringTrait = type.eContainer
+			val container = type.eContainer
 			
-			if (!(declaringTrait instanceof TJTrait))
+			if (!(container instanceof TJTrait || container instanceof TJClass))
 				return; // nothing to check
 			
 			var EObject currentParent = logicalContainerProvider.getNearestLogicalContainer(ref);
@@ -133,11 +137,13 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					return;
 				
 				// check that this inferred type is associated to the same trait of the container
-				// of the type parameter
+				// of the type parameter (same for Xtraitj class)
 				if (currentParent instanceof JvmGenericType) {
-					val associatedTrait = currentParent.associatedTrait
-					if (associatedTrait != null) {
-						if (associatedTrait !== declaringTrait)
+					var EObject associated = currentParent.associatedTrait
+					if (associated == null)
+						associated = currentParent.associatedTJClass
+					if (associated != null) {
+						if (associated !== container)
 							error("Cannot make a static reference to the non-static type " + type.getName(), 
 								ref, TypesPackage.Literals.JVM_PARAMETERIZED_TYPE_REFERENCE__TYPE, -1, IssueCodes.STATIC_ACCESS_TO_INSTANCE_MEMBER);
 					}

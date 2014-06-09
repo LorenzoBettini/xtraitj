@@ -1048,6 +1048,38 @@ trait T2 uses T1[alias s as s2] {
 		)
 	}
 
+	@Test def void testWrongReferenceToTypeParameter2() {
+		'''
+		package tests;
+				
+		trait T2 {
+			T m() { return null; }
+		}
+
+		class TFirst<T> {
+			
+		}
+		'''.parse.assertErrorsAsStrings(
+			'''Cannot make a static reference to the non-static type T'''
+		)
+	}
+
+	@Test def void testWrongReferenceToTypeParameter3() {
+		'''
+		package tests;
+				
+		trait T2<T> {
+			T m() { return null; }
+		}
+
+		class TFirst {
+			T f;
+		}
+		'''.parse.assertErrorsAsStrings(
+			'''Cannot make a static reference to the non-static type T'''
+		)
+	}
+
 	@Test def void testWrongInstantiationOfTypeParameter() {
 		'''
 		package tests;
