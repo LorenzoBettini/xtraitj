@@ -2050,4 +2050,60 @@ public class T3Impl<V> implements T3<V> {
 			executeGeneratedJavaClassMethodAndAssert("C3", "m", "[foo, bar]")
 		]
 	}
+
+	@Test def void testCompliantRequiredFieldsWithGenerics() {
+		compliantRequiredFieldsWithGenerics.compile[
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T1;
+import tests.traits.T2;
+
+@SuppressWarnings("all")
+public interface T3 extends T1<String>, T2 {
+  public abstract int getI();
+  
+  public abstract void setI(final int i);
+  
+  public abstract List<String> getLl();
+  
+  public abstract void setLl(final List<String> ll);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testCompliantRequiredFieldsWithGenericsAfterTypeParamInstantiation() {
+		compliantRequiredFieldsWithGenericsAfterTypeParamInstantiation.compile[
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T1;
+import tests.traits.T2;
+
+@SuppressWarnings("all")
+public interface T3 extends T1<String>, T2 {
+  public abstract int getI();
+  
+  public abstract void setI(final int i);
+  
+  public abstract List<String> getLl();
+  
+  public abstract void setLl(final List<String> ll);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }

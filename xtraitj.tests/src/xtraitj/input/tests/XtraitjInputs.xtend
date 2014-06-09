@@ -828,6 +828,51 @@ class C uses T3 {
 		'''
 	}
 
+	def compliantRequiredFieldsWithGenerics() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	int i;
+	List<String> ll;
+}
+
+trait T2  {
+	int i;
+	List<String> ll;
+}
+
+trait T3 uses T1<String>, T2 {
+	
+}
+		'''
+	}
+
+	def compliantRequiredFieldsWithGenericsAfterTypeParamInstantiation() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	int i;
+	List<T> ll;
+}
+
+trait T2  {
+	int i;
+	List<String> ll;
+}
+
+// the required field now has the same type List<String>
+trait T3 uses T1<String>, T2 {
+	
+}
+		'''
+	}
+
 	def compliantRequiredMethods() {
 		'''
 		package tests;

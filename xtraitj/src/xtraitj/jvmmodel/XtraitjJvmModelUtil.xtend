@@ -261,6 +261,11 @@ class XtraitjJvmModelUtil {
 			].flatten
 	}
 
+	def xtraitjJvmAllRequiredFieldOperations(TJTraitReference traitRef) {
+		traitRef.jvmAllRequiredFieldOperations.
+					createXtraitjJvmOperations(traitRef)
+	}
+
 	def xtraitjJvmAllRequiredMethodOperations(TJClass e) {
 		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
 	}
@@ -504,6 +509,12 @@ class XtraitjJvmModelUtil {
 	def conflictsWith(JvmOperation f1, JvmOperation f2) {
 		f1 != f2 && 
 		f1.simpleName == f2.simpleName &&
+		!f1.compliant(f2)
+	}
+
+	def conflictsWith(XtraitjJvmOperation f1, XtraitjJvmOperation f2) {
+		f1.op != f2.op && 
+		f1.op.simpleName == f2.op.simpleName &&
 		!f1.compliant(f2)
 	}
 

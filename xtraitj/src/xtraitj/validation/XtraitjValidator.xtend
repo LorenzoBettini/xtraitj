@@ -251,10 +251,10 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 
 	@Check def void checkConflicts(TJDeclaration d) {
 		for (t1 : d.traitReferences) {
-			for (f1 : t1.jvmAllRequiredFieldOperations) {
+			for (f1 : t1.xtraitjJvmAllRequiredFieldOperations) {
 				for (t2 : d.traitReferences) {
 					if (t1 != t2) {
-						if (t2.jvmAllRequiredFieldOperations.exists[conflictsWith(f1)]) {
+						if (t2.xtraitjJvmAllRequiredFieldOperations.exists[conflictsWith(f1)]) {
 							error(
 								"Field conflict '" + 
 								f1.fieldRepresentation + "' in " +

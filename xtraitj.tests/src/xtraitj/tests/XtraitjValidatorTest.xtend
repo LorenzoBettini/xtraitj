@@ -637,6 +637,44 @@ class C uses T<String> {
  		]
 	}
 
+	@Test def void testFieldConflictsWithGenerics() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> i;
+		}
+		
+		trait T2 {
+			List<String> i;
+		}
+		
+		trait T3 uses T1<Integer>, T2 {
+		}'''.parse => [
+ 			assertFieldConflict("List<Integer> i", "T1")
+ 			assertFieldConflict("List<String> i", "T2")
+ 		]
+	}
+
+	@Test def void testFieldConflictsWithGenerics2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> i;
+		}
+		
+		trait T2 {
+			List<String> i;
+		}
+		
+		trait T3<U> uses T1<U>, T2 {
+		}'''.parse => [
+ 			assertFieldConflict("List<U> i", "T1")
+ 			assertFieldConflict("List<String> i", "T2")
+ 		]
+	}
+
 	@Test def void testRequiredMethodConflicts() {
 		'''
 		trait T1 {
