@@ -608,6 +608,25 @@ class XtraitjJvmModelUtilTest {
 		]
 	}
 
+	@Test def void testStripGetter() {
+		"".assertEquals(null.stripGetter)
+		"foo".assertEquals("foo".stripGetter)
+		"foo".assertEquals("getFoo".stripGetter)
+		"foo".assertEquals("isFoo".stripGetter)
+		"get".assertEquals("get".stripGetter)
+		"is".assertEquals("is".stripGetter)
+	}
+
+	@Test def void testRenameGetterOrSetter() {
+		"".assertEquals(null.renameGetterOrSetter("bar"))
+		"getBar".assertEquals("getFoo".renameGetterOrSetter("bar"))
+		"setBar".assertEquals("setFoo".renameGetterOrSetter("bar"))
+		"isBar".assertEquals("isFoo".renameGetterOrSetter("bar"))
+		"bar".assertEquals("get".renameGetterOrSetter("bar"))
+		"bar".assertEquals("set".renameGetterOrSetter("bar"))
+		"bar".assertEquals("is".renameGetterOrSetter("bar"))
+	}
+
 	def private assertAssociatedInterface(TJTrait o, String expectedName) {
 		expectedName.assertEquals(o.associatedInterface.simpleName)
 	}

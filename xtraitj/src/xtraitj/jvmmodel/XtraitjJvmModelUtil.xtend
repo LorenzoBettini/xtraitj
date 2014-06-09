@@ -465,6 +465,9 @@ class XtraitjJvmModelUtil {
 	}
 
 	def renameGetterOrSetter(String opName, String newname) {
+		if (opName === null)
+			return ""
+		
 		if (opName.startsWith("get") && opName.length() > 3 && Character::isUpperCase(opName.charAt(3)))
 			return "get" + newname.toFirstUpper
 
@@ -478,6 +481,9 @@ class XtraitjJvmModelUtil {
 	}
 
 	def stripGetter(String opName) {
+		if (opName === null)
+			return ""
+		
 		if (opName.startsWith("get") && opName.length() > 3 && Character::isUpperCase(opName.charAt(3)))
 			return Introspector::decapitalize(opName.substring(3));
 
