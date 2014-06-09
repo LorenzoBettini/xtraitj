@@ -767,6 +767,29 @@ class C uses T<String> {
  		]
 	}
 
+	@Test def void testMethodConflictsWithGenerics() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+trait T3 uses T1<Integer>, T2 {
+	
+}
+		'''.parse => [
+ 			assertMethodConflict("List<Integer> m()", "T1")
+ 			assertMethodConflict("List<String> m()", "T2")
+ 		]
+	}
+
 	@Test def void testRequiredMethodConflictsWithDefinedMethod() {
 		'''
 		trait T1 {

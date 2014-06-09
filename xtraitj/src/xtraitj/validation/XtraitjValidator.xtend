@@ -268,10 +268,10 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				}
 			}
 			
-			for (f1 : t1.jvmAllRequiredMethodOperations) {
+			for (f1 : t1.xtraitjJvmAllRequiredMethodOperations) {
 				for (t2 : d.traitReferences) {
 					if (t1 != t2) {
-						if (t2.jvmAllRequiredMethodOperations.exists[conflictsWith(f1)]) {
+						if (t2.xtraitjJvmAllRequiredMethodOperations.exists[conflictsWith(f1)]) {
 							error(
 								"Method conflict '" + 
 								f1.methodRepresentation + "' in " +

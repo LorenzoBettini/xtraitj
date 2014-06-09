@@ -2106,4 +2106,52 @@ public interface T3 extends T1<String>, T2 {
 			assertGeneratedJavaCodeCompiles
 		]
 	}
+
+	@Test def void testCompliantRequiredMethodsWithGenerics() {
+		compliantRequiredMethodsWithGenerics.compile[
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T1;
+import tests.traits.T2;
+
+@SuppressWarnings("all")
+public interface T3 extends T1<String>, T2 {
+  public abstract int i();
+  
+  public abstract List<String> m();
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testCompliantRequiredMethodsWithGenericsAfterTypeParamInstantiation() {
+		compliantRequiredMethodsWithGenericsAfterTypeParamInstantiation.compile[
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.T1;
+import tests.traits.T2;
+
+@SuppressWarnings("all")
+public interface T3 extends T1<String>, T2 {
+  public abstract int i();
+  
+  public abstract List<String> m();
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }

@@ -897,6 +897,51 @@ trait T3 uses T1<String>, T2 {
 		'''
 	}
 
+	def compliantRequiredMethodsWithGenerics() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<String> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+trait T3 uses T1<String>, T2 {
+	
+}
+		'''
+	}
+
+	def compliantRequiredMethodsWithGenericsAfterTypeParamInstantiation() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+// the required method now has the same type List<String>
+trait T3 uses T1<String>, T2 {
+	
+}
+		'''
+	}
+
 	def classImplementsAllInterfaceMethodsWithSum() {
 		'''
 		package tests;

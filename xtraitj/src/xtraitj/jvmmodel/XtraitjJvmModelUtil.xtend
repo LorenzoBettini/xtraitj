@@ -270,6 +270,11 @@ class XtraitjJvmModelUtil {
 		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
 	}
 
+	def xtraitjJvmAllRequiredMethodOperations(TJTraitReference traitRef) {
+		traitRef.jvmAllRequiredMethodOperations.
+					createXtraitjJvmOperations(traitRef)
+	}
+
 	def xtraitjJvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[
