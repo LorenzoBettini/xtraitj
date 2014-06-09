@@ -133,6 +133,34 @@ C
 	}
 
 	@Test
+	def void testOutlineOfRequirementsFromGenericInterface() {
+		IResourcesSetupUtil.createFile(TEST_PROJECT + "/src/CInterface.java",
+'''
+import java.util.List;
+
+public interface CInterface<T> {
+	List<T> m(T s);
+}
+'''.toString);
+
+		IResourcesSetupUtil.waitForAutoBuild
+		
+		'''
+package my.traits;
+
+class C implements CInterface<String> {
+}
+		'''.assertAllLabels(
+'''
+my.traits
+C
+  requirements
+    m(String) : List<String>
+'''
+		)
+	}
+
+	@Test
 	def void testOutlineForProvides() {
 		'''
 package my.traits;

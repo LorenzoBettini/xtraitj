@@ -70,7 +70,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def _createChildren(EObjectNode parentNode, TJClass c) {
 		nodesForTraitReferences(parentNode, c)
-		nodesForRequirements(parentNode, c, c.jvmAllInterfaceMethods)
+		nodesForRequirements(parentNode, c, c.xtraitjJvmAllInterfaceMethods)
 		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {
@@ -112,13 +112,13 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		nodesForRequirements(parentNode, d, emptyList)
 	}
 
-	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
+	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<XtraitjJvmOperation> interfaceMethods) {
 		val fieldRequirements = d.xtraitjJvmAllRequiredFieldOperations
 		val methodRequirements = d.xtraitjJvmAllRequiredMethodOperationsFromReferences
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
 			val reqNode = new XtraitjRequirementsNode(parentNode, images.getImage("externalize.gif"))
-			nodesForInterfaceMethods(reqNode, interfaceMethods)
+			nodesForRequirements(reqNode, interfaceMethods)
 			nodesForRequirements(reqNode, fieldRequirements)
 			nodesForRequirements(reqNode, methodRequirements)
 		}
@@ -134,12 +134,6 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		if (!provides.empty) {
 			val reqNode = new XtraitjProvidesNode(parentNode, images.getImage("externalize.gif"))
 			nodesForProvides(reqNode, provides)
-		}
-	}
-
-	def nodesForInterfaceMethods(XtraitjRequirementsNode reqNode, Iterable<JvmOperation> requirements) {
-		for (req : requirements) {
-			reqNode.createNode(req)
 		}
 	}
 
@@ -175,10 +169,22 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 						true
 					)
 			}
-			// the else will not happen anymore since we separated the case for
 			// interface methods
-//			else
-//				reqNode.createNode(req.op)
+			else
+				reqNode.createEObjectNode(
+					req.op,
+					_image(req.op),
+					new StyledString(
+						req.op.simpleName 
+						+ req.parametersTypes.parameterTypesToString
+					).append(
+						new StyledString(" : " + 
+							req.returnType.simpleName,
+							StyledString::DECORATIONS_STYLER
+						)
+					),
+					true
+				)
 		}
 	}
 
@@ -208,21 +214,6 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 	
-//	def _text(JvmOperation op) {
-//		val source = op.originalSource
-//		
-//		if (source == null) {
-//			super._text(op)
-//		}
-//		
-//		if (source instanceof TJField) {
-//			op.simpleName.stripGetter + " : " + 
-//			op.returnType.getSimpleName()
-//		} else {
-//			super._text(op)
-//		}
-//	}
-
 	def _isLeaf(TJMember m) {
 		return true;
 	}
@@ -235,7 +226,4 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		return true;
 	}
 
-	def _isLeaf(JvmOperation o) {
-		return true;
-	}
 }
