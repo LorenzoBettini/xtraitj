@@ -241,7 +241,4 @@ public class XtraitjSwtbotAbstractTests {
 		waitForAutoBuild();
 	}
 
-	protected void assertEqualsStrings(CharSequence expected, CharSequence actual) {
-		assertEquals(expected.toString().replaceAll("\r", ""), actual.toString());
-	}
 }

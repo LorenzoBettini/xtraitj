@@ -15,6 +15,7 @@ import xtraitj.XtraitjInjectorProvider
 import xtraitj.validation.XtraitjValidator
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.XtraitjPackage
+import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
 import static extension org.junit.Assert.*
 
@@ -1166,7 +1167,7 @@ trait T2 uses T1<String> {
 	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
-		expected.toString.trim.assertEquals(
+		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
 	}
 

@@ -4,6 +4,8 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
+
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 

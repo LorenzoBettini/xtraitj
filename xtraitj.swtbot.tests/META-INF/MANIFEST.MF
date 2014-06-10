@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.swtbot.go;bundle-version="2.1.0",
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.standalone,
  org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
- org.eclipse.pde.core;bundle-version="3.9.1"
+ org.eclipse.pde.core;bundle-version="3.9.1",
+ xtraitj.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 
