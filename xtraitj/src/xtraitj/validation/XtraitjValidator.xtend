@@ -33,6 +33,8 @@ import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.typing.XtraitjTypingUtil
+import org.eclipse.xtext.common.types.JvmUpperBound
 
 /**
  * Custom validation rules. 
@@ -88,6 +90,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val ANNOTATION_ON_TRAIT_FIELD = PREFIX + "AnnotationOnTraitField"
 	
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjTypingUtil
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -548,6 +551,25 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 					t1,
 					XtraitjPackage.eINSTANCE.TJTraitReference_Arguments,
 					IssueCodes.INVALID_NUMBER_OF_TYPE_ARGUMENTS);
+			} else {
+				for (i : 0..<numTypeArguments) {
+					val arg = typeArgs.get(i)
+					val param = typeParams.get(i)
+					
+					val upperBound = param.constraints.findFirst[it instanceof JvmUpperBound]
+					
+					if (upperBound !== null && !t1.isSubtype(arg, upperBound.typeReference)) {
+						error("The type " 
+							+ arg.simpleName
+							+ " is not a valid substitute for the bounded parameter " 
+							+ param.simpleName
+							+ " "
+							+ upperBound.simpleName,
+							arg,
+							TypesPackage.Literals.JVM_PARAMETERIZED_TYPE_REFERENCE__TYPE,
+							IssueCodes.TYPE_BOUNDS_MISMATCH);
+					}
+				}
 			}
 		}
 	}
