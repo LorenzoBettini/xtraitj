@@ -50,12 +50,22 @@ class XtraitjJvmModelUtil {
 
 	def associatedInterface(TJTraitReference t) {
 		val associated = t.associatedInterfaceType
-		if (t.operations.empty)
-			associated?.createTypeRef(
-				t.arguments.map[cloneWithProxies]
-			)
-		else
-			associated?.createTypeRef
+		try {
+			if (t.operations.empty)
+				associated?.createTypeRef(
+					t.arguments.map[cloneWithProxies]
+				)
+			else
+				associated?.createTypeRef
+		} catch (IllegalArgumentException e) {
+			// FIXME
+			// this can be due to the fact that we refer to a trait
+			// directly instead of using a parameterized type reference
+			// thus if type arguments are not correct, the creation of
+			// type reference will raise such exception.
+			// we check type arguments in the validator, but that's too late
+			return null
+		}
 	}
 
 	def associatedTraitInterface(TJTraitReference t) {
@@ -92,12 +102,22 @@ class XtraitjJvmModelUtil {
 
 	def associatedClass(TJTraitReference t) {
 		val associatedType = t.associatedClassType
-		if (t.operations.empty)
-			associatedType?.createTypeRef(
-				t.arguments.map[cloneWithProxies]
-			)
-		else
-			associatedType?.createTypeRef
+		try {
+			if (t.operations.empty)
+				associatedType?.createTypeRef(
+					t.arguments.map[cloneWithProxies]
+				)
+			else
+				associatedType?.createTypeRef
+		} catch (IllegalArgumentException e) {
+			// FIXME
+			// this can be due to the fact that we refer to a trait
+			// directly instead of using a parameterized type reference
+			// thus if type arguments are not correct, the creation of
+			// type reference will raise such exception.
+			// we check type arguments in the validator, but that's too late
+			return null
+		}
 	}
 
 	def associatedClassType(TJTraitReference t) {

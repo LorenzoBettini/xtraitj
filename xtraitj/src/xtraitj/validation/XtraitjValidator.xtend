@@ -7,7 +7,13 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
+import org.eclipse.xtext.xbase.validation.IssueCodes
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
@@ -26,12 +32,6 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
-import org.eclipse.xtext.common.types.JvmTypeReference
-import org.eclipse.xtext.common.types.JvmTypeParameter
-import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
-import org.eclipse.xtext.common.types.TypesPackage
-import org.eclipse.xtext.xbase.validation.IssueCodes
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
@@ -433,7 +433,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	@Check def void checkTraitRestrictOperation(TJRestrictOperation op) {
 		op.errorForRequiredMember("restrict", RESTRICTING_REQUIRED)
 	}
-	
+
 	def private errorForRequiredMember(TjTraitOperationForProvided op, 
 				String opName, String issue) {
 		val member = op.member
@@ -523,6 +523,32 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 				XtraitjPackage.eINSTANCE.TJConstructor_Name,
 				DUPLICATE_CONSTRUCTOR
 			)
+		}
+	}
+
+	/**
+	 * A similar check is performed in JvmTypeReferencesValidator.
+	 * 
+	 * However, since we refer to traits without using a type reference,
+	 * we need to implement this check ourselves.
+	 */
+	@Check def void checkTypeArgsAgainstTypeParameters(TJDeclaration d) {
+		for (t1 : d.traitReferences) {
+			val trait = t1.trait
+			val typeParams = trait.typeParameters
+			val typeArgs = t1.arguments
+			
+			val numTypeParameters = typeParams.size();
+			val numTypeArguments = typeArgs.size();
+			if(numTypeParameters != numTypeArguments) {
+				error("Incorrect number of type arguments for trait " 
+						+ trait.name
+						+ "; it cannot be parameterized with arguments " 
+						+ typeArgs.typeArgumentsRepresentation(),
+					t1,
+					XtraitjPackage.eINSTANCE.TJTraitReference_Arguments,
+					IssueCodes.INVALID_NUMBER_OF_TYPE_ARGUMENTS);
+			}
 		}
 	}
 }

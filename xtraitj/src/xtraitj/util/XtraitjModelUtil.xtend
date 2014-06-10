@@ -3,7 +3,9 @@ package xtraitj.util
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmTypeReference
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
@@ -16,7 +18,6 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import xtraitj.xtraitj.TJConstructor
 
 class XtraitjModelUtil {
 	
@@ -144,6 +145,12 @@ class XtraitjModelUtil {
 		"(" +
 			f.params.map[parameterType?.simpleName].join(", ")
 		+ ")"
+	}
+
+	def static typeArgumentsRepresentation(List<JvmTypeReference> typeArguments) {
+		"<" +
+			typeArguments.map[simpleName].join(",")
+		+ ">"
 	}
 
 	def static constructorRepresentation(TJConstructor c) {
