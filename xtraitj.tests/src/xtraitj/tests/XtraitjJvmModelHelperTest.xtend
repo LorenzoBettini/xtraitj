@@ -6,11 +6,13 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.input.tests.MyGenericAnnotatedJavaInterface
 import xtraitj.input.tests.MyGenericTestInterface
+import xtraitj.input.tests.MyGenericTestInterfaceWithTwoTypeParameters
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
-import xtraitj.input.tests.MyGenericTestInterfaceWithTwoTypeParameters
+import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceDerived
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -35,9 +37,55 @@ class XtraitjJvmModelHelperTest extends XtraitjAbstractTest {
 		)
 	}
 
+	@Test def void testXtraitjResolvedOperations() {
+		MyGenericAnnotatedJavaInterface.assertXtraitjResolvedOperations(
+'''
+requiredFields: getField() : Object
+requiredMethods: getRequired(List<Object>) : Object
+definedMethods: getDefined(List<Object>) : Object
+'''
+		)
+	}
+
+	@Test def void testXtraitjResolvedOperationsWithTypeArgument() {
+		MyGenericAnnotatedJavaInterface.assertXtraitjResolvedOperations(
+'''
+requiredFields: getField() : String
+requiredMethods: getRequired(List<String>) : String
+definedMethods: getDefined(List<String>) : String
+'''
+		,
+		String
+		)
+	}
+
+	@Test def void testXtraitjResolvedOperationsWithTypeArgumentDerived() {
+		MyGenericAnnotatedJavaInterfaceDerived.assertXtraitjResolvedOperations(
+'''
+requiredFields: getField2() : String; getField() : String
+requiredMethods: getRequired2(List<String>) : String; getRequired(List<String>) : String
+definedMethods: getDefined2(List<String>) : String; getDefined(List<String>) : String
+'''
+		,
+		String
+		)
+	}
+
 	def private assertResolvedOperations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		expected.assertEqualsStrings(clazz.toResourceTypeRef(typeArguments).getOperations.map[
 			simpleSignature + " : " + resolvedReturnType
 		].join("; "))
+	}
+
+	def private assertXtraitjResolvedOperations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
+		var repr = ""
+		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
+		repr += "requiredFields: " +
+			resolved.requiredFields.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
+		repr += "requiredMethods: " +
+			resolved.requiredMethods.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
+		repr += "definedMethods: " +
+			resolved.definedMethods.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
+		expected.assertEqualsStrings(repr)
 	}
 }
