@@ -7,6 +7,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>../xtraitj.targetplatform</module>
+		<module>../xtraitj.runtime.lib</module>
 		<module>../xtraitj</module>
 		<module>../xtraitj.ui</module>
 		<module>../xtraitj.runtime.requirements</module>
