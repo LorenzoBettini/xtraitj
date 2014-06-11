@@ -1352,6 +1352,9 @@ package tests.traits;
 import java.util.List;
 import tests.traits.T2_T1_0_Adapter;
 
+/**
+ * alias on a directly instantiated type parameter
+ */
 @SuppressWarnings("all")
 public interface T2 extends T2_T1_0_Adapter {
   public abstract String p();

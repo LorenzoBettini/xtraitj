@@ -3886,6 +3886,59 @@ public class C implements MyTestInterface, MyTestInterface2, T1, T2 {
 		]
 	}
 
+	@Test def void testGeneratedJavaDocForTraitsAndClasses() {
+		elementsWithDocumentation.compile[
+
+assertTraitJavaInterface("tests", "T",
+'''
+package tests.traits;
+
+/**
+ * My documented trait
+ */
+@SuppressWarnings("all")
+public interface T {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T",
+'''
+package tests.traits.impl;
+
+import tests.traits.T;
+
+/**
+ * My documented trait
+ */
+@SuppressWarnings("all")
+public class TImpl implements T {
+  private T _delegate;
+  
+  public TImpl(final T delegate) {
+    this._delegate = delegate;
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+/**
+ * My documented class
+ */
+@SuppressWarnings("all")
+public class C {
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testCompliantRequiredFields() {
 		compliantRequiredFields.compile[
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")

@@ -1903,4 +1903,20 @@ class C uses T1, T2 {
 }
 '''
 	}
+
+	def elementsWithDocumentation() {
+'''
+package tests;
+
+/**
+ * My documented trait
+ */
+trait T {}
+
+/**
+ * My documented class
+ */
+class C {}
+'''
+	}
 }

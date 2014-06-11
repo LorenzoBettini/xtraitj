@@ -2,6 +2,9 @@ package xtraitj.example.examples.extensions.traits;
 
 import java.util.Iterator;
 
+/**
+ * Acts as a wrapper for a Java Iterator
+ */
 @SuppressWarnings("all")
 public interface TIterator<E> {
   public abstract Iterator<E> getIterator();

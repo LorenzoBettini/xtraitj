@@ -151,9 +151,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
+			documentation = t.documentation
+
    			copyTypeParameters(t.traitTypeParameters)
-   			
-   			
    			
    			// it is crucial to insert, at this stage, into the inferred interface all
    			// members which are specified in the trait, so that, later
@@ -459,6 +459,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(traitClass).initializeLater[
 
    			documentation = t.documentation
+
    			val traitInterfaceTypeRef = t.associatedInterface
 			
 			val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
