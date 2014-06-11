@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  *
  */
 @Target({TYPE})
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface XtraitjTraitClass {
 
 }

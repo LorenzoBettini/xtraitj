@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.xtext;bundle-version="[2.6.0,2.7.0)";visibility:=ree
  org.eclipse.xtext.common.types;bundle-version="[2.6.0,2.7.0)",
  org.eclipse.xtext.xbase.lib;bundle-version="[2.6.0,2.7.0)",
  org.eclipse.xtend.standalone;bundle-version="[2.6.0,2.7.0)",
- org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport
+ org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
+ xtraitj.runtime.lib;visibility:=reexport
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
