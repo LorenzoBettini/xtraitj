@@ -1,28 +1,24 @@
 package xtraitj.tests
 
+import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import com.google.inject.Inject
-import xtraitj.util.XtraitjAnnotatedElementHelper
-import org.junit.Test
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import static extension org.junit.Assert.*
-import org.eclipse.xtext.junit4.util.ParseHelper
-import xtraitj.xtraitj.TJProgram
-import xtraitj.input.tests.MyAnnotatedJavaInterface
 import xtraitj.input.tests.MyAnnotatedJavaClass
-import org.eclipse.xtext.common.types.JvmDeclaredType
-import org.eclipse.xtext.common.types.JvmMember
+import xtraitj.input.tests.MyAnnotatedJavaInterface
+import xtraitj.util.XtraitjAnnotatedElementHelper
+
+import static extension org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjAnnotatedElementHelperTest {
+class XtraitjAnnotatedElementHelperTest extends XtraitjAbstractTest {
 	
 	@Inject extension XtraitjAnnotatedElementHelper
 	@Inject extension JvmTypesBuilder
-	@Inject extension ParseHelper<TJProgram>
 	
 	@Test def void testAnnotatedTraitInterface() {
 		Object.toTypeRef.annotatedTraitInterface.assertFalse
@@ -62,15 +58,4 @@ class XtraitjAnnotatedElementHelperTest {
 		MyAnnotatedJavaInterface.getJavaMethod("notAnnotatedMethod").annotatedDefinedMethod.assertFalse
 	}
 
-	def private toTypeRef(Class<?> clazz) {
-		'''
-		trait T {}
-		'''.
-		parse.newTypeRef(clazz)
-	}
-
-	def private getJavaMethod(Class<?> clazz, String methodName) {
-		(clazz.toTypeRef.type as JvmDeclaredType).
-			allFeatures.filter(JvmMember).findFirst[simpleName == methodName]
-	}
 }
