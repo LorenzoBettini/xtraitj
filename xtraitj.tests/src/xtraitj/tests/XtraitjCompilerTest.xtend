@@ -37,21 +37,31 @@ assertTraitJavaInterface("T",
 package traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T {
+  @XtraitjRequiredField
   public abstract List<Integer> getF();
   
   public abstract void setF(final List<Integer> f);
   
+  @XtraitjRequiredField
   public abstract boolean isB();
   
   public abstract void setB(final boolean b);
   
+  @XtraitjDefinedMethod
   public abstract Object m(final List<String> l, final String s);
   
+  @XtraitjRequiredMethod
   public abstract boolean abM(final String s);
   
+  @XtraitjRequiredMethod
   public abstract void abV();
 }
 ''')
@@ -182,19 +192,27 @@ assertTraitJavaInterface("T",
 package traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T {
+  @XtraitjRequiredField
   public abstract List<Integer> getF();
   
   public abstract void setF(final List<Integer> f);
   
+  @XtraitjRequiredField
   public abstract boolean isB();
   
   public abstract void setB(final boolean b);
   
+  @XtraitjDefinedMethod
   public abstract Object m(final List<String> l, final String s);
   
+  @XtraitjDefinedMethod
   public abstract Object n();
 }
 ''')
@@ -267,8 +285,13 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1 {
+  @XtraitjDefinedMethod
   public abstract String callPriv();
 }
 ''')
@@ -312,9 +335,13 @@ package tests.traits;
 import tests.traits.T1;
 import tests.traits.T2;
 import tests.traits.T3;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T extends T1, T2, T3 {
+  @XtraitjDefinedMethod
   public abstract String m();
   
   public abstract Object t1();
@@ -330,13 +357,20 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1 {
+  @XtraitjDefinedMethod
   public abstract Object t1();
   
   /**
    * required method
    */
+  @XtraitjRequiredMethod
   public abstract Object t2();
 }
 '''
@@ -605,14 +639,23 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1 {
+  @XtraitjRequiredField
   public abstract int getI();
   
   public abstract void setI(final int i);
   
+  @XtraitjDefinedMethod
   public abstract Object m1();
   
+  @XtraitjRequiredMethod
   public abstract Object m2();
 }
 '''
@@ -707,10 +750,17 @@ assertTraitJavaInterface("tests", "TDouble",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TDouble {
+  @XtraitjDefinedMethod
   public abstract int doubleApply();
   
+  @XtraitjRequiredMethod
   public abstract int m();
 }
 '''
@@ -850,9 +900,13 @@ assertTraitJavaInterface("T3",
 package traits;
 
 import traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract int foo();
   
   public abstract int m2();
@@ -1137,9 +1191,13 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String foo();
   
   public abstract String n();
@@ -1256,11 +1314,16 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String req();
   
+  @XtraitjDefinedMethod
   public abstract String foo();
   
   public abstract String n();
@@ -1348,11 +1411,16 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjDefinedMethod
   public abstract String foo();
   
   public abstract String n2();
@@ -1503,11 +1571,16 @@ package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
 import tests.traits.T3_T2_1_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter, T3_T2_1_Adapter {
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjDefinedMethod
   public abstract String foo();
   
   public abstract String n2();
@@ -1666,7 +1739,9 @@ package tests.traits;
 
 import tests.traits.T1;
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter, T1 {
   public abstract int m1();
@@ -1765,7 +1840,9 @@ package tests.traits;
 
 import tests.traits.T1;
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T1, T3_T2_0_Adapter {
   public abstract int m1();
@@ -1865,9 +1942,13 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String callSecondRename();
   
   public abstract String callFirstRename();
@@ -2102,9 +2183,13 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String meth();
   
   public abstract boolean n();
@@ -2277,16 +2362,22 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
   /**
    * independent new version of m
    */
+  @XtraitjDefinedMethod
   public abstract int m(final int i);
   
+  @XtraitjDefinedMethod
   public abstract String callN();
   
+  @XtraitjDefinedMethod
   public abstract int callM();
   
   public abstract String p();
@@ -2468,11 +2559,16 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String callN();
   
+  @XtraitjDefinedMethod
   public abstract String callM();
   
   public abstract String p();
@@ -2704,16 +2800,22 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
   /**
    * independent version of n
    */
+  @XtraitjDefinedMethod
   public abstract String n(final int i);
   
+  @XtraitjDefinedMethod
   public abstract String callN();
   
+  @XtraitjDefinedMethod
   public abstract String callM();
   
   public abstract String p();
@@ -2989,16 +3091,22 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
   /**
    * new version of m
    */
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjDefinedMethod
   public abstract String callN();
   
+  @XtraitjDefinedMethod
   public abstract String callM();
   
   public abstract String p();
@@ -3180,16 +3288,22 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
   /**
    * new version of m
    */
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjDefinedMethod
   public abstract String callN();
   
+  @XtraitjDefinedMethod
   public abstract String callM();
   
   public abstract String p();
@@ -3398,7 +3512,9 @@ assertTraitJavaInterface("tests", "T3",
 package tests.traits;
 
 import tests.traits.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T3_T2_0_Adapter {
   public abstract String useField();
@@ -3690,9 +3806,13 @@ assertTraitJavaInterface("tests", "T2",
 package tests.traits;
 
 import tests.traits.T1;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T2 extends T1 {
+  @XtraitjDefinedMethod
   public abstract String req();
   
   public abstract String useReq();
@@ -3893,9 +4013,12 @@ assertTraitJavaInterface("tests", "T",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
 /**
  * My documented trait
  */
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T {
 }

@@ -21,15 +21,24 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1 {
+  @XtraitjRequiredField
   public abstract String getS();
   
   public abstract void setS(final String s);
   
   @SuppressWarnings("all")
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjRequiredMethod
   public abstract String req();
 }
 '''

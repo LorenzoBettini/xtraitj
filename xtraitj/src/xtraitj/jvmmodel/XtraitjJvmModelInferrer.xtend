@@ -32,6 +32,14 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
+import xtraitj.xtraitj.TJField
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField
+import xtraitj.xtraitj.TJRequiredMethod
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import org.eclipse.xtext.common.types.JvmMember
+import xtraitj.util.XtraitjAnnotatedElementHelper
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -44,6 +52,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjAnnotatedElementHelper
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -152,6 +161,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
 			documentation = t.documentation
+			
+			t.annotateAsTrait(it)
 
    			copyTypeParameters(t.traitTypeParameters)
    			
@@ -159,7 +170,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			// members which are specified in the trait, so that, later
    			// we also add the members we "inherit" from used traits 
 			for (field : t.fields) {
-				members += field.toGetterAbstract
+				members += field.toGetterAbstract => [
+					field.annotateAsRequiredField(it)
+				]
 				members += field.toSetterAbstract
 			}
 			
@@ -167,11 +180,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				if (!method.isPrivate)
 					members += method.toAbstractMethod => [
 	   					translateAnnotations(method.annotations)
+	   					method.annotateAsDefinedMethod(it)
 	   				]
 			}
 			
-			for (method : t.requiredMethods)
-				members += method.toAbstractMethod
+			for (method : t.requiredMethods) {
+				members += method.toAbstractMethod => [
+					method.annotateAsRequiredMethod(it)
+				]
+			}
 		]
 
 		// it is crucial to infer interfaces for trait operation expressions
@@ -783,7 +800,25 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def protected void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
-		target.annotations += xop.op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
+		target.annotations += xop.op.annotations.
+			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
+
+	def protected void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
+		target.annotations += element.toAnnotation(XtraitjTraitInterface)
+	}
+
+	def protected void annotateAsRequiredField(TJField element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjRequiredField)
+	}
+
+	def protected void annotateAsRequiredMethod(TJRequiredMethod element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
+	}
+
+	def protected void annotateAsDefinedMethod(TJMethod element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
+	}
+	
 }
 

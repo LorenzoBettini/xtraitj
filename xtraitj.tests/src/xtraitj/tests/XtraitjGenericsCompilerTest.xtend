@@ -71,17 +71,25 @@ assertTraitJavaInterface("tests", "T1",
 package tests.traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1<T extends List<String>, U> {
+  @XtraitjRequiredField
   public abstract T getT();
   
   public abstract void setT(final T t);
   
+  @XtraitjDefinedMethod
   public abstract String m();
   
+  @XtraitjDefinedMethod
   public abstract T read_t();
   
+  @XtraitjDefinedMethod
   public abstract void update_t(final T t);
 }
 '''
@@ -153,12 +161,19 @@ assertTraitJavaInterface("tests", "T1",
 '''
 package tests.traits;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1<T extends Comparable<T>> {
+  @XtraitjRequiredField
   public abstract T getT();
   
   public abstract void setT(final T t);
   
+  @XtraitjDefinedMethod
   public abstract int compare(final T t1);
 }
 '''
@@ -210,13 +225,19 @@ assertTraitJavaInterface("tests", "T1",
 package tests.traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
+  @XtraitjRequiredField
   public abstract T getT();
   
   public abstract void setT(final T t);
   
+  @XtraitjDefinedMethod
   public abstract int compare(final U t1);
 }
 '''
@@ -270,11 +291,16 @@ assertTraitJavaInterface("tests", "T1",
 package tests.traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1 {
+  @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
   
+  @XtraitjDefinedMethod
   public abstract <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2);
 }
 '''
@@ -321,7 +347,9 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.T1;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T2 extends T1 {
   public abstract <T extends List<String>> String getFirst(final T t);
@@ -526,9 +554,13 @@ assertTraitJavaInterface("tests", "T1",
 package tests.traits;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T1<T> {
+  @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
 }
 '''
@@ -573,7 +605,9 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<List<String>> {
 }
@@ -631,7 +665,9 @@ package tests.traits;
 import java.util.List;
 import java.util.Set;
 import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<List<String>, Set<Integer>> {
   public abstract List<String> getT();
@@ -802,7 +838,9 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<String> {
   public abstract String searchInList(final List<String> l, final String arg);
@@ -872,11 +910,16 @@ package tests.traits;
 import java.util.List;
 import java.util.Set;
 import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<String, Set<Integer>> {
+  @XtraitjDefinedMethod
   public abstract Iterable<String> iterableOfStrings();
   
+  @XtraitjDefinedMethod
   public abstract <V extends List<String>> String getFirst(final V t);
 }
 '''
@@ -1146,9 +1189,13 @@ import java.util.List;
 import tests.traits.TGeneric;
 import tests.traits.UsesTGeneric_TGeneric_0_Adapter;
 import tests.traits.UsesTGeneric_TGeneric_1_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter, UsesTGeneric_TGeneric_1_Adapter, TGeneric<String> {
+  @XtraitjDefinedMethod
   public abstract String useLists();
   
   public abstract List<Integer> returnListOfInteger();
@@ -1351,12 +1398,16 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.T2_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 /**
  * alias on a directly instantiated type parameter
  */
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T2 extends T2_T1_0_Adapter {
+  @XtraitjDefinedMethod
   public abstract String p();
   
   /**
@@ -1575,9 +1626,13 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TUsesGeneric extends TGeneric<String> {
+  @XtraitjDefinedMethod
   public abstract String updateAndReturn();
   
   public abstract List<? extends String> returnListOfT();
@@ -1733,7 +1788,9 @@ package tests.traits;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import tests.traits.TGenericExtensions;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TStringExtensions extends TGenericExtensions<String> {
   public abstract <R> List<R> mapToList(final Function1<? super String, ? extends R> mapper);
@@ -1761,13 +1818,19 @@ package tests.traits;
 import java.util.Iterator;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import tests.traits.TTransformerIterator_TIterator_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface TTransformerIterator<T, R> extends TTransformerIterator_TIterator_0_Adapter<T, R> {
+  @XtraitjRequiredField
   public abstract Function1<? super T, ? extends R> getFunction();
   
   public abstract void setFunction(final Function1<? super T, ? extends R> function);
   
+  @XtraitjDefinedMethod
   public abstract R next();
   
   public abstract boolean hasNext();
@@ -1868,7 +1931,9 @@ assertTraitJavaInterface("tests", "T2",
 package tests.traits;
 
 import tests.traits.T1;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T2<W> extends T1<W> {
   public abstract W m();
@@ -1999,7 +2064,9 @@ package tests.traits;
 
 import java.util.List;
 import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3<V> extends T2<List<V>> {
   public abstract List<V> m();
@@ -2064,7 +2131,9 @@ package tests.traits;
 import java.util.List;
 import tests.traits.T1;
 import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T1<String>, T2 {
   public abstract int getI();
@@ -2092,7 +2161,9 @@ package tests.traits;
 import java.util.List;
 import tests.traits.T1;
 import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T1<String>, T2 {
   public abstract int getI();
@@ -2120,7 +2191,9 @@ package tests.traits;
 import java.util.List;
 import tests.traits.T1;
 import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T1<String>, T2 {
   public abstract int i();
@@ -2144,7 +2217,9 @@ package tests.traits;
 import java.util.List;
 import tests.traits.T1;
 import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T3 extends T1<String>, T2 {
   public abstract int i();
