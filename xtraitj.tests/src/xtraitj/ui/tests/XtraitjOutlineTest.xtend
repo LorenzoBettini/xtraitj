@@ -1,19 +1,24 @@
 package xtraitj.ui.tests
 
+import com.google.inject.Inject
+import org.eclipse.core.runtime.CoreException
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
 import org.eclipse.xtext.ui.tests.editor.outline.AbstractOutlineWorkbenchTest
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
-import xtraitj.ui.internal.XtraitjActivator
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
-import org.junit.BeforeClass
 import xtraitj.tests.utils.ui.PDETargetPlatformUtils
+import xtraitj.tests.utils.ui.PluginProjectHelper
+import xtraitj.ui.internal.XtraitjActivator
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
 class XtraitjOutlineTest extends AbstractOutlineWorkbenchTest {
+	
+	@Inject PluginProjectHelper projectHelper
 	
 	override protected getEditorId() {
 		XtraitjActivator.XTRAITJ_XTRAITJ
@@ -22,6 +27,11 @@ class XtraitjOutlineTest extends AbstractOutlineWorkbenchTest {
 	@BeforeClass
 	def static void setUpTargetPlatform() {
 		PDETargetPlatformUtils.setTargetPlatform();
+	}
+
+	override protected createjavaProject(String projectName) throws CoreException {
+		projectHelper.createJavaPluginProject
+			(projectName, newArrayList("xtraitj.runtime.requirements"))
 	}
 
 	@Test

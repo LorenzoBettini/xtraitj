@@ -11,6 +11,7 @@ import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createJavaProject;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.xtext.junit4.ui.AbstractEditorTest;
 import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
@@ -50,8 +51,13 @@ public abstract class AbstractOutlineWorkbenchTest extends AbstractEditorTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		IJavaProject javaProject = createJavaProject(TEST_PROJECT);
+		createjavaProject(TEST_PROJECT);
+	}
+
+	protected IJavaProject createjavaProject(String projectName) throws CoreException {
+		IJavaProject javaProject = createJavaProject(projectName);
 		addNature(javaProject.getProject(), XtextProjectHelper.NATURE_ID);
+		return javaProject;
 	}
 
 	@Override
