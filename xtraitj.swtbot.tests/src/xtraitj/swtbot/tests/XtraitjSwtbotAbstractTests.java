@@ -28,7 +28,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import xtraitj.swtbot.tests.utils.PDETargetPlatformUtils;
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils;
 
 public class XtraitjSwtbotAbstractTests {
 
