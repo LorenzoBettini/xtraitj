@@ -1,15 +1,64 @@
 package xtraitj.ui.tests
 
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.jdt.core.IJavaProject
+import org.eclipse.jdt.core.JavaCore
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil
+import org.eclipse.xtext.ui.XtextProjectHelper
+import org.eclipse.xtext.ui.util.PluginProjectFactory
 import org.eclipse.xtext.xbase.junit.ui.AbstractContentAssistTest
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
+import xtraitj.ui.internal.XtraitjActivator
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
 class XtraitjContentAssistTest extends AbstractContentAssistTest {
+
+	static IJavaProject pluginJavaProject
+	
+	val static PROJECT_NAME = "customPluginProject"
+	
+	@BeforeClass
+	def static void setUp() {
+		PDETargetPlatformUtils.setTargetPlatform();
+		
+		val injector = XtraitjActivator.getInstance().getInjector(XtraitjActivator.XTRAITJ_XTRAITJ);
+		val projectFactory = injector.getInstance(PluginProjectFactory);
+		projectFactory.setProjectName(PROJECT_NAME);
+		projectFactory.addFolders(newArrayList("src"));
+		projectFactory.addBuilderIds(
+			JavaCore.BUILDER_ID, 
+			"org.eclipse.pde.ManifestBuilder",
+			"org.eclipse.pde.SchemaBuilder",
+			XtextProjectHelper.BUILDER_ID);
+		projectFactory.addProjectNatures(
+			JavaCore.NATURE_ID, 
+			"org.eclipse.pde.PluginNature", 
+			XtextProjectHelper.NATURE_ID
+		);
+		projectFactory.addRequiredBundles(newArrayList(
+				"xtraitj.runtime.requirements"));
+		val result = projectFactory.createProject(new NullProgressMonitor(), null);
+		JavaProjectSetupUtil.makeJava5Compliant(JavaCore.create(result));
+		pluginJavaProject = JavaProjectSetupUtil.findJavaProject(PROJECT_NAME);
+	}
+	
+	@AfterClass
+	def static void tearDown() {
+		pluginJavaProject.project.delete(true, new NullProgressMonitor)
+	}
+	
+	override getJavaProject(ResourceSet resourceSet) {
+		pluginJavaProject
+	}
 
 	val T = '''
 		trait T {

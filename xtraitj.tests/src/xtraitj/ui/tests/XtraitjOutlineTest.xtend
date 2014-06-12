@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
 import xtraitj.ui.internal.XtraitjActivator
 import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
+import org.junit.BeforeClass
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
@@ -15,6 +17,11 @@ class XtraitjOutlineTest extends AbstractOutlineWorkbenchTest {
 	
 	override protected getEditorId() {
 		XtraitjActivator.XTRAITJ_XTRAITJ
+	}
+
+	@BeforeClass
+	def static void setUpTargetPlatform() {
+		PDETargetPlatformUtils.setTargetPlatform();
 	}
 
 	@Test
