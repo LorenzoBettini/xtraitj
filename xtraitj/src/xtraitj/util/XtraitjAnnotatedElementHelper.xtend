@@ -8,6 +8,7 @@ import org.eclipse.xtext.common.types.JvmMember
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import org.eclipse.xtext.common.types.JvmAnnotationReference
 
 class XtraitjAnnotatedElementHelper {
 	
@@ -52,5 +53,11 @@ class XtraitjAnnotatedElementHelper {
 			exists[
 				annotation.identifier == XtraitjDefinedMethod.name
 			]
+	}
+
+	def filterOutXtraitjAnnotations(Iterable<JvmAnnotationReference> annotations) {
+		annotations.filter[
+			annotation.identifier != XtraitjDefinedMethod.name
+		]
 	}
 }

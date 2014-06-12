@@ -1,6 +1,7 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
@@ -12,6 +13,7 @@ import xtraitj.input.tests.MyAnnotatedJavaInterface
 import xtraitj.util.XtraitjAnnotatedElementHelper
 
 import static extension org.junit.Assert.*
+import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -58,4 +60,16 @@ class XtraitjAnnotatedElementHelperTest extends XtraitjAbstractTest {
 		MyAnnotatedJavaInterface.getJavaMethod("notAnnotatedMethod").annotatedDefinedMethod.assertFalse
 	}
 
+	@Test def void testFilterOutXtraitjAnnotations() {
+		MyAnnotatedJavaInterface.getJavaMethod("notXtraitjAnnotatedMethod").assertFilteredAnnotations("Inject")
+		MyAnnotatedJavaInterface.getJavaMethod("methodWithManyAnnotations").assertFilteredAnnotations("Inject, Named")
+	}
+
+	def private void assertFilteredAnnotations(JvmMember member, CharSequence expected) {
+		expected.assertEqualsStrings(
+			member.annotations.filterOutXtraitjAnnotations.map[
+				annotation.simpleName
+			].join(", ")
+		)
+	}
 }
