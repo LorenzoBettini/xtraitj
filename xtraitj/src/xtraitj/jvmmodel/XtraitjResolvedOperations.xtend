@@ -39,4 +39,8 @@ class XtraitjResolvedOperations {
 	def getDefinedMethods() {
 		return this.definedMethods
 	}
+
+	def getDeclaredMethods() {
+		return requiredMethods + definedMethods
+	}
 }
