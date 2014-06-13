@@ -55,7 +55,7 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 	}
 	
 	def text(TJTraitReference r) {
-		r.trait?.name
+		r.trait.simpleName
 	}
 	
 	def image(TJTrait t) {

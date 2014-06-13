@@ -70,7 +70,8 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def _createChildren(EObjectNode parentNode, TJClass c) {
 		nodesForTraitReferences(parentNode, c)
-		nodesForRequirements(parentNode, c, c.xtraitjJvmAllInterfaceMethods)
+		// TODO reimplement c.xtraitjJvmAllInterfaceMethods
+		// nodesForRequirements(parentNode, c, c.xtraitjJvmAllInterfaceMethods)
 		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {

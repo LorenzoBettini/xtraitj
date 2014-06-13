@@ -18,6 +18,8 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 
 class XtraitjModelUtil {
 	
@@ -41,9 +43,9 @@ class XtraitjModelUtil {
 		t.members.filter(typeof(TJMethod))
 	}
 
-	def static methods(TJTraitReference e) {
-		e.trait?.methods
-	}
+//	def static methods(TJTraitReference e) {
+//		e.trait?.methods
+//	}
 	
 	def static members(TJDeclaration d) {
 		switch (d) {
@@ -97,39 +99,6 @@ class XtraitjModelUtil {
 	def static traitOperationExpressions(TJDeclaration t) {
 		t.traitExpression.traitReferences.
 			filter[!operations.empty].toList
-	}
-
-	/**
-	 * Recursively collects all TJTrait occurrences in the TJTraitExpression
-	 * of the passed trait,
-	 * avoiding possible cycles
-	 */
-	def static allTraitsDependency(TJTrait t) {
-		if (t.traitExpression == null)
-			return emptyList
-		
-		t.traitExpression.allTraitReferences.filter(typeof(TJTraitReference)).
-			map[trait]
-	}
-
-	def static allTraitReferences(TJTraitExpression e) {
-		<TJTraitReference>newArrayList() => [
-			e.allTraitReferences(it, newHashSet)
-		]
-	}
-
-	def private static void allTraitReferences(TJTraitExpression e, 
-			List<TJTraitReference> traitExpressions,
-			Set<TJTrait> visited) {
-		for (t : e.traitReferences) {
-			// avoid possible cycles
-			if (!visited.contains(t.trait)) {
-				visited += t.trait
-				traitExpressions += t
-				t.trait.traitExpression?.
-					allTraitReferences(traitExpressions, visited)
-			}
-		}
 	}
 
 	def static representationWithTypes(TJField f) {

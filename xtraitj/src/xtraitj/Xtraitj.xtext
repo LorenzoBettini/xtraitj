@@ -42,8 +42,8 @@ TJTraitExpression:
 ;
 
 TJTraitReference: 	
-	trait=[TJTrait|QualifiedName]
-	('<' arguments+=JvmArgumentTypeReference (',' arguments+=JvmArgumentTypeReference)* '>')?
+	trait=JvmParameterizedTypeReference // [TJTrait|QualifiedName]
+	//('<' arguments+=JvmArgumentTypeReference (',' arguments+=JvmArgumentTypeReference)* '>')?
 	('['
 		operations+=TJTraitOperation
 		(',' operations+=TJTraitOperation)*

@@ -30,6 +30,22 @@ class XtraitjParserTest {
 		'''.parse.assertNoErrors
 	}
 
+	@Test def void simpleProgram2() {
+		'''
+		trait T {
+			
+		}
+		
+		trait T1 uses T {
+			
+		}
+		
+		class C uses T {
+			
+		}
+		'''.parse.assertNoErrors
+	}
+
 	@Test def void testFields() {
 		'''
 		package my.pack;
