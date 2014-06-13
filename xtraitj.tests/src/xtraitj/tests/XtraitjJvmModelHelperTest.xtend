@@ -84,6 +84,21 @@ getDefined(List<String>) : String'''
 		)
 	}
 
+	@Test def void testAllDeclarations() {
+		// included both required and defined methods
+		MyGenericAnnotatedJavaInterfaceDerived.assertAllDeclarations(
+'''
+getField2() : String
+getField() : String
+getRequired2(List<String>) : String
+getRequired(List<String>) : String
+getDefined2(List<String>) : String
+getDefined(List<String>) : String'''
+		,
+		String
+		)
+	}
+
 	def private assertResolvedOperations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		expected.assertEqualsStrings(clazz.toResourceTypeRef(typeArguments).getOperations.map[
 			simpleSignature + " : " + resolvedReturnType
@@ -106,6 +121,13 @@ getDefined(List<String>) : String'''
 		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
 		expected.assertEqualsStrings(
 			resolved.declaredMethods.map[simpleSignature + " : " + resolvedReturnType].join("\n")
+		)
+	}
+
+	def private assertAllDeclarations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
+		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
+		expected.assertEqualsStrings(
+			resolved.allDeclarations.map[simpleSignature + " : " + resolvedReturnType].join("\n")
 		)
 	}
 }
