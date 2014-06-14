@@ -139,7 +139,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (traitExp : c.traitExpression.traitReferences) {
    				superTypes += traitExp.traitReferenceCopy
-   				println("in class: " + traitExp.trait.simpleName)
    				members += traitExp.toTraitField
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
@@ -155,7 +154,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		e.toField(e.traitFieldName, e.traitReferenceCopy) [
 			initializer = [
 				append('''new ''')
-				append(e.trait.type)
+				append(e.associatedClass.type)
 				append("(this)")
 			]
 		]
@@ -210,7 +209,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(traitInterface).initializeLater [
 			if (t.traitExpression != null)
 				for (superInterface : (newArrayList => [collectSuperInterfaces(t.traitExpression)])) {
-					println("in trait interface: " + superInterface)
 					superTypes += superInterface
 				}	
 			
@@ -746,20 +744,20 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
    	def traitInterfaceName(TJTrait t) {
-   		val n = t.fullyQualifiedName
-   		n.skipLast(1).append("traits").
-   			append(n.lastSegment).toString// + "Interface"
+   		t.fullyQualifiedName.toString
+//   		n.skipLast(1).append("traits").
+//   			append(n.lastSegment).toString// + "Interface"
    	}
 
    	def traitExpressionInterfaceName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1).append("traits").
+   		n.skipLast(1). //append("traits").
    			append(t.adapterName).toString// + "Interface"
    	}
 
    	def traitExpressionClassName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1).append("traits").append("impl").
+   		n.skipLast(1). /* append("traits"). */ append("impl").
    			append(t.adapterName).toString + "Impl"
    	}
 
@@ -784,7 +782,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def traitFieldNameForOperations(TJTraitReference e) {
-		return e.trait?.traitFieldName + "_" +
+		return e.trait.traitFieldName + "_" +
 				e.containingDeclaration.traitReferences.indexOf(e)
 	}
 
@@ -793,7 +791,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def traitFieldName(JvmParameterizedTypeReference t) {
-		"_" + t.simpleName
+		t.typeNameWithoutTypeArgs
 	}
 
 	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {

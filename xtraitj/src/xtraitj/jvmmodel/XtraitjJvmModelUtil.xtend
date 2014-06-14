@@ -678,19 +678,33 @@ class XtraitjJvmModelUtil {
 
 	def traitClassName(TJTrait t) {
    		val n = t.fullyQualifiedName
-   		n.skipLast(1).append("traits").append("impl").
+   		n.skipLast(1). /* append("traits"). */ append("impl").
    			append(n.lastSegment).toString + "Impl"
    	}
 
 	def traitClassName(JvmTypeReference t) {
-   		val n = t.getQualifiedName
+   		var n = t.identifier
    		
-   		val pos = n.lastIndexOf(".")
+   		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			n = n.substring(0, pos)
+   		
+   		pos = n.lastIndexOf(".")
    		var name = ""
    		if (pos > 0)
    			name = n.substring(0, pos) + "."
    		
    		name + "impl." + n.substring(pos+1) + "Impl"
    	}
+
+	def typeNameWithoutTypeArgs(JvmTypeReference t) {
+		var n = t.simpleName
+   		
+   		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			return n.substring(0, pos)
+   		else
+   			return n
+	}
 }
 
