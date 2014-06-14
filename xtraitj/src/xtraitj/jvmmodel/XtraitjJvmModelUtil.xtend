@@ -325,7 +325,7 @@ class XtraitjJvmModelUtil {
 		// TODO deal with redirect
 		// see old xtraitjJvmAllRequiredOperations
 		val ops = e.trait.getXtraitjResolvedOperations()
-		(ops.requiredFields + ops.requiredMethods).createXtraitjJvmOperations
+		(ops.allRequirements).createXtraitjJvmOperations
 	}
 
 //	def xtraitjJvmAllInterfaceMethods(TJClass e) {
