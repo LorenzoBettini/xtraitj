@@ -82,7 +82,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 */
    	def dispatch void infer(TJProgram p, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
 		val traits = p.traits
-		for (t : traits)
+		for (t : traits) 
 			t.inferTraitInterface(acceptor)
 
 		for (t : traits)
@@ -139,6 +139,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (traitExp : c.traitExpression.traitReferences) {
    				superTypes += traitExp.traitReferenceCopy
    				members += traitExp.toTraitField
+   				println(traitExp.trait.simpleName)
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
    				for (traitMethod : traitExp.xtraitjJvmAllMethodOperations)
@@ -750,13 +751,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
    	def traitExpressionInterfaceName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1). //append("traits").
+   		n. // skipLast(1). append("traits").
    			append(t.adapterName).toString// + "Interface"
    	}
 
    	def traitExpressionClassName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1). /* append("traits"). */ append("impl").
+   		n. // skipLast(1). /* append("traits").append("impl").*/
    			append(t.adapterName).toString + "Impl"
    	}
 
@@ -833,7 +834,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def associatedClass(TJTraitReference t) {
 		if (t.operations.empty)
-			t.newTypeRef(t.trait.traitClassName)
+			t.newTypeRef(t.trait.traitClassName, t.trait.arguments.map[cloneWithProxies])
 		else
 			t.newTypeRef(t.traitExpressionClassName)
 	}

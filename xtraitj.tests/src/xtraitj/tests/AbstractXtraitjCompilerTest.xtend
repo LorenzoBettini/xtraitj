@@ -22,7 +22,7 @@ class AbstractXtraitjCompilerTest {
 	}
 
 	def protected void assertTraitJavaClass(CompilationTestHelper.Result r, String name, CharSequence expected) {
-		r.assertJavaCode("impl." + name + "Impl", expected)
+		r.assertJavaCode(name + "Impl", expected)
 	}
 
 	def protected void assertTraitAdapterJavaInterface(CompilationTestHelper.Result r, String packageName, String name, CharSequence expected) {
@@ -30,7 +30,7 @@ class AbstractXtraitjCompilerTest {
 	}
 
 	def protected void assertTraitJavaInterface(CompilationTestHelper.Result r, String packageName, String name, CharSequence expected) {
-		r.assertJavaCode(packageName + name, expected)
+		r.assertJavaCode(packageName + "." + name, expected)
 	}
 
 	def protected void assertTraitAdapterJavaClass(CompilationTestHelper.Result r, String packageName, String name, CharSequence expected) {
@@ -38,7 +38,7 @@ class AbstractXtraitjCompilerTest {
 	}
 
 	def protected void assertTraitJavaClass(CompilationTestHelper.Result r, String packageName, String name, CharSequence expected) {
-		r.assertJavaCode(packageName + ".impl." + name + "Impl", expected)
+		r.assertJavaCode(packageName + "." + name + "Impl", expected)
 	}
 
 	def protected void assertJavaClass(CompilationTestHelper.Result r, String packageName, String name, CharSequence expected) {

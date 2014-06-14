@@ -147,50 +147,9 @@ public class TImpl implements T {
 			boolean b=false;
 		}
 		'''.compile [
-assertJavaClass("C",
-'''
-import java.util.List;
-import traits.T;
-import traits.impl.TImpl;
 
-@SuppressWarnings("all")
-public class C implements T {
-  private List<Integer> f;
-  
-  public List<Integer> getF() {
-    return this.f;
-  }
-  
-  public void setF(final List<Integer> f) {
-    this.f = f;
-  }
-  
-  private boolean b = false;
-  
-  public boolean isB() {
-    return this.b;
-  }
-  
-  public void setB(final boolean b) {
-    this.b = b;
-  }
-  
-  private TImpl _T = new TImpl(this);
-  
-  public Object m(final List<String> l, final String s) {
-    return _T._m(l, s);
-  }
-  
-  public Object n() {
-    return _T._n();
-  }
-}
-'''
-)
 assertTraitJavaInterface("T",
 '''
-package traits;
-
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
@@ -218,13 +177,10 @@ public interface T {
 ''')
 assertTraitJavaClass("T",
 '''
-package traits.impl;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import traits.T;
 
 @SuppressWarnings("all")
 public class TImpl implements T {
@@ -275,6 +231,48 @@ public class TImpl implements T {
   }
 }
 ''')
+
+assertJavaClass("C",
+'''
+import java.util.List;
+import traits.T;
+import traits.impl.TImpl;
+
+@SuppressWarnings("all")
+public class C implements T {
+  private List<Integer> f;
+  
+  public List<Integer> getF() {
+    return this.f;
+  }
+  
+  public void setF(final List<Integer> f) {
+    this.f = f;
+  }
+  
+  private boolean b = false;
+  
+  public boolean isB() {
+    return this.b;
+  }
+  
+  public void setB(final boolean b) {
+    this.b = b;
+  }
+  
+  private TImpl _T = new TImpl(this);
+  
+  public Object m(final List<String> l, final String s) {
+    return _T._m(l, s);
+  }
+  
+  public Object n() {
+    return _T._n();
+  }
+}
+'''
+)
+
 			executeGeneratedJavaClassMethodAndAssert("C", "n", "1foo[1]false")
 		]
 	}

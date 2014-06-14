@@ -17,8 +17,12 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
+import org.eclipse.xtext.xtype.XFunctionTypeRef
+import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
@@ -30,12 +34,7 @@ import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
-import org.eclipse.xtext.xtype.XFunctionTypeRef
-import xtraitj.typing.XtraitjTypingUtil
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
-import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -679,12 +678,13 @@ class XtraitjJvmModelUtil {
 
 	def traitClassName(TJTrait t) {
    		val n = t.fullyQualifiedName
-   		n.skipLast(1). /* append("traits"). */ append("impl").
-   			append(n.lastSegment).toString + "Impl"
+   		n. // skipLast(1). /* append("traits").append("impl"). */ 
+   			/* append(n.lastSegment). */ 
+   			toString + "Impl"
    	}
 
 	def traitClassName(JvmTypeReference t) {
-   		var n = t.jvmTypeReferenceString
+   		var n = t.identifier
    		
    		var pos = n.indexOf("<")
    		if (pos > 0)
@@ -695,11 +695,11 @@ class XtraitjJvmModelUtil {
    		if (pos > 0)
    			name = n.substring(0, pos) + "."
    		
-   		name + "impl." + n.substring(pos+1) + "Impl"
+   		name + n.substring(pos+1) + "Impl"
    	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
-		var n = t.jvmTypeReferenceString
+		var n = t.simpleName
    		
    		var pos = n.indexOf("<")
    		if (pos > 0)
