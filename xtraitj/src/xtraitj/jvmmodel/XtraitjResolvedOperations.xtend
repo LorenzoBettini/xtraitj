@@ -47,4 +47,8 @@ class XtraitjResolvedOperations {
 	def getAllDeclarations() {
 		return requiredFields + declaredMethods
 	}
+
+	def getAllRequirements() {
+		return requiredFields + requiredMethods
+	}
 }
