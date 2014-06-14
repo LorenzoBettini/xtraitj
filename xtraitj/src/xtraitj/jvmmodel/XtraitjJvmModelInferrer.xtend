@@ -5,7 +5,9 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
+import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
@@ -15,32 +17,30 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
+import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
-import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
-import xtraitj.xtraitj.TJField
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
-import org.eclipse.xtext.common.types.JvmMember
-import xtraitj.util.XtraitjAnnotatedElementHelper
-import org.eclipse.xtext.common.types.util.TypeReferences
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -54,7 +54,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjAnnotatedElementHelper
-	@Inject extension TypeReferences
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -62,18 +61,18 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 * 
 	 * @param element
 	 *            the model to create one or more
-	 *            {@link org.eclipse.xtext.common.types.JvmDeclaredType declared
+	 *            {@link JvmDeclaredType declared
 	 *            types} from.
 	 * @param acceptor
 	 *            each created
-	 *            {@link org.eclipse.xtext.common.types.JvmDeclaredType type}
+	 *            {@link JvmDeclaredType type}
 	 *            without a container should be passed to the acceptor in order
 	 *            get attached to the current resource. The acceptor's
 	 *            {@link IJvmDeclaredTypeAcceptor#accept(org.eclipse.xtext.common.types.JvmDeclaredType)
 	 *            accept(..)} method takes the constructed empty type for the
 	 *            pre-indexing phase. This one is further initialized in the
 	 *            indexing phase using the closure you pass to the returned
-	 *            {@link org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing#initializeLater(org.eclipse.xtext.xbase.lib.Procedures.Procedure1)
+	 *            {@link IPostIndexingInitializing#initializeLater(org.eclipse.xtext.xbase.lib.Procedures.Procedure1)
 	 *            initializeLater(..)}.
 	 * @param isPreIndexingPhase
 	 *            whether the method is called in a pre-indexing phase, i.e.
@@ -151,7 +150,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
 	def toTraitField(TJTraitReference e) {
-		e.toField(e.traitFieldName, e.traitReferenceCopy) [
+		e.toField(e.traitFieldName, e.associatedClass) [
 			initializer = [
 				append('''new ''')
 				append(e.associatedClass.type)

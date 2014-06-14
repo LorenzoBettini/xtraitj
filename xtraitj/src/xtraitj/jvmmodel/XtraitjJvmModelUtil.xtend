@@ -35,6 +35,7 @@ import xtraitj.typing.XtraitjTypingUtil
 import static extension xtraitj.util.XtraitjModelUtil.*
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -683,7 +684,7 @@ class XtraitjJvmModelUtil {
    	}
 
 	def traitClassName(JvmTypeReference t) {
-   		var n = t.identifier
+   		var n = t.jvmTypeReferenceString
    		
    		var pos = n.indexOf("<")
    		if (pos > 0)
@@ -698,13 +699,17 @@ class XtraitjJvmModelUtil {
    	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
-		var n = t.simpleName
+		var n = t.jvmTypeReferenceString
    		
    		var pos = n.indexOf("<")
    		if (pos > 0)
    			return n.substring(0, pos)
    		else
    			return n
+	}
+
+	def getJvmTypeReferenceString(JvmTypeReference t) {
+		NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
 	}
 }
 
