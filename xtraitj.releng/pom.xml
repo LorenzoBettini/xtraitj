@@ -32,7 +32,7 @@
 		<findbugs-version>2.5.4-SNAPSHOT</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<xtext.version>2.6.0</xtext.version>
+		<xtext.version>2.6.1</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
 		<fornax-oaw-m2-plugin-version>3.4.0</fornax-oaw-m2-plugin-version>
 		
@@ -290,6 +290,17 @@
 	</build>
 
 	<pluginRepositories>
+		<pluginRepository>
+			<id>sonatype_releases</id>
+			<url>https://oss.sonatype.org/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	
 		<pluginRepository>
 			<!-- required for findbugs plugin 2.5.4-SNAPSHOT (using findbugs 2.0.3) -->
 			<id>codehaus-snapshots</id>
