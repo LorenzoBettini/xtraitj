@@ -312,7 +312,11 @@ class XtraitjJvmModelUtil {
 	}
 
 	def xtraitjJvmAllMethodOperations(TJTraitReference e) {
-		e.trait.getXtraitjResolvedOperations.declaredMethods.
+		e.trait.xtraitjJvmAllMethodOperations(e)
+	}
+
+	def xtraitjJvmAllMethodOperations(JvmTypeReference e, EObject context) {
+		e.getXtraitjResolvedOperations(context).declaredMethods.
 					createXtraitjJvmOperations
 	}
 
@@ -324,7 +328,13 @@ class XtraitjJvmModelUtil {
 	def xtraitjJvmAllRequiredOperations(TJTraitReference e) {
 		// TODO deal with redirect
 		// see old xtraitjJvmAllRequiredOperations
-		val ops = e.trait.getXtraitjResolvedOperations()
+		e.trait.xtraitjJvmAllRequiredOperations()
+	}
+
+	def xtraitjJvmAllRequiredOperations(JvmTypeReference e) {
+		// TODO deal with redirect
+		// see old xtraitjJvmAllRequiredOperations
+		val ops = e.getXtraitjResolvedOperations()
 		(ops.allRequirements).createXtraitjJvmOperations
 	}
 
