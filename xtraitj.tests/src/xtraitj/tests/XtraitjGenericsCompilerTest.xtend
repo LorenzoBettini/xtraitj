@@ -68,7 +68,7 @@ public class C<T extends List<String>, U> {
 
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -77,7 +77,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T extends List<String>, U> {
+public interface T1Interface<T extends List<String>, U> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -97,17 +97,17 @@ public interface T1<T extends List<String>, U> {
 
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import tests.traits.T1;
+import tests.T1Interface;
 
 @SuppressWarnings("all")
-public class T1Impl<T extends List<String>, U> implements T1<T, U> {
-  private T1<T, U> _delegate;
+public class T1<T extends List<String>, U> implements T1Interface<T, U> {
+  private T1Interface<T, U> _delegate;
   
-  public T1Impl(final T1<T, U> delegate) {
+  public T1(final T1Interface<T, U> delegate) {
     this._delegate = delegate;
   }
   
@@ -149,6 +149,9 @@ public class T1Impl<T extends List<String>, U> implements T1<T, U> {
 }
 '''
 )
+
+
+
 
 			assertGeneratedJavaCodeCompiles
 		]

@@ -157,7 +157,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T {
+public interface TInterface {
   @XtraitjRequiredField
   public abstract List<Integer> getF();
   
@@ -183,10 +183,10 @@ import java.util.List;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 
 @SuppressWarnings("all")
-public class TImpl implements T {
-  private T _delegate;
+public class T implements TInterface {
+  private TInterface _delegate;
   
-  public TImpl(final T delegate) {
+  public T(final TInterface delegate) {
     this._delegate = delegate;
   }
   

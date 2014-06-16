@@ -14,6 +14,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
@@ -154,34 +155,31 @@ class XtraitjGeneratorExtensions {
 		}
 	}
 
-   	def toGetterAbstract(TJMember m) {
-   		m.toGetter(m.name, m.type) => [
-   			abstract = true
-   		]
-   	}
-
-   	def toSetterAbstract(TJMember m) {
-   		m.toSetter(m.name, m.type) => [
-   			abstract = true
-   		]
-   	}
-
-	def toAbstractMethod(TJMethodDeclaration m) {
-		m.toMethod(m.name, m.type) [
-			documentation = m.documentation
-
-			copyTypeParameters(m.typeParameters)
-
-			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			abstract = true
-		]
-	}
-
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
 		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
 	}
 
+	def associatedClass(TJTraitReference t) {
+		if (t.operations.empty)
+			t.newTypeRef(t.trait.traitClassName, t.trait.arguments.map[cloneWithProxies])
+		else
+			t.newTypeRef(t.traitExpressionClassName)
+	}
+
+	def transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
+		val newRef = typeRef.cloneWithProxies 
+		if (newRef instanceof JvmParameterizedTypeReference) {
+			newRef.arguments.clear
+		
+			for (typePar : typeRef.arguments) {
+//				val type = typesFactory.createJvmGenericType
+//				type.setSimpleName(typePar.simpleName)
+				newRef.arguments += newTypeRef(typePar.type)
+			}
+		
+		}
+		
+		newRef
+	}
 
 }

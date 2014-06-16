@@ -16,8 +16,8 @@ class XtraitjTypeReferenceSerializer extends TypeReferenceSerializer {
 	
 	override isLocalTypeParameter(EObject context, JvmTypeParameter parameter) {
 		/*
-		 * For a trait we also infer a class with the same type parameters as the
-		 * associated trait; however, the type parameters are declared in the trait
+		 * For a trait we also generate an interface with the same type parameters as the
+		 * associated trait; this interface is created on the fly by the model generator
 		 * thus, we must consider that isLocalTypeParameter returns true
 		 * in this case, otherwise the type parameter is serialized as '?'.
 		 * The same holds for type parameters of methods (in this case we need to
