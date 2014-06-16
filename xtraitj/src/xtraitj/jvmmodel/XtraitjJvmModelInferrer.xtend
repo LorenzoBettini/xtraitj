@@ -2,6 +2,7 @@ package xtraitj.jvmmodel
 
 import com.google.inject.Inject
 import java.util.List
+import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
@@ -20,6 +21,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
@@ -41,8 +43,7 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import java.util.Map
-import org.eclipse.emf.ecore.util.EcoreUtil
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -56,6 +57,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension XtraitjGeneratorExtensions
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -86,14 +88,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		val Map<String,JvmGenericType> typesMap = newHashMap()
    		
 		val traits = p.traits
-		for (t : traits) 
-			t.inferTraitInterface(acceptor, typesMap)
+//		for (t : traits) 
+//			t.inferTraitInterface(acceptor, typesMap)
 
 		for (t : traits)
 			t.inferTraitClass(acceptor, typesMap)
 		
-		for (c : p.classes)
-			c.inferClass(acceptor, typesMap)
+//		for (c : p.classes)
+//			c.inferClass(acceptor, typesMap)
    	}
    	
    	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
@@ -591,18 +593,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		newRef
 	}
    	
-   	def toGetterAbstract(TJMember m) {
-   		m.toGetter(m.name, m.type) => [
-   			abstract = true
-   		]
-   	}
-
-   	def toSetterAbstract(TJMember m) {
-   		m.toSetter(m.name, m.type) => [
-   			abstract = true
-   		]
-   	}
-
    	def toGetterDelegate(JvmGenericType type, TJMember m) {
    		m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [
    			method |
@@ -705,19 +695,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toAbstractMethod(TJMethodDeclaration m) {
-		m.toMethod(m.name, m.type) [
-			documentation = m.documentation
-
-			copyTypeParameters(m.typeParameters)
-
-			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			abstract = true
-		]
-	}
-
 	def toAbstractMethod(XtraitjJvmOperation m) {
 		m.toAbstractMethod(m.op.simpleName)
 	}
@@ -754,89 +731,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-   	def traitInterfaceName(TJTrait t) {
-   		t.fullyQualifiedName.toString
-//   		n.skipLast(1).append("traits").
-//   			append(n.lastSegment).toString// + "Interface"
-   	}
-
-   	def traitExpressionInterfaceName(TJTraitReference t) {
-   		val n = t.containingDeclaration.fullyQualifiedName
-   		n. // skipLast(1). append("traits").
-   			append(t.adapterName).toString// + "Interface"
-   	}
-
-   	def traitExpressionClassName(TJTraitReference t) {
-   		val n = t.containingDeclaration.fullyQualifiedName
-   		n. // skipLast(1). /* append("traits").append("impl").*/
-   			append(t.adapterName).toString + "Impl"
-   	}
-
-	def adapterName(TJTraitReference t) {
-		t.syntheticName + "_Adapter"
-	}
-
-	def syntheticName(TJTraitReference t) {
-		t.containingDeclaration.name + "_" +
-		t.trait.simpleName + "_" +
-		t.containingDeclaration.traitOperationExpressions.indexOf(t)
-	}
-
-	def delegateFieldName() {
-		"_delegate"
-	}
-
-	def traitFieldName(TJTraitReference e) {
-		if (e.operations.empty)
-			return "_" + e.trait.traitFieldName
-		return "_" + e.syntheticName
-	}
-
-	def traitFieldNameForOperations(TJTraitReference e) {
-		return e.trait.traitFieldName + "_" +
-				e.containingDeclaration.traitReferences.indexOf(e)
-	}
-
-	def traitFieldName(TJTrait t) {
-		"_" + t.name
-	}
-
-	def traitFieldName(JvmParameterizedTypeReference t) {
-		t.typeNameWithoutTypeArgs
-	}
-
-	def protected void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
-		for (typeParameter : typeParameters) {
-			val clonedTypeParameter = typeParameter.cloneWithProxies();
-			if (clonedTypeParameter != null) {
-				target.typeParameters += clonedTypeParameter
-			}
-		}
-	}
-
-	def protected void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
-		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
-	}
-
 	def protected void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
 		target.annotations += xop.op.annotations.
 			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
-
-	def protected void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
-		target.annotations += element.toAnnotation(XtraitjTraitInterface)
-	}
-
-	def protected void annotateAsRequiredField(TJField element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredField)
-	}
-
-	def protected void annotateAsRequiredMethod(TJRequiredMethod element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
-	}
-
-	def protected void annotateAsDefinedMethod(TJMethod element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
 	}
 
 	def protected traitReferenceCopy(TJTraitReference traitRef) {

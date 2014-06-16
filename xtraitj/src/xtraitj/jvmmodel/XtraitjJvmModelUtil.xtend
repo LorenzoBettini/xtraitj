@@ -17,7 +17,6 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
@@ -35,6 +34,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.generator.XtraitjGeneratorExtensions
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -50,6 +50,7 @@ class XtraitjJvmModelUtil {
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjGeneratorExtensions
 
 //	def associatedInterface(TJTraitReference t) {
 //		val associated = t.associatedInterfaceType
@@ -686,40 +687,7 @@ class XtraitjJvmModelUtil {
    		"_" + name
    	}
 
-	def traitClassName(TJTrait t) {
-   		val n = t.fullyQualifiedName
-   		n. // skipLast(1). /* append("traits").append("impl"). */ 
-   			/* append(n.lastSegment). */ 
-   			toString + "Impl"
-   	}
 
-	def traitClassName(JvmTypeReference t) {
-   		var n = t.identifier
-   		
-   		var pos = n.indexOf("<")
-   		if (pos > 0)
-   			n = n.substring(0, pos)
-   		
-   		pos = n.lastIndexOf(".")
-   		var name = ""
-   		if (pos > 0)
-   			name = n.substring(0, pos) + "."
-   		
-   		name + n.substring(pos+1) + "Impl"
-   	}
 
-	def typeNameWithoutTypeArgs(JvmTypeReference t) {
-		var n = t.simpleName
-   		
-   		var pos = n.indexOf("<")
-   		if (pos > 0)
-   			return n.substring(0, pos)
-   		else
-   			return n
-	}
-
-	def getJvmTypeReferenceString(JvmTypeReference t) {
-		NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
-	}
 }
 
