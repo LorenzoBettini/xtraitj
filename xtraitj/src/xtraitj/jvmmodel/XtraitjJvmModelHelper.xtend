@@ -34,36 +34,8 @@ class XtraitjJvmModelHelper {
 		]
 	}
 
-	/**
-	 * Excludes methods declared in java.lang.Object.
-	 * The operations will have type parameters instantiated
-	 */
-	def getOperations(JvmTypeReference typeRef, EObject context) {
-		typeRef.toLightweightTypeReference(context).resolvedOperations.allOperations.filter[
-			declaration.declaringType.simpleName != objectClassName
-		]
-	}
-
 	def getXtraitjResolvedOperations(JvmTypeReference typeRef) {
 		typeRef.getXtraitjResolvedOperations(typeRef)
-	}
-
-	def getXtraitjResolvedOperations(JvmTypeReference typeRef, EObject context) {
-		val List<IResolvedOperation> requiredFields = newArrayList
-		val List<IResolvedOperation> requiredMethods = newArrayList
-		val List<IResolvedOperation> definedMethods = newArrayList
-		
-		for (o : typeRef.getOperations(context)) {
-			val declaration = o.declaration
-			if (declaration.annotatedRequiredField)
-				requiredFields += o
-			else if (declaration.annotatedRequiredMethod)
-				requiredMethods += o
-			else if (declaration.annotatedDefinedMethod)
-				definedMethods += o
-		}
-		
-		new XtraitjResolvedOperations(requiredFields, requiredMethods, definedMethods)
 	}
 
 	def getXtraitjResolvedOperations(JvmTypeReference typeRef, EObject context) {
