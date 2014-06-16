@@ -31,13 +31,13 @@ class XtraitjScopeProviderTest {
 	@Test def void testTraitRenameOperations() {
 		traitRenameOperations.parse.
 			renameOperation.assertScope
-			(memberFeature, "n, m, t1, s")
+			(memberFeature, "s, n, m, t1")
 	}
 
 	@Test def void testTraitRenameFieldOperations() {
 		traitRenameField.parse.
 			renameOperation.assertScope
-			(memberFeature, "fieldB, n, m, fieldS")
+			(memberFeature, "fieldB, fieldS, n, m")
 	}
 
 	@Test def void testTraitHideOperations() {
