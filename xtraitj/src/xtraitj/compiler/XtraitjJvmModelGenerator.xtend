@@ -44,6 +44,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				fsa.generateFile(type.qualifiedName.replace('.', '/') + '.java', 
 					type.generateType(generatorConfigProvider.get(type))
 				)
+			} else {
+				// we can assume it's an Xtraitj class
+				preprocessClassInferredType(genericType)
+				super._internalDoGenerate(type, fsa)
 			}
 		}
 	}
@@ -86,7 +90,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
 						
-		superTypes += transformedTraitInterfaceTypeRef
+		superTypes.add(0, transformedTraitInterfaceTypeRef)
 		
 		members.add(0, t.toConstructor[
 			simpleName = t.name
@@ -110,6 +114,20 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		// remove the default constructor
 		members.remove(members.size - 1)
+	}
+
+	def preprocessClassInferredType(JvmGenericType type) {
+		for (s : type.superTypes) {
+			val superTypeRef = (s as JvmParameterizedTypeReference)
+			
+			// we must transform the references to Trait classes
+			// into references to Trait interfaces
+			val t = (superTypeRef.type as JvmGenericType)
+			if (!t.isInterface) {
+				// then it's the reference to a trait class
+				superTypeRef.type = t.superTypes.head.type
+			}
+		}
 	}
 
    	def toGetterAbstract(TJMember m, JvmTypeParameterDeclarator target) {

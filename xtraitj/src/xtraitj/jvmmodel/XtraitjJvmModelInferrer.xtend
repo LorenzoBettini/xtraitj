@@ -94,8 +94,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		for (t : traits)
 			t.inferTraitClass(acceptor, typesMap)
 		
-//		for (c : p.classes)
-//			c.inferClass(acceptor, typesMap)
+		for (c : p.classes)
+			c.inferClass(acceptor, typesMap)
    	}
    	
    	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
@@ -144,11 +144,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (traitRef : c.traitExpression.traitReferences) {
    				superTypes += traitRef.traitReferenceCopy
-   				members += traitRef.toTraitField
-   				println(traitRef.trait.simpleName)
+   				
    				// do not delegate to a trait who requires that operation
    				// but to the one which actually implements it
    				val realRef = traitRef.buildTypeRef(typesMap)
+   				
+   				members += traitRef.toField(traitRef.traitFieldName, realRef) [
+					initializer = [
+						append('''new ''')
+						append(realRef.type)
+						append("(this)")
+					]
+				]
+   				
    				for (traitMethod : realRef.xtraitjJvmAllMethodOperations(traitRef))
    					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
    						copyAnnotationsFrom(traitMethod)
@@ -156,16 +164,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			}
    		]
    	}
-
-	def toTraitField(TJTraitReference e) {
-		e.toField(e.traitFieldName, e.associatedClass) [
-			initializer = [
-				append('''new ''')
-				append(e.associatedClass.type)
-				append("(this)")
-			]
-		]
-	}
 
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
@@ -486,7 +484,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// does not expose type parameters yet
 		traitClass.copyTypeParameters(t.traitTypeParameters)
 		
-		//typesMap.put(t.name, traitClass)
+		typesMap.put(t.name, traitClass)
    		
 		acceptor.accept(traitClass).initializeLater[
 

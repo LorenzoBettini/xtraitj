@@ -243,11 +243,9 @@ public class T implements TInterface {
 assertJavaClass("C",
 '''
 import java.util.List;
-import traits.T;
-import traits.impl.TImpl;
 
 @SuppressWarnings("all")
-public class C implements T {
+public class C implements TInterface {
   private List<Integer> f;
   
   public List<Integer> getF() {
@@ -268,7 +266,7 @@ public class C implements T {
     this.b = b;
   }
   
-  private TImpl _T = new TImpl(this);
+  private T _T = new T(this);
   
   public Object m(final List<String> l, final String s) {
     return _T._m(l, s);
