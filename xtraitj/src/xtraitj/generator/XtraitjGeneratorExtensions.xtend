@@ -26,6 +26,9 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJField
+import xtraitj.xtraitj.TJRequiredMethod
+import xtraitj.xtraitj.TJMethod
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -126,23 +129,23 @@ class XtraitjGeneratorExtensions {
 		NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
 	}
 
-	def void annotateAsTrait(EObject element, JvmAnnotationTarget target) {
+	def void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
 		target.annotations += element.toAnnotation(XtraitjTraitInterface)
 	}
 
-	def void annotateAsTraitClass(EObject element, JvmAnnotationTarget target) {
+	def void annotateAsTraitClass(TJTrait element, JvmAnnotationTarget target) {
 		target.annotations += element.toAnnotation(XtraitjTraitClass)
 	}
 
-	def void annotateAsRequiredField(EObject element, JvmMember target) {
+	def void annotateAsRequiredField(TJField element, JvmMember target) {
 		target.annotations += element.toAnnotation(XtraitjRequiredField)
 	}
 
-	def void annotateAsRequiredMethod(EObject element, JvmMember target) {
+	def void annotateAsRequiredMethod(TJRequiredMethod element, JvmMember target) {
 		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
 	}
 
-	def void annotateAsDefinedMethod(EObject element, JvmMember target) {
+	def void annotateAsDefinedMethod(TJMethod element, JvmMember target) {
 		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
 	}
 

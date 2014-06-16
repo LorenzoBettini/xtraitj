@@ -491,6 +491,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(traitClass).initializeLater[
 
    			documentation = t.documentation
+   			
+   			t.annotateAsTraitClass(it)
 
 //   			val traitInterfaceTypeRef = t.associatedInterface
 //			
@@ -518,12 +520,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //			]
    			
    			for (field : t.fields) {
-   				members += toGetterDelegate(field)
+   				members += toGetterDelegate(field) => [
+   					field.annotateAsRequiredField(it)
+   				]
    				members += field.toSetterDelegate
    			}
    			
    			for (aMethod : t.requiredMethods)
-   				members += aMethod.toMethodDelegate(delegateFieldName)
+   				members += aMethod.toMethodDelegate(delegateFieldName) => [
+   					aMethod.annotateAsRequiredMethod(it)
+   				]
    			
    			for (method : t.methods) {
    				if (method.isPrivate) {
@@ -538,7 +544,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   				val actualMethod = method.toTraitMethod(method.name.underscoreName)
    					
    					// m() { _delegate.m(); }
-   					val delegateMethod = method.toMethodDelegate(delegateFieldName)
+   					val delegateMethod = method.toMethodDelegate(delegateFieldName) => [
+	   					method.annotateAsDefinedMethod(it)
+	   				]
    					
    					delegateMethod.translateAnnotations(method.annotations)
    					

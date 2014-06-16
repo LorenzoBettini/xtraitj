@@ -102,7 +102,11 @@ package tests;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
 public class T1<T extends List<String>, U> implements T1Interface<T, U> {
   private T1Interface<T, U> _delegate;
@@ -111,6 +115,7 @@ public class T1<T extends List<String>, U> implements T1Interface<T, U> {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public T getT() {
     return _delegate.getT();
   }
@@ -119,6 +124,7 @@ public class T1<T extends List<String>, U> implements T1Interface<T, U> {
     _delegate.setT(t);
   }
   
+  @XtraitjDefinedMethod
   public String m() {
     return _delegate.m();
   }
@@ -130,6 +136,7 @@ public class T1<T extends List<String>, U> implements T1Interface<T, U> {
     return IterableExtensions.<String>head(_t);
   }
   
+  @XtraitjDefinedMethod
   public T read_t() {
     return _delegate.read_t();
   }
@@ -139,6 +146,7 @@ public class T1<T extends List<String>, U> implements T1Interface<T, U> {
     return t1;
   }
   
+  @XtraitjDefinedMethod
   public void update_t(final T t) {
     _delegate.update_t(t);
   }

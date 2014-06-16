@@ -181,7 +181,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
 public class T implements TInterface {
   private TInterface _delegate;
@@ -190,6 +194,7 @@ public class T implements TInterface {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public List<Integer> getF() {
     return _delegate.getF();
   }
@@ -198,6 +203,7 @@ public class T implements TInterface {
     _delegate.setF(f);
   }
   
+  @XtraitjRequiredField
   public boolean isB() {
     return _delegate.isB();
   }
@@ -206,6 +212,7 @@ public class T implements TInterface {
     _delegate.setB(b);
   }
   
+  @XtraitjDefinedMethod
   public Object m(final List<String> l, final String s) {
     return _delegate.m(l, s);
   }
@@ -221,6 +228,7 @@ public class T implements TInterface {
     return (_plus_1 + Boolean.valueOf(_isB));
   }
   
+  @XtraitjDefinedMethod
   public Object n() {
     return _delegate.n();
   }
