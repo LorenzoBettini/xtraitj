@@ -34,8 +34,6 @@ class XtraitjCompilerTest extends AbstractXtraitjCompilerTest {
 		'''.compile [
 assertTraitJavaInterface("T",
 '''
-package traits;
-
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
@@ -44,7 +42,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T {
+public interface TInterface {
   @XtraitjRequiredField
   public abstract List<Integer> getF();
   
@@ -67,21 +65,24 @@ public interface T {
 ''')
 assertTraitJavaClass("T",
 '''
-package traits.impl;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import traits.T;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class TImpl implements T {
-  private T _delegate;
+public class T implements TInterface {
+  private TInterface _delegate;
   
-  public TImpl(final T delegate) {
+  public T(final TInterface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public List<Integer> getF() {
     return _delegate.getF();
   }
@@ -90,6 +91,7 @@ public class TImpl implements T {
     _delegate.setF(f);
   }
   
+  @XtraitjRequiredField
   public boolean isB() {
     return _delegate.isB();
   }
@@ -98,14 +100,17 @@ public class TImpl implements T {
     _delegate.setB(b);
   }
   
+  @XtraitjRequiredMethod
   public boolean abM(final String s) {
     return _delegate.abM(s);
   }
   
+  @XtraitjRequiredMethod
   public void abV() {
     _delegate.abV();
   }
   
+  @XtraitjDefinedMethod
   public Object m(final List<String> l, final String s) {
     return _delegate.m(l, s);
   }
@@ -287,29 +292,32 @@ public class C implements TInterface {
 		traitPrivateMethod.compile [
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1 {
+public interface T1Interface {
   @XtraitjDefinedMethod
   public abstract String callPriv();
 }
 ''')
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl implements T1 {
-  private T1 _delegate;
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
   
-  public T1Impl(final T1 delegate) {
+  public T1(final T1Interface delegate) {
     this._delegate = delegate;
   }
   
@@ -317,6 +325,7 @@ public class T1Impl implements T1 {
     return "T1.priv;";
   }
   
+  @XtraitjDefinedMethod
   public String callPriv() {
     return _delegate.callPriv();
   }
@@ -641,7 +650,7 @@ public class C implements T2 {
 		classWithTraitSum.compile[
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
@@ -650,7 +659,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1 {
+public interface T1Interface {
   @XtraitjRequiredField
   public abstract int getI();
   
@@ -666,18 +675,24 @@ public interface T1 {
 )
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl implements T1 {
-  private T1 _delegate;
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
   
-  public T1Impl(final T1 delegate) {
+  public T1(final T1Interface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public int getI() {
     return _delegate.getI();
   }
@@ -686,10 +701,12 @@ public class T1Impl implements T1 {
     _delegate.setI(i);
   }
   
+  @XtraitjRequiredMethod
   public Object m2() {
     return _delegate.m2();
   }
   
+  @XtraitjDefinedMethod
   public Object m1() {
     return _delegate.m1();
   }
@@ -712,13 +729,13 @@ assertJavaClass("tests", "C",
 '''
 package tests;
 
-import tests.traits.T1;
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.T2Impl;
+import tests.T1;
+import tests.T1Interface;
+import tests.T2;
+import tests.T2Interface;
 
 @SuppressWarnings("all")
-public class C implements T1, T2 {
+public class C implements T1Interface, T2Interface {
   private int i = 0;
   
   public int getI() {
@@ -729,13 +746,13 @@ public class C implements T1, T2 {
     this.i = i;
   }
   
-  private T1Impl _T1 = new T1Impl(this);
+  private T1 _T1 = new T1(this);
   
   public Object m1() {
     return _T1._m1();
   }
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public Object m2() {
     return _T2._m2();
@@ -752,7 +769,7 @@ public class C implements T1, T2 {
 		traitWithDoubleApply.compile[
 assertTraitJavaInterface("tests", "TDouble",
 '''
-package tests.traits;
+package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
@@ -760,7 +777,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TDouble {
+public interface TDoubleInterface {
   @XtraitjDefinedMethod
   public abstract int doubleApply();
   
@@ -771,22 +788,28 @@ public interface TDouble {
 )
 assertTraitJavaClass("tests", "TDouble",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.TDouble;
+import tests.TDoubleInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class TDoubleImpl implements TDouble {
-  private TDouble _delegate;
+public class TDouble implements TDoubleInterface {
+  private TDoubleInterface _delegate;
   
-  public TDoubleImpl(final TDouble delegate) {
+  public TDouble(final TDoubleInterface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredMethod
   public int m() {
     return _delegate.m();
   }
   
+  @XtraitjDefinedMethod
   public int doubleApply() {
     return _delegate.doubleApply();
   }
@@ -801,18 +824,22 @@ public class TDoubleImpl implements TDouble {
 )
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl implements T1 {
-  private T1 _delegate;
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
   
-  public T1Impl(final T1 delegate) {
+  public T1(final T1Interface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjDefinedMethod
   public int m() {
     return _delegate.m();
   }
@@ -825,18 +852,22 @@ public class T1Impl implements T1 {
 )
 assertTraitJavaClass("tests", "T2",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T2;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2Impl implements T2 {
-  private T2 _delegate;
+public class T2 implements T2Interface {
+  private T2Interface _delegate;
   
-  public T2Impl(final T2 delegate) {
+  public T2(final T2Interface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjDefinedMethod
   public int m() {
     return _delegate.m();
   }
@@ -851,20 +882,20 @@ assertJavaClass("tests", "C1",
 '''
 package tests;
 
-import tests.traits.T1;
-import tests.traits.TDouble;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.TDoubleImpl;
+import tests.T1;
+import tests.T1Interface;
+import tests.TDouble;
+import tests.TDoubleInterface;
 
 @SuppressWarnings("all")
-public class C1 implements T1, TDouble {
-  private T1Impl _T1 = new T1Impl(this);
+public class C1 implements T1Interface, TDoubleInterface {
+  private T1 _T1 = new T1(this);
   
   public int m() {
     return _T1._m();
   }
   
-  private TDoubleImpl _TDouble = new TDoubleImpl(this);
+  private TDouble _TDouble = new TDouble(this);
   
   public int doubleApply() {
     return _TDouble._doubleApply();
@@ -3665,20 +3696,20 @@ assertJavaClass("tests", "C",
 package tests;
 
 import java.util.ArrayList;
-import tests.traits.T1;
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.T2Impl;
+import tests.T1;
+import tests.T1Interface;
+import tests.T2;
+import tests.T2Interface;
 
 @SuppressWarnings("all")
-public class C implements T2, T1 {
-  private T2Impl _T2 = new T2Impl(this);
+public class C implements T2Interface, T1Interface {
+  private T2 _T2 = new T2(this);
   
   public ArrayList<String> createList() {
     return _T2._createList();
   }
   
-  private T1Impl _T1 = new T1Impl(this);
+  private T1 _T1 = new T1(this);
   
   public String listToString() {
     return _T1._listToString();
@@ -3982,22 +4013,22 @@ assertJavaClass("tests", "C",
 package tests;
 
 import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.T2Impl;
+import tests.T1;
+import tests.T1Interface;
+import tests.T2;
+import tests.T2Interface;
 import xtraitj.input.tests.MyTestInterface;
 import xtraitj.input.tests.MyTestInterface2;
 
 @SuppressWarnings("all")
-public class C implements MyTestInterface, MyTestInterface2, T1, T2 {
-  private T1Impl _T1 = new T1Impl(this);
+public class C implements MyTestInterface, MyTestInterface2, T1Interface, T2Interface {
+  private T1 _T1 = new T1(this);
   
   public int m(final List<String> l) {
     return _T1._m(l);
   }
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public List<Integer> n(final int i) {
     return _T2._n(i);

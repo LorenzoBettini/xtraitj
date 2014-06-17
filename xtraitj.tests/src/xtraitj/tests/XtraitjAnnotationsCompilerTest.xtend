@@ -19,7 +19,7 @@ class XtraitjAnnotationsCompilerTest extends AbstractXtraitjCompilerTest {
 
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
@@ -28,7 +28,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1 {
+public interface T1Interface {
   @XtraitjRequiredField
   public abstract String getS();
   
@@ -46,18 +46,24 @@ public interface T1 {
 
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl implements T1 {
-  private T1 _delegate;
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
   
-  public T1Impl(final T1 delegate) {
+  public T1(final T1Interface delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public String getS() {
     return _delegate.getS();
   }
@@ -66,10 +72,12 @@ public class T1Impl implements T1 {
     _delegate.setS(s);
   }
   
+  @XtraitjRequiredMethod
   public String req() {
     return _delegate.req();
   }
   
+  @XtraitjDefinedMethod
   @SuppressWarnings("all")
   public String m() {
     return _delegate.m();
@@ -87,13 +95,13 @@ assertJavaClass("tests", "C",
 package tests;
 
 import com.google.inject.Inject;
-import tests.traits.T1;
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.T2Impl;
+import tests.T1;
+import tests.T1Interface;
+import tests.T2;
+import tests.T2Interface;
 
 @SuppressWarnings("all")
-public class C implements T1, T2 {
+public class C implements T1Interface, T2Interface {
   @Inject
   private String s = "bar";
   
@@ -105,14 +113,14 @@ public class C implements T1, T2 {
     this.s = s;
   }
   
-  private T1Impl _T1 = new T1Impl(this);
+  private T1 _T1 = new T1(this);
   
   @SuppressWarnings("all")
   public String m() {
     return _T1._m();
   }
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public String req() {
     return _T2._req();

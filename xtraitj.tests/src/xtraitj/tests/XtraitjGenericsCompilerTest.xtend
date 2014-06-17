@@ -562,7 +562,7 @@ public class C implements T1 {
 
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -570,7 +570,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1Interface<T> {
   @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
 }
@@ -579,19 +579,23 @@ public interface T1<T> {
 
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
 import java.util.List;
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl<T> implements T1<T> {
-  private T1<T> _delegate;
+public class T1<T> implements T1Interface<T> {
+  private T1Interface<T> _delegate;
   
-  public T1Impl(final T1<T> delegate) {
+  public T1(final T1Interface<T> delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjDefinedMethod
   public <T extends List<String>> String getFirst(final T t) {
     return _delegate.getFirst(t);
   }
@@ -1060,22 +1064,22 @@ assertJavaClass("tests", "C",
 package tests;
 
 import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
-import tests.traits.impl.T2Impl;
+import tests.T1;
+import tests.T1Interface;
+import tests.T2;
+import tests.T2Interface;
 import xtraitj.input.tests.MyGenericTestInterface;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer>, T1, T2 {
-  private T1Impl _T1 = new T1Impl(this);
+public class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer>, T1Interface, T2Interface {
+  private T1 _T1 = new T1(this);
   
   public int m(final List<String> l) {
     return _T1._m(l);
   }
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public List<Integer> n(final int i) {
     return _T2._n(i);
@@ -1095,12 +1099,12 @@ assertJavaClass("tests", "C",
 package tests;
 
 import tests.T1;
-import tests.T1Impl;
+import tests.T1Interface;
 import xtraitj.input.tests.MyGenericTestInterface3;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface3<Integer>, T1 {
-  private tests.T1Impl _T1 = new T1Impl(this);
+public class C implements MyGenericTestInterface3<Integer>, T1Interface {
+  private T1 _T1 = new T1(this);
   
   public Integer n(final int i) {
     return _T1._n(i);
@@ -1119,13 +1123,13 @@ assertJavaClass("tests", "C",
 '''
 package tests;
 
-import tests.traits.T1;
-import tests.traits.impl.T1Impl;
+import tests.T1;
+import tests.T1Interface;
 import xtraitj.input.tests.MyGenericTestInterface3;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
-  private T1Impl<U> _T1 = new T1Impl(this);
+public class C<U> implements MyGenericTestInterface3<U>, T1Interface<U> {
+  private T1<U> _T1 = new T1(this);
   
   public U n(final int i) {
     return _T1._n(i);
@@ -1140,18 +1144,65 @@ public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
 	@Test def void testClassImplementsAllGenericInterfaceMethodsWithCovariantReturnType() {
 		classImplementsAllGenericInterfaceMethodsWithCovariantReturnType.compile[
 
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests;
+
+import java.util.ArrayList;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T1Interface<U> {
+  @XtraitjDefinedMethod
+  public abstract ArrayList<?> n(final int i);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import java.util.ArrayList;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1<U> implements T1Interface<U> {
+  private T1Interface<U> _delegate;
+  
+  public T1(final T1Interface<U> delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjDefinedMethod
+  public ArrayList<U> n(final int i) {
+    return _delegate.n(i);
+  }
+  
+  public ArrayList<U> _n(final int i) {
+    return null;
+  }
+}
+'''
+)
+
 assertJavaClass("tests", "C",
 '''
 package tests;
 
 import java.util.ArrayList;
-import tests.traits.T1;
-import tests.traits.impl.T1Impl;
+import tests.T1;
+import tests.T1Interface;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface2<U>, T1<U> {
-  private T1Impl<U> _T1 = new T1Impl(this);
+public class C<U> implements MyGenericTestInterface2<U>, T1Interface<U> {
+  private T1<U> _T1 = new T1(this);
   
   public ArrayList<U> n(final int i) {
     return _T1._n(i);
@@ -1171,13 +1222,13 @@ assertJavaClass("tests", "C",
 package tests;
 
 import java.util.ArrayList;
-import tests.traits.T1;
-import tests.traits.impl.T1Impl;
+import tests.T1;
+import tests.T1Interface;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface2<String>, T1<String> {
-  private T1Impl<String> _T1 = new T1Impl(this);
+public class C implements MyGenericTestInterface2<String>, T1Interface<String> {
+  private T1<String> _T1 = new T1(this);
   
   public ArrayList<String> n(final int i) {
     return _T1._n(i);
