@@ -735,20 +735,51 @@ public class C implements UsesTGeneric {
 	@Test def void testRequiredMethodsWithGenerics() {
 		requiredMethodsWithGenerics.compile[
 
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests;
+
+import tests.TGeneric;
+import tests.TUsesGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TUsesGeneric implements TUsesGenericInterface {
+  private TUsesGenericInterface _delegate;
+  
+  private TGeneric<String> _TGeneric;
+  
+  public TUsesGeneric(final TUsesGenericInterface delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGeneric(delegate);
+  }
+  
+  public Iterable<String> iterableOfStrings() {
+    return _delegate.iterableOfStrings();
+  }
+  
+  public Iterable<String> _iterableOfStrings() {
+    return _TGeneric._iterableOfStrings();
+  }
+}
+'''
+)
+
 assertJavaClass("tests", "CUsesGeneric",
 '''
 package tests;
 
-import tests.traits.T2;
-import tests.traits.TUsesGeneric;
-import tests.traits.impl.T2Impl;
-import tests.traits.impl.TUsesGenericImpl;
+import tests.T2;
+import tests.T2Interface;
+import tests.TUsesGeneric;
+import tests.TUsesGenericInterface;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGeneric, T2 {
-  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
+public class CUsesGeneric implements TUsesGenericInterface, T2Interface {
+  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public Iterable<String> iterableOfStrings() {
     return _T2._iterableOfStrings();
@@ -761,16 +792,16 @@ assertJavaClass("tests", "CUsesGeneric2",
 '''
 package tests;
 
-import tests.traits.T2;
-import tests.traits.TGeneric;
-import tests.traits.impl.T2Impl;
-import tests.traits.impl.TGenericImpl;
+import tests.T2;
+import tests.T2Interface;
+import tests.TGeneric;
+import tests.TGenericInterface;
 
 @SuppressWarnings("all")
-public class CUsesGeneric2 implements TGeneric<String>, T2 {
-  private TGenericImpl<String> _TGeneric = new TGenericImpl(this);
+public class CUsesGeneric2 implements TGenericInterface<String>, T2Interface {
+  private TGeneric<String> _TGeneric = new TGeneric(this);
   
-  private T2Impl _T2 = new T2Impl(this);
+  private T2 _T2 = new T2(this);
   
   public Iterable<String> iterableOfStrings() {
     return _T2._iterableOfStrings();

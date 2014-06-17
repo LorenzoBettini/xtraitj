@@ -100,20 +100,20 @@ class XtraitjGeneratorExtensions {
 		t.typeNameWithoutTypeArgs
 	}
 
-	def traitClassName(JvmTypeReference t) {
-   		var n = t.identifier
-   		
-   		var pos = n.indexOf("<")
-   		if (pos > 0)
-   			n = n.substring(0, pos)
-   		
-   		pos = n.lastIndexOf(".")
-   		var name = ""
-   		if (pos > 0)
-   			name = n.substring(0, pos) + "."
-   		
-   		name + n.substring(pos+1) + "Impl"
-   	}
+//	def traitClassName(JvmTypeReference t) {
+//   		var n = t.identifier
+//   		
+//   		var pos = n.indexOf("<")
+//   		if (pos > 0)
+//   			n = n.substring(0, pos)
+//   		
+//   		pos = n.lastIndexOf(".")
+//   		var name = ""
+//   		if (pos > 0)
+//   			name = n.substring(0, pos) + "."
+//   		
+//   		name + n.substring(pos+1) + "Impl"
+//   	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
 		var n = t.simpleName
@@ -160,13 +160,6 @@ class XtraitjGeneratorExtensions {
 
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
 		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
-	}
-
-	def associatedClass(TJTraitReference t) {
-		if (t.operations.empty)
-			t.newTypeRef(t.trait.traitClassName, t.trait.arguments.map[cloneWithProxies])
-		else
-			t.newTypeRef(t.traitExpressionClassName)
 	}
 
 	def transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {

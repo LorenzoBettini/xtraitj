@@ -1,15 +1,16 @@
 package xtraitj.compiler
 
 import com.google.inject.Inject
+import java.util.HashMap
 import java.util.Map
-import java.util.Set
+import org.eclipse.xtext.common.types.JvmConstraintOwner
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.xbase.compiler.DisableCodeGenerationAdapter
 import org.eclipse.xtext.xbase.compiler.IGeneratorConfigProvider
@@ -17,16 +18,14 @@ import org.eclipse.xtext.xbase.compiler.JvmModelGenerator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import java.util.HashMap
-import org.eclipse.xtext.common.types.JvmWildcardTypeReference
-import org.eclipse.xtext.common.types.JvmConstraintOwner
-import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -113,7 +112,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				for (traitExp : t.traitExpression.traitReferences) {
 	   				newLine.append('''«traitExp.traitFieldName» = ''')
 	   				append('''new ''')
-					append(traitExp.trait.type)
+					append(traitExp.traitReferenceJavaType.type)
 					append("(delegate);")
 				}
    			]
@@ -121,7 +120,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 		for (traitExp : t.traitReferences)
 			members.add(0, traitExp.toField
-				(traitExp.traitFieldName, traitExp.associatedClass))
+				(traitExp.traitFieldName, traitExp.traitReferenceJavaType))
 
 		members.add(0, t.toField(delegateFieldName, transformedTraitInterfaceTypeRef))
 		
@@ -235,4 +234,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			constraint.typeReference = constraint.typeReference.rebindTypeParameters(target, visited)
 		}
 	}
+
+	def traitReferenceJavaType(TJTraitReference t) {
+		if (t.operations.empty)
+			t.trait.cloneWithProxies
+		else
+			t.newTypeRef(t.traitExpressionClassName)
+	}
+
+
 }
