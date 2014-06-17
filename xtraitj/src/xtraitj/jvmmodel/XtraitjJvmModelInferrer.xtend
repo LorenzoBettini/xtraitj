@@ -157,7 +157,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					]
 				]
    				
-   				for (traitMethod : realRef.xtraitjJvmAllMethodOperations(traitRef))
+   				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
    					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
    						copyAnnotationsFrom(traitMethod)
    					]

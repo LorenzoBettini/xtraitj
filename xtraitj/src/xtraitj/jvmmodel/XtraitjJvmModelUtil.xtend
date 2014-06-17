@@ -312,6 +312,15 @@ class XtraitjJvmModelUtil {
 			].flatten
 	}
 
+	def xtraitjJvmAllDefinedMethodOperations(TJTraitReference e) {
+		e.trait.xtraitjJvmAllDefinedMethodOperations(e)
+	}
+
+	def xtraitjJvmAllDefinedMethodOperations(JvmTypeReference e, EObject context) {
+		e.getXtraitjResolvedOperations(context).definedMethods.
+					createXtraitjJvmOperations
+	}
+
 	def xtraitjJvmAllMethodOperations(TJTraitReference e) {
 		e.trait.xtraitjJvmAllMethodOperations(e)
 	}

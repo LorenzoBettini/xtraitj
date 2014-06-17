@@ -58,6 +58,8 @@ class XtraitjAnnotatedElementHelper {
 	def filterOutXtraitjAnnotations(Iterable<JvmAnnotationReference> annotations) {
 		annotations.filter[
 			annotation.identifier != XtraitjDefinedMethod.name
+			&&
+			annotation.identifier != XtraitjRequiredMethod.name
 		]
 	}
 }
