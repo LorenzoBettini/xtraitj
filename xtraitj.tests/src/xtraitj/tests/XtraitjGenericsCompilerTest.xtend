@@ -239,7 +239,7 @@ public class T1<T extends Comparable<T>> implements T1Interface<T> {
 
 assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -248,7 +248,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
+public interface T1Interface<T extends Comparable<T>, U extends List<? extends T>> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -262,19 +262,24 @@ public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
 
 assertTraitJavaClass("tests", "T1",
 '''
-package tests.traits.impl;
+package tests;
 
 import java.util.List;
-import tests.traits.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl<T extends Comparable<T>, U extends List<? extends T>> implements T1<T, U> {
-  private T1<T, U> _delegate;
+public class T1<T extends Comparable<T>, U extends List<? extends T>> implements T1Interface<T, U> {
+  private T1Interface<T, U> _delegate;
   
-  public T1Impl(final T1<T, U> delegate) {
+  public T1(final T1Interface<T, U> delegate) {
     this._delegate = delegate;
   }
   
+  @XtraitjRequiredField
   public T getT() {
     return _delegate.getT();
   }
@@ -283,6 +288,7 @@ public class T1Impl<T extends Comparable<T>, U extends List<? extends T>> implem
     _delegate.setT(t);
   }
   
+  @XtraitjDefinedMethod
   public int compare(final U t1) {
     return _delegate.compare(t1);
   }

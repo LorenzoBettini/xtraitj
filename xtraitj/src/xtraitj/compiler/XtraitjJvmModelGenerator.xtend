@@ -1,9 +1,12 @@
 package xtraitj.compiler
 
 import com.google.inject.Inject
+import java.util.Map
+import java.util.Set
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
@@ -20,8 +23,9 @@ import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import java.util.Set
-import org.eclipse.xtext.common.types.JvmType
+import java.util.HashMap
+import org.eclipse.xtext.common.types.JvmWildcardTypeReference
+import org.eclipse.xtext.common.types.JvmConstraintOwner
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -61,6 +65,11 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			t.annotateAsTrait(it)
 		
 		   	copyTypeParameters(t.traitTypeParameters)
+
+			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
+		   	for (typePar : typeParameters) {
+		   		typePar.rebindConstraintsTypeParameters(it, map)
+		   	}
 		   			
 			for (field : t.fields) {
 				members += field.toGetterAbstract(it) => [
@@ -167,30 +176,27 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	 * is different)
 	 */
 	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
-		typeRef.rebindTypeParameters(target, newHashSet())
+		typeRef.rebindTypeParameters(target, newHashMap())
 	}
 
-	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target, Set<JvmType> visited) {
+	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target, Map<JvmTypeParameter, JvmTypeParameter> visited) {
 		val reboundTypeRef = typeRef.cloneWithProxies
 		
 		if (reboundTypeRef instanceof JvmParameterizedTypeReference) {
 			val type = reboundTypeRef.type
 			
 			if (type instanceof JvmTypeParameter) {
-				val typePar = target.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
-				reboundTypeRef.type = typePar
+				var typePar = visited.get(type)
 				
-				val constraints = typePar.constraints
-				for (i : 0..<constraints.size) {
-					val constraint = constraints.get(i)
-					val constraintType = constraint.typeReference.type
+				if (typePar === null) {
+					typePar = target.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
 					
-					if (!visited.contains(constraintType)) {
-						visited.add(constraintType)
-						
-						constraint.typeReference = constraint.typeReference.rebindTypeParameters(target, visited)
-					}
+					visited.put(type, typePar)
+					
+					rebindConstraintsTypeParameters(typePar, target, visited)
 				}
+				
+				reboundTypeRef.type = typePar
 			}
 			
 			// rebind type arguments as well
@@ -201,6 +207,11 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			
 			return reboundTypeRef
 		}
+
+		if (reboundTypeRef instanceof JvmWildcardTypeReference) {
+			reboundTypeRef.rebindConstraintsTypeParameters(target, visited)
+			return reboundTypeRef
+		}
 		
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
 			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(target, visited)
@@ -209,5 +220,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		}
 		
 		return typeRef
+	}
+	
+	protected def rebindConstraintsTypeParameters(JvmConstraintOwner constraintOwner, JvmTypeParameterDeclarator target, Map<JvmTypeParameter, JvmTypeParameter> visited) {
+		val constraints = constraintOwner.constraints
+		for (i : 0..<constraints.size) {
+			val constraint = constraints.get(i)
+			constraint.typeReference = constraint.typeReference.rebindTypeParameters(target, visited)
+		}
 	}
 }
