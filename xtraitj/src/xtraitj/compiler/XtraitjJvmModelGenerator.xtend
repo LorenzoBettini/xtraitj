@@ -20,6 +20,8 @@ import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import java.util.Set
+import org.eclipse.xtext.common.types.JvmType
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -143,10 +145,12 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
    	}
 
 	def toAbstractMethod(TJMethodDeclaration m, JvmTypeParameterDeclarator target) {
-		m.toMethod(m.name, m.type.rebindTypeParameters(target)) [
+		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
 			copyTypeParameters(m.typeParameters)
+			
+			returnType = returnType.rebindTypeParameters(target)
 
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target))
@@ -163,21 +167,47 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	 * is different)
 	 */
 	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
+		typeRef.rebindTypeParameters(target, newHashSet())
+	}
+
+	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target, Set<JvmType> visited) {
 		val reboundTypeRef = typeRef.cloneWithProxies
 		
-		if (reboundTypeRef instanceof JvmParameterizedTypeReference && reboundTypeRef.type instanceof JvmTypeParameter) {
-			val rebound = reboundTypeRef as JvmParameterizedTypeReference
-			val typePar = target.typeParameters.findFirst[name == rebound.type.simpleName]
-			rebound.type = typePar
-			return rebound
+		if (reboundTypeRef instanceof JvmParameterizedTypeReference) {
+			val type = reboundTypeRef.type
+			
+			if (type instanceof JvmTypeParameter) {
+				val typePar = target.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
+				reboundTypeRef.type = typePar
+				
+				val constraints = typePar.constraints
+				for (i : 0..<constraints.size) {
+					val constraint = constraints.get(i)
+					val constraintType = constraint.typeReference.type
+					
+					if (!visited.contains(constraintType)) {
+						visited.add(constraintType)
+						
+						constraint.typeReference = constraint.typeReference.rebindTypeParameters(target, visited)
+					}
+				}
+			}
+			
+			// rebind type arguments as well
+			val arguments = reboundTypeRef.arguments
+			for (i : 0..<arguments.size()) {
+				arguments.set(i, arguments.get(i).rebindTypeParameters(target, visited))
+			}
+			
+			return reboundTypeRef
 		}
 		
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
-			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(target)
+			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(target, visited)
 			reboundTypeRef.returnType = reboundReturnTypeRef
 			return reboundTypeRef
 		}
 		
 		return typeRef
-	}	
+	}
 }
