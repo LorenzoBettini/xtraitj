@@ -8,6 +8,7 @@ import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.typing.XtraitjTypingUtil
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmType
 
 class XtraitjJvmModelHelper {
 	@Inject extension OverrideHelper
@@ -30,8 +31,12 @@ class XtraitjJvmModelHelper {
 	 */
 	def getOperations(JvmTypeReference typeRef, EObject context) {
 		typeRef.toLightweightTypeReference(context).resolvedOperations.allOperations.filter[
-			declaration.declaringType.simpleName != objectClassName
+			declaration.declaringType.notJavaLangObject
 		]
+	}
+
+	def isNotJavaLangObject(JvmType type) {
+		type.simpleName != objectClassName
 	}
 
 	def getXtraitjResolvedOperations(JvmTypeReference typeRef) {

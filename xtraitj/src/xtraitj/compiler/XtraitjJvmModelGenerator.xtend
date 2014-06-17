@@ -26,12 +26,14 @@ import static extension xtraitj.util.XtraitjModelUtil.*
 import java.util.HashMap
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.JvmConstraintOwner
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
 	@Inject extension XtraitjGeneratorExtensions
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
 	
 	@Inject IGeneratorConfigProvider generatorConfigProvider
 	
@@ -134,7 +136,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			// we must transform the references to Trait classes
 			// into references to Trait interfaces
 			val t = (superTypeRef.type as JvmGenericType)
-			if (!t.isInterface) {
+			if (!t.isInterface && t.notJavaLangObject) {
 				// then it's the reference to a trait class
 				superTypeRef.type = t.superTypes.head.type
 			}
