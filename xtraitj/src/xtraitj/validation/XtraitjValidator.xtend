@@ -258,60 +258,60 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		}
 	}
 
-	@Check def void checkConflicts(TJDeclaration d) {
-		for (t1 : d.traitReferences) {
-			for (f1 : t1.xtraitjJvmAllRequiredFieldOperations) {
-				for (t2 : d.traitReferences) {
-					if (t1 != t2) {
-						if (t2.xtraitjJvmAllRequiredFieldOperations.exists[conflictsWith(f1)]) {
-							error(
-								"Field conflict '" + 
-								f1.fieldRepresentation + "' in " +
-								t1.trait.typeRefRepr,
-								t1,
-								null,
-								FIELD_CONFLICT
-							)
-						}			
-					}
-				}
-			}
-			
-			for (f1 : t1.xtraitjJvmAllRequiredMethodOperations) {
-				for (t2 : d.traitReferences) {
-					if (t1 != t2) {
-						if (t2.xtraitjJvmAllRequiredMethodOperations.exists[conflictsWith(f1)]) {
-							error(
-								"Method conflict '" + 
-								f1.methodRepresentation + "' in " +
-								t1.trait.typeRefRepr,
-								t1,
-								null,
-								METHOD_CONFLICT
-							)
-						}			
-					}
-				}
-			}
-
-			for (f1 : t1.xtraitjJvmAllMethodOperations) {
-				for (t2 : d.traitReferences) {
-					if (t1 != t2) {
-						if (t2.xtraitjJvmAllMethodOperations.exists[f1.op.simpleName == op.simpleName]) {
-							error(
-								"Method conflict '" + 
-								f1.methodRepresentation + "' in " +
-								t1.trait.typeRefRepr,
-								t1,
-								null,
-								METHOD_CONFLICT
-							)
-						}			
-					}
-				}
-			}
-		}
-	}
+//	@Check def void checkConflicts(TJDeclaration d) {
+//		for (t1 : d.traitReferences) {
+//			for (f1 : t1.xtraitjJvmAllRequiredFieldOperations) {
+//				for (t2 : d.traitReferences) {
+//					if (t1 != t2) {
+//						if (t2.xtraitjJvmAllRequiredFieldOperations.exists[conflictsWith(f1)]) {
+//							error(
+//								"Field conflict '" + 
+//								f1.fieldRepresentation + "' in " +
+//								t1.trait.typeRefRepr,
+//								t1,
+//								null,
+//								FIELD_CONFLICT
+//							)
+//						}			
+//					}
+//				}
+//			}
+//			
+//			for (f1 : t1.xtraitjJvmAllRequiredMethodOperations) {
+//				for (t2 : d.traitReferences) {
+//					if (t1 != t2) {
+//						if (t2.xtraitjJvmAllRequiredMethodOperations.exists[conflictsWith(f1)]) {
+//							error(
+//								"Method conflict '" + 
+//								f1.methodRepresentation + "' in " +
+//								t1.trait.typeRefRepr,
+//								t1,
+//								null,
+//								METHOD_CONFLICT
+//							)
+//						}			
+//					}
+//				}
+//			}
+//
+//			for (f1 : t1.xtraitjJvmAllMethodOperations) {
+//				for (t2 : d.traitReferences) {
+//					if (t1 != t2) {
+//						if (t2.xtraitjJvmAllMethodOperations.exists[f1.op.simpleName == op.simpleName]) {
+//							error(
+//								"Method conflict '" + 
+//								f1.methodRepresentation + "' in " +
+//								t1.trait.typeRefRepr,
+//								t1,
+//								null,
+//								METHOD_CONFLICT
+//							)
+//						}			
+//					}
+//				}
+//			}
+//		}
+//	}
 
 //	@Check def void checkConflicts(TJField f) {
 //		if (f.containingTrait == null)
