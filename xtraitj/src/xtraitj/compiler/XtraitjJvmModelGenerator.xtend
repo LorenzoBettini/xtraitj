@@ -113,7 +113,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				for (traitExp : t.traitExpression.traitReferences) {
 	   				newLine.append('''«traitExp.traitFieldName» = ''')
 	   				append('''new ''')
-					append(traitExp.associatedClass.type)
+					append(traitExp.trait.type)
 					append("(delegate);")
 				}
    			]
@@ -133,13 +133,17 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		for (s : type.superTypes) {
 			val superTypeRef = (s as JvmParameterizedTypeReference)
 			
-			// we must transform the references to Trait classes
-			// into references to Trait interfaces
-			val t = (superTypeRef.type as JvmGenericType)
-			if (!t.isInterface && t.notJavaLangObject) {
-				// then it's the reference to a trait class
-				superTypeRef.type = t.superTypes.head.type
-			}
+			superTypeRef.transformClassReferenceToInterfaceReference
+		}
+	}
+
+	def transformClassReferenceToInterfaceReference(JvmParameterizedTypeReference superTypeRef) {
+		// we must transform the references to Trait classes
+		// into references to Trait interfaces
+		val t = (superTypeRef.type as JvmGenericType)
+		if (!t.isInterface && t.notJavaLangObject) {
+			// then it's the reference to a trait class
+			superTypeRef.type = t.superTypes.head.type
 		}
 	}
 
