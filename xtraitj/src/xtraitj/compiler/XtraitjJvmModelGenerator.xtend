@@ -71,6 +71,12 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		   	for (typePar : typeParameters) {
 		   		typePar.rebindConstraintsTypeParameters(it, map)
 		   	}
+		   	
+		   	for (traitRef : t.traitExpression.traitReferences) {
+		   		val superTypeRef = traitRef.traitReferenceJavaType
+		   		superTypeRef.transformClassReferenceToInterfaceReference
+   				superTypes += superTypeRef
+   			}
 		   			
 			for (field : t.fields) {
 				members += field.toGetterAbstract(it) => [
@@ -237,9 +243,9 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 	def traitReferenceJavaType(TJTraitReference t) {
 		if (t.operations.empty)
-			t.trait.cloneWithProxies
+			t.trait.cloneWithProxies as JvmParameterizedTypeReference
 		else
-			t.newTypeRef(t.traitExpressionClassName)
+			t.newTypeRef(t.traitExpressionClassName) as JvmParameterizedTypeReference
 	}
 
 
