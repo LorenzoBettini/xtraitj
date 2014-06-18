@@ -364,60 +364,49 @@ public interface T2_T1_0_Adapter {
 
 assertTraitJavaInterface("tests", "TGeneric",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
-import tests.traits.TGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<String> {
+public interface TGenericInterface<T> {
+  @XtraitjRequiredField
+  public abstract List<T> getMyL();
+  
+  public abstract void setMyL(final List<T> myL);
+  
   @XtraitjDefinedMethod
-  public abstract String updateAndReturn();
+  public abstract List<? extends T> returnListOfT();
   
-  public abstract List<? extends String> returnListOfT();
+  @XtraitjDefinedMethod
+  public abstract T searchInList(final List<? extends T> l, final T arg);
   
-  public abstract String searchInList(final List<? extends String> l, final String arg);
+  @XtraitjDefinedMethod
+  public abstract void addToListOfT(final List<? super T> l, final T arg);
   
-  public abstract void addToListOfT(final List<? super String> l, final String arg);
-  
-  public abstract void addToListOfTDefault(final List<? super String> l);
-  
-  public abstract List<String> getMyL();
-  
-  public abstract void setMyL(final List<String> myL);
+  @XtraitjDefinedMethod
+  public abstract void addToListOfTDefault(final List<? super T> l);
 }
 '''
 )
 
 assertTraitJavaInterface("tests", "TUsesGeneric",
 '''
-package tests.traits;
+package tests;
 
-import java.util.List;
-import tests.traits.TGeneric;
+import tests.TGenericInterface;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<String> {
+public interface TUsesGenericInterface extends TGenericInterface<String> {
   @XtraitjDefinedMethod
   public abstract String updateAndReturn();
-  
-  public abstract List<? extends String> returnListOfT();
-  
-  public abstract String searchInList(final List<? extends String> l, final String arg);
-  
-  public abstract void addToListOfT(final List<? super String> l, final String arg);
-  
-  public abstract void addToListOfTDefault(final List<? super String> l);
-  
-  public abstract List<String> getMyL();
-  
-  public abstract void setMyL(final List<String> myL);
 }
 '''
 )

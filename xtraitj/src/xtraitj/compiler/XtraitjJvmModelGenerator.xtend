@@ -43,14 +43,17 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			val genericType = type as JvmGenericType
 			val t = genericType.associatedTrait
 			if (t !== null) {
-				val traitInterface = buildTraitInterface(t)
-				fsa.generateFile(t.traitInterfaceName.replace('.', '/') + '.java', 
-					traitInterface.generateType(generatorConfigProvider.get(type))
-				)
-				preprocessTraitClass(t, genericType)
-				fsa.generateFile(type.qualifiedName.replace('.', '/') + '.java', 
-					type.generateType(generatorConfigProvider.get(type))
-				)
+				if (genericType.interface) {
+					preprocessTraitInterface(t, genericType)
+					fsa.generateFile(t.traitInterfaceName.replace('.', '/') + '.java', 
+						genericType.generateType(generatorConfigProvider.get(type))
+					)					
+				} else {
+					preprocessTraitClass(t, genericType)
+					fsa.generateFile(type.qualifiedName.replace('.', '/') + '.java', 
+						type.generateType(generatorConfigProvider.get(type))
+					)
+				}
 			} else {
 				// we can assume it's an Xtraitj class
 				preprocessClassInferredType(genericType)
@@ -59,11 +62,11 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		}
 	}
 	
-	def buildTraitInterface(TJTrait t) {
-		val traitInterface = t.toInterface(t.traitInterfaceName) [
-			documentation = t.documentation
-			
-			t.annotateAsTrait(it)
+	def preprocessTraitInterface(TJTrait t, JvmGenericType it) {
+//		val traitInterface = t.toInterface(t.traitInterfaceName) [
+//			documentation = t.documentation
+//			
+//			t.annotateAsTrait(it)
 		
 		   	copyTypeParameters(t.traitTypeParameters)
 
@@ -98,8 +101,8 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 					method.annotateAsRequiredMethod(it)
 				]
 			}
-		]
-		traitInterface
+//		]
+//		traitInterface
 	}
 	
 	def preprocessTraitClass(TJTrait t, JvmGenericType it) {

@@ -74,11 +74,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		val Map<String,JvmGenericType> typesMap = newHashMap()
    		
 		val traits = p.traits
-//		for (t : traits) 
-//			t.inferTraitInterface(acceptor, typesMap)
-
-		for (t : traits)
+		for (t : traits) {
+			// infer interfaces and classes in this order
+			t.inferTraitInterface(acceptor, typesMap)
+			// so that in the model generator when we generate the class the
+			// interface has already been enriched
 			t.inferTraitClass(acceptor, typesMap)
+		}
 		
 		for (c : p.classes)
 			c.inferClass(acceptor, typesMap)
@@ -152,6 +154,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
+   		// this is a minimal inference, the interface will be filled up by
+   		// XtraitjJvmModelGenerator
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
 			documentation = t.documentation
 			
