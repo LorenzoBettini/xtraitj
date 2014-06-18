@@ -2804,14 +2804,6 @@ public class T3Impl implements T3 {
 		]
 	}
 
-	@Test def void testCompliantRequiredMethods() {
-		compliantRequiredMethods.compile[
-			executeGeneratedJavaClassMethodAndAssert("C", "m1", "req")
-			executeGeneratedJavaClassMethodAndAssert("C", "m2", "req")
-			executeGeneratedJavaClassMethodAndAssert("C", "req", "req")
-		]
-	}
-
 	@Test def void testTraitUsesTraitWithFields() {
 		traitUsesTraitWithFields.compile[
 assertTraitJavaClass("tests", "T2",
@@ -2937,88 +2929,7 @@ public class T4Impl implements T4 {
 		]
 	}
 
-	@Test def void testTraitProvidesMethodToUsedTrait() {
-		traitProvidesMethodToUsedTrait.compile[
 
-assertTraitJavaInterface("tests", "T2",
-'''
-package tests;
-
-import tests.T1Interface;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T2Interface extends T1Interface {
-  @XtraitjDefinedMethod
-  public abstract String req();
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T2",
-'''
-package tests;
-
-import tests.T1;
-import tests.T2Interface;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class T2 implements T2Interface {
-  private T2Interface _delegate;
-  
-  private T1 _T1;
-  
-  public T2(final T2Interface delegate) {
-    this._delegate = delegate;
-    _T1 = new T1(delegate);
-  }
-  
-  @XtraitjDefinedMethod
-  public String req() {
-    return _delegate.req();
-  }
-  
-  public String _req() {
-    return "req";
-  }
-  
-  public String useReq() {
-    return _delegate.useReq();
-  }
-  
-  public String _useReq() {
-    return _T1._useReq();
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "C",
-'''
-package tests;
-
-import tests.T2;
-import tests.T2Interface;
-
-@SuppressWarnings("all")
-public class C implements T2Interface {
-  private T2 _T2 = new T2(this);
-  
-  public String req() {
-    return _T2._req();
-  }
-}
-'''
-)
-
-			executeGeneratedJavaClassMethodAndAssert("C", "useReq", "req")
-		]
-	}
 
 	@Test def void testTraitAliasWhenSplitInTwoFiles() {
 		val rs = '''

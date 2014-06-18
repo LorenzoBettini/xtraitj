@@ -550,8 +550,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
    					members += traitMethod.toMethodDelegate(
-   						delegateFieldName, methodName, methodName
-   					)
+	   						delegateFieldName, methodName, methodName
+	   					) => [ 
+		   					traitMethod.op.annotateAsDefinedMethod(it)
+		   				]
    					// _m() { delegate to trait defining the method }
    					members += traitMethod.toMethodDelegate(
    						tRef.traitFieldName, methodName.underscoreName,

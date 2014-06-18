@@ -842,31 +842,7 @@ public class CUsesGeneric implements TUsesGeneric {
 		]
 	}
 
-	@Test def void testCompliantRequiredMethodsWithGenericsAfterTypeParamInstantiation() {
-		compliantRequiredMethodsWithGenericsAfterTypeParamInstantiation.compile[
 
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests.traits;
-
-import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3 extends T1<String>, T2 {
-  public abstract int i();
-  
-  public abstract List<String> m();
-}
-'''
-)
-
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 	@Test def void testCompliantRequiredFieldsWithGenericsAfterTypeParamInstantiation() {
 		compliantRequiredFieldsWithGenericsAfterTypeParamInstantiation.compile[
@@ -898,31 +874,6 @@ public interface T3 extends T1<String>, T2 {
 		]
 	}
 
-	@Test def void testCompliantRequiredMethodsWithGenerics() {
-		compliantRequiredMethodsWithGenerics.compile[
-
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests.traits;
-
-import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3 extends T1<String>, T2 {
-  public abstract int i();
-  
-  public abstract List<String> m();
-}
-'''
-)
-
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 	@Test def void testPassTypeParameterAsTypeArgument() {
 		passTypeParameterAsTypeArgument.compile[
@@ -1541,76 +1492,7 @@ public class CUsesGeneric implements TGeneric<List<String>, Set<Integer>> {
 		]
 	}
 
-	@Test def void testTraitUsesGenericTraitWithDefinedMethods() {
-		traitUsesGenericTraitWithDefinedMethod.compile[
 
-assertTraitJavaInterface("tests", "TUsesGeneric",
-'''
-package tests.traits;
-
-import java.util.List;
-import tests.traits.TGeneric;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<String> {
-  public abstract String searchInList(final List<String> l, final String arg);
-}
-'''
-)
-
-assertTraitJavaClass("tests", "TUsesGeneric",
-'''
-package tests.traits.impl;
-
-import java.util.List;
-import tests.traits.TUsesGeneric;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class TUsesGenericImpl implements TUsesGeneric {
-  private TUsesGeneric _delegate;
-  
-  private TGenericImpl<String> _TGeneric;
-  
-  public TUsesGenericImpl(final TUsesGeneric delegate) {
-    this._delegate = delegate;
-    _TGeneric = new TGenericImpl(delegate);
-  }
-  
-  public String searchInList(final List<String> l, final String arg) {
-    return _delegate.searchInList(l, arg);
-  }
-  
-  public String _searchInList(final List<String> l, final String arg) {
-    return _TGeneric._searchInList(l, arg);
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "CUsesGeneric",
-'''
-package tests;
-
-import java.util.List;
-import tests.traits.TUsesGeneric;
-import tests.traits.impl.TUsesGenericImpl;
-
-@SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGeneric {
-  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
-  
-  public String searchInList(final List<String> l, final String arg) {
-    return _TUsesGeneric._searchInList(l, arg);
-  }
-}
-'''
-)
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 	@Test def void testTraitWithGenericMethod() {
 		traitWithGenericMethod.compile[

@@ -690,9 +690,148 @@ public class CUsesGeneric2 implements TGenericInterface<String>, T2Interface {
 		]
 	}
 
+	@Test def void testCompliantRequiredMethodsWithGenerics() {
+		compliantRequiredMethodsWithGenerics.compile[
 
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests;
 
+import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T1Interface<T> {
+  @XtraitjRequiredMethod
+  public abstract int i();
+  
+  @XtraitjRequiredMethod
+  public abstract List<String> m();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T1Interface<String>, T2Interface {
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testCompliantRequiredMethodsWithGenericsAfterTypeParamInstantiation() {
+		compliantRequiredMethodsWithGenericsAfterTypeParamInstantiation.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests;
+
+import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T1Interface<T> {
+  @XtraitjRequiredMethod
+  public abstract int i();
+  
+  @XtraitjRequiredMethod
+  public abstract List<T> m();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T1Interface<String>, T2Interface {
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithDefinedMethods() {
+		traitUsesGenericTraitWithDefinedMethod.compile[
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.TGeneric;
+import tests.TUsesGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TUsesGeneric implements TUsesGenericInterface {
+  private TUsesGenericInterface _delegate;
+  
+  private TGeneric<String> _TGeneric;
+  
+  public TUsesGeneric(final TUsesGenericInterface delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGeneric(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String searchInList(final List<String> l, final String arg) {
+    return _delegate.searchInList(l, arg);
+  }
+  
+  public String _searchInList(final List<String> l, final String arg) {
+    return _TGeneric._searchInList(l, arg);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.TUsesGeneric;
+import tests.TUsesGenericInterface;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TUsesGenericInterface {
+  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+  
+  public String searchInList(final List<String> l, final String arg) {
+    return _TUsesGeneric._searchInList(l, arg);
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 
 
 
