@@ -362,6 +362,36 @@ public interface T2_T1_0_Adapter {
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 
+assertTraitJavaInterface("tests", "TGeneric",
+'''
+package tests.traits;
+
+import java.util.List;
+import tests.traits.TGeneric;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TUsesGeneric extends TGeneric<String> {
+  @XtraitjDefinedMethod
+  public abstract String updateAndReturn();
+  
+  public abstract List<? extends String> returnListOfT();
+  
+  public abstract String searchInList(final List<? extends String> l, final String arg);
+  
+  public abstract void addToListOfT(final List<? super String> l, final String arg);
+  
+  public abstract void addToListOfTDefault(final List<? super String> l);
+  
+  public abstract List<String> getMyL();
+  
+  public abstract void setMyL(final List<String> myL);
+}
+'''
+)
+
 assertTraitJavaInterface("tests", "TUsesGeneric",
 '''
 package tests.traits;
@@ -731,87 +761,6 @@ public class C implements UsesTGeneric {
 		]
 	}
 
-
-	@Test def void testRequiredMethodsWithGenerics() {
-		requiredMethodsWithGenerics.compile[
-
-assertTraitJavaClass("tests", "TUsesGeneric",
-'''
-package tests;
-
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
-  
-  private TGeneric<String> _TGeneric;
-  
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
-    this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
-  }
-  
-  public Iterable<String> iterableOfStrings() {
-    return _delegate.iterableOfStrings();
-  }
-  
-  public Iterable<String> _iterableOfStrings() {
-    return _TGeneric._iterableOfStrings();
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "CUsesGeneric",
-'''
-package tests;
-
-import tests.T2;
-import tests.T2Interface;
-import tests.TUsesGeneric;
-import tests.TUsesGenericInterface;
-
-@SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGenericInterface, T2Interface {
-  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
-  
-  private T2 _T2 = new T2(this);
-  
-  public Iterable<String> iterableOfStrings() {
-    return _T2._iterableOfStrings();
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "CUsesGeneric2",
-'''
-package tests;
-
-import tests.T2;
-import tests.T2Interface;
-import tests.TGeneric;
-import tests.TGenericInterface;
-
-@SuppressWarnings("all")
-public class CUsesGeneric2 implements TGenericInterface<String>, T2Interface {
-  private TGeneric<String> _TGeneric = new TGeneric(this);
-  
-  private T2 _T2 = new T2(this);
-  
-  public Iterable<String> iterableOfStrings() {
-    return _T2._iterableOfStrings();
-  }
-}
-'''
-)
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 	@Test def void testTraitUsesGenericTraitWithRequiredMethods() {
 		traitUsesGenericTraitWithRequiredMethods.compile[
@@ -1187,25 +1136,77 @@ public class T3Impl<V> implements T3<V> {
 	@Test def void testCompliantRequiredFieldsWithGenerics() {
 		compliantRequiredFieldsWithGenerics.compile[
 
-assertTraitJavaInterface("tests", "T3",
+assertTraitJavaInterface("tests", "T1",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3 extends T1<String>, T2 {
+public interface T1Interface<T> {
+  @XtraitjRequiredField
   public abstract int getI();
   
   public abstract void setI(final int i);
   
+  @XtraitjRequiredField
   public abstract List<String> getLl();
   
   public abstract void setLl(final List<String> ll);
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T1Interface<String>, T2Interface {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import java.util.List;
+import tests.T1;
+import tests.T2;
+import tests.T3Interface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T2 _T2;
+  
+  private T1<String> _T1;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T1 = new T1(delegate);
+    _T2 = new T2(delegate);
+  }
+  
+  public int getI() {
+    return _delegate.getI();
+  }
+  
+  public List<String> getLl() {
+    return _delegate.getLl();
+  }
 }
 '''
 )
@@ -1362,29 +1363,47 @@ public class C implements T1 {
 	@Test def void testTraitUsesGenericTraitWithFields() {
 		traitUsesGenericTraitWithFields.compile[
 
-assertTraitJavaInterface("tests", "TUsesGeneric",
+assertTraitJavaInterface("tests", "TGeneric",
 '''
-package tests.traits;
+package tests;
 
-import java.util.List;
-import java.util.Set;
-import tests.traits.TGeneric;
+import java.util.Collection;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<List<String>, Set<Integer>> {
-  public abstract List<String> getT();
+public interface TGenericInterface<T extends Collection<String>, U extends Collection<Integer>> {
+  @XtraitjRequiredField
+  public abstract T getT();
   
-  public abstract void setT(final List<String> t);
+  public abstract void setT(final T t);
   
-  public abstract Iterable<List<String>> getIterableOfStrings();
+  @XtraitjRequiredField
+  public abstract Iterable<T> getIterableOfStrings();
   
-  public abstract void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings);
+  public abstract void setIterableOfStrings(final Iterable<T> iterableOfStrings);
   
-  public abstract Iterable<Set<Integer>> getIterableOfIntegers();
+  @XtraitjRequiredField
+  public abstract Iterable<U> getIterableOfIntegers();
   
-  public abstract void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers);
+  public abstract void setIterableOfIntegers(final Iterable<U> iterableOfIntegers);
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import java.util.Set;
+import tests.TGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TUsesGenericInterface extends TGenericInterface<List<String>, Set<Integer>> {
 }
 '''
 )
@@ -1752,64 +1771,6 @@ public interface TStringExtensions extends TGenericExtensions<String> {
 		]
 	}
 
-	@Test def void testTraitUsesGenericTrait() {
-		traitUsesGenericTrait.compile[
-
-assertTraitJavaInterface("tests", "TUsesGeneric",
-'''
-package tests.traits;
-
-import java.util.List;
-import tests.traits.TGeneric;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface TUsesGeneric extends TGeneric<List<String>> {
-}
-'''
-)
-
-assertTraitJavaClass("tests", "TUsesGeneric",
-'''
-package tests.traits.impl;
-
-import java.util.List;
-import tests.traits.TUsesGeneric;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class TUsesGenericImpl implements TUsesGeneric {
-  private TUsesGeneric _delegate;
-  
-  private TGenericImpl<List<String>> _TGeneric;
-  
-  public TUsesGenericImpl(final TUsesGeneric delegate) {
-    this._delegate = delegate;
-    _TGeneric = new TGenericImpl(delegate);
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "CUsesGeneric",
-'''
-package tests;
-
-import java.util.List;
-import tests.traits.TGeneric;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class CUsesGeneric implements TGeneric<List<String>> {
-  private TGenericImpl<List<String>> _TGeneric = new TGenericImpl(this);
-}
-'''
-)
-
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 
 }

@@ -552,6 +552,143 @@ public class C implements MyGenericTestInterface2<String>, T1Interface<String> {
 		]
 	}
 
+	@Test def void testTraitUsesGenericTrait() {
+		traitUsesGenericTrait.compile[
+
+assertTraitJavaInterface("tests", "TUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.TGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TUsesGenericInterface extends TGenericInterface<List<String>> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.TGeneric;
+import tests.TUsesGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TUsesGeneric implements TUsesGenericInterface {
+  private TUsesGenericInterface _delegate;
+  
+  private TGeneric<List<String>> _TGeneric;
+  
+  public TUsesGeneric(final TUsesGenericInterface delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGeneric(delegate);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import java.util.List;
+import tests.TGeneric;
+import tests.TGenericInterface;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TGenericInterface<List<String>> {
+  private TGeneric<List<String>> _TGeneric = new TGeneric(this);
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testRequiredMethodsWithGenerics() {
+		requiredMethodsWithGenerics.compile[
+
+assertTraitJavaClass("tests", "TUsesGeneric",
+'''
+package tests;
+
+import tests.TGeneric;
+import tests.TUsesGenericInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TUsesGeneric implements TUsesGenericInterface {
+  private TUsesGenericInterface _delegate;
+  
+  private TGeneric<String> _TGeneric;
+  
+  public TUsesGeneric(final TUsesGenericInterface delegate) {
+    this._delegate = delegate;
+    _TGeneric = new TGeneric(delegate);
+  }
+  
+  public Iterable<String> iterableOfStrings() {
+    return _delegate.iterableOfStrings();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.TUsesGeneric;
+import tests.TUsesGenericInterface;
+
+@SuppressWarnings("all")
+public class CUsesGeneric implements TUsesGenericInterface, T2Interface {
+  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+  
+  private T2 _T2 = new T2(this);
+  
+  public Iterable<String> iterableOfStrings() {
+    return _T2._iterableOfStrings();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "CUsesGeneric2",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.TGeneric;
+import tests.TGenericInterface;
+
+@SuppressWarnings("all")
+public class CUsesGeneric2 implements TGenericInterface<String>, T2Interface {
+  private TGeneric<String> _TGeneric = new TGeneric(this);
+  
+  private T2 _T2 = new T2(this);
+  
+  public Iterable<String> iterableOfStrings() {
+    return _T2._iterableOfStrings();
+  }
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 
 
 

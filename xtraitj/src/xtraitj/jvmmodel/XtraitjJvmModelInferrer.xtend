@@ -5,45 +5,31 @@ import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.common.types.JvmAnnotationTarget
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
-import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmTypeParameter
-import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField
-import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
-import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRenameOperation
-import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -556,7 +542,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (tRef : t.traitReferences) {
    				val traitRef = tRef.buildTypeRef(typesMap)
    				// first delegates for implemented methods 
-   				for (traitMethod : traitRef.xtraitjJvmAllMethodOperations(tRef)) {
+   				for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
    					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
    					members += traitMethod.toMethodDelegate(

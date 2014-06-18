@@ -2942,41 +2942,43 @@ public class T4Impl implements T4 {
 
 assertTraitJavaInterface("tests", "T2",
 '''
-package tests.traits;
+package tests;
 
-import tests.traits.T1;
+import tests.T1Interface;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T2 extends T1 {
+public interface T2Interface extends T1Interface {
   @XtraitjDefinedMethod
   public abstract String req();
-  
-  public abstract String useReq();
 }
 '''
 )
 
 assertTraitJavaClass("tests", "T2",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T2;
-import tests.traits.impl.T1Impl;
+import tests.T1;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2Impl implements T2 {
-  private T2 _delegate;
+public class T2 implements T2Interface {
+  private T2Interface _delegate;
   
-  private T1Impl _T1;
+  private T1 _T1;
   
-  public T2Impl(final T2 delegate) {
+  public T2(final T2Interface delegate) {
     this._delegate = delegate;
-    _T1 = new T1Impl(delegate);
+    _T1 = new T1(delegate);
   }
   
+  @XtraitjDefinedMethod
   public String req() {
     return _delegate.req();
   }
@@ -2991,6 +2993,24 @@ public class T2Impl implements T2 {
   
   public String _useReq() {
     return _T1._useReq();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+
+@SuppressWarnings("all")
+public class C implements T2Interface {
+  private T2 _T2 = new T2(this);
+  
+  public String req() {
+    return _T2._req();
   }
 }
 '''
