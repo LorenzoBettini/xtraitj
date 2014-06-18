@@ -11,24 +11,20 @@ import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
-import xtraitj.xtraitj.TJMember
-import xtraitj.xtraitj.TJMethodDeclaration
+import xtraitj.xtraitj.TJField
+import xtraitj.xtraitj.TJMethod
+import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJField
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.xtraitj.TJMethod
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -116,19 +112,9 @@ class XtraitjGeneratorExtensions {
 //   	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
-		var n = t.simpleName
-   		
-   		var pos = n.indexOf("<")
-   		if (pos > 0)
-   			return n.substring(0, pos)
-   		else
-   			return n
+		t.jvmTypeReferenceString
 	}
 	
-	def getJvmTypeReferenceString(JvmTypeReference t) {
-		NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
-	}
-
 	def void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
 		target.annotations += element.toAnnotation(XtraitjTraitInterface)
 	}

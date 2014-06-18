@@ -1,9 +1,9 @@
 package xtraitj.util
 
 import java.util.List
-import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -18,8 +18,6 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmType
 
 class XtraitjModelUtil {
 	
@@ -129,4 +127,14 @@ class XtraitjModelUtil {
 			+ ")"
 	}
 
+	def static getJvmTypeReferenceString(JvmTypeReference t) {
+		val n = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
+		
+		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			return n.substring(0, pos)
+   		else
+   			return n
+	}
+	
 }
