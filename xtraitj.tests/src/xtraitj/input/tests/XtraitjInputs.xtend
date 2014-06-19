@@ -1102,6 +1102,8 @@ trait T3 uses T1<String>, T2 {
 		
 		trait T2 uses T1 {}
 		
+		trait T3 uses T2 {}
+		
 		class C uses T2 {}
 		
 		class C2 uses T1 {}

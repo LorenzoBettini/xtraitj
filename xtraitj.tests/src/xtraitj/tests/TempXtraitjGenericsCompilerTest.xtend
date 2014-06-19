@@ -1045,6 +1045,63 @@ public class T2 implements T2Interface {
 '''
 )
 
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T2Interface {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2;
+import tests.T3Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T2 _T2;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2 = new T2(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public <T extends List<String>> String getFirst(final List<String> t) {
+    return _delegate.getFirst(t);
+  }
+  
+  public <T extends List<String>> String _getFirst(final List<String> t) {
+    return _T2._getFirst(t);
+  }
+  
+  @XtraitjDefinedMethod
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final Comparable<Object> t1, final List<? extends Comparable<Object>> t2) {
+    return _delegate.compare(t1, t2);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int _compare(final Comparable<Object> t1, final List<? extends Comparable<Object>> t2) {
+    return _T2._compare(t1, t2);
+  }
+}
+'''
+)
+
 assertJavaClass("tests", "C",
 '''
 package tests;
