@@ -130,7 +130,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				]
    			}
    			
-   			for (traitRef : c.traitExpression.traitReferences) {
+   			for (traitRef : c.traitReferences) {
    				superTypes += traitRef.traitReferenceCopy
    				
    				// do not delegate to a trait who requires that operation

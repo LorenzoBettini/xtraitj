@@ -1045,6 +1045,52 @@ public class T2 implements T2Interface {
 '''
 )
 
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2;
+import tests.T2Interface;
+
+@SuppressWarnings("all")
+public class C implements T2Interface {
+  private T2 _T2 = new T2(this);
+  
+  public <T extends List<String>> String getFirst(final List<String> t) {
+    return _T2._getFirst(t);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final Comparable<Object> t1, final List<? extends Comparable<Object>> t2) {
+    return _T2._compare(t1, t2);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C2",
+'''
+package tests;
+
+import java.util.List;
+import tests.T1;
+import tests.T1Interface;
+
+@SuppressWarnings("all")
+public class C2 implements T1Interface {
+  private T1 _T1 = new T1(this);
+  
+  public <T extends List<String>> String getFirst(final T t) {
+    return _T1._getFirst(t);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2) {
+    return _T1._compare(t1, t2);
+  }
+}
+'''
+)
+
 			assertGeneratedJavaCodeCompiles
 		]
 	}
