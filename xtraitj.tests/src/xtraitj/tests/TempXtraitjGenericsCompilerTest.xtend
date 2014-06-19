@@ -844,35 +844,7 @@ public class CUsesGeneric implements TUsesGeneric {
 
 
 
-	@Test def void testCompliantRequiredFieldsWithGenericsAfterTypeParamInstantiation() {
-		compliantRequiredFieldsWithGenericsAfterTypeParamInstantiation.compile[
 
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests.traits;
-
-import java.util.List;
-import tests.traits.T1;
-import tests.traits.T2;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3 extends T1<String>, T2 {
-  public abstract int getI();
-  
-  public abstract void setI(final int i);
-  
-  public abstract List<String> getLl();
-  
-  public abstract void setLl(final List<String> ll);
-}
-'''
-)
-
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 
 	@Test def void testPassTypeParameterAsTypeArgument() {
@@ -1073,87 +1045,7 @@ public class T3Impl<V> implements T3<V> {
 		]
 	}
 
-	@Test def void testCompliantRequiredFieldsWithGenerics() {
-		compliantRequiredFieldsWithGenerics.compile[
 
-assertTraitJavaInterface("tests", "T1",
-'''
-package tests;
-
-import java.util.List;
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T1Interface<T> {
-  @XtraitjRequiredField
-  public abstract int getI();
-  
-  public abstract void setI(final int i);
-  
-  @XtraitjRequiredField
-  public abstract List<String> getLl();
-  
-  public abstract void setLl(final List<String> ll);
-}
-'''
-)
-
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests;
-
-import tests.T1Interface;
-import tests.T2Interface;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3Interface extends T1Interface<String>, T2Interface {
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T3",
-'''
-package tests;
-
-import java.util.List;
-import tests.T1;
-import tests.T2;
-import tests.T3Interface;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class T3 implements T3Interface {
-  private T3Interface _delegate;
-  
-  private T2 _T2;
-  
-  private T1<String> _T1;
-  
-  public T3(final T3Interface delegate) {
-    this._delegate = delegate;
-    _T1 = new T1(delegate);
-    _T2 = new T2(delegate);
-  }
-  
-  public int getI() {
-    return _delegate.getI();
-  }
-  
-  public List<String> getLl() {
-    return _delegate.getLl();
-  }
-}
-'''
-)
-
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 	@Test def void testTraitUsingGenericMethod() {
 		traitUsingGenericMethod.compile[
@@ -1300,197 +1192,6 @@ public class C implements T1 {
 		]
 	}
 
-	@Test def void testTraitUsesGenericTraitWithFields() {
-		traitUsesGenericTraitWithFields.compile[
-
-assertTraitJavaInterface("tests", "TGeneric",
-'''
-package tests;
-
-import java.util.Collection;
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface TGenericInterface<T extends Collection<String>, U extends Collection<Integer>> {
-  @XtraitjRequiredField
-  public abstract T getT();
-  
-  public abstract void setT(final T t);
-  
-  @XtraitjRequiredField
-  public abstract Iterable<T> getIterableOfStrings();
-  
-  public abstract void setIterableOfStrings(final Iterable<T> iterableOfStrings);
-  
-  @XtraitjRequiredField
-  public abstract Iterable<U> getIterableOfIntegers();
-  
-  public abstract void setIterableOfIntegers(final Iterable<U> iterableOfIntegers);
-}
-'''
-)
-
-assertTraitJavaInterface("tests", "TUsesGeneric",
-'''
-package tests;
-
-import java.util.List;
-import java.util.Set;
-import tests.TGenericInterface;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface TUsesGenericInterface extends TGenericInterface<List<String>, Set<Integer>> {
-}
-'''
-)
-
-
-assertTraitJavaClass("tests", "TUsesGeneric",
-'''
-package tests.traits.impl;
-
-import java.util.List;
-import java.util.Set;
-import tests.traits.TUsesGeneric;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class TUsesGenericImpl implements TUsesGeneric {
-  private TUsesGeneric _delegate;
-  
-  private TGenericImpl<List<String>, Set<Integer>> _TGeneric;
-  
-  public TUsesGenericImpl(final TUsesGeneric delegate) {
-    this._delegate = delegate;
-    _TGeneric = new TGenericImpl(delegate);
-  }
-  
-  public List<String> getT() {
-    return _delegate.getT();
-  }
-  
-  public void setT(final List<String> t) {
-    _delegate.setT(t);
-  }
-  
-  public Iterable<List<String>> getIterableOfStrings() {
-    return _delegate.getIterableOfStrings();
-  }
-  
-  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
-    _delegate.setIterableOfStrings(iterableOfStrings);
-  }
-  
-  public Iterable<Set<Integer>> getIterableOfIntegers() {
-    return _delegate.getIterableOfIntegers();
-  }
-  
-  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
-    _delegate.setIterableOfIntegers(iterableOfIntegers);
-  }
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T2",
-'''
-package tests.traits.impl;
-
-import java.util.List;
-import java.util.Set;
-import tests.traits.T2;
-import tests.traits.impl.TUsesGenericImpl;
-
-@SuppressWarnings("all")
-public class T2Impl implements T2 {
-  private T2 _delegate;
-  
-  private TUsesGenericImpl _TUsesGeneric;
-  
-  public T2Impl(final T2 delegate) {
-    this._delegate = delegate;
-    _TUsesGeneric = new TUsesGenericImpl(delegate);
-  }
-  
-  public List<String> getT() {
-    return _delegate.getT();
-  }
-  
-  public void setT(final List<String> t) {
-    _delegate.setT(t);
-  }
-  
-  public Iterable<List<String>> getIterableOfStrings() {
-    return _delegate.getIterableOfStrings();
-  }
-  
-  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
-    _delegate.setIterableOfStrings(iterableOfStrings);
-  }
-  
-  public Iterable<Set<Integer>> getIterableOfIntegers() {
-    return _delegate.getIterableOfIntegers();
-  }
-  
-  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
-    _delegate.setIterableOfIntegers(iterableOfIntegers);
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "CUsesGeneric",
-'''
-package tests;
-
-import java.util.List;
-import java.util.Set;
-import tests.traits.TGeneric;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class CUsesGeneric implements TGeneric<List<String>, Set<Integer>> {
-  private List<String> t;
-  
-  public List<String> getT() {
-    return this.t;
-  }
-  
-  public void setT(final List<String> t) {
-    this.t = t;
-  }
-  
-  private Iterable<List<String>> iterableOfStrings;
-  
-  public Iterable<List<String>> getIterableOfStrings() {
-    return this.iterableOfStrings;
-  }
-  
-  public void setIterableOfStrings(final Iterable<List<String>> iterableOfStrings) {
-    this.iterableOfStrings = iterableOfStrings;
-  }
-  
-  private Iterable<Set<Integer>> iterableOfIntegers;
-  
-  public Iterable<Set<Integer>> getIterableOfIntegers() {
-    return this.iterableOfIntegers;
-  }
-  
-  public void setIterableOfIntegers(final Iterable<Set<Integer>> iterableOfIntegers) {
-    this.iterableOfIntegers = iterableOfIntegers;
-  }
-  
-  private TGenericImpl<List<String>, Set<Integer>> _TGeneric = new TGenericImpl(this);
-}
-'''
-)
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 
 
@@ -1615,25 +1316,106 @@ public class T2Impl implements T2 {
 	@Test def void testGenericFunctionType() {
 		genericFunctionType.compile[
 
-assertTraitJavaInterface("tests", "TStringExtensions",
+assertTraitJavaInterface("tests", "TGenericExtensions",
 '''
-package tests.traits;
+package tests;
 
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import tests.traits.TGenericExtensions;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TStringExtensions extends TGenericExtensions<String> {
-  public abstract <R> List<R> mapToList(final Function1<? super String, ? extends R> mapper);
+public interface TGenericExtensionsInterface<T> {
+  @XtraitjRequiredField
+  public abstract Iterable<T> getIterable();
   
-  public abstract List<String> mapToList2(final Function1<? super String, ? extends String> mapper);
+  public abstract void setIterable(final Iterable<T> iterable);
   
-  public abstract Iterable<String> getIterable();
+  @XtraitjDefinedMethod
+  public <R> List<R> mapToList();
   
-  public abstract void setIterable(final Iterable<String> iterable);
+  @XtraitjDefinedMethod
+  public abstract List<T> mapToList2(final Function1<? super T, ? extends T> mapper);
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TGenericExtensions",
+'''
+package tests;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TGenericExtensionsInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TGenericExtensions<T> implements TGenericExtensionsInterface<T> {
+  private TGenericExtensionsInterface<T> _delegate;
+  
+  public TGenericExtensions(final TGenericExtensionsInterface<T> delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjRequiredField
+  public Iterable<T> getIterable() {
+    return _delegate.getIterable();
+  }
+  
+  public void setIterable(final Iterable<T> iterable) {
+    _delegate.setIterable(iterable);
+  }
+  
+  @XtraitjDefinedMethod
+  public <R> List<R> mapToList(final Function1<? super T, ? extends R> mapper) {
+    return _delegate.mapToList(mapper);
+  }
+  
+  public <R> List<R> _mapToList(final Function1<? super T, ? extends R> mapper) {
+    final ArrayList<R> result = new ArrayList<R>();
+    Iterable<T> _iterable = this.getIterable();
+    for (final T e : _iterable) {
+      R _apply = mapper.apply(e);
+      result.add(_apply);
+    }
+    return result;
+  }
+  
+  @XtraitjDefinedMethod
+  public List<T> mapToList2(final Function1<? super T, ? extends T> mapper) {
+    return _delegate.mapToList2(mapper);
+  }
+  
+  public List<T> _mapToList2(final Function1<? super T, ? extends T> mapper) {
+    final ArrayList<T> result = new ArrayList<T>();
+    Iterable<T> _iterable = this.getIterable();
+    for (final T e : _iterable) {
+      T _apply = mapper.apply(e);
+      result.add(_apply);
+    }
+    return result;
+  }
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "TStringExtensions",
+'''
+package tests;
+
+import tests.TGenericExtensionsInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TStringExtensionsInterface extends TGenericExtensionsInterface<String> {
 }
 '''
 )

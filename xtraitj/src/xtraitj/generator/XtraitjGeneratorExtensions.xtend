@@ -18,8 +18,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
-import xtraitj.xtraitj.TJField
-import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
@@ -122,11 +120,11 @@ class XtraitjGeneratorExtensions {
 		target.annotations += element.toAnnotation(XtraitjTraitClass)
 	}
 
-	def void annotateAsRequiredField(TJField element, JvmMember target) {
+	def void annotateAsRequiredField(EObject element, JvmMember target) {
 		target.annotations += element.toAnnotation(XtraitjRequiredField)
 	}
 
-	def void annotateAsRequiredMethod(TJRequiredMethod element, JvmMember target) {
+	def void annotateAsRequiredMethod(EObject element, JvmMember target) {
 		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
 	}
 

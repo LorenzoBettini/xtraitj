@@ -564,14 +564,29 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (tRef : t.traitReferences) {
    				val traitRef = tRef.buildTypeRef(typesMap)
+   				
+   				for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
+   					if (!members.alreadyDefined(op.op)) {
+	   					// this is the getter
+	   					members += op.toMethodDelegate(
+								delegateFieldName,
+								op.op.simpleName, op.op.simpleName) => [
+		   					op.op.annotateAsRequiredField(it)
+		   				]
+		   				members += op.toSetterDelegateFromGetter
+	   				}
+   				}
+   				
    				// then delegates for required methods
    				// TODO deal with restrict
    				// see old xtraitjJvmAllRequiredOperations
-   				for (op : traitRef.xtraitjJvmAllRequiredOperations)
+   				for (op : traitRef.xtraitjJvmAllRequiredMethodOperations(tRef))
    					if (!members.alreadyDefined(op.op)) {
    						members += op.toMethodDelegate(
-   							delegateFieldName,
-   							op.op.simpleName, op.op.simpleName)
+	   							delegateFieldName,
+	   							op.op.simpleName, op.op.simpleName) => [
+		   					op.op.annotateAsRequiredMethod(it)
+		   				]
    					}
    			}
    		]
@@ -591,6 +606,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		m.toSetter(m.name, m.type) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«m.name»);''')]
+   		]
+   	}
+
+   	def toSetterDelegateFromGetter(XtraitjJvmOperation op) {
+   		val fieldName = op.op.simpleName.stripGetter
+   		op.op.toSetter(fieldName, op.returnType) => [
+   			method |
+   			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
    		]
    	}
 

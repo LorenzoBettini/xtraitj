@@ -21,6 +21,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
@@ -34,7 +35,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.generator.XtraitjGeneratorExtensions
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -281,8 +281,8 @@ class XtraitjJvmModelUtil {
 			].flatten
 	}
 
-	def xtraitjJvmAllRequiredFieldOperations(TJTraitReference traitRef) {
-		traitRef.trait.getXtraitjResolvedOperations.requiredFields.
+	def xtraitjJvmAllRequiredFieldOperations(JvmTypeReference ref, EObject context) {
+		ref.getXtraitjResolvedOperations(context).requiredFields.
 					createXtraitjJvmOperations
 	}
 
@@ -290,8 +290,8 @@ class XtraitjJvmModelUtil {
 		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
 	}
 
-	def xtraitjJvmAllRequiredMethodOperations(TJTraitReference traitRef) {
-		traitRef.trait.getXtraitjResolvedOperations.requiredMethods.
+	def xtraitjJvmAllRequiredMethodOperations(JvmTypeReference ref, EObject context) {
+		ref.getXtraitjResolvedOperations(context).requiredMethods.
 					createXtraitjJvmOperations
 	}
 
