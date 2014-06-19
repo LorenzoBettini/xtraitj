@@ -2,7 +2,10 @@ package xtraitj.util
 
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
@@ -136,5 +139,12 @@ class XtraitjModelUtil {
    		else
    			return n
 	}
-	
+
+	/**
+	 * Simply using getType would trigger proxy resolution which we do not want at this
+	 * stage.  This method takes the JvmType reflectively without triggering proxy resolution.
+	 */
+	def static getTypeWithoutProxyResolution(JvmParameterizedTypeReference typeRef) {
+		typeRef.eGet(TypesPackage.eINSTANCE.jvmParameterizedTypeReference_Type, false) as JvmType
+	}
 }
