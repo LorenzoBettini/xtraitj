@@ -559,21 +559,27 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			}
    			
    			for (tRef : t.traitReferences) {
+   				// we need these supertypes for validation and for later inference
+   				// but we'll remove them in the generator
+   				superTypes += tRef.traitReferenceCopy
+   				
    				val traitRef = tRef.buildTypeRef(typesMap)
    				// first delegates for implemented methods 
    				for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
-   					val methodName = traitMethod.op.simpleName
-   					// m() { _delegate.m(); }
-   					members += traitMethod.toMethodDelegate(
-	   						delegateFieldName, methodName, methodName
-	   					) => [ 
-		   					traitMethod.op.annotateAsDefinedMethod(it)
-		   				]
-   					// _m() { delegate to trait defining the method }
-   					members += traitMethod.toMethodDelegate(
-   						tRef.traitFieldName, methodName.underscoreName,
-   						methodName.underscoreName
-   					)
+   					if (!members.alreadyDefined(traitMethod.op)) {
+	   					val methodName = traitMethod.op.simpleName
+	   					// m() { _delegate.m(); }
+	   					members += traitMethod.toMethodDelegate(
+		   						delegateFieldName, methodName, methodName
+		   					) => [ 
+			   					traitMethod.op.annotateAsDefinedMethod(it)
+			   				]
+	   					// _m() { delegate to trait defining the method }
+	   					members += traitMethod.toMethodDelegate(
+	   						tRef.traitFieldName, methodName.underscoreName,
+	   						methodName.underscoreName
+	   					)
+   					}
    				}
    			}
    			

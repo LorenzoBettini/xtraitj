@@ -110,6 +110,9 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
+		
+		// remove superclasses added in the inferrer
+		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
 						
 		superTypes.add(0, transformedTraitInterfaceTypeRef)
 		
