@@ -56,7 +56,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				}
 			} else {
 				// we can assume it's an Xtraitj class
-				preprocessClassInferredType(genericType)
+				transformSuperclassReferencesIntoInterfacesReferences(genericType)
 				super._internalDoGenerate(type, fsa)
 			}
 		}
@@ -75,7 +75,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		   		typePar.rebindConstraintsTypeParameters(it, map)
 		   	}
 		   	
-		   	for (traitRef : t.traitExpression.traitReferences) {
+		   	for (traitRef : t.traitReferences) {
 		   		val superTypeRef = traitRef.traitReferenceJavaType
 		   		superTypeRef.transformClassReferenceToInterfaceReference
    				superTypes += superTypeRef
@@ -137,7 +137,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		members.remove(members.size - 1)
 	}
 
-	def preprocessClassInferredType(JvmGenericType type) {
+	def transformSuperclassReferencesIntoInterfacesReferences(JvmGenericType type) {
 		for (s : type.superTypes) {
 			val superTypeRef = (s as JvmParameterizedTypeReference)
 			
