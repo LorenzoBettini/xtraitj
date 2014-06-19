@@ -7,8 +7,8 @@ import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.xtraitj.TJProgram
 import xtraitj.input.tests.XtraitjInputs
+import xtraitj.xtraitj.TJProgram
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(InjectorProviderCustom))
@@ -460,6 +460,333 @@ public class C implements T1Interface, T2Interface {
 )
 			executeGeneratedJavaClassMethodAndAssert("C", "m1", "4")
 			executeGeneratedJavaClassMethodAndAssert("C", "m2", "4")
+		]
+	}
+
+	@Test def void testTraitSum() {
+		traitSum.compile[
+assertTraitJavaInterface("tests", "T",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T2Interface;
+import tests.T3Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TInterface extends T1Interface, T2Interface, T3Interface {
+  @XtraitjDefinedMethod
+  public abstract String m();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T1Interface {
+  @XtraitjDefinedMethod
+  public abstract Object t1();
+  
+  /**
+   * required method
+   */
+  @XtraitjRequiredMethod
+  public abstract Object t2();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
+  
+  public T1(final T1Interface delegate) {
+    this._delegate = delegate;
+  }
+  
+  /**
+   * required method
+   */
+  @XtraitjRequiredMethod
+  public Object t2() {
+    return _delegate.t2();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t1() {
+    return _delegate.t1();
+  }
+  
+  public Object _t1() {
+    return "a";
+  }
+}
+''')
+
+assertTraitJavaClass("tests", "T",
+'''
+package tests;
+
+import tests.T1;
+import tests.T2;
+import tests.T3;
+import tests.TInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T implements TInterface {
+  private TInterface _delegate;
+  
+  private T3 _T3;
+  
+  private T2 _T2;
+  
+  private T1 _T1;
+  
+  public T(final TInterface delegate) {
+    this._delegate = delegate;
+    _T1 = new T1(delegate);
+    _T2 = new T2(delegate);
+    _T3 = new T3(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    Object _t1 = this.t1();
+    String _string = _t1.toString();
+    Object _t2 = this.t2();
+    String _string_1 = _t2.toString();
+    String _plus = (_string + _string_1);
+    Object _t3 = this.t3();
+    String _string_2 = _t3.toString();
+    return (_plus + _string_2);
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t1() {
+    return _delegate.t1();
+  }
+  
+  public Object _t1() {
+    return _T1._t1();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t2() {
+    return _delegate.t2();
+  }
+  
+  public Object _t2() {
+    return _T2._t2();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t3() {
+    return _delegate.t3();
+  }
+  
+  public Object _t3() {
+    return _T3._t3();
+  }
+}
+''')
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.T;
+import tests.TInterface;
+
+@SuppressWarnings("all")
+public class C implements TInterface {
+  private T _T = new T(this);
+  
+  public String m() {
+    return _T._m();
+  }
+  
+  public Object t1() {
+    return _T._t1();
+  }
+  
+  public Object t2() {
+    return _T._t2();
+  }
+  
+  public Object t3() {
+    return _T._t3();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "a1 - a - false")
+		]
+	}
+
+	@Test def void testTraitUsesTraitWithTraitSum() {
+		traitUsesTraitWithTraitSum.compile[
+assertTraitJavaClass("tests", "T4",
+'''
+package tests;
+
+import tests.T;
+import tests.T4Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T4 implements T4Interface {
+  private T4Interface _delegate;
+  
+  private T _T;
+  
+  public T4(final T4Interface delegate) {
+    this._delegate = delegate;
+    _T = new T(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t1() {
+    return _delegate.t1();
+  }
+  
+  public Object _t1() {
+    return _T._t1();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t2() {
+    return _delegate.t2();
+  }
+  
+  public Object _t2() {
+    return _T._t2();
+  }
+  
+  @XtraitjDefinedMethod
+  public Object t3() {
+    return _delegate.t3();
+  }
+  
+  public Object _t3() {
+    return _T._t3();
+  }
+}
+''')
+			executeGeneratedJavaClassMethodAndAssert("C4", "m", "a1 - a - false")
+		]
+	}
+
+	@Test def void testTraitUsesTraitWithFields() {
+		traitUsesTraitWithFields.compile[
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import tests.T;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2 implements T2Interface {
+  private T2Interface _delegate;
+  
+  private T _T;
+  
+  public T2(final T2Interface delegate) {
+    this._delegate = delegate;
+    _T = new T(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T._m();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+''')
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+
+@SuppressWarnings("all")
+public class C implements T2Interface {
+  private String s = "test";
+  
+  public String getS() {
+    return this.s;
+  }
+  
+  public void setS(final String s) {
+    this.s = s;
+  }
+  
+  private T2 _T2 = new T2(this);
+  
+  public String m() {
+    return _T2._m();
+  }
+}
+''')
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "Test")
 		]
 	}
 
@@ -938,6 +1265,14 @@ public class C implements T2Interface {
 )
 
 			executeGeneratedJavaClassMethodAndAssert("C", "useReq", "req")
+		]
+	}
+
+	@Test def void testCompliantRequiredFields() {
+		compliantRequiredFields.compile[
+			executeGeneratedJavaClassMethodAndAssert("C", "m1", "s")
+			executeGeneratedJavaClassMethodAndAssert("C", "m2", "s")
+			executeGeneratedJavaClassMethodAndAssert("C", "m3", "s")
 		]
 	}
 

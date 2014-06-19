@@ -73,17 +73,32 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	def dispatch void infer(TJProgram p, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
    		val Map<String,JvmGenericType> typesMap = newHashMap()
    		
-		val traits = p.traits
-		for (t : traits) {
-			// infer interfaces and classes in this order
-			t.inferTraitInterface(acceptor, typesMap)
-			// so that in the model generator when we generate the class the
-			// interface has already been enriched
-			t.inferTraitClass(acceptor, typesMap)
-		}
+   		val dependiences = new XtraitjDependencies(p).dependencies
+   		
+//		val traits = p.traits
+//		for (t : traits) {
+//			// infer interfaces and classes in this order
+//			t.inferTraitInterface(acceptor, typesMap)
+//			// so that in the model generator when we generate the class the
+//			// interface has already been enriched
+//			t.inferTraitClass(acceptor, typesMap)
+//		}
+//		
+//		for (c : p.classes)
+//			c.inferClass(acceptor, typesMap)
 		
-		for (c : p.classes)
-			c.inferClass(acceptor, typesMap)
+		for (e : dependiences) {
+			switch(e) {
+				TJTrait: {
+					// infer interfaces and classes in this order
+					e.inferTraitInterface(acceptor, typesMap)
+					// so that in the model generator when we generate the class the
+					// interface has already been enriched
+					e.inferTraitClass(acceptor, typesMap)
+				}
+				TJClass: e.inferClass(acceptor, typesMap)
+			}
+		}
    	}
    	
    	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
