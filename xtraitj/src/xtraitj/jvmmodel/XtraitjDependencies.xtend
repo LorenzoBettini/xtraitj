@@ -5,6 +5,7 @@ import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJProgram
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.common.types.impl.JvmParameterizedTypeReferenceImplCustom
 
 /**
  * Dependencies among traits and classes during the inferrer (when trait references, that is,
@@ -30,7 +31,7 @@ class XtraitjDependencies {
 		}
 		for (traitRef : e.traitReferences) {
 			val typeRef = traitRef.trait
-			val type = typeRef.type
+			val type = (typeRef as JvmParameterizedTypeReferenceImplCustom).basicGetType
 			if (type.eIsProxy) {
 				val n = typeRef.jvmTypeReferenceString
 				val declaration = program.elements.findFirst[name == n]
