@@ -205,12 +205,17 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				if (typePar === null) {
 					typePar = target.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
 					
-					visited.put(type, typePar)
-					
-					rebindConstraintsTypeParameters(typePar, target, visited)
+					// the typePar can now be null if it refers to a method's generic type
+					// instead of a type parameter in the interface...
+					// in such case we don't need any rebind so we simply go on
+					if (typePar !== null) {
+						visited.put(type, typePar)
+
+						rebindConstraintsTypeParameters(typePar, target, visited)
+
+						reboundTypeRef.type = typePar
+					}
 				}
-				
-				reboundTypeRef.type = typePar
 			}
 			
 			// rebind type arguments as well
