@@ -4,8 +4,10 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
 import org.eclipse.xtext.common.types.JvmMember
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
@@ -13,11 +15,15 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
+import xtraitj.util.XtraitjAnnotatedElementHelper
+import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
@@ -28,6 +34,8 @@ class XtraitjGeneratorExtensions {
 	
 	@Inject extension IQualifiedNameProvider
 	@Inject extension JvmTypesBuilder
+	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension XtraitjJvmModelUtil
 
 	def traitInterfaceName(String n) {
    		n + "Interface"
@@ -141,6 +149,11 @@ class XtraitjGeneratorExtensions {
 		}
 	}
 
+	def void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
+		target.annotations += xop.op.annotations.
+			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
 		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
 	}
@@ -161,4 +174,47 @@ class XtraitjGeneratorExtensions {
 		newRef
 	}
 
+	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName) {
+		op.toMethodDelegate(delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
+	}
+
+	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+		val o = op.op
+		val m = o.originalSource ?: o
+		if (!o.typeParameters.empty)
+			m.toMethod(methodName, op.returnType) [
+				documentation = m.documentation
+				
+				if (m instanceof TJMethodDeclaration) {
+					copyTypeParameters(o.typeParameters)
+				}
+	
+				//returnType = returnType.rebindTypeParameters(it)
+		
+				val paramTypeIt = op.parametersTypes.iterator
+				for (p : o.parameters) {
+					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
+					parameters += p.toParameter(p.name, paramTypeIt.next)
+				}
+				val args = o.parameters.map[name].join(", ")
+				if (op.returnType?.simpleName != "void")
+					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+				else
+					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+			]
+		else // if there's no type params we can make things simpler
+			m.toMethod(methodName, op.returnType) [
+				documentation = m.documentation
+				
+				val paramTypeIt = op.parametersTypes.iterator
+				for (p : o.parameters) {
+					parameters += p.toParameter(p.name, paramTypeIt.next)
+				}
+				val args = o.parameters.map[name].join(", ")
+				if (op.returnType?.simpleName != "void")
+					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+				else
+					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+			] // and we can navigate to the original method
+	}
 }

@@ -148,22 +148,22 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (traitRef : c.traitReferences) {
    				superTypes += traitRef.traitReferenceCopy
    				
-   				// do not delegate to a trait who requires that operation
-   				// but to the one which actually implements it
-   				val realRef = traitRef.buildTypeRef(typesMap)
+//   				// do not delegate to a trait who requires that operation
+//   				// but to the one which actually implements it
+//   				val realRef = traitRef.buildTypeRef(typesMap)
+//   				
+//   				members += traitRef.toField(traitRef.traitFieldName, realRef) [
+//					initializer = [
+//						append('''new ''')
+//						append(realRef.type)
+//						append("(this)")
+//					]
+//				]
    				
-   				members += traitRef.toField(traitRef.traitFieldName, realRef) [
-					initializer = [
-						append('''new ''')
-						append(realRef.type)
-						append("(this)")
-					]
-				]
-   				
-   				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
-   					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
-   						copyAnnotationsFrom(traitMethod)
-   					]
+//   				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
+//   					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
+//   						copyAnnotationsFrom(traitMethod)
+//   					]
    			}
    		]
    	}
@@ -638,50 +638,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName) {
-		op.toMethodDelegate(delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
-	}
-
-	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-		val o = op.op
-		val m = o.originalSource ?: o
-		if (!o.typeParameters.empty)
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-				if (m instanceof TJMethodDeclaration) {
-					copyTypeParameters(o.typeParameters)
-				}
-	
-				//returnType = returnType.rebindTypeParameters(it)
-		
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-					parameters += p.toParameter(p.name, paramTypeIt.next)
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			]
-		else // if there's no type params we can make things simpler
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					parameters += p.toParameter(p.name, paramTypeIt.next)
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			] // and we can navigate to the original method
-	}
-
 	def toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
@@ -733,11 +689,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			}
 			body = method.body
 		]
-	}
-
-	def protected void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
-		target.annotations += xop.op.annotations.
-			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
 	def protected traitReferenceCopy(TJTraitReference traitRef) {

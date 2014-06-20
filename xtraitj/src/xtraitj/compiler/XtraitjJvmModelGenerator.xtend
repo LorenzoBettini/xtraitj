@@ -26,6 +26,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJClass
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -56,7 +57,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				}
 			} else {
 				// we can assume it's an Xtraitj class
-				transformSuperclassReferencesIntoInterfacesReferences(genericType)
+				genericType.associatedTJClass.preprocessClass(genericType)
 				super._internalDoGenerate(type, fsa)
 			}
 		}
@@ -138,6 +139,29 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		// remove the default constructor
 		members.remove(members.size - 1)
+	}
+
+	def preprocessClass(TJClass c, JvmGenericType it) {
+		transformSuperclassReferencesIntoInterfacesReferences()
+		
+		for (traitRef : c.traitReferences) {
+			val realRef = traitRef.trait
+			
+			members += traitRef.toField(traitRef.traitFieldName, realRef) [
+				initializer = [
+					append('''new ''')
+					append(realRef.type)
+					append("(this)")
+				]
+			]
+			
+			// do not delegate to a trait who requires that operation
+   			// but to the one which actually implements it
+			for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
+				members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
+					copyAnnotationsFrom(traitMethod)
+				]
+		}
 	}
 
 	def transformSuperclassReferencesIntoInterfacesReferences(JvmGenericType type) {
