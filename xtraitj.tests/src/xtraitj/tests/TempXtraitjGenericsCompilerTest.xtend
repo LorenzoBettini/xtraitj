@@ -1122,7 +1122,11 @@ public class C implements T2Interface {
     return _T2._compare(t1, t2);
   }
   
-  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final Comparable<Object> t1, final List<? extends Comparable<Object>> t2) {
+  public <T extends List<String>> String getFirst(final T t) {
+    return _T2._getFirst(t);
+  }
+  
+  public <T extends Comparable<T>, U extends List<? extends T>> int compare(final T t1, final U t2) {
     return _T2._compare(t1, t2);
   }
 }

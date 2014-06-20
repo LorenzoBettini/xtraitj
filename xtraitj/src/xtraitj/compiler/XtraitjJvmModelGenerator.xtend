@@ -20,13 +20,13 @@ import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJClass
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -73,7 +73,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
 		   	for (typePar : typeParameters) {
-		   		typePar.rebindConstraintsTypeParameters(it, map)
+		   		typePar.rebindConstraintsTypeParameters(it, null, map)
 		   	}
 		   	
 		   	for (traitRef : t.traitReferences) {
@@ -183,13 +183,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	}
 
    	def toGetterAbstract(TJMember m, JvmTypeParameterDeclarator target) {
-   		m.toGetter(m.name, m.type.rebindTypeParameters(target)) => [
+   		m.toGetter(m.name, m.type.rebindTypeParameters(target, null)) => [
    			abstract = true
    		]
    	}
 
    	def toSetterAbstract(TJMember m, JvmTypeParameterDeclarator target) {
-   		m.toSetter(m.name, m.type.rebindTypeParameters(target)) => [
+   		m.toSetter(m.name, m.type.rebindTypeParameters(target, null)) => [
    			abstract = true
    		]
    	}
@@ -200,10 +200,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 			copyTypeParameters(m.typeParameters)
 			
-			returnType = returnType.rebindTypeParameters(target)
+			returnType = returnType.rebindTypeParameters(target, it)
 
 			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target))
+				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target, it))
 			}
 			abstract = true
 		]
@@ -216,11 +216,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	 * get IllegalArgumentException during the typing (the reference owner
 	 * is different)
 	 */
-	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target) {
-		typeRef.rebindTypeParameters(target, newHashMap())
+	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator containerTypeDecl, JvmTypeParameterDeclarator containerOperation) {
+		typeRef.rebindTypeParameters(containerTypeDecl, containerOperation, newHashMap())
 	}
 
-	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator target, Map<JvmTypeParameter, JvmTypeParameter> visited) {
+	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator containerTypeDecl, 
+			JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited
+	) {
 		val reboundTypeRef = typeRef.cloneWithProxies
 		
 		if (reboundTypeRef instanceof JvmParameterizedTypeReference) {
@@ -230,15 +232,17 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				var typePar = visited.get(type)
 				
 				if (typePar === null) {
-					typePar = target.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
+					typePar = findCorrespondingTypeParameter(containerTypeDecl, reboundTypeRef)
 					
 					// the typePar can now be null if it refers to a method's generic type
-					// instead of a type parameter in the interface...
-					// in such case we don't need any rebind so we simply go on
+					if (typePar === null && containerOperation !== null) {
+						typePar = findCorrespondingTypeParameter(containerOperation, reboundTypeRef)
+					}					
+					
 					if (typePar !== null) {
 						visited.put(type, typePar)
 
-						rebindConstraintsTypeParameters(typePar, target, visited)
+						rebindConstraintsTypeParameters(typePar, containerTypeDecl, containerOperation, visited)
 
 						reboundTypeRef.type = typePar
 					}
@@ -248,19 +252,19 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			// rebind type arguments as well
 			val arguments = reboundTypeRef.arguments
 			for (i : 0..<arguments.size()) {
-				arguments.set(i, arguments.get(i).rebindTypeParameters(target, visited))
+				arguments.set(i, arguments.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
 			}
 			
 			return reboundTypeRef
 		}
 
 		if (reboundTypeRef instanceof JvmWildcardTypeReference) {
-			reboundTypeRef.rebindConstraintsTypeParameters(target, visited)
+			reboundTypeRef.rebindConstraintsTypeParameters(containerTypeDecl, containerOperation, visited)
 			return reboundTypeRef
 		}
 		
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
-			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(target, visited)
+			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(containerTypeDecl, containerOperation, visited)
 			reboundTypeRef.returnType = reboundReturnTypeRef
 			return reboundTypeRef
 		}
@@ -268,11 +272,15 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		return typeRef
 	}
 	
-	protected def rebindConstraintsTypeParameters(JvmConstraintOwner constraintOwner, JvmTypeParameterDeclarator target, Map<JvmTypeParameter, JvmTypeParameter> visited) {
+	def findCorrespondingTypeParameter(JvmTypeParameterDeclarator declarator, JvmParameterizedTypeReference reboundTypeRef) {
+		declarator.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
+	}
+	
+	protected def rebindConstraintsTypeParameters(JvmConstraintOwner constraintOwner, JvmTypeParameterDeclarator containerDecl, JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited) {
 		val constraints = constraintOwner.constraints
 		for (i : 0..<constraints.size) {
 			val constraint = constraints.get(i)
-			constraint.typeReference = constraint.typeReference.rebindTypeParameters(target, visited)
+			constraint.typeReference = constraint.typeReference.rebindTypeParameters(containerDecl, containerOperation, visited)
 		}
 	}
 
