@@ -27,6 +27,9 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 import org.eclipse.emf.ecore.EObject
+import java.util.LinkedList
+import org.eclipse.xtext.common.types.JvmMember
+import java.util.List
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -38,16 +41,20 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject IGeneratorConfigProvider generatorConfigProvider
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
+		val membersMap = new HashMap<TJTrait, List<JvmMember>>
+		
 		// first we need to preprocess all the inferred types
-		for (obj : input.contents.reverseView) {
+		for (obj : input.contents) {
 			if (obj instanceof JvmGenericType) {
 				if(obj.qualifiedName != null) {
 					val t = obj.associatedTrait
 					if (t !== null) {
+						val members = new LinkedList<JvmMember>
+						membersMap.put(t, members)
 						if (obj.interface) {
 							preprocessTraitInterface(t, obj)
 						} else {
-							preprocessTraitClass(t, obj)
+							preprocessTraitClass(t, obj, members)
 						}
 					} else {
 						// we can assume it's an Xtraitj class
@@ -63,9 +70,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			if (obj instanceof JvmGenericType) {
 				if(obj.qualifiedName != null) {
 					val t = obj.associatedTrait
+					val members = membersMap.get(t)
 					if (t !== null) {
 						if (!obj.interface) {
-							preprocessTraitClassSuperTypes(t, obj)
+							preprocessTraitClassSuperTypes(t, obj, members)
 						}
 					} else {
 						// we can assume it's an Xtraitj class
@@ -150,13 +158,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //		traitInterface
 	}
 	
-	def preprocessTraitClass(TJTrait t, JvmGenericType it) {
+	def preprocessTraitClass(TJTrait t, JvmGenericType it, List<JvmMember> members) {
 		val traitInterfaceTypeRef = t.associatedInterface
 			
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
 		
-		members.add(0, t.toConstructor[
+		it.members.add(0, t.toConstructor[
 			simpleName = t.name
 			parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
 			body = [
@@ -171,13 +179,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		])
 
 		for (traitExp : t.traitReferences)
-			members.add(0, traitExp.toField
+			it.members.add(0, traitExp.toField
 				(traitExp.traitFieldName, traitExp.traitReferenceJavaType))
 
-		members.add(0, t.toField(delegateFieldName, transformedTraitInterfaceTypeRef))
+		it.members.add(0, t.toField(delegateFieldName, transformedTraitInterfaceTypeRef))
 		
 		// remove the default constructor
-		members.remove(members.size - 1)
+		it.members.remove(it.members.size - 1)
 		
 		for (tRef : t.traitReferences) {
 			val traitRef = tRef.trait
@@ -234,11 +242,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //		superTypes.add(0, transformedTraitInterfaceTypeRef)
 	}
 
-	def preprocessTraitClassSuperTypes(TJTrait t, JvmGenericType it) {
+	def preprocessTraitClassSuperTypes(TJTrait t, JvmGenericType it, List<JvmMember> members) {
 		val traitInterfaceTypeRef = t.associatedInterface
 			
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
+
+		it.members += members
 		
 		// remove superclasses added in the inferrer
 		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
