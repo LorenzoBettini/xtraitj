@@ -2,17 +2,20 @@ package xtraitj.compiler
 
 import com.google.inject.Inject
 import java.util.HashMap
+import java.util.LinkedList
+import java.util.List
 import java.util.Map
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.common.types.JvmConstraintOwner
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.xtext.xbase.compiler.IGeneratorConfigProvider
 import org.eclipse.xtext.xbase.compiler.JvmModelGenerator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
@@ -26,10 +29,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.emf.ecore.EObject
-import java.util.LinkedList
-import org.eclipse.xtext.common.types.JvmMember
-import java.util.List
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -37,8 +36,6 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
-	
-	@Inject IGeneratorConfigProvider generatorConfigProvider
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
 		val membersMap = new HashMap<TJTrait, List<JvmMember>>
@@ -158,13 +155,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //		traitInterface
 	}
 	
-	def preprocessTraitClass(TJTrait t, JvmGenericType it, List<JvmMember> members) {
+	def preprocessTraitClass(TJTrait t, JvmGenericType it, List<JvmMember> collectedMembers) {
 		val traitInterfaceTypeRef = t.associatedInterface
 			
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
 		
-		it.members.add(0, t.toConstructor[
+		members.add(0, t.toConstructor[
 			simpleName = t.name
 			parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
 			body = [
@@ -179,28 +176,28 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		])
 
 		for (traitExp : t.traitReferences)
-			it.members.add(0, traitExp.toField
+			members.add(0, traitExp.toField
 				(traitExp.traitFieldName, traitExp.traitReferenceJavaType))
 
-		it.members.add(0, t.toField(delegateFieldName, transformedTraitInterfaceTypeRef))
+		members.add(0, t.toField(delegateFieldName, transformedTraitInterfaceTypeRef))
 		
 		// remove the default constructor
-		it.members.remove(it.members.size - 1)
+		members.remove(it.members.size - 1)
 		
 		for (tRef : t.traitReferences) {
 			val traitRef = tRef.trait
 			// first delegates for implemented methods 
 			for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
-				if (!members.alreadyDefined(traitMethod.op)) {
+				if (!collectedMembers.alreadyDefined(traitMethod.op)) {
    					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
-   					members += traitMethod.toMethodDelegate(
+   					collectedMembers += traitMethod.toMethodDelegate(
 	   						delegateFieldName, methodName, methodName
 	   					) => [ 
 		   					traitMethod.op.annotateAsDefinedMethod(it)
 		   				]
    					// _m() { delegate to trait defining the method }
-   					members += traitMethod.toMethodDelegate(
+   					collectedMembers += traitMethod.toMethodDelegate(
    						tRef.traitFieldName, methodName.underscoreName,
    						methodName.underscoreName
    					)
@@ -212,14 +209,14 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			val traitRef = tRef.trait
 			
 			for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
-				if (!members.alreadyDefined(op.op)) {
+				if (!collectedMembers.alreadyDefined(op.op)) {
    					// this is the getter
-   					members += op.toMethodDelegate(
+   					collectedMembers += op.toMethodDelegate(
 							delegateFieldName,
 							op.op.simpleName, op.op.simpleName) => [
 	   					op.op.annotateAsRequiredField(it)
 	   				]
-	   				members += op.toSetterDelegateFromGetter
+	   				collectedMembers += op.toSetterDelegateFromGetter
    				}
 			}
 			
@@ -227,8 +224,8 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			// TODO deal with restrict
 			// see old xtraitjJvmAllRequiredOperations
 			for (op : traitRef.xtraitjJvmAllRequiredMethodOperations(tRef))
-				if (!members.alreadyDefined(op.op)) {
-					members += op.toMethodDelegate(
+				if (!members.alreadyDefined(op.op) && !collectedMembers.alreadyDefined(op.op)) {
+					collectedMembers += op.toMethodDelegate(
    							delegateFieldName,
    							op.op.simpleName, op.op.simpleName) => [
 	   					op.op.annotateAsRequiredMethod(it)
@@ -242,13 +239,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //		superTypes.add(0, transformedTraitInterfaceTypeRef)
 	}
 
-	def preprocessTraitClassSuperTypes(TJTrait t, JvmGenericType it, List<JvmMember> members) {
+	def preprocessTraitClassSuperTypes(TJTrait t, JvmGenericType it, List<JvmMember> collectedMembers) {
 		val traitInterfaceTypeRef = t.associatedInterface
 			
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
 
-		it.members += members
+		members += collectedMembers
 		
 		// remove superclasses added in the inferrer
 		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])

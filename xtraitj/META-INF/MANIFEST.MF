@@ -24,8 +24,19 @@ Require-Bundle: org.eclipse.xtext;bundle-version="[2.6.0,2.7.0)";visibility:=ree
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: xtraitj,xtraitj.formatting,xtraitj.generator,xtraitj.j
- vmmodel,xtraitj.parser.antlr,xtraitj.parser.antlr.internal,xtraitj.sc
- oping,xtraitj.serializer,xtraitj.services,xtraitj.typing,xtraitj.util
- ,xtraitj.validation,xtraitj.xtraitj,xtraitj.xtraitj.impl,xtraitj.xtra
- itj.util
+Export-Package: xtraitj,
+ xtraitj.formatting,
+ xtraitj.generator,
+ xtraitj.jvmmodel,
+ xtraitj.parser.antlr,
+ xtraitj.parser.antlr.internal,
+ xtraitj.scoping,
+ xtraitj.serializer,
+ xtraitj.services,
+ xtraitj.typesystem.override,
+ xtraitj.typing,
+ xtraitj.util,
+ xtraitj.validation,
+ xtraitj.xtraitj,
+ xtraitj.xtraitj.impl,
+ xtraitj.xtraitj.util

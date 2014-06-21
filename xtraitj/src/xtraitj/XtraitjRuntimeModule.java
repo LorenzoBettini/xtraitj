@@ -13,6 +13,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
+import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
 import xtraitj.compiler.XtraitjErrorSafeExtensions;
 import xtraitj.compiler.XtraitjJvmModelGenerator;
@@ -23,6 +24,7 @@ import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.scoping.XtraitjXbaseScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
+import xtraitj.typesystem.override.XtraitjOverrideHelper;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
@@ -78,5 +80,9 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	
 	public Class<? extends ErrorSafeExtensions> bindErrorSafeExtensions() {
 		return XtraitjErrorSafeExtensions.class;
+	}
+	
+	public Class<? extends OverrideHelper> bindOverrideHelper() {
+		return XtraitjOverrideHelper.class;
 	}
 }
