@@ -1622,6 +1622,159 @@ public class CUsesGeneric implements TUsesGenericInterface {
 		]
 	}
 
+	@Test def void testTraitUsingGenericMethod() {
+		traitUsingGenericMethod.compile[
 
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import java.util.ArrayList;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1 implements T1Interface {
+  private T1Interface _delegate;
+  
+  public T1(final T1Interface delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjDefinedMethod
+  public <T> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T> T _identity(final T t) {
+    return t;
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    final String s = this.<String>identity("foo");
+    final Integer i = this.<Integer>identity(Integer.valueOf(0));
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
+    return ((((s + ",") + i) + ",") + l);
+  }
+  
+  @XtraitjDefinedMethod
+  public <V> V recursive(final V v) {
+    return _delegate.recursive(v);
+  }
+  
+  public <V> V _recursive(final V v) {
+    V _recursive = this.<V>recursive(v);
+    return this.<V>recursive(_recursive);
+  }
+  
+  @XtraitjDefinedMethod
+  public <U> void noReturn(final U u) {
+    _delegate.noReturn(u);
+  }
+  
+  public <U> void _noReturn(final U u) {
+    InputOutput.<Object>println(u);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useRecursive() {
+    _delegate.useRecursive();
+  }
+  
+  public void _useRecursive() {
+    Integer _recursive = this.<Integer>recursive(Integer.valueOf(0));
+    String _recursive_1 = this.<String>recursive("foo");
+    String _plus = (_recursive + _recursive_1);
+    InputOutput.<String>println(_plus);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested() {
+    return _delegate.useIdentityNested();
+  }
+  
+  public String _useIdentityNested() {
+    String _identity = this.<String>identity("foo");
+    final String s = this.<String>identity(_identity);
+    Integer _identity_1 = this.<Integer>identity(Integer.valueOf(0));
+    final Integer i = this.<Integer>identity(_identity_1);
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    ArrayList<Boolean> _identity_2 = this.<ArrayList<Boolean>>identity(_newArrayList);
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_identity_2);
+    return ((((s + ",") + i) + ",") + l);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn() {
+    _delegate.useNoReturn();
+  }
+  
+  public void _useNoReturn() {
+    this.<String>noReturn("foo");
+    this.<Integer>noReturn(Integer.valueOf(0));
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.T1;
+import tests.T1Interface;
+
+@SuppressWarnings("all")
+public class C implements T1Interface {
+  private T1 _T1 = new T1(this);
+  
+  public <T> T identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  public String useIdentity() {
+    return _T1._useIdentity();
+  }
+  
+  public <V> V recursive(final V v) {
+    return _T1._recursive(v);
+  }
+  
+  public <U> void noReturn(final U u) {
+    _T1._noReturn(u);
+  }
+  
+  public void useRecursive() {
+    _T1._useRecursive();
+  }
+  
+  public String useIdentityNested() {
+    return _T1._useIdentityNested();
+  }
+  
+  public void useNoReturn() {
+    _T1._useNoReturn();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentity2", "bar,foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested2", "bar,foo,0,[true, false]")
+		]
+	}
 
 }

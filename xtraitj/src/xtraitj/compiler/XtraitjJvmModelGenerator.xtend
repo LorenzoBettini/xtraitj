@@ -112,11 +112,6 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
 						transformTypeParametersIntoTypeArguments(t)
 		
-		// remove superclasses added in the inferrer
-		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
-						
-		superTypes.add(0, transformedTraitInterfaceTypeRef)
-		
 		members.add(0, t.toConstructor[
 			simpleName = t.name
 			parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
@@ -139,6 +134,60 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		// remove the default constructor
 		members.remove(members.size - 1)
+		
+		for (tRef : t.traitReferences) {
+			val traitRef = tRef.trait
+			// first delegates for implemented methods 
+			for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
+				if (!members.alreadyDefined(traitMethod.op)) {
+   					val methodName = traitMethod.op.simpleName
+   					// m() { _delegate.m(); }
+   					members += traitMethod.toMethodDelegate(
+	   						delegateFieldName, methodName, methodName
+	   					) => [ 
+		   					traitMethod.op.annotateAsDefinedMethod(it)
+		   				]
+   					// _m() { delegate to trait defining the method }
+   					members += traitMethod.toMethodDelegate(
+   						tRef.traitFieldName, methodName.underscoreName,
+   						methodName.underscoreName
+   					)
+				}
+			}
+		}
+		
+		for (tRef : t.traitReferences) {
+			val traitRef = tRef.trait
+			
+			for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
+				if (!members.alreadyDefined(op.op)) {
+   					// this is the getter
+   					members += op.toMethodDelegate(
+							delegateFieldName,
+							op.op.simpleName, op.op.simpleName) => [
+	   					op.op.annotateAsRequiredField(it)
+	   				]
+	   				members += op.toSetterDelegateFromGetter
+   				}
+			}
+			
+			// then delegates for required methods
+			// TODO deal with restrict
+			// see old xtraitjJvmAllRequiredOperations
+			for (op : traitRef.xtraitjJvmAllRequiredMethodOperations(tRef))
+				if (!members.alreadyDefined(op.op)) {
+					members += op.toMethodDelegate(
+   							delegateFieldName,
+   							op.op.simpleName, op.op.simpleName) => [
+	   					op.op.annotateAsRequiredMethod(it)
+	   				]
+				}
+		}
+		
+		// remove superclasses added in the inferrer
+		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
+						
+		superTypes.add(0, transformedTraitInterfaceTypeRef)
 	}
 
 	def preprocessClass(TJClass c, JvmGenericType it) {
