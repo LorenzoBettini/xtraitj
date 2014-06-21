@@ -3,8 +3,8 @@ package xtraitj.compiler
 import com.google.inject.Inject
 import java.util.HashMap
 import java.util.Map
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.common.types.JvmConstraintOwner
-import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
@@ -12,7 +12,6 @@ import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.xtext.xbase.compiler.DisableCodeGenerationAdapter
 import org.eclipse.xtext.xbase.compiler.IGeneratorConfigProvider
 import org.eclipse.xtext.xbase.compiler.JvmModelGenerator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
@@ -27,6 +26,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.emf.ecore.EObject
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -37,31 +37,75 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
 	@Inject IGeneratorConfigProvider generatorConfigProvider
 	
-	override dispatch void internalDoGenerate(JvmDeclaredType type, IFileSystemAccess fsa) {
-		if (DisableCodeGenerationAdapter.isDisabled(type))
-			return;
-		if(type.qualifiedName != null) {
-			val genericType = type as JvmGenericType
-			val t = genericType.associatedTrait
-			if (t !== null) {
-				if (genericType.interface) {
-					preprocessTraitInterface(t, genericType)
-					fsa.generateFile(t.traitInterfaceName.replace('.', '/') + '.java', 
-						genericType.generateType(generatorConfigProvider.get(type))
-					)					
-				} else {
-					preprocessTraitClass(t, genericType)
-					fsa.generateFile(type.qualifiedName.replace('.', '/') + '.java', 
-						type.generateType(generatorConfigProvider.get(type))
-					)
+	override void doGenerate(Resource input, IFileSystemAccess fsa) {
+		// first we need to preprocess all the inferred types
+		for (obj : input.contents.reverseView) {
+			if (obj instanceof JvmGenericType) {
+				if(obj.qualifiedName != null) {
+					val t = obj.associatedTrait
+					if (t !== null) {
+						if (obj.interface) {
+							preprocessTraitInterface(t, obj)
+						} else {
+							preprocessTraitClass(t, obj)
+						}
+					} else {
+						// we can assume it's an Xtraitj class
+						obj.associatedTJClass.preprocessClass(obj)
+					}
 				}
-			} else {
-				// we can assume it's an Xtraitj class
-				genericType.associatedTJClass.preprocessClass(genericType)
-				super._internalDoGenerate(type, fsa)
 			}
 		}
+		
+		// then we can fix superTypes references (superclasses are turned into
+		// corresponding interfaces)
+		for (obj : input.contents) {
+			if (obj instanceof JvmGenericType) {
+				if(obj.qualifiedName != null) {
+					val t = obj.associatedTrait
+					if (t !== null) {
+						if (!obj.interface) {
+							preprocessTraitClassSuperTypes(t, obj)
+						}
+					} else {
+						// we can assume it's an Xtraitj class
+						obj.associatedTJClass.preprocessClassSuperTypes(obj)
+					}
+				}
+			}
+		}
+		
+		// final we do the actual generation
+		for (obj : input.contents) {
+			obj.internalDoGenerate(fsa)
+		}
 	}
+	
+//	override dispatch void internalDoGenerate(JvmDeclaredType type, IFileSystemAccess fsa) {
+//		if (DisableCodeGenerationAdapter.isDisabled(type))
+//			return;
+//		if(type.qualifiedName != null) {
+//			val genericType = type as JvmGenericType
+//			val t = genericType.associatedTrait
+//			if (t !== null) {
+//				if (genericType.interface) {
+//					preprocessTraitInterface(t, genericType)
+//					fsa.generateFile(t.traitInterfaceName.replace('.', '/') + '.java', 
+//						genericType.generateType(generatorConfigProvider.get(type))
+//					)					
+//				} else {
+//					preprocessTraitClass(t, genericType)
+//					fsa.generateFile(type.qualifiedName.replace('.', '/') + '.java', 
+//						type.generateType(generatorConfigProvider.get(type))
+//					)
+//				}
+//			} else {
+//				// we can assume it's an Xtraitj class
+//				genericType.associatedTJClass.preprocessClass(genericType)
+//				super._internalDoGenerate(type, fsa)
+//			}
+//		}
+//	}
 	
 	def preprocessTraitInterface(TJTrait t, JvmGenericType it) {
 //		val traitInterface = t.toInterface(t.traitInterfaceName) [
@@ -78,7 +122,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		   	
 		   	for (traitRef : t.traitReferences) {
 		   		val superTypeRef = traitRef.traitReferenceJavaType
-		   		superTypeRef.transformClassReferenceToInterfaceReference
+		   		t.transformClassReferenceToInterfaceReference(superTypeRef)
    				superTypes += superTypeRef
    			}
 		   			
@@ -184,14 +228,27 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				}
 		}
 		
+//		// remove superclasses added in the inferrer
+//		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
+//						
+//		superTypes.add(0, transformedTraitInterfaceTypeRef)
+	}
+
+	def preprocessTraitClassSuperTypes(TJTrait t, JvmGenericType it) {
+		val traitInterfaceTypeRef = t.associatedInterface
+			
+		val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
+						transformTypeParametersIntoTypeArguments(t)
+		
 		// remove superclasses added in the inferrer
 		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
-						
+
+		// and add the actual interfaces						
 		superTypes.add(0, transformedTraitInterfaceTypeRef)
 	}
 
 	def preprocessClass(TJClass c, JvmGenericType it) {
-		transformSuperclassReferencesIntoInterfacesReferences()
+		// transformSuperclassReferencesIntoInterfacesReferences()
 		
 		for (traitRef : c.traitReferences) {
 			val realRef = traitRef.trait
@@ -213,21 +270,30 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		}
 	}
 
+	def preprocessClassSuperTypes(TJClass c, JvmGenericType it) {
+		transformSuperclassReferencesIntoInterfacesReferences()
+	}
+
 	def transformSuperclassReferencesIntoInterfacesReferences(JvmGenericType type) {
 		for (s : type.superTypes) {
 			val superTypeRef = (s as JvmParameterizedTypeReference)
 			
-			superTypeRef.transformClassReferenceToInterfaceReference
+			type.transformClassReferenceToInterfaceReference(superTypeRef)
 		}
 	}
 
-	def transformClassReferenceToInterfaceReference(JvmParameterizedTypeReference superTypeRef) {
+	def transformClassReferenceToInterfaceReference(EObject context, JvmParameterizedTypeReference superTypeRef) {
 		// we must transform the references to Trait classes
 		// into references to Trait interfaces
 		val t = (superTypeRef.type as JvmGenericType)
 		if (!t.isInterface && t.notJavaLangObject) {
 			// then it's the reference to a trait class
-			superTypeRef.type = t.superTypes.head.type
+			// and we turn it into a reference to the corresponding interface
+			superTypeRef.type = context.newTypeRef(
+				superTypeRef.type.identifier.removeTypeArgs.traitInterfaceName
+			).type
+			
+			// superTypeRef.type = t.superTypes.head.type
 		}
 	}
 

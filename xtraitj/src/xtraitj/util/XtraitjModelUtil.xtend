@@ -133,6 +133,10 @@ class XtraitjModelUtil {
 	def static getJvmTypeReferenceString(JvmTypeReference t) {
 		val n = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
 		
+		removeTypeArgs(n)
+	}
+	
+	def static removeTypeArgs(String n) {
 		var pos = n.indexOf("<")
    		if (pos > 0)
    			return n.substring(0, pos)
