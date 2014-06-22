@@ -3,11 +3,9 @@ package xtraitj.generator
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
-import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
-import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
@@ -228,21 +226,16 @@ class XtraitjGeneratorExtensions {
    		]
    	}
 
-	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
-		val typeRef = t.trait
-		// here instead proxy resolution seems to be necessary
-		// val type = typeRef.getTypeWithoutProxyResolution
-		val type = typeRef.type
-		if (type.eIsProxy()) {
-			val mapped = typesMap.get(typeRef.getJvmTypeReferenceString)
-			if (mapped !== null)
-				return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
-		}
-		typeRef
-//		val typeName = typeRef.traitClassName
-//		val type = typesMap.get(typeName)
-//		if (type === null)
-//			return typeRef
-//		return type.newTypeRef(typeRef.arguments.map[cloneWithProxies])
-	}
+//	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
+//		val typeRef = t.trait
+//		// here instead proxy resolution seems to be necessary
+//		// val type = typeRef.getTypeWithoutProxyResolution
+//		val type = typeRef.type
+//		if (type.eIsProxy()) {
+//			val mapped = typesMap.get(typeRef.getJvmTypeReferenceString)
+//			if (mapped !== null)
+//				return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
+//		}
+//		typeRef
+//	}
 }
