@@ -472,13 +472,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def void collectSuperInterfaces(List<JvmTypeReference> typeRefs, TJTraitExpression e) {
-		for (it : e.traitReferences) {
-			// TODO: the case for trait expressions
-			typeRefs += traitReferenceCopy
-		}
-	}
-
    	def void inferTraitClass(TJTrait t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
    		val traitClass = t.toClass(t.traitClassName)
 		
