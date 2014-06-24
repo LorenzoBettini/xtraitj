@@ -29,6 +29,8 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.common.types.JvmOperation
+import xtraitj.util.XtraitjAnnotatedElementHelper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -36,6 +38,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjAnnotatedElementHelper
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
 		val membersMap = new HashMap<TJTrait, List<JvmMember>>
@@ -183,6 +186,26 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		// remove the default constructor
 		members.remove(it.members.size - 1)
+		
+		val List<Pair<Integer,JvmOperation>> delegatesForDefinedMethods = newArrayList()
+		for (i : 0..<members.size) {
+			val m = members.get(i)
+			if (m.annotatedDefinedMethod) {
+				// m() { _delegate.m(); }
+				delegatesForDefinedMethods += i -> 
+				((m as JvmOperation).toOpMethodDelegate(delegateFieldName, m.simpleName, m.simpleName) => [
+   					it.copyAllAnnotationsFrom(m)
+   					m.annotations.clear
+   				])
+				// _m() { original m's body }
+   				m.simpleName = m.simpleName.underscoreName;
+			}
+		}
+		
+		for (delegM : delegatesForDefinedMethods.reverseView) {
+			// insert the delegate methods in the right place in the members list
+			members.add(delegM.key, delegM.value)
+		}
 		
 		for (tRef : t.traitReferences) {
 			val traitRef = tRef.trait
