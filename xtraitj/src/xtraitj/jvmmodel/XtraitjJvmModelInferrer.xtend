@@ -254,42 +254,46 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
 	def void inferTraitExpressionInterface(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor) {
+		// this is a minimal inference, the interface will be filled up by
+   		// XtraitjJvmModelGenerator
 		acceptor.accept(
-			t.toInterface(t.traitExpressionInterfaceName) [
-				copyTypeParameters(t.containingDeclaration.typeParameters)
+			t.toInterface(t.traitExpressionInterfaceName)
+			[
+				//copyTypeParameters(t.containingDeclaration.typeParameters)
 			]
-		).initializeLater[
-			for (jvmOp : t.xtraitjJvmAllOperations) {
-				val relatedOperations = t.operationsForJvmOp(jvmOp)
-				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
-				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
-				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
-				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
-				
-				if (relatedOperations.empty) {
-					members += jvmOp.toAbstractMethod(jvmOp.op.simpleName)
-				} else {
-					if (renameOperation != null) {
-						members += jvmOp.toAbstractMethod
-							(jvmOp.op.simpleName.renameGetterOrSetter(renameOperation.newname))
-					}
-					// hidden methods are simply not inserted in this interface
-					if (aliasOperation != null) {
-						members += jvmOp.toAbstractMethod(aliasOperation.newname)
-						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
-							// we need to add also the original method
-							members += jvmOp.toAbstractMethod(aliasOperation.member.simpleName)
-						}
-					}
-					// restricted methods are added and associated to the
-					// operation itself
-					if (restrictOperation != null) {
-						members += 
-							restrictOperation.toAbstractMethod(jvmOp, jvmOp.op.simpleName)
-					}
-				}
-			}
-		]
+		)
+//		.initializeLater[
+//			for (jvmOp : t.xtraitjJvmAllOperations) {
+//				val relatedOperations = t.operationsForJvmOp(jvmOp)
+//				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
+//				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
+//				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
+//				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
+//				
+//				if (relatedOperations.empty) {
+//					members += jvmOp.toAbstractMethod(jvmOp.op.simpleName)
+//				} else {
+//					if (renameOperation != null) {
+//						members += jvmOp.toAbstractMethod
+//							(jvmOp.op.simpleName.renameGetterOrSetter(renameOperation.newname))
+//					}
+//					// hidden methods are simply not inserted in this interface
+//					if (aliasOperation != null) {
+//						members += jvmOp.toAbstractMethod(aliasOperation.newname)
+//						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
+//							// we need to add also the original method
+//							members += jvmOp.toAbstractMethod(aliasOperation.member.simpleName)
+//						}
+//					}
+//					// restricted methods are added and associated to the
+//					// operation itself
+//					if (restrictOperation != null) {
+//						members += 
+//							restrictOperation.toAbstractMethod(jvmOp, jvmOp.op.simpleName)
+//					}
+//				}
+//			}
+//		]
 	}
 
 	def operationsForJvmOp(TJTraitReference t, XtraitjJvmOperation jvmOp) {
@@ -481,6 +485,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		traitClass.copyTypeParameters(t.traitTypeParameters)
 		
 		typesMap.put(t.name, traitClass)
+		
+	   	for (tRef : t.traitReferences) {
+			if (!tRef.operations.empty) {
+				tRef.inferTraitExpressionInterface(acceptor)
+				tRef.inferTraitExpressionClass(acceptor)
+			}
+		}
    		
 		acceptor.accept(traitClass).initializeLater[
 

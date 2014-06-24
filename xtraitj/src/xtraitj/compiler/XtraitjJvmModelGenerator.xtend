@@ -154,6 +154,19 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //		]
 //		traitInterface
 	}
+
+	def preprocessTraitExpressionInterface(TJTraitReference t, JvmGenericType it) {
+//		val traitInterface = t.toInterface(t.traitInterfaceName) [
+//			documentation = t.documentation
+//			
+//			t.annotateAsTrait(it)
+		
+		   	copyTypeParameters(t.containingDeclaration.typeParameters)
+
+
+//		]
+//		traitInterface
+	}
 	
 	def preprocessTraitClass(TJTrait t, JvmGenericType it, List<JvmMember> collectedMembers) {
 		val traitInterfaceTypeRef = t.associatedInterface
@@ -232,6 +245,15 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	   				]
 				}
 		}
+		
+//		// remove superclasses added in the inferrer
+//		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
+//						
+//		superTypes.add(0, transformedTraitInterfaceTypeRef)
+	}
+
+	def preprocessTraitExpressionClass(TJTraitReference t, JvmGenericType it, List<JvmMember> collectedMembers) {
+		
 		
 //		// remove superclasses added in the inferrer
 //		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
