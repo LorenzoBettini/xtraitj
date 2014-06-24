@@ -535,13 +535,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					// type parameters work correctly
    					
 	   				// _m() { original m's body }
-	   				val actualMethod = method.toTraitMethod(method.name) => [
+	   				val actualMethod = method.toTraitMethod(method.name.underscoreName)
+   					
+   					// m() { _delegate.m(); }
+   					val delegateMethod = method.toMethodDelegate(delegateFieldName) => [
 	   					method.annotateAsDefinedMethod(it)
 	   				]
    					
-   					actualMethod.translateAnnotations(method.annotations)
+   					delegateMethod.translateAnnotations(method.annotations)
    					
-	   				//members += delegateMethod
+	   				members += delegateMethod
 	   				members += actualMethod
 				}
    			}

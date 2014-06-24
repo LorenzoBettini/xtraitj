@@ -150,16 +150,8 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
-		target.copyAnnotationsFrom(xop.op)
-	}
-
-	def void copyAnnotationsFrom(JvmOperation target, JvmMember op) {
-		target.annotations += op.annotations.
+		target.annotations += xop.op.annotations.
 			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
-
-	def void copyAllAnnotationsFrom(JvmOperation target, JvmMember op) {
-		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
@@ -224,25 +216,6 @@ class XtraitjGeneratorExtensions {
 				else
 					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 			] // and we can navigate to the original method
-	}
-
-	def toOpMethodDelegate(JvmOperation o, String delegateFieldName, String methodName, String methodToDelegate) {
-		val m = o.originalSource ?: o
-		m.toMethod(methodName, o.returnType) [
-			documentation = m.documentation
-			
-			copyTypeParameters(o.typeParameters)
-
-			for (p : o.parameters) {
-				//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			val args = o.parameters.map[name].join(", ")
-			if (o.returnType?.simpleName != "void")
-				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-			else
-				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-		]
 	}
 
    	def toSetterDelegateFromGetter(XtraitjJvmOperation op) {
