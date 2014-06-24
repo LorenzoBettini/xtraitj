@@ -1,4 +1,4 @@
-package xtraitj.tests
+package xtraitj.temporary.tests
 
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
@@ -9,8 +9,8 @@ import org.junit.runner.RunWith
 import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(InjectorProviderCustom))
-class TempXtraitjGenericsCompilerTest extends AbstractXtraitjCompilerTest {
+@InjectWith(typeof(xtraitj.tests.InjectorProviderCustom))
+class TempXtraitjGenericsCompilerTest extends xtraitj.tests.AbstractXtraitjCompilerTest {
 	@Inject extension CompilationTestHelper
 	@Inject extension XtraitjInputs
 	
