@@ -59,13 +59,13 @@ class XtraitjGeneratorExtensions {
 
    	def traitExpressionInterfaceName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1).toString // append("traits").
+   		n //.skipLast(1).toString // append("traits").
    			+ t.adapterName + "Interface"
    	}
 
    	def traitExpressionClassName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
-   		n.skipLast(1).toString /* append("traits").append("impl").*/
+   		n // .skipLast(1).toString /* append("traits").append("impl").*/
    			+ t.adapterName
    	}
 
@@ -74,8 +74,9 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def syntheticName(TJTraitReference t) {
-		t.containingDeclaration.name + "_" +
-		t.trait.simpleName + "_" +
+		//t.containingDeclaration.name + 
+		"_" +
+		t.trait.typeNameWithoutTypeArgs /* .simpleName */ + "_" +
 		t.containingDeclaration.traitOperationExpressions.indexOf(t)
 	}
 
