@@ -35,6 +35,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.util.Strings
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -562,6 +563,10 @@ class XtraitjJvmModelUtil {
 			return Introspector::decapitalize(opName.substring(2));
 		
 		return opName
+	}
+
+	def toSetterName(String opName) {
+		"set" + Strings.toFirstUpper(opName)
 	}
 
 	def isValidInterface(JvmParameterizedTypeReference t) {

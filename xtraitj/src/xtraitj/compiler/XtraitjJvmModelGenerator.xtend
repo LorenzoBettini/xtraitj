@@ -23,6 +23,8 @@ import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
+import xtraitj.types.XtraitjTraitOperationWrapper
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJHideOperation
@@ -34,7 +36,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.util.XtraitjAnnotatedElementHelper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -337,6 +338,85 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		// remove the default constructor
 		members.remove(it.members.size - 1)
 		
+		for (xop : members.filter(XtraitjTraitOperationWrapper)) {
+			val traitOp = xop.operation
+			val origOp = xop.jvmOperation
+
+			val requiredField = origOp.annotatedRequiredField()
+			val requiredMethod = origOp.annotatedRequiredMethod()
+
+			switch (traitOp) {
+				TJRenameOperation: {
+					// example T1[rename m -> m2]
+					
+					if (requiredField || requiredMethod) {
+						// make sure we take the jvmOp's name
+						// since the member in the rename operation is bound
+						// to the getter in case of a field
+						val newname = 
+							origOp.simpleName.renameGetterOrSetter(traitOp.newname)
+						// m is forwarded to this.m2()
+						collectedMembers += xop.
+							toMethodDelegate(
+								"this",
+								origOp.simpleName,
+								newname
+							)
+						// m2 is forwarded to delegate.m2()
+						collectedMembers += xop.
+							toMethodDelegate(
+								delegateFieldName,
+								newname,
+								newname
+							)
+						
+						if (requiredField) {
+							val origSetterName = origOp.simpleName.toSetterName
+							val newSetterName = newname.toSetterName
+							
+							collectedMembers += xop.
+								toMethodDelegate(
+									"this",
+									origSetterName,
+									newSetterName
+								)
+							// m2 is forwarded to delegate.m2()
+							collectedMembers += xop.
+								toMethodDelegate(
+									delegateFieldName,
+									newSetterName,
+									newSetterName
+								)
+						}
+					} else {
+						// m is forwarded to this.m2
+						val newname = traitOp.newname
+						val origname = origOp.simpleName
+						collectedMembers += xop.
+						toMethodDelegate(
+							"this",
+							origname,
+							newname
+						)
+						// m2 is forwarded to delegate.m2
+						collectedMembers += xop.
+							toMethodDelegate(
+								delegateFieldName,
+								newname,
+								newname
+							)
+						// _m2 is forwarded to T1._m
+						collectedMembers += xop.
+							toMethodDelegate(
+								traitFieldName,
+								newname.underscoreName,
+								origname.underscoreName
+							)
+					}
+				}
+			}
+		}
+		
 //		// remove superclasses added in the inferrer
 //		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
 //						
@@ -364,6 +444,11 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		superTypes.add(0, traitRefAssociatedInterface)
 		
 		transformSuperclassReferencesIntoInterfacesReferences
+		
+		// remove all the XtraitjTraitOperationWrappers
+		members.removeAll(members.filter(XtraitjTraitOperationWrapper))
+		// and add the new collected members
+		members += collectedMembers
 	}
 
 	def preprocessClass(TJClass c, JvmGenericType it) {

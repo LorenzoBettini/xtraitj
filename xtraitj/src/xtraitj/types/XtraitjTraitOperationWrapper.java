@@ -28,7 +28,11 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		this.operation = operation;
 	}
 
-	protected JvmOperation getJvmOperation() {
+	public TJTraitOperation getOperation() {
+		return operation;
+	}
+
+	public JvmOperation getJvmOperation() {
 		return (JvmOperation) operation.getMember();
 	}
 

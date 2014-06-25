@@ -22,6 +22,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
+import xtraitj.types.XtraitjTraitOperationWrapper
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
@@ -89,7 +90,7 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def traitFieldNameForOperations(TJTraitReference e) {
-		return e.trait.traitFieldName + "_" +
+		return "_" + e.trait.traitFieldName + "_" +
 				e.containingDeclaration.traitReferences.indexOf(e)
 	}
 
@@ -216,6 +217,23 @@ class XtraitjGeneratorExtensions {
 				else
 					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 			] // and we can navigate to the original method
+	}
+
+	def toMethodDelegate(XtraitjTraitOperationWrapper op, String delegateFieldName, String methodName, String methodToDelegate) {
+		//val o = op.jvmOperation
+		val m = op.operation
+		m.toMethod(methodName, op.returnType) [
+			documentation = m.documentation
+			
+			for (p : op.parameters) {
+				parameters += p.toParameter(p.name, p.parameterType)
+			}
+			val args = op.parameters.map[name].join(", ")
+			if (op.returnType?.simpleName != "void")
+				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+			else
+				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+		]
 	}
 
    	def toSetterDelegateFromGetter(XtraitjJvmOperation op) {
