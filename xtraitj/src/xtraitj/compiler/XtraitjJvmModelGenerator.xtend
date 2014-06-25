@@ -38,7 +38,8 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject extension XtraitjJvmModelHelper
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
-		val membersMap = new HashMap<TJTrait, List<JvmMember>>
+		val traitsMembersMap = new HashMap<TJTrait, List<JvmMember>>
+		val traitRefsMembersMap = new HashMap<TJTraitReference, List<JvmMember>>
 		
 		// first we need to preprocess all the inferred types
 		for (obj : input.contents) {
@@ -47,15 +48,26 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 					val t = obj.associatedTrait
 					if (t !== null) {
 						val members = new LinkedList<JvmMember>
-						membersMap.put(t, members)
+						traitsMembersMap.put(t, members)
 						if (obj.interface) {
 							preprocessTraitInterface(t, obj)
 						} else {
 							preprocessTraitClass(t, obj, members)
 						}
 					} else {
-						// we can assume it's an Xtraitj class
-						obj.associatedTJClass.preprocessClass(obj)
+						val tRef = obj.associatedTraitReference
+						if (tRef !== null) {
+							val members = new LinkedList<JvmMember>
+							traitRefsMembersMap.put(tRef, members)
+							if (obj.interface) {
+								preprocessTraitExpressionInterface(tRef, obj)
+							} else {
+								preprocessTraitExpressionClass(tRef, obj, members)
+							}
+						} else {
+							// we can assume it's an Xtraitj class
+							obj.associatedTJClass.preprocessClass(obj)
+						}
 					}
 				}
 			}
@@ -67,14 +79,22 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			if (obj instanceof JvmGenericType) {
 				if(obj.qualifiedName != null) {
 					val t = obj.associatedTrait
-					val members = membersMap.get(t)
 					if (t !== null) {
+						val members = traitsMembersMap.get(t)
 						if (!obj.interface) {
 							preprocessTraitClassSuperTypes(t, obj, members)
 						}
 					} else {
-						// we can assume it's an Xtraitj class
-						obj.associatedTJClass.preprocessClassSuperTypes(obj)
+						val tRef = obj.associatedTraitReference
+						if (tRef !== null) {
+							val members = traitRefsMembersMap.get(tRef)
+							if (!obj.interface) {
+								preprocessTraitExpressionClassSuperTypes(tRef, obj, members)
+							}	
+						} else {
+							// we can assume it's an Xtraitj class
+							obj.associatedTJClass.preprocessClassSuperTypes(obj)
+						}
 					}
 				}
 			}
@@ -274,6 +294,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 		// and add the actual interfaces						
 		superTypes.add(0, transformedTraitInterfaceTypeRef)
+	}
+
+	def preprocessTraitExpressionClassSuperTypes(TJTraitReference t, JvmGenericType it, List<JvmMember> collectedMembers) {
+		
 	}
 
 	def preprocessClass(TJClass c, JvmGenericType it) {

@@ -186,7 +186,7 @@ class C uses T {
 		
 		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
 			int foo() { 
-				return n2() + m2();
+				return this.n2() + m2();
 			}
 		}
 		'''

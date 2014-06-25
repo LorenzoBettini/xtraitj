@@ -1,29 +1,25 @@
 package xtraitj.jvmmodel
 
 import com.google.inject.Inject
-import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
-import xtraitj.xtraitj.TJAliasOperation
+import xtraitj.types.XtraitjTraitOperationWrapper
 import xtraitj.xtraitj.TJClass
-import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRenameOperation
-import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
-import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
@@ -40,6 +36,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjGeneratorExtensions
+	@Inject IJvmModelAssociator associator
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -113,7 +110,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 		// then we can infer the corresponding classes
 		for (it : c.traitOperationExpressions)
-			inferTraitExpressionClass(acceptor)
+			inferTraitExpressionClass(acceptor, typesMap)
    		
    		acceptor.accept(inferredClass).initializeLater[
    			documentation = c.documentation
@@ -144,7 +141,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (traitRef : c.traitReferences) {
    				// we need these supertypes for validation
    				// but we'll remove them in the generator
-   				superTypes += traitRef.traitReferenceCopy
+   				superTypes += traitRef.traitReferenceCopy(typesMap)
    				
 //   				// do not delegate to a trait who requires that operation
 //   				// but to the one which actually implements it
@@ -311,12 +308,27 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def void inferTraitExpressionClass(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor) {
-		val traitReferenceClass = t.toClass(t.traitExpressionClassName)
+	def void inferTraitExpressionClass(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
+		val traitExpressionClassName = t.traitExpressionClassName
+		
+		val traitReferenceClass = t.toClass(traitExpressionClassName)
 		
 		traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
 		
+		typesMap.put(traitExpressionClassName, traitReferenceClass)
+		
 		acceptor.accept(traitReferenceClass).initializeLater[
+			
+			for (tOp : t.operations) {
+				switch(tOp) {
+					TJRenameOperation: {
+						members += new XtraitjTraitOperationWrapper(tOp) => [
+							tOp.associate(it)
+						]
+					}
+				}
+			}
+			
 //			// the interface for the adapter class
 //			val traitRefAssociatedInterface = t.associatedInterface
 //			superTypes += traitRefAssociatedInterface
@@ -489,7 +501,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   	for (tRef : t.traitReferences) {
 			if (!tRef.operations.empty) {
 				tRef.inferTraitExpressionInterface(acceptor)
-				tRef.inferTraitExpressionClass(acceptor)
+				tRef.inferTraitExpressionClass(acceptor, typesMap)
 			}
 		}
    		
@@ -563,7 +575,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (tRef : t.traitReferences) {
    				// we need these supertypes for validation
    				// but we'll remove them in the generator
-   				superTypes += tRef.traitReferenceCopy
+   				superTypes += tRef.traitReferenceCopy(typesMap)
 //   				
 //   				val traitRef = tRef.buildTypeRef(typesMap)
 //   				// first delegates for implemented methods 
@@ -685,9 +697,28 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def protected traitReferenceCopy(TJTraitReference traitRef) {
-		traitRef.trait.cloneWithProxies
+	def protected traitReferenceCopy(TJTraitReference traitRef, Map<String, JvmGenericType> typesMap) {
+		if (!traitRef.operations.empty) {
+			//return traitRef.newTypeRef(traitRef.traitExpressionClassName)
+			return traitRef.buildTypeRefForTraitExpression(typesMap)
+		} else {
+			return traitRef.trait.cloneWithProxies
+		}
 	}
 
+	/**
+	 * This builds a type reference to a trait class inferred for this very program
+	 * that represents a trait reference with operations.
+	 */
+	def buildTypeRefForTraitExpression(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
+		val mapped = typesMap.get(t.traitExpressionClassName)
+		return mapped.newTypeRef(t.trait.arguments.map[cloneWithProxies])
+	}
+
+	def protected <T extends EObject> T associate(EObject sourceElement, T target) {
+		if(sourceElement != null && target != null)
+			associator.associate(sourceElement, target);
+		return target;
+	}
 }
 
