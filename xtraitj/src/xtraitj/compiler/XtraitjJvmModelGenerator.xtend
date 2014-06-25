@@ -22,13 +22,19 @@ import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmOperation
+import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethodDeclaration
+import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.util.XtraitjAnnotatedElementHelper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -36,6 +42,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjAnnotatedElementHelper
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
 		val traitsMembersMap = new HashMap<TJTrait, List<JvmMember>>
@@ -183,7 +190,40 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		   	copyTypeParameters(t.containingDeclaration.typeParameters)
 
-
+			for (jvmOp : t.xtraitjJvmAllOperations) {
+				val relatedOperations = t.operationsForJvmOp(jvmOp)
+				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
+				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
+				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
+				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
+				
+				val op = jvmOp.op
+				
+				if (relatedOperations.empty) {
+					members += jvmOp.toAbstractMethod(op.simpleName)
+					if (op.annotatedRequiredField())
+						members += jvmOp.toAbstractSetterDelegateFromGetter
+				} else {
+					if (renameOperation != null) {
+						members += jvmOp.toAbstractMethod
+							(op.simpleName.renameGetterOrSetter(renameOperation.newname))
+					}
+					// hidden methods are simply not inserted in this interface
+					if (aliasOperation != null) {
+						members += jvmOp.toAbstractMethod(aliasOperation.newname)
+						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
+							// we need to add also the original method
+							members += jvmOp.toAbstractMethod(aliasOperation.member.simpleName)
+						}
+					}
+					// restricted methods are added and associated to the
+					// operation itself
+					if (restrictOperation != null) {
+						members += 
+							restrictOperation.toAbstractMethod(jvmOp, op.simpleName)
+					}
+				}
+			}
 //		]
 //		traitInterface
 	}
@@ -273,7 +313,29 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	}
 
 	def preprocessTraitExpressionClass(TJTraitReference t, JvmGenericType it, List<JvmMember> collectedMembers) {
+		// the interface for the adapter class
+		val traitRefAssociatedInterface = t.associatedAdapterInterface
 		
+		val traitFieldName = t.traitFieldNameForOperations
+		
+		members.add(0, t.toConstructor[
+			simpleName = t.traitExpressionClassName
+			parameters += t.toParameter("delegate", traitRefAssociatedInterface)
+			body = [
+				it.append('''this.«delegateFieldName» = delegate;''')
+				newLine.append('''«traitFieldName» = ''')
+			   	append('''new ''')
+				append(t.trait.type)
+				append("(this);")	
+   			]
+		])
+		members.add(0, t.
+			toField(traitFieldName, t.trait))
+		members.add(0, t.containingDeclaration.
+			toField(delegateFieldName, traitRefAssociatedInterface))
+		
+		// remove the default constructor
+		members.remove(it.members.size - 1)
 		
 //		// remove superclasses added in the inferrer
 //		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
@@ -297,7 +359,11 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	}
 
 	def preprocessTraitExpressionClassSuperTypes(TJTraitReference t, JvmGenericType it, List<JvmMember> collectedMembers) {
+		// the interface for the adapter class
+		val traitRefAssociatedInterface = t.associatedAdapterInterface
+		superTypes.add(0, traitRefAssociatedInterface)
 		
+		transformSuperclassReferencesIntoInterfacesReferences
 	}
 
 	def preprocessClass(TJClass c, JvmGenericType it) {
@@ -372,6 +438,29 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target, it))
+			}
+			abstract = true
+		]
+	}
+
+	def toAbstractMethod(XtraitjJvmOperation m) {
+		m.toAbstractMethod(m.op.simpleName)
+	}
+
+	def toAbstractMethod(XtraitjJvmOperation m, String name) {
+		m.op.originalSource.toAbstractMethod(m, name)
+	}
+
+	def toAbstractMethod(EObject source, XtraitjJvmOperation m, String name) {
+		val op = m.op
+		source.toMethod(name, m.returnType) [
+			documentation = m.op.documentation
+			
+			copyTypeParameters(op.typeParameters)
+			
+			val paramTypeIt = m.parametersTypes.iterator
+			for (p : m.op.parameters) {
+				parameters += p.toParameter(p.name, paramTypeIt.next)
 			}
 			abstract = true
 		]

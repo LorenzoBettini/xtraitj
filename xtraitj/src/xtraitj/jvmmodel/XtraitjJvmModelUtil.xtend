@@ -90,10 +90,15 @@ class XtraitjJvmModelUtil {
 //		return t._associatedInterfaceType
 //	}
 
+	def associatedAdapterInterface(TJTraitReference t) {
+		t.newTypeRef(t.traitExpressionInterfaceName,
+			t.trait.arguments.map[cloneWithProxies]
+		)
+	}
+
 	def associatedInterface(TJTrait t) {
 		t.associatedInterfaceType?.createTypeRef()
 	}
-
 
 	def associatedInterfaceType(TJTrait t) {
 		t._associatedInterfaceType
@@ -696,7 +701,20 @@ class XtraitjJvmModelUtil {
    		"_" + name
    	}
 
-
+	def operationsForJvmOp(TJTraitReference t, XtraitjJvmOperation jvmOp) {
+		t.operations.filter[
+			member?.simpleName == jvmOp.op.simpleName ||
+			{
+				val memberSourceField = member?.sourceField 
+				val jvmOpSourceField = jvmOp.op.sourceField;
+				(
+					memberSourceField != null &&
+					jvmOpSourceField != null &&
+					memberSourceField == jvmOpSourceField
+				)
+			}
+		]
+	}
 
 }
 

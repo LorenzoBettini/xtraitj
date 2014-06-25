@@ -2138,40 +2138,31 @@ public class T3Impl implements T3 {
 		traitRenameOperations.compile[
 assertTraitAdapterJavaInterface("T3_T2_0",
 '''
-package traits;
-
 @SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
+public interface T3_T2_0_AdapterInterface {
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
   public abstract int n2();
   
   public abstract int m2();
   
   public abstract int t1();
-  
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
 }
 '''
 )
 
 assertTraitJavaInterface("T3",
 '''
-package traits;
-
-import traits.T3_T2_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3 extends T3_T2_0_Adapter {
+public interface T3Interface extends T3_T2_0_AdapterInterface {
   @XtraitjDefinedMethod
   public abstract int foo();
-  
-  public abstract int m2();
-  
-  public abstract int t1();
 }
 '''
 )

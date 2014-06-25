@@ -293,21 +293,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //		]
 	}
 
-	def operationsForJvmOp(TJTraitReference t, XtraitjJvmOperation jvmOp) {
-		t.operations.filter[
-			member?.simpleName == jvmOp.op.simpleName ||
-			{
-				val memberSourceField = member?.sourceField 
-				val jvmOpSourceField = jvmOp.op.sourceField;
-				(
-					memberSourceField != null &&
-					jvmOpSourceField != null &&
-					memberSourceField == jvmOpSourceField
-				)
-			}
-		]
-	}
-
 	def void inferTraitExpressionClass(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
 		val traitExpressionClassName = t.traitExpressionClassName
 		
@@ -318,6 +303,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		typesMap.put(traitExpressionClassName, traitReferenceClass)
 		
 		acceptor.accept(traitReferenceClass).initializeLater[
+			
+			superTypes += t.trait.cloneWithProxies
 			
 			for (tOp : t.operations) {
 				switch(tOp) {
@@ -658,29 +645,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				body = [append('''return «delegateFieldName».«m.name»(«args»);''')]
 			else
 				body = [append('''«delegateFieldName».«m.name»(«args»);''')]
-		]
-	}
-
-	def toAbstractMethod(XtraitjJvmOperation m) {
-		m.toAbstractMethod(m.op.simpleName)
-	}
-
-	def toAbstractMethod(XtraitjJvmOperation m, String name) {
-		m.op.originalSource.toAbstractMethod(m, name)
-	}
-
-	def toAbstractMethod(EObject source, XtraitjJvmOperation m, String name) {
-		val op = m.op
-		source.toMethod(name, m.returnType) [
-			documentation = m.op.documentation
-			
-			copyTypeParameters(op.typeParameters)
-			
-			val paramTypeIt = m.parametersTypes.iterator
-			for (p : m.op.parameters) {
-				parameters += p.toParameter(p.name, paramTypeIt.next)
-			}
-			abstract = true
 		]
 	}
 

@@ -226,6 +226,13 @@ class XtraitjGeneratorExtensions {
    		]
    	}
 
+	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op) {
+   		val fieldName = op.op.simpleName.stripGetter
+   		op.op.toSetter(fieldName, op.returnType) => [
+   			abstract = true
+   		]
+   	}
+
 //	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
 //		val typeRef = t.trait
 //		// here instead proxy resolution seems to be necessary
