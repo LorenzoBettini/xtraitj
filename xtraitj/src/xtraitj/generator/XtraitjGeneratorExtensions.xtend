@@ -29,6 +29,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.common.types.JvmGenericType
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -251,6 +252,10 @@ class XtraitjGeneratorExtensions {
    			abstract = true
    		]
    	}
+
+	def typeParametersOfReferredType(JvmParameterizedTypeReference typeRef) {
+		(typeRef.type as JvmGenericType).typeParameters.map[cloneWithProxies]
+	}
 
 //	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
 //		val typeRef = t.trait

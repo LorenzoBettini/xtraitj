@@ -676,7 +676,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 */
 	def buildTypeRefForTraitExpression(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
 		val mapped = typesMap.get(t.traitExpressionClassName)
-		return mapped.newTypeRef(t.trait.arguments.map[cloneWithProxies])
+		//return mapped.newTypeRef(t.trait.arguments.map[cloneWithProxies])
+		val containingDeclTypeParams = t.containingDeclaration.typeParameters
+		val typeArguments = containingDeclTypeParams.map[t.newTypeRef(it.simpleName)]
+		return mapped.newTypeRef(typeArguments)
 	}
 
 	def protected <T extends EObject> T associate(EObject sourceElement, T target) {

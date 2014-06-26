@@ -578,26 +578,17 @@ public class C implements UsesTGeneric {
 
 assertTraitJavaInterface("tests", "UsesTGeneric",
 '''
-package tests.traits;
+package tests;
 
-import java.util.List;
-import tests.traits.TGeneric;
-import tests.traits.UsesTGeneric_TGeneric_0_Adapter;
-import tests.traits.UsesTGeneric_TGeneric_1_Adapter;
+import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter, UsesTGeneric_TGeneric_1_Adapter, TGeneric<String> {
+public interface UsesTGenericInterface extends UsesTGeneric_TGeneric_0_AdapterInterface {
   @XtraitjDefinedMethod
   public abstract String useLists();
-  
-  public abstract List<Integer> returnListOfInteger();
-  
-  public abstract List<List<Integer>> returnListOfListOfInteger();
-  
-  public abstract List<String> returnList();
 }
 '''
 )

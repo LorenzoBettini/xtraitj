@@ -189,7 +189,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //			
 //			t.annotateAsTrait(it)
 		
-		   	copyTypeParameters(t.containingDeclaration.typeParameters)
+		   	copyTypeParameters(t.trait.typeParametersOfReferredType)
 
 			for (jvmOp : t.xtraitjJvmAllOperations) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
