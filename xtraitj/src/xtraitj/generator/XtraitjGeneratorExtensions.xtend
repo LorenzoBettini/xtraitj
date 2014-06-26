@@ -143,6 +143,10 @@ class XtraitjGeneratorExtensions {
 		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
 	}
 
+	def void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
+		target.annotations += element.toAnnotation(XtraitjDefinedMethod, originalName)
+	}
+
 	def void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
 		for (typeParameter : typeParameters) {
 			val clonedTypeParameter = typeParameter.cloneWithProxies();

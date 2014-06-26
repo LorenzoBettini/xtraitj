@@ -311,6 +311,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					TJRenameOperation: {
 						members += new XtraitjTraitOperationWrapper(tOp) => [
 							tOp.associate(it)
+							tOp.annotateAsRenamedMethod(it, tOp.operationMemberName)
 						]
 					}
 				}

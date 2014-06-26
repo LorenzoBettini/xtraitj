@@ -593,6 +593,56 @@ public interface UsesTGenericInterface extends UsesTGeneric_TGeneric_0_AdapterIn
 '''
 )
 
+assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
+'''
+package tests.traits.impl;
+
+import java.util.List;
+import tests.traits.TGeneric;
+import tests.traits.UsesTGeneric_TGeneric_0_Adapter;
+import tests.traits.impl.TGenericImpl;
+
+@SuppressWarnings("all")
+public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
+  private UsesTGeneric_TGeneric_0_Adapter _delegate;
+  
+  private TGenericImpl<Integer> _TGeneric_0;
+  
+  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
+    this._delegate = delegate;
+    _TGeneric_0 = new TGenericImpl(this);
+  }
+  
+  public List<Integer> returnList() {
+    return this.returnListOfInteger();
+  }
+  
+  public List<Integer> returnListOfInteger() {
+    return _delegate.returnListOfInteger();
+  }
+  
+  public List<Integer> _returnListOfInteger() {
+    return _TGeneric_0._returnList();
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
+'''
+package tests.traits;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface UsesTGeneric_TGeneric_0_Adapter {
+  public abstract List<Integer> returnListOfInteger();
+}
+'''
+)
+
+
+
 assertTraitJavaClass("tests", "UsesTGeneric",
 '''
 package tests.traits.impl;
@@ -693,53 +743,7 @@ public class UsesTGenericImpl implements UsesTGeneric {
 '''
 )
 
-assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
-'''
-package tests.traits;
 
-import java.util.List;
-
-@SuppressWarnings("all")
-public interface UsesTGeneric_TGeneric_0_Adapter {
-  public abstract List<Integer> returnListOfInteger();
-}
-'''
-)
-
-assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
-'''
-package tests.traits.impl;
-
-import java.util.List;
-import tests.traits.TGeneric;
-import tests.traits.UsesTGeneric_TGeneric_0_Adapter;
-import tests.traits.impl.TGenericImpl;
-
-@SuppressWarnings("all")
-public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
-  private UsesTGeneric_TGeneric_0_Adapter _delegate;
-  
-  private TGenericImpl<Integer> _TGeneric_0;
-  
-  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
-    this._delegate = delegate;
-    _TGeneric_0 = new TGenericImpl(this);
-  }
-  
-  public List<Integer> returnList() {
-    return this.returnListOfInteger();
-  }
-  
-  public List<Integer> returnListOfInteger() {
-    return _delegate.returnListOfInteger();
-  }
-  
-  public List<Integer> _returnListOfInteger() {
-    return _TGeneric_0._returnList();
-  }
-}
-'''
-)
 
 assertJavaClass("tests", "C",
 '''

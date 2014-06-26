@@ -21,6 +21,8 @@ import xtraitj.xtraitj.TJTraitExpression
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import xtraitj.xtraitj.TJTraitOperation
+import xtraitj.xtraitj.XtraitjPackage
 
 class XtraitjModelUtil {
 	
@@ -150,5 +152,14 @@ class XtraitjModelUtil {
 	 */
 	def static getTypeWithoutProxyResolution(JvmParameterizedTypeReference typeRef) {
 		typeRef.eGet(TypesPackage.eINSTANCE.jvmParameterizedTypeReference_Type, false) as JvmType
+	}
+
+	/**
+	 * Retrieves the name of the member involved in this trait operation
+	 * without actually resolving the member
+	 */
+	def static getOperationMemberName(TJTraitOperation op) {
+		val nodes = NodeModelUtils.findNodesForFeature(op, XtraitjPackage.eINSTANCE.TJTraitOperation_Member)
+		NodeModelUtils.getTokenText(nodes.head)
 	}
 }
