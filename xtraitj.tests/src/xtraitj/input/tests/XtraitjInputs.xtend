@@ -1406,6 +1406,34 @@ class CUsesGeneric2 uses T2 {
 		'''
 	}
 
+	// TODO this can be removed when generics are fixed
+	def traitUsesGenericTraitWithRenameSimpler() {
+		'''
+package tests;
+
+import java.util.List
+import java.util.LinkedList
+
+trait TGeneric<T> {
+	List<T> returnList() {
+		return new LinkedList<T>
+	}
+}
+
+trait UsesTGeneric uses 
+	TGeneric<Integer>[rename returnList to returnListOfInteger]
+{
+	String useLists() {
+		val stringList = returnList()
+		val intList = returnListOfInteger()
+		return (stringList.toString + intList.toString)
+	}
+}
+
+//class C uses UsesTGeneric {}
+		'''
+	}
+
 	def traitUsesGenericTraitWithRename() {
 		'''
 package tests;
