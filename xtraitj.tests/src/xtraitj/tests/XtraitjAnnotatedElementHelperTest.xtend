@@ -14,6 +14,7 @@ import xtraitj.util.XtraitjAnnotatedElementHelper
 
 import static extension org.junit.Assert.*
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
+import xtraitj.input.tests.MyAnnotatedRenamedMethod
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -58,6 +59,12 @@ class XtraitjAnnotatedElementHelperTest extends XtraitjAbstractTest {
 		MyAnnotatedJavaInterface.getJavaMethod("getDefined").annotatedDefinedMethod.assertTrue
 		MyAnnotatedJavaClass.getJavaMethod("notAnnotatedMethod").annotatedDefinedMethod.assertFalse
 		MyAnnotatedJavaInterface.getJavaMethod("notAnnotatedMethod").annotatedDefinedMethod.assertFalse
+	}
+
+	@Test def void testAnnotatedRenamedMethod() {
+		MyAnnotatedRenamedMethod.getJavaMethod("newName").annotatedRenamedMethodFor("original").assertTrue
+		MyAnnotatedRenamedMethod.getJavaMethod("newName").annotatedRenamedMethodFor("foo").assertFalse
+		MyAnnotatedRenamedMethod.getJavaMethod("notAnnotated").annotatedRenamedMethodFor("foo").assertFalse
 	}
 
 	@Test def void testFilterOutXtraitjAnnotations() {

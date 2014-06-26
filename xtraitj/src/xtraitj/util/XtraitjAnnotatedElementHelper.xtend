@@ -9,6 +9,8 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import org.eclipse.xtext.common.types.JvmAnnotationReference
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
+import org.eclipse.xtext.common.types.JvmStringAnnotationValue
 
 class XtraitjAnnotatedElementHelper {
 	
@@ -52,6 +54,16 @@ class XtraitjAnnotatedElementHelper {
 		member.annotations.
 			exists[
 				annotation.identifier == XtraitjDefinedMethod.name
+			]
+	}
+
+	def annotatedRenamedMethodFor(JvmMember member, String originalName) {
+		member.annotations.
+			exists[
+				annotation.identifier == XtraitjRenamedMethod.name
+				&&
+				values.filter(JvmStringAnnotationValue).
+					map[values].flatten.exists[it == originalName]
 			]
 	}
 
