@@ -593,6 +593,21 @@ public interface UsesTGenericInterface extends UsesTGeneric_TGeneric_0_AdapterIn
 '''
 )
 
+assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
+'''
+package tests;
+
+import java.util.List;
+
+@SuppressWarnings("all")
+public interface UsesTGeneric_TGeneric_0_AdapterInterface {
+  public abstract List<Integer> returnListOfInteger();
+  
+  public abstract void printListOfInteger(final List<Integer> l);
+}
+'''
+)
+
 assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
 '''
 package tests.traits.impl;
@@ -636,19 +651,6 @@ public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneri
   public void _printListOfInteger(final List<Integer> l) {
     _TGeneric_0._printList(l);
   }
-}
-'''
-)
-
-assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
-'''
-package tests.traits;
-
-import java.util.List;
-
-@SuppressWarnings("all")
-public interface UsesTGeneric_TGeneric_0_Adapter {
-  public abstract List<Integer> returnListOfInteger();
 }
 '''
 )

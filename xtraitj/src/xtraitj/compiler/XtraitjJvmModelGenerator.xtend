@@ -189,7 +189,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //			
 //			t.annotateAsTrait(it)
 		
-		   	copyTypeParameters(t.trait.typeParametersOfReferredType)
+		   	copyTypeParameters(t.containingDeclaration.typeParameters)
 
 			for (jvmOp : t.xtraitjJvmAllOperations) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
@@ -317,13 +317,16 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		// the interface for the adapter class
 		val traitRefAssociatedInterface = t.associatedAdapterInterface
 		
+		val transformedTraitInterfaceTypeRef = traitRefAssociatedInterface.
+						transformTypeParametersIntoTypeArguments(t.containingDeclaration)
+		
 		val traitFieldName = t.traitFieldNameForOperations
 		
 		val constructorName = it.simpleName
 		
 		members.add(0, t.toConstructor[
 			simpleName = constructorName
-			parameters += t.toParameter("delegate", traitRefAssociatedInterface)
+			parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
 			body = [
 				it.append('''this.«delegateFieldName» = delegate;''')
 				newLine.append('''«traitFieldName» = ''')
@@ -335,7 +338,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		members.add(0, t.
 			toField(traitFieldName, t.trait))
 		members.add(0, t.containingDeclaration.
-			toField(delegateFieldName, traitRefAssociatedInterface))
+			toField(delegateFieldName, transformedTraitInterfaceTypeRef))
 		
 		// remove the default constructor
 		members.remove(it.members.size - 1)
