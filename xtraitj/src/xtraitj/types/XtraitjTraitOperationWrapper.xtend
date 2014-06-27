@@ -16,6 +16,8 @@ import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmFormalParameter
 import org.eclipse.xtext.common.types.JvmVisibility
 import xtraitj.xtraitj.TJRenameOperation
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 
 /**
  * @author Lorenzo Bettini
@@ -29,7 +31,11 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	@Inject XtraitjJvmModelHelper jvmModelHelper;
 	
+	@Inject extension JvmTypesBuilder
+	
 	var IResolvedOperation resolvedOperation = null;
+	
+	var EList<JvmFormalParameter> parameters = null;
 
 	def void init(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
@@ -62,7 +68,16 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	override EList<JvmFormalParameter> getParameters() {
-		return getJvmOperation().getParameters();
+		// replace original parameter types with the resolved ones
+		if (parameters == null) {
+			parameters = new BasicEList(getJvmOperation.parameters.map[cloneWithProxies])
+			val iterator = getResolvedOperation.resolvedParameterTypes.iterator
+			for (parameter : parameters) {
+				parameter.parameterType = iterator.next.toTypeReference.cloneWithProxies
+			}
+		}
+		
+		return parameters;
 	}
 
 	override JvmVisibility getVisibility() {

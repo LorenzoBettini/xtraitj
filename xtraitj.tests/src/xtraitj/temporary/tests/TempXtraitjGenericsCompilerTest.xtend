@@ -624,6 +624,18 @@ public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneri
   public List<Integer> _returnListOfInteger() {
     return _TGeneric_0._returnList();
   }
+  
+  public void printList(final List<Integer> l) {
+    this.printListOfInteger(l);
+  }
+  
+  public void printListOfInteger(final List<Integer> l) {
+    _delegate.printListOfInteger(l);
+  }
+  
+  public void _printListOfInteger(final List<Integer> l) {
+    _TGeneric_0._printList(l);
+  }
 }
 '''
 )
