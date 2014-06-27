@@ -610,28 +610,30 @@ public interface UsesTGeneric_TGeneric_0_AdapterInterface {
 
 assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
 '''
-package tests.traits.impl;
+package tests;
 
 import java.util.List;
-import tests.traits.TGeneric;
-import tests.traits.UsesTGeneric_TGeneric_0_Adapter;
-import tests.traits.impl.TGenericImpl;
+import tests.TGeneric;
+import tests.TGenericInterface;
+import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
-  private UsesTGeneric_TGeneric_0_Adapter _delegate;
+public class UsesTGeneric_TGeneric_0_Adapter implements UsesTGeneric_TGeneric_0_AdapterInterface, TGenericInterface<Integer> {
+  private UsesTGeneric_TGeneric_0_AdapterInterface _delegate;
   
-  private TGenericImpl<Integer> _TGeneric_0;
+  private TGeneric<Integer> _TGeneric_0;
   
-  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
+  public UsesTGeneric_TGeneric_0_Adapter(final UsesTGeneric_TGeneric_0_AdapterInterface delegate) {
     this._delegate = delegate;
-    _TGeneric_0 = new TGenericImpl(this);
+    _TGeneric_0 = new TGeneric(this);
   }
   
   public List<Integer> returnList() {
     return this.returnListOfInteger();
   }
   
+  @XtraitjRenamedMethod("returnList")
   public List<Integer> returnListOfInteger() {
     return _delegate.returnListOfInteger();
   }
@@ -644,6 +646,7 @@ public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneri
     this.printListOfInteger(l);
   }
   
+  @XtraitjRenamedMethod("printList")
   public void printListOfInteger(final List<Integer> l) {
     _delegate.printListOfInteger(l);
   }
@@ -654,8 +657,6 @@ public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneri
 }
 '''
 )
-
-
 
 assertTraitJavaClass("tests", "UsesTGeneric",
 '''

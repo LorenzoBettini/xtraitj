@@ -377,7 +377,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 								delegateFieldName,
 								newname,
 								newname
-							)
+							) => [ copyAllAnnotationsFrom(xop) ]
 						
 						if (requiredField) {
 							val origSetterName = origOp.simpleName.toSetterName
@@ -413,7 +413,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 								delegateFieldName,
 								newname,
 								newname
-							)
+							) => [ copyAllAnnotationsFrom(xop) ]
 						// _m2 is forwarded to T1._m
 						collectedMembers += xop.
 							toMethodDelegate(
