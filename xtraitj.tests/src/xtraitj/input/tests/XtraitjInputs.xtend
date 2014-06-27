@@ -1418,10 +1418,11 @@ trait TGeneric<T> {
 	List<T> returnList() {
 		return new LinkedList<T>
 	}
+	void printList(List<T> l) {}
 }
 
 trait UsesTGeneric uses 
-	TGeneric<Integer>[rename returnList to returnListOfInteger]
+	TGeneric<Integer>[rename returnList to returnListOfInteger, rename printList to printListOfInteger]
 {
 	String useLists() {
 		val intList1 = returnList()

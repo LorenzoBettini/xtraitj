@@ -9,7 +9,10 @@ import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.typing.XtraitjTypingUtil
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmType
+import org.eclipse.xtext.common.types.JvmOperation
+import com.google.inject.Singleton
 
+@Singleton
 class XtraitjJvmModelHelper {
 	@Inject extension OverrideHelper
 	@Inject extension XtraitjAnnotatedElementHelper
@@ -33,6 +36,22 @@ class XtraitjJvmModelHelper {
 		typeRef.toLightweightTypeReference(context).resolvedOperations.allOperations.filter[
 			declaration.declaringType.notJavaLangObject
 		]
+	}
+
+	/**
+	 * Resolves the given operation in the context of a type reference, for example
+	 * 
+	 * <pre>
+	 * trait T1&lt;T&gt; {
+	 *   T m() ...
+	 * }
+	 * trait T2 uses T1&lt;String&gt;[rename m as n]
+	 * </pre>
+	 * 
+	 * Then m must be resolved as String m using T1&lt;String&gt; as the type context
+	 */
+	def getResolvedOperation(JvmTypeReference typeRef, EObject context, JvmOperation op) {
+		typeRef.toLightweightTypeReference(context).resolvedOperations.getResolvedOperation(op)
 	}
 
 	def isNotJavaLangObject(JvmType type) {

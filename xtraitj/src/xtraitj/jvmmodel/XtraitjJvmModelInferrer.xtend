@@ -36,6 +36,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjGeneratorExtensions
+	@Inject extension XtraitjJvmModelHelper jvmModelHelper
 	@Inject IJvmModelAssociator associator
 
 	/**
@@ -309,7 +310,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
-						members += new XtraitjTraitOperationWrapper(tOp) => [
+						members += new XtraitjTraitOperationWrapper(tOp, t.trait, jvmModelHelper) => [
 							tOp.associate(it)
 							tOp.annotateAsRenamedMethod(it, tOp.operationMemberName)
 						]

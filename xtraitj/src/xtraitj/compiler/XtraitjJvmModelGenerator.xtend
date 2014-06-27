@@ -344,6 +344,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 
 			val requiredField = origOp.annotatedRequiredField()
 			val requiredMethod = origOp.annotatedRequiredMethod()
+			
+			val resolvedOp = xop.resolvedOperation
+			println(resolvedOp.resolvedReturnType)
+			println(resolvedOp.resolvedParameterTypes)
 
 			switch (traitOp) {
 				TJRenameOperation: {

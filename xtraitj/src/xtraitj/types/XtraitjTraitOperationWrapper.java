@@ -7,11 +7,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmOperation;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmVisibility;
 import org.eclipse.xtext.common.types.impl.JvmOperationImpl;
+import org.eclipse.xtext.xbase.typesystem.override.IResolvedOperation;
 
+import xtraitj.jvmmodel.XtraitjJvmModelHelper;
 import xtraitj.xtraitj.TJRenameOperation;
 import xtraitj.xtraitj.TJTraitOperation;
 
@@ -22,14 +25,32 @@ import xtraitj.xtraitj.TJTraitOperation;
 public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 
 	private TJTraitOperation operation;
+	
+	private JvmParameterizedTypeReference typeReference;
+	
+	private XtraitjJvmModelHelper jvmModelHelper;
+	
+	private IResolvedOperation resolvedOperation = null;
 
-	public XtraitjTraitOperationWrapper(TJTraitOperation operation) {
+	public XtraitjTraitOperationWrapper(TJTraitOperation operation,
+			JvmParameterizedTypeReference typeReference,
+			XtraitjJvmModelHelper jvmModelHelper) {
 		super();
 		this.operation = operation;
+		this.typeReference = typeReference;
+		this.jvmModelHelper = jvmModelHelper;
 	}
 
 	public TJTraitOperation getOperation() {
 		return operation;
+	}
+	
+	public IResolvedOperation getResolvedOperation() {
+		if (resolvedOperation == null) {
+			resolvedOperation = jvmModelHelper.getResolvedOperation(typeReference, operation, getJvmOperation());
+		}
+		
+		return resolvedOperation;
 	}
 
 	public JvmOperation getJvmOperation() {
@@ -38,7 +59,7 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 
 	@Override
 	public JvmTypeReference getReturnType() {
-		return getJvmOperation().getReturnType();
+		return getResolvedOperation().getResolvedReturnType().toTypeReference();
 	}
 
 	@Override
