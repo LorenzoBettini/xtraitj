@@ -19,5 +19,5 @@ import java.lang.annotation.Target;
 @Target({METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XtraitjRenamedMethod {
-	String originalName();
+	String value();
 }

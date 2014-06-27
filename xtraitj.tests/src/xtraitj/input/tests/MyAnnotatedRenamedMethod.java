@@ -6,7 +6,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 @XtraitjTraitClass
 public class MyAnnotatedRenamedMethod {
 
-	@XtraitjRenamedMethod(originalName="original")
+	@XtraitjRenamedMethod("original")
 	String newName() {
 		return "test";
 	}
