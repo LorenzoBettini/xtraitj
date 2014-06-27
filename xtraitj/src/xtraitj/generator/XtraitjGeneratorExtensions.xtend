@@ -6,6 +6,7 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
+import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
@@ -18,6 +19,7 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
@@ -29,7 +31,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.common.types.JvmGenericType
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -144,7 +145,7 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
-		target.annotations += element.toAnnotation(XtraitjDefinedMethod, originalName)
+		target.annotations += element.toAnnotation(XtraitjRenamedMethod, originalName)
 	}
 
 	def void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
@@ -159,6 +160,10 @@ class XtraitjGeneratorExtensions {
 	def void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
 		target.annotations += xop.op.annotations.
 			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
+	def void copyAllAnnotationsFrom(JvmOperation target, JvmOperation op) {
+		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
