@@ -319,8 +319,10 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		
 		val traitFieldName = t.traitFieldNameForOperations
 		
+		val constructorName = it.simpleName
+		
 		members.add(0, t.toConstructor[
-			simpleName = t.traitExpressionClassName
+			simpleName = constructorName
 			parameters += t.toParameter("delegate", traitRefAssociatedInterface)
 			body = [
 				it.append('''this.«delegateFieldName» = delegate;''')
