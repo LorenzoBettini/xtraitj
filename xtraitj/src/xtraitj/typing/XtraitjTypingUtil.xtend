@@ -1,17 +1,20 @@
 package xtraitj.typing
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.util.Primitives
 import org.eclipse.xtext.xbase.typesystem.legacy.StandardTypeReferenceOwner
 import org.eclipse.xtext.xbase.typesystem.references.OwnedConverter
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
-import org.eclipse.xtext.common.types.util.Primitives
-import org.eclipse.emf.ecore.EObject
 
 class XtraitjTypingUtil {
 	
 	@Inject CommonTypeComputationServices services;
 	@Inject extension Primitives
+	
+	val static objectClassName = Object.simpleName
 	
 	def sameType(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
 		if (t1 == null || t2 == null)
@@ -48,4 +51,8 @@ class XtraitjTypingUtil {
 		converter.toLightweightReference(typeRef)
 	}
 
+	def isNotJavaLangObject(JvmType type) {
+		type.simpleName != objectClassName
+	}
+	
 }

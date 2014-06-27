@@ -20,10 +20,10 @@ import org.eclipse.xtext.xbase.compiler.JvmModelGenerator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
-import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.types.XtraitjTraitOperationWrapper
+import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
@@ -42,7 +42,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	@Inject extension XtraitjGeneratorExtensions
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
-	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjTypingUtil
 	@Inject extension XtraitjAnnotatedElementHelper
 	
 	override void doGenerate(Resource input, IFileSystemAccess fsa) {
