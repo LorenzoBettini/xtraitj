@@ -12,7 +12,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingIn
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
-import xtraitj.types.XtraitjTraitOperationWrapper
+import xtraitj.types.XtraitjTraitOperationWrapperFactory
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
@@ -36,7 +36,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjGeneratorExtensions
-	@Inject extension XtraitjJvmModelHelper jvmModelHelper
+	@Inject XtraitjTraitOperationWrapperFactory xtraitjTraitOperationWrapperFactory
 	@Inject IJvmModelAssociator associator
 
 	/**
@@ -310,7 +310,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
-						members += new XtraitjTraitOperationWrapper(tOp, t.trait, jvmModelHelper) => [
+						members += xtraitjTraitOperationWrapperFactory.create(tOp, t.trait) => [
 							tOp.associate(it)
 							tOp.annotateAsRenamedMethod(it, tOp.operationMemberName)
 						]

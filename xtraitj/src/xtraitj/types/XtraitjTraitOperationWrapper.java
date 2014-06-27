@@ -14,6 +14,8 @@ import org.eclipse.xtext.common.types.JvmVisibility;
 import org.eclipse.xtext.common.types.impl.JvmOperationImpl;
 import org.eclipse.xtext.xbase.typesystem.override.IResolvedOperation;
 
+import com.google.inject.Inject;
+
 import xtraitj.jvmmodel.XtraitjJvmModelHelper;
 import xtraitj.xtraitj.TJRenameOperation;
 import xtraitj.xtraitj.TJTraitOperation;
@@ -28,17 +30,15 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	private JvmParameterizedTypeReference typeReference;
 	
+	@Inject
 	private XtraitjJvmModelHelper jvmModelHelper;
 	
 	private IResolvedOperation resolvedOperation = null;
 
-	public XtraitjTraitOperationWrapper(TJTraitOperation operation,
-			JvmParameterizedTypeReference typeReference,
-			XtraitjJvmModelHelper jvmModelHelper) {
-		super();
+	public void init(TJTraitOperation operation,
+			JvmParameterizedTypeReference typeReference) {
 		this.operation = operation;
 		this.typeReference = typeReference;
-		this.jvmModelHelper = jvmModelHelper;
 	}
 
 	public TJTraitOperation getOperation() {
