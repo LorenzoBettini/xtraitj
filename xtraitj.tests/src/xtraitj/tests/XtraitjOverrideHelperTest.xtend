@@ -11,6 +11,7 @@ import xtraitj.typesystem.^override.XtraitjOverrideHelper
 import xtraitj.typing.XtraitjTypingUtil
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
+import xtraitj.input.tests.^override.MyAnnotatedJavaInterfaceWithRenamed
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -19,8 +20,17 @@ class XtraitjOverrideHelperTest extends XtraitjAbstractTest {
 	@Inject extension XtraitjOverrideHelper
 	@Inject extension XtraitjTypingUtil
 	
-	@Test def void testResolvedOperationsWithoutTypeArgument() {
+	@Test def void testResolvedOperationsWithDefinedOverRequired() {
 		MyAnnotatedJavaInterfaceWithDefined.assertAllOperations(
+'''
+getRequired() : String - [XtraitjDefinedMethod]
+getDefined() : String - [XtraitjDefinedMethod]
+getField() : String - [XtraitjRequiredField]'''
+		)
+	}
+
+	@Test def void testResolvedOperationsWithRenamed() {
+		MyAnnotatedJavaInterfaceWithRenamed.assertAllOperations(
 '''
 getRequired() : String - [XtraitjDefinedMethod]
 getDefined() : String - [XtraitjDefinedMethod]
