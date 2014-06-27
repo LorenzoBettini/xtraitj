@@ -112,6 +112,15 @@ getRequired(List<String>) : String'''
 		)
 	}
 
+	@Test def void testGetResolvedOperation() {
+		// included both required and defined methods
+		MyGenericAnnotatedJavaInterfaceDerived.assertResolvedOperation("getRequired2",
+'''getRequired2(List<String>) : String'''
+		,
+		String
+		)
+	}
+
 	def private assertResolvedOperations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		expected.assertEqualsStrings(clazz.toResourceTypeRef(typeArguments).getOperations.map[
 			simpleSignature + " : " + resolvedReturnType
@@ -128,6 +137,14 @@ getRequired(List<String>) : String'''
 		repr += "definedMethods: " +
 			resolved.definedMethods.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
 		expected.assertEqualsStrings(repr)
+	}
+
+	def private assertResolvedOperation(Class<?> clazz, String methodName, CharSequence expected, Class<?>... typeArguments) {
+		val typeRef = clazz.toResourceTypeRef(typeArguments)
+		val op = typeRef.getJavaMethod(methodName)
+		val resolved = typeRef.getResolvedOperation(typeRef, op)
+		
+		expected.assertEqualsStrings(resolved.simpleSignature + " : " + resolved.resolvedReturnType)
 	}
 
 	def private assertDeclaredMethods(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {

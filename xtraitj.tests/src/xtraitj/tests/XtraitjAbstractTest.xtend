@@ -2,7 +2,7 @@ package xtraitj.tests
 
 import com.google.inject.Inject
 import org.eclipse.xtext.common.types.JvmDeclaredType
-import org.eclipse.xtext.common.types.JvmMember
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
@@ -10,7 +10,9 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.xtraitj.TJProgram
+
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.common.types.JvmTypeReference
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -27,8 +29,11 @@ abstract class XtraitjAbstractTest {
 	}
 
 	def protected getJavaMethod(Class<?> clazz, String methodName) {
-		(clazz.toTypeRef.type as JvmDeclaredType).
-			allFeatures.filter(JvmMember).findFirst[simpleName == methodName]
+		clazz.toTypeRef.getJavaMethod(methodName)
+	}
+
+	def protected getJavaMethod(JvmTypeReference typeRef, String methodName) {
+		(typeRef.type as JvmDeclaredType).allFeatures.filter(JvmOperation).findFirst[simpleName == methodName]
 	}
 
 	def protected toResourceTypeRef(Class<?> clazz, Class<?>... typeArgs) {
