@@ -1425,13 +1425,13 @@ trait UsesTGeneric uses
 	TGeneric<Integer>[rename returnList to returnListOfInteger, rename printList to printListOfInteger]
 {
 	String useLists() {
-		val intList = returnListOfInteger()
+		val intList = returnListOfInteger() => [add(1)]
 		printListOfInteger(intList)
 		return intList.toString
 	}
 }
 
-//class C uses UsesTGeneric {}
+class C uses UsesTGeneric {}
 		'''
 	}
 
