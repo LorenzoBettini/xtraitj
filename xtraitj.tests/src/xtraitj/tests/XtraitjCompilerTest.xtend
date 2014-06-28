@@ -557,11 +557,11 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 public class T implements TInterface {
   private TInterface _delegate;
   
-  private T3 _T3;
+  private T1 _T1;
   
   private T2 _T2;
   
-  private T1 _T1;
+  private T3 _T3;
   
   public T(final TInterface delegate) {
     this._delegate = delegate;

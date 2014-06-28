@@ -23,6 +23,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJDeclaration
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -139,28 +140,30 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				]
    			}
    			
-   			for (traitRef : c.traitReferences) {
-   				// we need these supertypes for validation
-   				// but we'll remove them in the generator
-   				superTypes += traitRef.traitReferenceCopy(typesMap)
-   				
-//   				// do not delegate to a trait who requires that operation
-//   				// but to the one which actually implements it
-//   				val realRef = traitRef.buildTypeRef(typesMap)
+   			c.addSuperTypesFromTraitReferences(it, typesMap)
+   			
+//   			for (traitRef : c.traitReferences) {
+//   				// we need these supertypes for validation
+//   				// but we'll remove them in the generator
+//   				superTypes += traitRef.traitReferenceCopy(typesMap)
 //   				
-//   				members += traitRef.toField(traitRef.traitFieldName, realRef) [
-//					initializer = [
-//						append('''new ''')
-//						append(realRef.type)
-//						append("(this)")
-//					]
-//				]
-   				
-//   				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
-//   					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
-//   						copyAnnotationsFrom(traitMethod)
-//   					]
-   			}
+////   				// do not delegate to a trait who requires that operation
+////   				// but to the one which actually implements it
+////   				val realRef = traitRef.buildTypeRef(typesMap)
+////   				
+////   				members += traitRef.toField(traitRef.traitFieldName, realRef) [
+////					initializer = [
+////						append('''new ''')
+////						append(realRef.type)
+////						append("(this)")
+////					]
+////				]
+//   				
+////   				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
+////   					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
+////   						copyAnnotationsFrom(traitMethod)
+////   					]
+//   			}
    		]
    	}
 
@@ -563,30 +566,32 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				}
    			}
    			
-   			for (tRef : t.traitReferences) {
-   				// we need these supertypes for validation
-   				// but we'll remove them in the generator
-   				superTypes += tRef.traitReferenceCopy(typesMap)
-//   				
-//   				val traitRef = tRef.buildTypeRef(typesMap)
-//   				// first delegates for implemented methods 
-//   				for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
-//   					if (!members.alreadyDefined(traitMethod.op)) {
-//	   					val methodName = traitMethod.op.simpleName
-//	   					// m() { _delegate.m(); }
-//	   					members += traitMethod.toMethodDelegate(
-//		   						delegateFieldName, methodName, methodName
-//		   					) => [ 
-//			   					traitMethod.op.annotateAsDefinedMethod(it)
-//			   				]
-//	   					// _m() { delegate to trait defining the method }
-//	   					members += traitMethod.toMethodDelegate(
-//	   						tRef.traitFieldName, methodName.underscoreName,
-//	   						methodName.underscoreName
-//	   					)
-//   					}
-//   				}
-   			}
+   			t.addSuperTypesFromTraitReferences(it, typesMap)
+   			
+//   			for (tRef : t.traitReferences) {
+//   				// we need these supertypes for validation
+//   				// but we'll remove them in the generator
+//   				superTypes += tRef.traitReferenceCopy(typesMap)
+////   				
+////   				val traitRef = tRef.buildTypeRef(typesMap)
+////   				// first delegates for implemented methods 
+////   				for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
+////   					if (!members.alreadyDefined(traitMethod.op)) {
+////	   					val methodName = traitMethod.op.simpleName
+////	   					// m() { _delegate.m(); }
+////	   					members += traitMethod.toMethodDelegate(
+////		   						delegateFieldName, methodName, methodName
+////		   					) => [ 
+////			   					traitMethod.op.annotateAsDefinedMethod(it)
+////			   				]
+////	   					// _m() { delegate to trait defining the method }
+////	   					members += traitMethod.toMethodDelegate(
+////	   						tRef.traitFieldName, methodName.underscoreName,
+////	   						methodName.underscoreName
+////	   					)
+////   					}
+////   				}
+//   			}
    			
 //   			for (tRef : t.traitReferences) {
 //   				val traitRef = tRef.buildTypeRef(typesMap)
@@ -617,6 +622,26 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //   			}
    		]
    	}
+
+	def addSuperTypesFromTraitReferences(TJDeclaration d, JvmGenericType it, Map<String, JvmGenericType> typesMap) {
+		// Xbase collects candidate features starting with the first superTypes (it looks so)
+		// Since trait references with operations could make some methods as private
+		// it is crucial to put the trait references WITHOUT operations first, so that,
+		// for instance, non renamed methods (original ones) are correctly bound:
+		// T uses T1[rename m to n], T1
+		// the rename operation hides the original m, but the original one must
+		// still be visible from the trait reference without operation T1
+		
+		// we need these supertypes for validation
+		// but we'll remove them in the generator
+		for (tRef : d.traitReferences.filter[operations.empty]) {
+			superTypes += tRef.traitReferenceCopy(typesMap)
+		}
+		
+		for (tRef : d.traitReferences.filter[!operations.empty]) {
+			superTypes += tRef.traitReferenceCopy(typesMap)
+		}
+	}
 
    	def toGetterDelegate(JvmGenericType type, TJMember m) {
    		// m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [

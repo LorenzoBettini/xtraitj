@@ -250,7 +250,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
    			]
 		])
 
-		for (traitExp : t.traitReferences)
+		for (traitExp : t.traitReferences.reverseView)
 			members.add(0, traitExp.toField
 				(traitExp.traitFieldName, traitExp.traitReferenceJavaType))
 
