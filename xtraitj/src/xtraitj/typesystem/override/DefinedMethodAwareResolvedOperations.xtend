@@ -40,22 +40,15 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			val operations = type.getDeclaredOperations();
 			for(JvmOperation operation: operations) {
 				val simpleName = operation.getSimpleName();
-				var continue = false
 				if (processedOperations.containsKey(simpleName)) {
 					if (isOverridden(operation, processedOperations.get(simpleName))) {
 						if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
-							// a defined method has the precedence over existing
-							// operations
-							processedOperations.removeAll(simpleName);
-						} else {
-							continue = true;
+							processedOperations.removeAll(simpleName)
+							addAsResolved(operation, processedOperations, simpleName, result);
 						}
 					}
-				}
-				if (!continue) {
-					val resolvedOperation = createResolvedOperation(operation);
-					processedOperations.put(simpleName, resolvedOperation);
-					result.add(resolvedOperation);
+				} else {
+					addAsResolved(operation, processedOperations, simpleName, result);
 				}
 			}
 			for(JvmTypeReference superType: type.getSuperTypes()) {
@@ -65,5 +58,11 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 				}
 			}
 		}
+	}
+	
+	private def addAsResolved(JvmOperation operation, Multimap<String, AbstractResolvedOperation> processedOperations, String simpleName, List<IResolvedOperation> result) {
+		val resolvedOperation = createResolvedOperation(operation);
+		processedOperations.put(simpleName, resolvedOperation);
+		result.add(resolvedOperation)
 	}
 }
