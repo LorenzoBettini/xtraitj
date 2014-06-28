@@ -15,7 +15,7 @@ public class XtraitjTraitRenameOperationWrapper extends XtraitjTraitOperationWra
 
 	@Inject extension XtraitjGeneratorExtensions
 	
-	override addCustomAnnotations() {
+	override processOperationSpecificAnnotations() {
 		getOperation.annotateAsRenamedMethod(this, getJvmOperation().simpleName)
 	}
 

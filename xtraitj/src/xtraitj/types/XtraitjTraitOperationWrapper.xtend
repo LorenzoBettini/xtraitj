@@ -18,6 +18,7 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.xtraitj.TJTraitOperation
+import xtraitj.util.XtraitjModelUtil
 
 /**
  * @author Lorenzo Bettini
@@ -89,10 +90,24 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	override getAnnotations() {
 		if (annotations == null) {
 			annotations = new BasicEList(getJvmOperation().annotations)
-			addCustomAnnotations
+			processOperationSpecificAnnotations
 		}
 		return annotations
 	}
 	
-	def abstract void addCustomAnnotations();
+	def abstract void processOperationSpecificAnnotations();
+	
+	override String getSimpleName() {
+		return XtraitjModelUtil.getOperationMemberName(operation)
+	}
+
+	override String getQualifiedName(char innerClassDelimiter) {
+		val simpleName = getSimpleName();
+		if (simpleName == null)
+			return null;
+		val declaringType = getDeclaringType();
+		if (declaringType == null)
+			return simpleName;
+		return declaringType.getQualifiedName(innerClassDelimiter) + '.' + simpleName;
+	}
 }

@@ -36,6 +36,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.types.XtraitjTraitRenameOperationWrapper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -345,18 +346,19 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		members.remove(it.members.size - 1)
 		
 		for (xop : members.filter(XtraitjTraitOperationWrapper)) {
-			val traitOp = xop.operation
 			val origOp = xop.jvmOperation
 
 			val requiredField = origOp.annotatedRequiredField()
 			val requiredMethod = origOp.annotatedRequiredMethod()
 			
-			val resolvedOp = xop.resolvedOperation
-			println(resolvedOp.resolvedReturnType)
-			println(resolvedOp.resolvedParameterTypes)
+//			val resolvedOp = xop.resolvedOperation
+//			println(resolvedOp.resolvedReturnType)
+//			println(resolvedOp.resolvedParameterTypes)
 
-			switch (traitOp) {
-				TJRenameOperation: {
+			switch (xop) {
+				XtraitjTraitRenameOperationWrapper: {
+					val traitOp = xop.renameOperation
+			
 					// example T1[rename m -> m2]
 					
 					if (requiredField || requiredMethod) {
