@@ -6,11 +6,11 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import xtraitj.xtraitj.TJTraitOperation
 
 class XtraitjTraitOperationWrapperFactory {
-	@Inject Provider<XtraitjTraitOperationWrapper> provider
+	@Inject Provider<XtraitjTraitRenameOperationWrapper> renameOpProvider
 	
-	def create(TJTraitOperation operation,
+	def createRenameOperationWrapper(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
-		provider.get => [
+		renameOpProvider.get => [
 			init(operation, typeReference)
 		]	
 	}
