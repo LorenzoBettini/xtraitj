@@ -1,4 +1,4 @@
-package xtraitj.input.tests.override;
+package xtraitj.input.tests.override.renamed;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;

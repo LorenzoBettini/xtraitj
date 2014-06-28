@@ -6,12 +6,12 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.input.tests.^override.MyAnnotatedJavaInterfaceWithDefined
+import xtraitj.input.tests.^override.renamed.MyAnnotatedJavaInterfaceWithDefined
+import xtraitj.input.tests.^override.renamed.MyAnnotatedJavaInterfaceWithRenamed
 import xtraitj.typesystem.^override.XtraitjOverrideHelper
 import xtraitj.typing.XtraitjTypingUtil
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
-import xtraitj.input.tests.^override.MyAnnotatedJavaInterfaceWithRenamed
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
