@@ -18,6 +18,8 @@ import org.eclipse.xtext.common.types.JvmVisibility
 import xtraitj.xtraitj.TJRenameOperation
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.common.types.JvmAnnotationReference
+import xtraitj.generator.XtraitjGeneratorExtensions
 
 /**
  * @author Lorenzo Bettini
@@ -33,9 +35,13 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	@Inject extension JvmTypesBuilder
 	
+	@Inject extension XtraitjGeneratorExtensions
+	
 	var IResolvedOperation resolvedOperation = null;
 	
 	var EList<JvmFormalParameter> parameters = null;
+	
+	var EList<JvmAnnotationReference> annotations = null;
 
 	def void init(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
@@ -82,6 +88,16 @@ public class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 
 	override JvmVisibility getVisibility() {
 		return getJvmOperation().getVisibility();
+	}
+
+	override getAnnotations() {
+		if (annotations == null) {
+			annotations = new BasicEList(getJvmOperation().annotations)
+			if (operation instanceof TJRenameOperation) {
+				getOperation.annotateAsRenamedMethod(this, getJvmOperation().simpleName)
+			}
+		}
+		return annotations
 	}
 
 	override String getSimpleName() {

@@ -89,7 +89,7 @@ class XtraitjGeneratorExtensions {
 	def traitFieldName(TJTraitReference e) {
 		if (e.operations.empty)
 			return "_" + e.trait.traitFieldName
-		return e.syntheticName
+		return e.traitFieldNameForOperations
 	}
 
 	def traitFieldNameForOperations(TJTraitReference e) {
@@ -164,6 +164,11 @@ class XtraitjGeneratorExtensions {
 
 	def void copyAllAnnotationsFrom(JvmOperation target, JvmOperation op) {
 		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
+	def void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
+		target.annotations += op.annotations.
+			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
 	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
