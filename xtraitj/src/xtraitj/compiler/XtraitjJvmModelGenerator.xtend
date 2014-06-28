@@ -259,7 +259,8 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		members.remove(it.members.size - 1)
 		
 		for (tRef : t.traitReferences) {
-			val traitRef = tRef.trait
+			val traitRef = tRef.traitReferenceJavaType
+
 			// first delegates for implemented methods 
 			for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
 				if (!collectedMembers.alreadyDefined(traitMethod.op)) {
