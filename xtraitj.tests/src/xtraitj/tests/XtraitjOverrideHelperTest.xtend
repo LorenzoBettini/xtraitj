@@ -32,9 +32,8 @@ getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequi
 	@Test def void testResolvedOperationsWithRenamed() {
 		MyAnnotatedJavaInterfaceWithRenamed.assertAllOperations(
 '''
+getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithRenamed
 getRenamed() : String - [XtraitjRenamedMethod] - MyAnnotatedJavaInterfaceWithRenamed
-getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
-getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
 getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
 		)
 	}

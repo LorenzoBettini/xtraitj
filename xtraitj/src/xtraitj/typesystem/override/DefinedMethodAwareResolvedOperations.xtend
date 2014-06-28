@@ -40,25 +40,47 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			val operations = type.getDeclaredOperations();
 			for(JvmOperation operation: operations) {
 				val simpleName = operation.getSimpleName();
-				if (processedOperations.containsKey(simpleName)) {
-					if (isOverridden(operation, processedOperations.get(simpleName))) {
-						if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
-							processedOperations.removeAll(simpleName)
-							result.removeAll(result.filter[o | o.declaration.simpleName == simpleName])
-							addAsResolved(operation, processedOperations, simpleName, result);
+				if (!hasAlreadyBeenRenamed(result, simpleName)) {
+					if (processedOperations.containsKey(simpleName)) {
+						if (isOverridden(operation, processedOperations.get(simpleName))) {
+							if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
+								
+								if (!hasAlreadyBeenRenamed(result, simpleName) &&
+										removeRequiredOperations(result, simpleName)) {
+									processedOperations.removeAll(simpleName)
+									addAsResolved(operation, processedOperations, simpleName, result);
+								}
+							}
 						}
+					} else {
+						addAsResolved(operation, processedOperations, simpleName, result);
 					}
-				} else {
-					addAsResolved(operation, processedOperations, simpleName, result);
 				}
 			}
 			for(JvmTypeReference superType: type.getSuperTypes()) {
 				val rawSuperType = superType.getType();
+				if (rawSuperType.simpleName != Object.simpleName) // useful for debugging
 				if (rawSuperType instanceof JvmDeclaredType) {
 					computeAllOperations(rawSuperType, processedOperations, processedTypes, result);
 				}
 			}
 		}
+	}
+	
+	protected def removeRequiredOperations(List<IResolvedOperation> result, String simpleName) {
+		result.removeAll(result.filter[
+			o | 
+			o.declaration.simpleName == simpleName
+			&&
+			!annotatedElementHelper.annotatedDefinedMethod(o.declaration)
+		])
+	}
+
+	protected def hasAlreadyBeenRenamed(List<IResolvedOperation> result, String simpleName) {
+		result.exists[
+			o | 
+			annotatedElementHelper.annotatedRenamedMethodFor(o.declaration, simpleName)
+		]
 	}
 	
 	private def addAsResolved(JvmOperation operation, Multimap<String, AbstractResolvedOperation> processedOperations, String simpleName, List<IResolvedOperation> result) {
