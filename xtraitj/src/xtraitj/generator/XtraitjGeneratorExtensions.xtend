@@ -89,7 +89,7 @@ class XtraitjGeneratorExtensions {
 	def traitFieldName(TJTraitReference e) {
 		if (e.operations.empty)
 			return "_" + e.trait.traitFieldName
-		return "_" + e.syntheticName
+		return e.syntheticName
 	}
 
 	def traitFieldNameForOperations(TJTraitReference e) {
