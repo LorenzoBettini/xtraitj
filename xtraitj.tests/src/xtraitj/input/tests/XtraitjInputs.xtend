@@ -1425,9 +1425,9 @@ trait UsesTGeneric uses
 	TGeneric<Integer>[rename returnList to returnListOfInteger, rename printList to printListOfInteger]
 {
 	String useLists() {
-		val intList1 = returnList()
-		val intList2 = returnListOfInteger()
-		return (intList1.toString + intList2.toString)
+		val intList = returnListOfInteger()
+		printListOfInteger(intList)
+		return intList.toString
 	}
 }
 
