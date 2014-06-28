@@ -23,18 +23,19 @@ class XtraitjOverrideHelperTest extends XtraitjAbstractTest {
 	@Test def void testResolvedOperationsWithDefinedOverRequired() {
 		MyAnnotatedJavaInterfaceWithDefined.assertAllOperations(
 '''
-getRequired() : String - [XtraitjDefinedMethod]
-getDefined() : String - [XtraitjDefinedMethod]
-getField() : String - [XtraitjRequiredField]'''
+getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
+getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
+getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
 		)
 	}
 
 	@Test def void testResolvedOperationsWithRenamed() {
 		MyAnnotatedJavaInterfaceWithRenamed.assertAllOperations(
 '''
-getRequired() : String - [XtraitjDefinedMethod]
-getDefined() : String - [XtraitjDefinedMethod]
-getField() : String - [XtraitjRequiredField]'''
+getRenamed() : String - [XtraitjRenamedMethod] - MyAnnotatedJavaInterfaceWithRenamed
+getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
+getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
+getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
 		)
 	}
 	
@@ -46,7 +47,8 @@ getField() : String - [XtraitjRequiredField]'''
 				declaration.declaringType.notJavaLangObject
 			].map[
 				simpleSignature + " : " + resolvedReturnType + " - " +
-				declaration.annotations.map[annotation.simpleName]
+				declaration.annotations.map[annotation.simpleName] + " - " +
+				declaration.declaringType.simpleName
 			].join("\n"))
 	}
 
