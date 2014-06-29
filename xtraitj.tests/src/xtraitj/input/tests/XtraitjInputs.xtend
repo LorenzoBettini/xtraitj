@@ -442,6 +442,8 @@ class C uses T {
 			String n() { return m(); }
 		}
 		
+		// a required method of the used trait, req1, is renamed
+		// so that it matches the method req provided by this trait
 		trait T3 uses T2[ rename req1 to req ] {
 			String req() {
 				return "T3.req"

@@ -1289,4 +1289,1120 @@ public class C implements T2Interface {
 			executeGeneratedJavaClassMethodAndAssert("C", "callM1", "T2.m;")
 		]
 	}
+
+	@Test def void testTraitRenameRequiredMethodToProvidedAndSum() {
+		classUsesTraitRenameRequiredMethodToProvidedAndSum.compile[
+
+			// callM1 which calls m1 which was required and was
+			// renamed to provided T2.m
+			executeGeneratedJavaClassMethodAndAssert("C", "callM1", "T2.m;")
+		]
+	}
+
+	@Test def void testTraitRenameRequiredMethods() {
+		traitRenameRequiredMethods.compile[
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract String req();
+  
+  public abstract String n();
+  
+  public abstract String m();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract String foo();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public String req1() {
+    return this.req();
+  }
+  
+  @XtraitjRequiredMethod
+  @XtraitjRenamedMethod("req1")
+  public String req() {
+    return _delegate.req();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T2_0._m();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String foo() {
+    return _delegate.foo();
+  }
+  
+  public String _foo() {
+    return this.n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T2_0._m();
+  }
+  
+  @XtraitjRequiredMethod
+  public String req() {
+    return _delegate.req();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitRenameOperations() {
+		traitRenameOperations.compile[
+assertTraitAdapterJavaInterface("T3_T2_0",
+'''
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  public abstract int n2();
+  
+  public abstract int m2();
+  
+  public abstract int t1();
+}
+'''
+)
+
+assertTraitJavaInterface("T3",
+'''
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract int foo();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("T3_T2_0",
+'''
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public int m() {
+    return this.m2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public int m2() {
+    return _delegate.m2();
+  }
+  
+  public int _m2() {
+    return _T2_0._m();
+  }
+  
+  public int n() {
+    return this.n2();
+  }
+  
+  @XtraitjRequiredMethod
+  @XtraitjRenamedMethod("n")
+  public int n2() {
+    return _delegate.n2();
+  }
+  
+  @XtraitjDefinedMethod
+  public int t1() {
+    return _delegate.t1();
+  }
+  
+  public int _t1() {
+    return _T2_0._t1();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("T3",
+'''
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public int foo() {
+    return _delegate.foo();
+  }
+  
+  public int _foo() {
+    int _n2 = this.n2();
+    int _m2 = this.m2();
+    return (_n2 + _m2);
+  }
+  
+  @XtraitjDefinedMethod
+  public int m2() {
+    return _delegate.m2();
+  }
+  
+  public int _m2() {
+    return _T2_0._m2();
+  }
+  
+  @XtraitjDefinedMethod
+  public int t1() {
+    return _delegate.t1();
+  }
+  
+  public int _t1() {
+    return _T2_0._t1();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+  
+  @XtraitjRequiredMethod
+  public int n2() {
+    return _delegate.n2();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitRenameProvidedMethods() {
+		traitRenameProvidedMethods.compile[
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract String n2();
+  
+  public abstract String m2();
+  
+  public abstract String t1();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public String m() {
+    return this.m2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m();
+  }
+  
+  public String n() {
+    return this.n2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("n")
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String t1() {
+    return _delegate.t1();
+  }
+  
+  public String _t1() {
+    return _T2_0._t1();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String foo() {
+    return _delegate.foo();
+  }
+  
+  public String _foo() {
+    String _n2 = this.n2();
+    String _m2 = this.m2();
+    String _plus = (_n2 + _m2);
+    String _t1 = this.t1();
+    return (_plus + _t1);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m2();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n2();
+  }
+  
+  @XtraitjDefinedMethod
+  public String t1() {
+    return _delegate.t1();
+  }
+  
+  public String _t1() {
+    return _T2_0._t1();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "foo", "T2.n;T1.m;T1.t1;")
+		]
+	}
+
+	@Test def void testTraitDoubleRenaming() {
+		traitDoubleRenaming.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract String n2();
+  
+  public abstract String m2();
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_1",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_1_AdapterInterface {
+  public abstract String n3();
+  
+  public abstract String m3();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import tests.T3_T2_1_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface, T3_T2_1_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract String m();
+  
+  @XtraitjDefinedMethod
+  public abstract String foo();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public String m() {
+    return this.m2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m();
+  }
+  
+  public String n() {
+    return this.n2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("n")
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import tests.T3_T2_1_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  private T3_T2_1_Adapter _T2_1;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+    _T2_1 = new T3_T2_1_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    String _m2 = this.m2();
+    return ("T3." + _m2);
+  }
+  
+  @XtraitjDefinedMethod
+  public String foo() {
+    return _delegate.foo();
+  }
+  
+  public String _foo() {
+    String _n3 = this.n3();
+    String _m = this.m();
+    return (_n3 + _m);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m2();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n2();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m3() {
+    return _delegate.m3();
+  }
+  
+  public String _m3() {
+    return _T2_1._m3();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n3() {
+    return _delegate.n3();
+  }
+  
+  public String _n3() {
+    return _T2_1._n3();
+  }
+}
+'''
+)
+			executeGeneratedJavaClassMethodAndAssert("C", "foo", "T2.n;T3.T1.m;")
+		]
+	}
+
+	@Test def void testTraitRedefinitionByRenaming() {
+		traitRedefinitionByRenaming.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract String n2();
+  
+  public abstract String m2();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract String m();
+  
+  @XtraitjDefinedMethod
+  public abstract String foo();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public String m() {
+    return this.m2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m();
+  }
+  
+  public String n() {
+    return this.n2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("n")
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    String _m2 = this.m2();
+    return ("T3." + _m2);
+  }
+  
+  @XtraitjDefinedMethod
+  public String foo() {
+    return _delegate.foo();
+  }
+  
+  public String _foo() {
+    String _n2 = this.n2();
+    String _m = this.m();
+    return (_n2 + _m);
+  }
+  
+  @XtraitjDefinedMethod
+  public String m2() {
+    return _delegate.m2();
+  }
+  
+  public String _m2() {
+    return _T2_0._m2();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n2() {
+    return _delegate.n2();
+  }
+  
+  public String _n2() {
+    return _T2_0._n2();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "foo", "T2.n;T3.T1.m;")
+		]
+	}
+
+	@Test def void testTraitRenameProvidedMethodToRequiredAndSum() {
+		traitRenameProvidedMethodToRequiredAndSum.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract int m1();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface, T1Interface {
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public int m() {
+    return this.m1();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public int m1() {
+    return _delegate.m1();
+  }
+  
+  public int _m1() {
+    return _T2_0._m();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T1;
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  private T1 _T1;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+    _T1 = new T1(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public int m1() {
+    return _delegate.m1();
+  }
+  
+  public int _m1() {
+    return _T2_0._m1();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitRenameRequiredMethodProvidedByTrait() {
+		traitRenameRequiredMethodProvidedByTrait.compile[
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract String req();
+  
+  @XtraitjDefinedMethod
+  public abstract String foo();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String req() {
+    return _delegate.req();
+  }
+  
+  public String _req() {
+    return "T3.req";
+  }
+  
+  @XtraitjDefinedMethod
+  public String foo() {
+    return _delegate.foo();
+  }
+  
+  public String _foo() {
+    return this.n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T2_0._m();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testTraitRenameProvidedMethodToRequiredAndSum2() {
+		traitRenameProvidedMethodToRequiredAndSum2.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract int m1();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T1Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T1Interface, T3_T2_0_AdapterInterface {
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2 _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public int m() {
+    return this.m1();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public int m1() {
+    return _delegate.m1();
+  }
+  
+  public int _m1() {
+    return _T2_0._m();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T1;
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T1 _T1;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T1 = new T1(delegate);
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public int m1() {
+    return _delegate.m1();
+  }
+  
+  public int _m1() {
+    return _T2_0._m1();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 }

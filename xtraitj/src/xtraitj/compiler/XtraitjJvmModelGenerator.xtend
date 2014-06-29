@@ -291,7 +291,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		}
 		
 		for (tRef : traitReferences) {
-			val traitRef = tRef.trait
+			val traitRef = tRef.traitReferenceJavaType
 			
 			for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
 				if (!collectedMembers.alreadyDefined(op.op)) {
