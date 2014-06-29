@@ -94,7 +94,7 @@ class XtraitjGeneratorExtensions {
 
 	def traitFieldNameForOperations(TJTraitReference e) {
 		return "_" + e.trait.traitFieldName + "_" +
-				e.containingDeclaration.traitReferences.indexOf(e)
+				e.containingDeclaration.traitOperationExpressions.indexOf(e)
 	}
 
 	def traitFieldName(TJTrait t) {
