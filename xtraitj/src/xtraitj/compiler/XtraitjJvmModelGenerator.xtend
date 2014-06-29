@@ -23,6 +23,7 @@ import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.types.XtraitjTraitOperationWrapper
+import xtraitj.types.XtraitjTraitRenameOperationWrapper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
@@ -36,7 +37,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.types.XtraitjTraitRenameOperationWrapper
 
 class XtraitjJvmModelGenerator extends JvmModelGenerator {
 	
@@ -259,9 +259,18 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		// remove the default constructor
 		members.remove(it.members.size - 1)
 		
-		for (tRef : t.traitReferences) {
+		addDelegates(t.traitReferences, it, collectedMembers)
+		
+//		// remove superclasses added in the inferrer
+//		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
+//						
+//		superTypes.add(0, transformedTraitInterfaceTypeRef)
+	}
+	
+	def addDelegates(List<TJTraitReference> traitReferences, JvmGenericType it, List<JvmMember> collectedMembers) {
+		for (tRef : traitReferences) {
 			val traitRef = tRef.traitReferenceJavaType
-
+		
 			// first delegates for implemented methods 
 			for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
 				if (!collectedMembers.alreadyDefined(traitMethod.op)) {
@@ -281,15 +290,15 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			}
 		}
 		
-		for (tRef : t.traitReferences) {
+		for (tRef : traitReferences) {
 			val traitRef = tRef.trait
 			
 			for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
 				if (!collectedMembers.alreadyDefined(op.op)) {
    					// this is the getter
    					collectedMembers += op.toMethodDelegate(
-							delegateFieldName,
-							op.op.simpleName, op.op.simpleName) => [
+					delegateFieldName,
+					op.op.simpleName, op.op.simpleName) => [
 	   					op.op.annotateAsRequiredField(it)
 	   				]
 	   				collectedMembers += op.toSetterDelegateFromGetter
@@ -302,17 +311,12 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 			for (op : traitRef.xtraitjJvmAllRequiredMethodOperations(tRef))
 				if (!members.alreadyDefined(op.op) && !collectedMembers.alreadyDefined(op.op)) {
 					collectedMembers += op.toMethodDelegate(
-   							delegateFieldName,
-   							op.op.simpleName, op.op.simpleName) => [
-	   					op.op.annotateAsRequiredMethod(it)
-	   				]
+						delegateFieldName,
+						op.op.simpleName, op.op.simpleName) => [
+			   					op.op.annotateAsRequiredMethod(it)
+			   				]
 				}
 		}
-		
-//		// remove superclasses added in the inferrer
-//		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])
-//						
-//		superTypes.add(0, transformedTraitInterfaceTypeRef)
 	}
 
 	def preprocessTraitExpressionClass(TJTraitReference t, JvmGenericType it, List<JvmMember> collectedMembers) {
@@ -428,6 +432,8 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 				}
 			}
 		}
+		
+		addDelegates(newArrayList(t), it, collectedMembers)
 		
 //		// remove superclasses added in the inferrer
 //		superTypes.removeAll(superTypes.filter[!(type as JvmGenericType).interface])

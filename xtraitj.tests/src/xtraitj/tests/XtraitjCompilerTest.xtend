@@ -1281,5 +1281,12 @@ public class C implements T2Interface {
 		]
 	}
 
+	@Test def void testTraitRenamedRequiredMethodDoesNotConflict() {
+		traitRenamedRequiredMethodDoesNotConflict.compile[
 
+			// callM1 which calls m1 which was required and was
+			// renamed to provided T2.m
+			executeGeneratedJavaClassMethodAndAssert("C", "callM1", "T2.m;")
+		]
+	}
 }

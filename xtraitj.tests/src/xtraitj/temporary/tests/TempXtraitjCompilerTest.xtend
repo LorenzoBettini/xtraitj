@@ -1197,10 +1197,10 @@ public class T3Impl implements T3 {
 
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
-package tests.traits;
+package tests;
 
 @SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
+public interface T3_T2_0_AdapterInterface {
   public abstract int m1();
 }
 '''
@@ -1208,43 +1208,46 @@ public interface T3_T2_0_Adapter {
 
 assertTraitJavaInterface("tests", "T3",
 '''
-package tests.traits;
+package tests;
 
-import tests.traits.T1;
-import tests.traits.T3_T2_0_Adapter;
+import tests.T1Interface;
+import tests.T3_T2_0_AdapterInterface;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3 extends T1, T3_T2_0_Adapter {
-  public abstract int m1();
+public interface T3Interface extends T1Interface, T3_T2_0_AdapterInterface {
 }
 '''
 )
 
 assertTraitAdapterJavaClass("tests", "T3_T2_0",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T2;
-import tests.traits.T3_T2_0_Adapter;
-import tests.traits.impl.T2Impl;
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
-  private T3_T2_0_Adapter _delegate;
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
   
-  private T2Impl _T2_1;
+  private T2 _T2_1;
   
-  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
     this._delegate = delegate;
-    _T2_1 = new T2Impl(this);
+    _T2_1 = new T2(this);
   }
   
   public int m() {
     return this.m1();
   }
   
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
   public int m1() {
     return _delegate.m1();
   }
@@ -1424,15 +1427,6 @@ public class T3Impl implements T3 {
 
 	@Test def void testTraitRenameRequiredMethodToProvidedAndSum() {
 		classUsesTraitRenameRequiredMethodToProvidedAndSum.compile[
-
-			// callM1 which calls m1 which was required and was
-			// renamed to provided T2.m
-			executeGeneratedJavaClassMethodAndAssert("C", "callM1", "T2.m;")
-		]
-	}
-
-	@Test def void testTraitRenamedRequiredMethodDoesNotConflict() {
-		traitRenamedRequiredMethodDoesNotConflict.compile[
 
 			// callM1 which calls m1 which was required and was
 			// renamed to provided T2.m
@@ -2169,35 +2163,28 @@ public interface T3Interface extends T3_T2_0_AdapterInterface {
 
 assertTraitAdapterJavaClass("T3_T2_0",
 '''
-package traits.impl;
-
-import traits.T2;
-import traits.T3_T2_0_Adapter;
-import traits.impl.T2Impl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
-public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
-  private T3_T2_0_Adapter _delegate;
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
   
-  private T2Impl _T2_0;
+  private T2 _T2_0;
   
-  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
     this._delegate = delegate;
-    _T2_0 = new T2Impl(this);
-  }
-  
-  public int n() {
-    return this.n2();
-  }
-  
-  public int n2() {
-    return _delegate.n2();
+    _T2_0 = new T2(this);
   }
   
   public int m() {
     return this.m2();
   }
   
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
   public int m2() {
     return _delegate.m2();
   }
@@ -2206,6 +2193,17 @@ public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
     return _T2_0._m();
   }
   
+  public int n() {
+    return this.n2();
+  }
+  
+  @XtraitjRequiredMethod
+  @XtraitjRenamedMethod("n")
+  public int n2() {
+    return _delegate.n2();
+  }
+  
+  @XtraitjDefinedMethod
   public int t1() {
     return _delegate.t1();
   }
@@ -2214,6 +2212,7 @@ public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
     return _T2_0._t1();
   }
   
+  @XtraitjRequiredField
   public String getS() {
     return _delegate.getS();
   }
