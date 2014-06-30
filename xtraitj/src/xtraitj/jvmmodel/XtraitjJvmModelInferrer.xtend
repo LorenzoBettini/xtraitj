@@ -14,6 +14,7 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.types.XtraitjTraitOperationWrapperFactory
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
@@ -23,7 +24,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJDeclaration
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -106,13 +106,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// we can see all the methods which are possibly provided
 		// by the trait operation expressions (possibly after renaming)
 
-		// infer interfaces first for trait operation expressions		
-		for (it : c.traitOperationExpressions)
-			inferTraitExpressionInterface(acceptor)
-
-		// then we can infer the corresponding classes
-		for (it : c.traitOperationExpressions)
-			inferTraitExpressionClass(acceptor, typesMap)
+		inferTypesForTraitReferencesWithOperations(c, acceptor, typesMap)
    		
    		acceptor.accept(inferredClass).initializeLater[
    			documentation = c.documentation
@@ -492,12 +486,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		typesMap.put(t.name, traitClass)
 		
-	   	for (tRef : t.traitReferences) {
-			if (!tRef.operations.empty) {
-				tRef.inferTraitExpressionInterface(acceptor)
-				tRef.inferTraitExpressionClass(acceptor, typesMap)
-			}
-		}
+	   	inferTypesForTraitReferencesWithOperations(t, acceptor, typesMap)
    		
 		acceptor.accept(traitClass).initializeLater[
 
@@ -622,6 +611,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //   			}
    		]
    	}
+				
+	def inferTypesForTraitReferencesWithOperations(TJDeclaration d, IJvmDeclaredTypeAcceptor acceptor, Map<String, JvmGenericType> typesMap) {
+		for (tRef : d.traitReferences) {
+			if (!tRef.operations.empty) {
+				tRef.inferTraitExpressionInterface(acceptor)
+				tRef.inferTraitExpressionClass(acceptor, typesMap)
+			}
+		}
+	}
 
 	def addSuperTypesFromTraitReferences(TJDeclaration d, JvmGenericType it, Map<String, JvmGenericType> typesMap) {
 		// Xbase collects candidate features starting with the first superTypes (it looks so)

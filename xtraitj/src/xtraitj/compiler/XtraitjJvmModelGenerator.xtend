@@ -473,7 +473,7 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		// transformSuperclassReferencesIntoInterfacesReferences()
 		
 		for (traitRef : c.traitReferences) {
-			val realRef = traitRef.trait
+			val realRef = traitRef.traitReferenceJavaType
 			
 			members += traitRef.toField(traitRef.traitFieldName, realRef) [
 				initializer = [

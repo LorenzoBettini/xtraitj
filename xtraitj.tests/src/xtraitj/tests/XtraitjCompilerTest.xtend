@@ -2542,4 +2542,96 @@ public class T3 implements T3Interface {
 		]
 	}
 
+	@Test def void testClassRenamesRequiredMethodToProvidedAndSum() {
+		classRenamesRequiredMethodToProvidedAndSum.compile[
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.C_T1_0_Adapter;
+import tests.C_T1_0_AdapterInterface;
+import tests.T2;
+import tests.T2Interface;
+
+@SuppressWarnings("all")
+public class C implements T2Interface, C_T1_0_AdapterInterface {
+  private T2 _T2 = new T2(this);
+  
+  public String m() {
+    return _T2._m();
+  }
+  
+  private C_T1_0_Adapter _T1_0 = new C_T1_0_Adapter(this);
+  
+  public String callM1() {
+    return _T1_0._callM1();
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "C_T1_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface C_T1_0_AdapterInterface {
+  public abstract String m();
+  
+  public abstract String callM1();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "C_T1_0",
+'''
+package tests;
+
+import tests.C_T1_0_AdapterInterface;
+import tests.T1;
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+
+@SuppressWarnings("all")
+public class C_T1_0_Adapter implements C_T1_0_AdapterInterface, T1Interface {
+  private C_T1_0_AdapterInterface _delegate;
+  
+  private T1 _T1_0;
+  
+  public C_T1_0_Adapter(final C_T1_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1(this);
+  }
+  
+  public String m1() {
+    return this.m();
+  }
+  
+  @XtraitjRequiredMethod
+  @XtraitjRenamedMethod("m1")
+  public String m() {
+    return _delegate.m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String callM1() {
+    return _delegate.callM1();
+  }
+  
+  public String _callM1() {
+    return _T1_0._callM1();
+  }
+}
+'''
+)
+
+			// callM1 which calls m1 which was required and was
+			// renamed to provided T2.m
+			executeGeneratedJavaClassMethodAndAssert("C", "callM1", "T2.m;")
+		]
+	}
+
 }
