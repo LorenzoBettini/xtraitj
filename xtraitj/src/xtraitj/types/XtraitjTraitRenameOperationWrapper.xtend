@@ -5,7 +5,6 @@ package xtraitj.types;
 
 import com.google.inject.Inject
 import xtraitj.generator.XtraitjGeneratorExtensions
-import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJRenameOperation
 
 /**
@@ -15,12 +14,8 @@ import xtraitj.xtraitj.TJRenameOperation
 public class XtraitjTraitRenameOperationWrapper extends XtraitjTraitOperationWrapper {
 
 	@Inject extension XtraitjGeneratorExtensions
-	@Inject extension XtraitjAnnotatedElementHelper
 	
 	override processOperationSpecificAnnotations() {
-		// since we can rename an already renamed element, we must remove
-		// possible existing rename annotations
-		annotations.removeAll(annotations.filter[renameAnnotation])
 		getOperation.annotateAsRenamedMethod(this, getJvmOperation().simpleName)
 	}
 

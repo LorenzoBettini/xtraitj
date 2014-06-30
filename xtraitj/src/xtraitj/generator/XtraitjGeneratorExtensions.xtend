@@ -10,6 +10,7 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmStringAnnotationValue
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
@@ -145,7 +146,17 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
-		target.annotations += element.toAnnotation(XtraitjRenamedMethod, originalName)
+		// we need to keep track of all the methods renamed, that is, the
+		// method renamed by this method and recursively possible methods renamed
+		// by the renamed method (this will make method resolution work as expected).
+		var annot = target.annotations.findFirst[renameAnnotation]
+		if (annot == null) {
+			annot = element.toAnnotation(XtraitjRenamedMethod, originalName)
+			target.annotations += annot
+		} else {
+			annot.getExplicitValues().filter(JvmStringAnnotationValue).head.
+				values += originalName
+		}
 	}
 
 	def void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {

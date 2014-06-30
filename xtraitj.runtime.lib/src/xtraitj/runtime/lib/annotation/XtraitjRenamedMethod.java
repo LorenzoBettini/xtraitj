@@ -19,5 +19,11 @@ import java.lang.annotation.Target;
 @Target({METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XtraitjRenamedMethod {
-	String value();
+	
+	/**
+	 * The names of the methods that have been renamed by the method
+	 * annotated by this annotation.
+	 * @return
+	 */
+	String[] value();
 }
