@@ -36,6 +36,7 @@ import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 import org.eclipse.xtext.util.Strings
+import xtraitj.xtraitj.TJTraitOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -372,7 +373,11 @@ class XtraitjJvmModelUtil {
 //	}
 
 	def originalSource(JvmMember o) {
-		o.sourceElements.findFirst[(it instanceof TJMember)] as TJMember
+		o.sourceElements.findFirst[
+			(it instanceof TJMember)
+			||
+			(it instanceof TJTraitOperation)
+		]
 	}
 
 	def defines(TJTrait t, JvmMember m) {
