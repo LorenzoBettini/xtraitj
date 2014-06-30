@@ -66,7 +66,7 @@ TJRestrictOperation: {TJRestrictOperation} 'restrict' member=[types::JvmMember] 
 
 TJAliasOperation: {TJAliasOperation} 'alias' member=[types::JvmMember] 'as' newname=ID ;
 
-TJRenameOperation: {TJRenameOperation} 'rename' member=[types::JvmMember] 'to' newname=ID ;
+TJRenameOperation: {TJRenameOperation} 'rename' (field?='field')? member=[types::JvmMember] 'to' newname=ID ;
 
 TJRedirectOperation: {TJRedirectOperation} 'redirect' member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
 
