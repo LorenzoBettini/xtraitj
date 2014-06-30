@@ -59,7 +59,7 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			}
 			for(JvmTypeReference superType: type.getSuperTypes()) {
 				val rawSuperType = superType.getType();
-				if (rawSuperType.simpleName != Object.simpleName) // useful for debugging
+				//if (rawSuperType.simpleName != Object.simpleName) // useful for debugging
 				if (rawSuperType instanceof JvmDeclaredType) {
 					computeAllOperations(rawSuperType, processedOperations, processedTypes, result);
 				}
