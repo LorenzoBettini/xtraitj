@@ -919,10 +919,10 @@ public class T3Impl implements T3 {
 
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
-package tests.traits;
+package tests;
 
 @SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
+public interface T3_T2_0_AdapterInterface {
   public abstract String callFirstRename();
   
   public abstract String secondRename();
@@ -932,56 +932,49 @@ public interface T3_T2_0_Adapter {
 
 assertTraitJavaInterface("tests", "T3",
 '''
-package tests.traits;
+package tests;
 
-import tests.traits.T3_T2_0_Adapter;
+import tests.T3_T2_0_AdapterInterface;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3 extends T3_T2_0_Adapter {
+public interface T3Interface extends T3_T2_0_AdapterInterface {
   @XtraitjDefinedMethod
   public abstract String callSecondRename();
-  
-  public abstract String callFirstRename();
-  
-  public abstract String secondRename();
 }
 '''
 )
 
 assertTraitAdapterJavaClass("tests", "T3_T2_0",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T2;
-import tests.traits.T3_T2_0_Adapter;
-import tests.traits.impl.T2Impl;
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
-  private T3_T2_0_Adapter _delegate;
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface {
+  private T3_T2_0_AdapterInterface _delegate;
   
-  private T2Impl _T2_0;
+  private T2 _T2_0;
   
-  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
     this._delegate = delegate;
-    _T2_0 = new T2Impl(this);
-  }
-  
-  public String callFirstRename() {
-    return _delegate.callFirstRename();
-  }
-  
-  public String _callFirstRename() {
-    return _T2_0._callFirstRename();
+    _T2_0 = new T2(this);
   }
   
   public String firstRename() {
     return this.secondRename();
   }
   
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  @XtraitjRenamedMethod("firstRename")
   public String secondRename() {
     return _delegate.secondRename();
   }
@@ -989,28 +982,41 @@ public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
   public String _secondRename() {
     return _T2_0._firstRename();
   }
+  
+  @XtraitjDefinedMethod
+  public String callFirstRename() {
+    return _delegate.callFirstRename();
+  }
+  
+  public String _callFirstRename() {
+    return _T2_0._callFirstRename();
+  }
 }
 '''
 )
 
 assertTraitJavaClass("tests", "T3",
 '''
-package tests.traits.impl;
+package tests;
 
-import tests.traits.T3;
-import tests.traits.impl.T3_T2_0_AdapterImpl;
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
+@XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3Impl implements T3 {
-  private T3 _delegate;
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
   
-  private T3_T2_0_AdapterImpl _T3_T2_0;
+  private T3_T2_0_Adapter _T2_0;
   
-  public T3Impl(final T3 delegate) {
+  public T3(final T3Interface delegate) {
     this._delegate = delegate;
-    _T3_T2_0 = new T3_T2_0_AdapterImpl(delegate);
+    _T2_0 = new T3_T2_0_Adapter(delegate);
   }
   
+  @XtraitjDefinedMethod
   public String callSecondRename() {
     return _delegate.callSecondRename();
   }
@@ -1019,20 +1025,22 @@ public class T3Impl implements T3 {
     return this.secondRename();
   }
   
-  public String callFirstRename() {
-    return _delegate.callFirstRename();
-  }
-  
-  public String _callFirstRename() {
-    return _T3_T2_0._callFirstRename();
-  }
-  
+  @XtraitjDefinedMethod
   public String secondRename() {
     return _delegate.secondRename();
   }
   
   public String _secondRename() {
-    return _T3_T2_0._secondRename();
+    return _T2_0._secondRename();
+  }
+  
+  @XtraitjDefinedMethod
+  public String callFirstRename() {
+    return _delegate.callFirstRename();
+  }
+  
+  public String _callFirstRename() {
+    return _T2_0._callFirstRename();
   }
 }
 '''

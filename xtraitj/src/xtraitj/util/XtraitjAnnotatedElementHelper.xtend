@@ -77,7 +77,11 @@ class XtraitjAnnotatedElementHelper {
 
 	def filterOutXtraitjRenamedAnnotations(Iterable<JvmAnnotationReference> annotations) {
 		annotations.filter[
-			annotation.identifier != XtraitjRenamedMethod.name
+			!renameAnnotation
 		]
+	}
+
+	def isRenameAnnotation(JvmAnnotationReference ref) {
+		ref.annotation.identifier == XtraitjRenamedMethod.name
 	}
 }
