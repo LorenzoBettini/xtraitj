@@ -2161,7 +2161,6 @@ package tests;
 import java.util.List;
 import tests.UsesTGeneric;
 import tests.UsesTGenericInterface;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
 public class C implements UsesTGenericInterface {
@@ -2171,12 +2170,10 @@ public class C implements UsesTGenericInterface {
     return _UsesTGeneric._useLists();
   }
   
-  @XtraitjRenamedMethod("returnList")
   public List<Integer> returnListOfInteger() {
     return _UsesTGeneric._returnListOfInteger();
   }
   
-  @XtraitjRenamedMethod("printList")
   public void printListOfInteger(final List<Integer> l) {
     _UsesTGeneric._printListOfInteger(l);
   }
@@ -2375,7 +2372,6 @@ package tests;
 import java.util.List;
 import tests.UsesTGeneric;
 import tests.UsesTGenericInterface;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
 public class C implements UsesTGenericInterface {
@@ -2389,12 +2385,10 @@ public class C implements UsesTGenericInterface {
     return _UsesTGeneric._returnList();
   }
   
-  @XtraitjRenamedMethod("returnList")
   public List<Integer> returnListOfInteger() {
     return _UsesTGeneric._returnListOfInteger();
   }
   
-  @XtraitjRenamedMethod("returnList")
   public List<List<Integer>> returnListOfListOfInteger() {
     return _UsesTGeneric._returnListOfListOfInteger();
   }

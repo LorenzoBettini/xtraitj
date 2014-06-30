@@ -69,9 +69,25 @@ class XtraitjAnnotatedElementHelper {
 
 	def filterOutXtraitjAnnotations(Iterable<JvmAnnotationReference> annotations) {
 		annotations.filter[
-			annotation.identifier != XtraitjDefinedMethod.name
+			!definedAnnotation
 			&&
-			annotation.identifier != XtraitjRequiredMethod.name
+			!renameAnnotation
+			&&
+			!requiredMethodAnnotation
+			&&
+			!requiredFieldAnnotation
+		]
+	}
+
+	def filterXtraitjAnnotations(Iterable<JvmAnnotationReference> annotations) {
+		annotations.filter[
+			definedAnnotation
+			||
+			renameAnnotation
+			||
+			requiredMethodAnnotation
+			||
+			requiredFieldAnnotation
 		]
 	}
 
@@ -83,5 +99,17 @@ class XtraitjAnnotatedElementHelper {
 
 	def isRenameAnnotation(JvmAnnotationReference ref) {
 		ref.annotation.identifier == XtraitjRenamedMethod.name
+	}
+
+	def isDefinedAnnotation(JvmAnnotationReference ref) {
+		ref.annotation.identifier == XtraitjDefinedMethod.name
+	}
+
+	def isRequiredMethodAnnotation(JvmAnnotationReference ref) {
+		ref.annotation.identifier == XtraitjRequiredMethod.name
+	}
+
+	def isRequiredFieldAnnotation(JvmAnnotationReference ref) {
+		ref.annotation.identifier == XtraitjRequiredField.name
 	}
 }

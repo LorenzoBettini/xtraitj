@@ -3,8 +3,9 @@
  */
 package xtraitj.types;
 
+import com.google.inject.Inject
 import org.eclipse.xtext.common.types.JvmVisibility
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import xtraitj.util.XtraitjAnnotatedElementHelper
 
 /**
  * This represents a private operation wrapper that must not be
@@ -14,9 +15,11 @@ import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
  *
  */
 public class XtraitjTraitPrivateOperationWrapper extends XtraitjTraitOperationWrapper {
+	
+	@Inject extension XtraitjAnnotatedElementHelper
 
 	override processOperationSpecificAnnotations() {
-		getAnnotations.removeAll(getAnnotations.filter[it instanceof XtraitjDefinedMethod])
+		getAnnotations.removeAll(getAnnotations.filterXtraitjAnnotations)
 	}
 
 	override getVisibility() {
