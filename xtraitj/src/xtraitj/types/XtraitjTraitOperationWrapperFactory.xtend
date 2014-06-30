@@ -8,7 +8,7 @@ import xtraitj.xtraitj.TJTraitOperation
 class XtraitjTraitOperationWrapperFactory {
 	@Inject Provider<XtraitjTraitRenameOperationWrapper> renameOpProvider
 	
-	@Inject Provider<XtraitjTraitHideOperationWrapper> hideOpProvider
+	@Inject Provider<XtraitjTraitPrivateOperationWrapper> privateOpProvider
 	
 	def createRenameOperationWrapper(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
@@ -17,9 +17,9 @@ class XtraitjTraitOperationWrapperFactory {
 		]	
 	}
 
-	def createHideOperationWrapper(TJTraitOperation operation,
+	def createPrivateOperationWrapper(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
-		hideOpProvider.get => [
+		privateOpProvider.get => [
 			init(operation, typeReference)
 		]	
 	}
