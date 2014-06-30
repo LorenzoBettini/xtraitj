@@ -529,7 +529,10 @@ class C uses T {
 		}
 		
 		trait T3 uses T2[ rename fieldS to s, rename fieldB to b ] {
-			String meth() { return s + b; }
+			String meth() {
+				s = "foo" 
+				return s + b;
+			}
 		}
 		'''
 	}
