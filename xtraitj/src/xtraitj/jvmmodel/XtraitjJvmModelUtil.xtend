@@ -574,10 +574,6 @@ class XtraitjJvmModelUtil {
 		"set" + Strings.toFirstUpper(opName)
 	}
 
-	def toGetterName(String opName) {
-		"get" + Strings.toFirstUpper(opName)
-	}
-	
 	def fromGetterToSetterName(String opName) {
 		opName.stripGetter.toSetterName
 	}

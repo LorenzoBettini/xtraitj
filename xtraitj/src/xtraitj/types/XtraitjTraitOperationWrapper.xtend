@@ -19,6 +19,7 @@ import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.util.XtraitjModelUtil
+import xtraitj.xtraitj.impl.TJTraitOperationImpl
 
 /**
  * @author Lorenzo Bettini
@@ -46,8 +47,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		this.typeReference = typeReference;
 	}
 
-	def TJTraitOperation getOperation() {
-		return operation;
+	def TJTraitOperationImpl getOperation() {
+		return operation as TJTraitOperationImpl;
 	}
 	
 	def IResolvedOperation getResolvedOperation() {

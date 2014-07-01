@@ -3,8 +3,8 @@
  */
 package xtraitj.types;
 
-import com.google.inject.Inject
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import org.eclipse.xtext.util.Strings
+import org.eclipse.xtext.xbase.typesystem.InferredTypeIndicator
 
 /**
  * @author Lorenzo Bettini
@@ -12,13 +12,20 @@ import xtraitj.jvmmodel.XtraitjJvmModelUtil
  */
 public class XtraitjTraitRenameGetterOperationWrapper extends XtraitjTraitRenameOperationWrapper {
 
-	@Inject extension XtraitjJvmModelUtil
-	
 	override String getSimpleName() {
-		// don't do that: it triggers scoping
-//		return operation.member.simpleName.renameGetterOrSetter(
-//			renameOperation.getNewname())
-		return renameOperation.getNewname().toGetterName;
+		// when members are not yet resolved we simply use "get" as a prefix
+		// later, when they are resolved, we can use the correct prefix
+		var prefix = "get";
+		if (!getOperation().basicGetMember().eIsProxy()) {
+			val typeRef = jvmOperation.returnType
+			if (typeRef != null && !typeRef.eIsProxy() && !InferredTypeIndicator.isInferred(typeRef) 
+					&& typeRef.getType()!=null 
+					&& !typeRef.getType().eIsProxy() && "boolean".equals(typeRef.getType().getIdentifier())) {
+				prefix = "is";
+			}
+		}
+
+		return prefix + Strings.toFirstUpper(renameOperation.getNewname());
 	}
 
 }

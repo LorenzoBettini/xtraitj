@@ -530,7 +530,8 @@ class C uses T {
 		
 		trait T3 uses T2[ rename field fieldS to s, rename field fieldB to b ] {
 			String meth() {
-				s = "foo" 
+				s = "foo"
+				b = false
 				return s + b;
 			}
 		}
