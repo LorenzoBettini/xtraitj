@@ -2399,4 +2399,161 @@ public class C implements UsesTGenericInterface {
 		]
 	}
 
+	@Test def void testRenameGenericField() {
+		classUsesTraitWithGenericRenamedFields.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_AdapterInterface {
+  public abstract Boolean getB();
+  
+  public abstract void setB(final Boolean b);
+  
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface extends T3_T2_0_AdapterInterface {
+  @XtraitjDefinedMethod
+  public abstract String meth();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Interface;
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface<String, Boolean> {
+  private T3_T2_0_AdapterInterface _delegate;
+  
+  private T2<String, Boolean> _T2_0;
+  
+  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2(this);
+  }
+  
+  public String getFieldS() {
+    return this.getS();
+  }
+  
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldS")
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setFieldS(final String s) {
+    this.setS(s);
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+  
+  public Boolean getFieldB() {
+    return this.getB();
+  }
+  
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldB")
+  public Boolean getB() {
+    return _delegate.getB();
+  }
+  
+  public void setFieldB(final Boolean b) {
+    this.setB(b);
+  }
+  
+  public void setB(final Boolean b) {
+    _delegate.setB(b);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3Interface;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3 implements T3Interface {
+  private T3Interface _delegate;
+  
+  private T3_T2_0_Adapter _T2_0;
+  
+  public T3(final T3Interface delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_Adapter(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String meth() {
+    return _delegate.meth();
+  }
+  
+  public String _meth() {
+    this.setS("foo");
+    this.setB(Boolean.valueOf(false));
+    String _s = this.getS();
+    Boolean _b = this.getB();
+    return (_s + _b);
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+  
+  @XtraitjRequiredField
+  public Boolean getB() {
+    return _delegate.getB();
+  }
+  
+  public void setB(final Boolean b) {
+    _delegate.setB(b);
+  }
+}
+'''
+)
+
+			// call the method which uses the renamed field
+			executeGeneratedJavaClassMethodAndAssert("C", "meth", "foofalse")
+		]
+	}
 }

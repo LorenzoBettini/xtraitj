@@ -1475,6 +1475,40 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
+	def traitRenameGenericField() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+		}
+		
+		trait T3 uses T2<String,Boolean>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				s = "foo"
+				b = false
+				return s + b;
+			}
+		}
+		'''
+	}
+
+	def classUsesTraitWithGenericRenamedFields() {
+		'''
+		«traitRenameGenericField»
+		
+		class C uses T3 {
+			Boolean b = true;
+			String s = "test";
+		}
+		'''
+	}
+
+
 	def traitUsesGenericTraitWithAlias() {
 		'''
 package tests;
