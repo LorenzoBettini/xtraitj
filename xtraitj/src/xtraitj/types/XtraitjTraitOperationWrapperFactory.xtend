@@ -7,12 +7,28 @@ import xtraitj.xtraitj.TJTraitOperation
 
 class XtraitjTraitOperationWrapperFactory {
 	@Inject Provider<XtraitjTraitRenameOperationWrapper> renameOpProvider
+	@Inject Provider<XtraitjTraitRenameGetterOperationWrapper> renameGetterOpProvider
+	@Inject Provider<XtraitjTraitRenameSetterOperationWrapper> renameSetterOpProvider
 	
 	@Inject Provider<XtraitjTraitPrivateOperationWrapper> privateOpProvider
 	
 	def createRenameOperationWrapper(TJTraitOperation operation,
 			JvmParameterizedTypeReference typeReference) {
 		renameOpProvider.get => [
+			init(operation, typeReference)
+		]	
+	}
+
+	def createRenameOperationWrapperForGetter(TJTraitOperation operation,
+			JvmParameterizedTypeReference typeReference) {
+		renameGetterOpProvider.get => [
+			init(operation, typeReference)
+		]	
+	}
+
+	def createRenameOperationWrapperForSetter(TJTraitOperation operation,
+			JvmParameterizedTypeReference typeReference) {
+		renameSetterOpProvider.get => [
 			init(operation, typeReference)
 		]	
 	}

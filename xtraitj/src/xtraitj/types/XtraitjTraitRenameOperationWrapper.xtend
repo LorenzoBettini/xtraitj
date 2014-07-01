@@ -27,8 +27,8 @@ public class XtraitjTraitRenameOperationWrapper extends XtraitjTraitOperationWra
 		return renameOperation.getNewname();
 	}
 
-	override String computeIdentifier() {
-		return renameOperation.getNewname();
-	}
+//	override String computeIdentifier() {
+//		return renameOperation.getNewname();
+//	}
 	
 }

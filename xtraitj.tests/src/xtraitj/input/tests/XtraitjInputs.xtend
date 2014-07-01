@@ -528,7 +528,7 @@ class C uses T {
 			boolean n() { return fieldB; }
 		}
 		
-		trait T3 uses T2[ rename fieldS to s, rename fieldB to b ] {
+		trait T3 uses T2[ rename field fieldS to s, rename field fieldB to b ] {
 			String meth() {
 				s = "foo" 
 				return s + b;

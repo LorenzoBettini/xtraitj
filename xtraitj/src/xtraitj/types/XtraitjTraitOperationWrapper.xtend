@@ -36,7 +36,7 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	var IResolvedOperation resolvedOperation = null;
 	
-	var EList<JvmFormalParameter> parameters = null;
+	protected var EList<JvmFormalParameter> parameters = null;
 	
 	var EList<JvmAnnotationReference> annotations = null;
 

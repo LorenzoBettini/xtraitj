@@ -307,12 +307,24 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
-						members += xtraitjTraitOperationWrapperFactory.createRenameOperationWrapper(tOp, t.trait) => [
-							tOp.associate(it)
-						]
-						members += xtraitjTraitOperationWrapperFactory.createPrivateOperationWrapper(tOp, t.trait) => [
-							tOp.associate(it)
-						]
+						if (tOp.field) {
+							members += xtraitjTraitOperationWrapperFactory.createRenameOperationWrapperForGetter(tOp, t.trait) => [
+								tOp.associate(it)
+							]
+							members += xtraitjTraitOperationWrapperFactory.createPrivateOperationWrapper(tOp, t.trait) => [
+								tOp.associate(it)
+							]
+							members += xtraitjTraitOperationWrapperFactory.createRenameOperationWrapperForSetter(tOp, t.trait) => [
+								tOp.associate(it)
+							]
+						} else {
+							members += xtraitjTraitOperationWrapperFactory.createRenameOperationWrapper(tOp, t.trait) => [
+								tOp.associate(it)
+							]
+							members += xtraitjTraitOperationWrapperFactory.createPrivateOperationWrapper(tOp, t.trait) => [
+								tOp.associate(it)
+							]
+						}
 					}
 				}
 			}

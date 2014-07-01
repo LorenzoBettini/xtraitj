@@ -23,7 +23,9 @@ import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.types.XtraitjTraitOperationWrapper
+import xtraitj.types.XtraitjTraitRenameGetterOperationWrapper
 import xtraitj.types.XtraitjTraitRenameOperationWrapper
+import xtraitj.types.XtraitjTraitRenameSetterOperationWrapper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
@@ -357,7 +359,6 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		for (xop : members.filter(XtraitjTraitOperationWrapper)) {
 			val origOp = xop.jvmOperation
 
-			val requiredField = origOp.annotatedRequiredField()
 			val requiredMethod = origOp.annotatedRequiredMethod()
 			
 //			val resolvedOp = xop.resolvedOperation
@@ -365,12 +366,59 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 //			println(resolvedOp.resolvedParameterTypes)
 
 			switch (xop) {
+				XtraitjTraitRenameGetterOperationWrapper: {
+					val traitOp = xop.renameOperation
+			
+					// example T1[rename field m -> m2]
+					
+					// make sure we take the jvmOp's name
+					// since the member in the rename operation is bound
+					// to the getter in case of a field
+					val newname = 
+						origOp.simpleName.renameGetterOrSetter(traitOp.newname)
+					// m is forwarded to this.m2()
+					collectedMembers += xop.
+						toMethodDelegate(
+							"this",
+							origOp.simpleName,
+							newname
+						)
+					// m2 is forwarded to delegate.m2()
+					collectedMembers += xop.
+						toMethodDelegate(
+							delegateFieldName,
+							newname,
+							newname
+						) => [ copyAllAnnotationsFrom(xop) ]
+				}
+				XtraitjTraitRenameSetterOperationWrapper: {
+					val traitOp = xop.renameOperation
+			
+					// example T1[rename field m -> m2]
+					
+					val origSetterName = origOp.simpleName.fromGetterToSetterName
+					val newSetterName = traitOp.newname.fromGetterToSetterName
+					
+					collectedMembers += xop.
+						toMethodDelegate(
+							"this",
+							origSetterName,
+							newSetterName
+						)
+					// m2 is forwarded to delegate.m2()
+					collectedMembers += xop.
+						toMethodDelegate(
+							delegateFieldName,
+							newSetterName,
+							newSetterName
+						)
+				}
 				XtraitjTraitRenameOperationWrapper: {
 					val traitOp = xop.renameOperation
 			
 					// example T1[rename m -> m2]
 					
-					if (requiredField || requiredMethod) {
+					if (requiredMethod) {
 						// make sure we take the jvmOp's name
 						// since the member in the rename operation is bound
 						// to the getter in case of a field
@@ -391,24 +439,6 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 								newname
 							) => [ copyAllAnnotationsFrom(xop) ]
 						
-						if (requiredField) {
-							val origSetterName = origOp.simpleName.toSetterName
-							val newSetterName = newname.toSetterName
-							
-							collectedMembers += xop.
-								toMethodDelegate(
-									"this",
-									origSetterName,
-									newSetterName
-								)
-							// m2 is forwarded to delegate.m2()
-							collectedMembers += xop.
-								toMethodDelegate(
-									delegateFieldName,
-									newSetterName,
-									newSetterName
-								)
-						}
 					} else {
 						// m is forwarded to this.m2
 						val newname = traitOp.newname
