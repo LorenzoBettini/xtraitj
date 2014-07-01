@@ -922,42 +922,38 @@ public class T3Impl implements T3 {
 
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
-package tests.traits;
+package tests;
 
 @SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
+public interface T3_T2_0_AdapterInterface {
   public abstract boolean isB();
   
-  public abstract void setB(final boolean fieldB);
+  public abstract void setB(final boolean b);
+  
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
   
   public abstract boolean n();
   
   public abstract String m();
-  
-  public abstract String getS();
-  
-  public abstract void setS(final String fieldS);
 }
 '''
 )
 
 assertTraitJavaInterface("tests", "T3",
 '''
-package tests.traits;
+package tests;
 
-import tests.traits.T3_T2_0_Adapter;
+import tests.T3_T2_0_AdapterInterface;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3 extends T3_T2_0_Adapter {
+public interface T3Interface extends T3_T2_0_AdapterInterface {
   @XtraitjDefinedMethod
   public abstract String meth();
-  
-  public abstract boolean n();
-  
-  public abstract String m();
 }
 '''
 )

@@ -278,6 +278,12 @@ class XtraitjGeneratorExtensions {
    		]
    	}
 
+	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op, String newName) {
+   		op.op.toSetter(newName, op.returnType) => [
+   			abstract = true
+   		]
+   	}
+
 	def typeParametersOfReferredType(JvmParameterizedTypeReference typeRef) {
 		(typeRef.type as JvmGenericType).typeParameters.map[cloneWithProxies]
 	}

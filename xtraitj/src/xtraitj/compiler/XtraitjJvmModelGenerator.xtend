@@ -207,8 +207,13 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 						members += jvmOp.toAbstractSetterDelegateFromGetter
 				} else {
 					if (renameOperation != null) {
+						val newname = renameOperation.newname
 						members += jvmOp.toAbstractMethod
-							(op.simpleName.renameGetterOrSetter(renameOperation.newname))
+							(op.simpleName.renameGetterOrSetter(newname))
+						if (op.annotatedRequiredField()) {
+							members += jvmOp.toAbstractSetterDelegateFromGetter
+								(newname)
+						}
 					}
 					// hidden methods are simply not inserted in this interface
 					if (aliasOperation != null) {
