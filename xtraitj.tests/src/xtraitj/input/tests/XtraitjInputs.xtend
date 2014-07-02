@@ -1508,7 +1508,7 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
-	def traitRenameGenericField2() {
+	def traitRenameGenericFieldNotInstantiated() {
 		'''
 		package tests;
 		
@@ -1530,8 +1530,10 @@ class C uses UsesTGeneric {}
 			String meth() {
 				println(s)
 				val t1 = s
+				s = t1
 				println(b)
 				val t2 = b
+				b = t2
 				return "foo" // s + b;
 			}
 		}

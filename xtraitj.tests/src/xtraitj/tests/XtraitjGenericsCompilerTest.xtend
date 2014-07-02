@@ -2557,8 +2557,8 @@ public class T3 implements T3Interface {
 		]
 	}
 
-	@Test def void testRenameGenericField2() {
-		traitRenameGenericField2.compile[
+	@Test def void testRenameGenericFieldNotInstantiated() {
+		traitRenameGenericFieldNotInstantiated.compile[
 
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
@@ -2754,9 +2754,11 @@ public class T3<U extends String, V> implements T3Interface<U, V> {
     U _s = this.getS();
     InputOutput.<U>println(_s);
     final U t1 = this.getS();
+    this.setS(t1);
     V _b = this.getB();
     InputOutput.<V>println(_b);
     final V t2 = this.getB();
+    this.setB(t2);
     return "foo";
   }
   
