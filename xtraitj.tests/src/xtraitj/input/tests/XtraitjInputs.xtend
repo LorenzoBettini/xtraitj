@@ -1508,6 +1508,27 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
+	def traitRenameGenericField2() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+		}
+		
+		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				//val t = s
+				return "foo" //s + b;
+			}
+		}
+		'''
+	}
+
 
 	def traitUsesGenericTraitWithAlias() {
 		'''
