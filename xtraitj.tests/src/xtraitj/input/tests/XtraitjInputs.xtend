@@ -1522,6 +1522,7 @@ class C uses UsesTGeneric {}
 		
 		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
 			String meth() {
+				println(s)
 				//val t = s
 				return "foo" //s + b;
 			}

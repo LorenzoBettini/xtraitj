@@ -106,7 +106,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// we can see all the methods which are possibly provided
 		// by the trait operation expressions (possibly after renaming)
 
-		inferTypesForTraitReferencesWithOperations(c, acceptor, typesMap)
+		inferTypesForTraitReferencesWithOperations(c, inferredClass, acceptor, typesMap)
    		
    		acceptor.accept(inferredClass).initializeLater[
    			documentation = c.documentation
@@ -291,12 +291,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //		]
 	}
 
-	def void inferTraitExpressionClass(TJTraitReference t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
+	def void inferTraitExpressionClass(TJTraitReference t, JvmGenericType containingDeclarationInferredType, 
+		IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap
+	) {
 		val traitExpressionClassName = t.traitExpressionClassName
 		
 		val traitReferenceClass = t.toClass(traitExpressionClassName)
 		
-		traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
+		//traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
+		traitReferenceClass.copyTypeParameters(containingDeclarationInferredType.typeParameters)
 		
 		typesMap.put(traitExpressionClassName, traitReferenceClass)
 		
@@ -498,7 +501,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		typesMap.put(t.name, traitClass)
 		
-	   	inferTypesForTraitReferencesWithOperations(t, acceptor, typesMap)
+	   	inferTypesForTraitReferencesWithOperations(t, traitClass, acceptor, typesMap)
    		
 		acceptor.accept(traitClass).initializeLater[
 
@@ -624,11 +627,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 				
-	def inferTypesForTraitReferencesWithOperations(TJDeclaration d, IJvmDeclaredTypeAcceptor acceptor, Map<String, JvmGenericType> typesMap) {
+	def inferTypesForTraitReferencesWithOperations(TJDeclaration d, JvmGenericType inferredType, IJvmDeclaredTypeAcceptor acceptor, Map<String, JvmGenericType> typesMap) {
 		for (tRef : d.traitReferences) {
 			if (!tRef.operations.empty) {
 				tRef.inferTraitExpressionInterface(acceptor)
-				tRef.inferTraitExpressionClass(acceptor, typesMap)
+				tRef.inferTraitExpressionClass(inferredType, acceptor, typesMap)
 			}
 		}
 	}
@@ -645,11 +648,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// we need these supertypes for validation
 		// but we'll remove them in the generator
 		for (tRef : d.traitReferences.filter[operations.empty]) {
-			superTypes += tRef.traitReferenceCopy(typesMap)
+			superTypes += tRef.traitReferenceCopy(it, typesMap)
 		}
 		
 		for (tRef : d.traitReferences.filter[!operations.empty]) {
-			superTypes += tRef.traitReferenceCopy(typesMap)
+			superTypes += tRef.traitReferenceCopy(it, typesMap)
 		}
 	}
 
@@ -700,10 +703,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def protected traitReferenceCopy(TJTraitReference traitRef, Map<String, JvmGenericType> typesMap) {
+	def protected traitReferenceCopy(TJTraitReference traitRef, 
+		JvmGenericType containingDeclarationInferredType, Map<String, JvmGenericType> typesMap
+	) {
 		if (!traitRef.operations.empty) {
 			//return traitRef.newTypeRef(traitRef.traitExpressionClassName)
-			return traitRef.buildTypeRefForTraitExpression(typesMap)
+			return traitRef.buildTypeRefForTraitExpression(containingDeclarationInferredType, typesMap)
 		} else {
 			return traitRef.trait.cloneWithProxies
 		}
@@ -713,11 +718,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 * This builds a type reference to a trait class inferred for this very program
 	 * that represents a trait reference with operations.
 	 */
-	def buildTypeRefForTraitExpression(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
+	def buildTypeRefForTraitExpression(TJTraitReference t, 
+		JvmGenericType containingDeclarationInferredType, Map<String, JvmGenericType> typesMap
+	) {
 		val mapped = typesMap.get(t.traitExpressionClassName)
 		//return mapped.newTypeRef(t.trait.arguments.map[cloneWithProxies])
-		val containingDeclTypeParams = t.containingDeclaration.typeParameters
-		val typeArguments = containingDeclTypeParams.map[t.newTypeRef(it.simpleName)]
+		val containingDeclTypeParams = containingDeclarationInferredType.typeParameters
+		// it is crucial to use as type arguments type references to the type
+		// parameters of the containing inferred JvmGenericType
+		// DON'T use references to the original type parameters of the
+		// trait element in the AST! 
+		val typeArguments = containingDeclTypeParams.map[newTypeRef]
 		return mapped.newTypeRef(typeArguments)
 	}
 
