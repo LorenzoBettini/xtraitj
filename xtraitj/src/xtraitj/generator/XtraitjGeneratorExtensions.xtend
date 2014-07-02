@@ -32,6 +32,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -40,6 +41,7 @@ class XtraitjGeneratorExtensions {
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjAnnotatedElementHelper
 	@Inject extension XtraitjJvmModelUtil
+	@Inject	IJvmModelAssociator associator
 
 	def traitInterfaceName(String n) {
    		n + "Interface"
@@ -164,6 +166,7 @@ class XtraitjGeneratorExtensions {
 			val clonedTypeParameter = typeParameter.cloneWithProxies();
 			if (clonedTypeParameter != null) {
 				target.typeParameters += clonedTypeParameter
+				associator.associate(typeParameter, clonedTypeParameter);
 			}
 		}
 	}
