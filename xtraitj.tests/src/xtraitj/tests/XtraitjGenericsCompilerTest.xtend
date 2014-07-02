@@ -2399,8 +2399,8 @@ public class C implements UsesTGenericInterface {
 		]
 	}
 
-	@Test def void testRenameGenericField() {
-		classUsesTraitWithGenericRenamedFields.compile[
+	@Test def void traitRenameGenericFieldInstantiated() {
+		classUsesTraitWithGenericRenamedFieldsInstantiated.compile[
 
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
@@ -2573,6 +2573,8 @@ public interface T3_T2_0_AdapterInterface<U extends String, V> {
   public abstract U getS();
   
   public abstract void setS(final U s);
+  
+  public abstract String T2meth();
 }
 '''
 )
@@ -2601,6 +2603,7 @@ package tests;
 import tests.T2;
 import tests.T2Interface;
 import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
@@ -2650,6 +2653,71 @@ public class T3_T2_0_Adapter<U extends String, V> implements T3_T2_0_AdapterInte
   public void setB(final V b) {
     _delegate.setB(b);
   }
+  
+  @XtraitjDefinedMethod
+  public String T2meth() {
+    return _delegate.T2meth();
+  }
+  
+  public String _T2meth() {
+    return _T2_0._T2meth();
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import tests.T1;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2<G1, G2> implements T2Interface<G1, G2> {
+  private T2Interface<G1, G2> _delegate;
+  
+  private T1<G1> _T1;
+  
+  public T2(final T2Interface<G1, G2> delegate) {
+    this._delegate = delegate;
+    _T1 = new T1(delegate);
+  }
+  
+  @XtraitjRequiredField
+  public G2 getFieldB() {
+    return _delegate.getFieldB();
+  }
+  
+  public void setFieldB(final G2 fieldB) {
+    _delegate.setFieldB(fieldB);
+  }
+  
+  @XtraitjDefinedMethod
+  public String T2meth() {
+    return _delegate.T2meth();
+  }
+  
+  public String _T2meth() {
+    G1 _fieldS = this.getFieldS();
+    InputOutput.<G1>println(_fieldS);
+    final G1 t = this.getFieldS();
+    return "foo";
+  }
+  
+  @XtraitjRequiredField
+  public G1 getFieldS() {
+    return _delegate.getFieldS();
+  }
+  
+  public void setFieldS(final G1 fieldS) {
+    _delegate.setFieldS(fieldS);
+  }
 }
 '''
 )
@@ -2685,7 +2753,20 @@ public class T3<U extends String, V> implements T3Interface<U, V> {
   public String _meth() {
     U _s = this.getS();
     InputOutput.<U>println(_s);
+    final U t1 = this.getS();
+    V _b = this.getB();
+    InputOutput.<V>println(_b);
+    final V t2 = this.getB();
     return "foo";
+  }
+  
+  @XtraitjDefinedMethod
+  public String T2meth() {
+    return _delegate.T2meth();
+  }
+  
+  public String _T2meth() {
+    return _T2_0._T2meth();
   }
   
   @XtraitjRequiredField

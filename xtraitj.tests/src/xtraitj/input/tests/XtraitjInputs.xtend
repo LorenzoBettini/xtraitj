@@ -1475,7 +1475,7 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
-	def traitRenameGenericField() {
+	def traitRenameGenericFieldInstantiated() {
 		'''
 		package tests;
 		
@@ -1497,9 +1497,9 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
-	def classUsesTraitWithGenericRenamedFields() {
+	def classUsesTraitWithGenericRenamedFieldsInstantiated() {
 		'''
-		«traitRenameGenericField»
+		«traitRenameGenericFieldInstantiated»
 		
 		class C uses T3 {
 			Boolean b = true;
@@ -1518,14 +1518,27 @@ class C uses UsesTGeneric {}
 		
 		trait T2<G1,G2> uses T1<G1> {
 			G2 fieldB;
+			
+			String T2meth() {
+				println(fieldS)
+				val t = fieldS
+				return "foo" // fieldS + fieldB;
+			}
 		}
 		
 		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
 			String meth() {
 				println(s)
-				//val t = s
-				return "foo" //s + b;
+				val t1 = s
+				println(b)
+				val t2 = b
+				return "foo" // s + b;
 			}
+		}
+		
+		class C3<U extends String,V> uses T3<U,V>{
+			U s;
+			V b;
 		}
 		'''
 	}
