@@ -39,6 +39,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	protected var EList<JvmFormalParameter> parameters = null;
 	
+	protected var EList<JvmTypeParameter> typeParameters = null;
+	
 	var EList<JvmAnnotationReference> annotations = null;
 
 	def void init(TJTraitOperation operation,
@@ -68,7 +70,12 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	override EList<JvmTypeParameter> getTypeParameters() {
-		return getJvmOperation().getTypeParameters();
+		if (typeParameters == null) {
+			typeParameters = new BasicEList(
+				getResolvedOperation.resolvedTypeParameters
+			)
+		}
+		return typeParameters
 	}
 
 	override EList<JvmFormalParameter> getParameters() {
