@@ -4,7 +4,6 @@
 package xtraitj.types;
 
 import com.google.inject.Inject
-import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.common.types.JvmFormalParameter
 import org.eclipse.xtext.common.types.util.TypeReferences
@@ -35,7 +34,7 @@ public class XtraitjTraitRenameSetterOperationWrapper extends XtraitjTraitRename
 		// builds a parameter based on the return type of the original
 		// resolved operation
 		if (parameters == null) {
-			parameters = new BasicEList()
+			parameters = superGetParameters()
 			parameters += 
 				getJvmOperation.toParameter(renameOperation.newname, 
 					resolvedOperation.resolvedReturnType.toTypeReference

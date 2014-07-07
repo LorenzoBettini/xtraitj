@@ -17,8 +17,8 @@ import org.eclipse.xtext.common.types.impl.JvmOperationImpl
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
-import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.util.XtraitjModelUtil
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.impl.TJTraitOperationImpl
 
 /**
@@ -36,10 +36,6 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	@Inject extension JvmTypesBuilder
 	
 	var IResolvedOperation resolvedOperation = null;
-	
-	protected var EList<JvmFormalParameter> parameters = null;
-	
-	protected var EList<JvmTypeParameter> typeParameters = null;
 	
 	var EList<JvmAnnotationReference> annotations = null;
 
@@ -71,9 +67,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 
 	override EList<JvmTypeParameter> getTypeParameters() {
 		if (typeParameters == null) {
-			typeParameters = new BasicEList(
-				getResolvedOperation.resolvedTypeParameters
-			)
+			typeParameters = super.getTypeParameters
+			typeParameters.addAll(getResolvedOperation.resolvedTypeParameters)
 		}
 		return typeParameters
 	}
@@ -81,7 +76,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	override EList<JvmFormalParameter> getParameters() {
 		// replace original parameter types with the resolved ones
 		if (parameters == null) {
-			parameters = new BasicEList(getJvmOperation.parameters.map[cloneWithProxies])
+			parameters = superGetParameters()
+			parameters.addAll(getJvmOperation.parameters.map[cloneWithProxies])
 			val iterator = getResolvedOperation.resolvedParameterTypes.iterator
 			for (parameter : parameters) {
 				parameter.parameterType = iterator.next.toTypeReference.cloneWithProxies
@@ -89,6 +85,10 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		}
 		
 		return parameters;
+	}
+	
+	protected def superGetParameters() {
+		super.getParameters
 	}
 
 	override JvmVisibility getVisibility() {
