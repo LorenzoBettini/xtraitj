@@ -1545,6 +1545,34 @@ class C uses UsesTGeneric {}
 		'''
 	}
 
+	def traitUsesTraitWithRenameGenericMethod() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1 {
+	<T> List<T> returnList(T t) {
+		return newArrayList(t)
+	}
+}
+
+trait UsesTGeneric uses 
+	T1[rename returnList to returnListOfInteger],
+	T1 
+{
+	String useLists() {
+		val stringList = returnList("bar") => [add("foo")]
+		//val intList = returnListOfInteger(0)// => [add(1)]
+		//(stringList.toString)
+		return stringList.toString
+	}
+}
+
+class C uses UsesTGeneric {}
+		'''
+	}
+
 
 	def traitUsesGenericTraitWithAlias() {
 		'''

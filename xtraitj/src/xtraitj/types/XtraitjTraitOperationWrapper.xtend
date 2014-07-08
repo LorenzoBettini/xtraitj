@@ -72,7 +72,7 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	override EList<JvmTypeParameter> getTypeParameters() {
 		if (typeParameters == null) {
 			typeParameters = super.getTypeParameters
-			typeParameters.addAll(getResolvedOperation.resolvedTypeParameters)
+			typeParameters.addAll(getResolvedOperation.resolvedTypeParameters.map[cloneWithProxies])
 		}
 		return typeParameters
 	}

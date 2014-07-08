@@ -16,6 +16,7 @@ import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
@@ -27,12 +28,10 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 import xtraitj.types.XtraitjTraitOperationWrapper
 import xtraitj.util.XtraitjAnnotatedElementHelper
-import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 
 @Singleton
 class XtraitjGeneratorExtensions {
@@ -212,13 +211,13 @@ class XtraitjGeneratorExtensions {
 	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
 		val o = op.op
 		val m = o.originalSource ?: o
-		if (!o.typeParameters.empty)
+//		if (!o.typeParameters.empty)
 			m.toMethod(methodName, op.returnType) [
 				documentation = m.documentation
 				
-				if (m instanceof TJMethodDeclaration) {
+//				if (m instanceof TJMethodDeclaration) {
 					copyTypeParameters(o.typeParameters)
-				}
+//				}
 	
 				//returnType = returnType.rebindTypeParameters(it)
 		
@@ -233,20 +232,20 @@ class XtraitjGeneratorExtensions {
 				else
 					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 			]
-		else // if there's no type params we can make things simpler
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					parameters += p.toParameter(p.name, paramTypeIt.next)
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			] // and we can navigate to the original method
+//		else // if there's no type params we can make things simpler
+//			m.toMethod(methodName, op.returnType) [
+//				documentation = m.documentation
+//				
+//				val paramTypeIt = op.parametersTypes.iterator
+//				for (p : o.parameters) {
+//					parameters += p.toParameter(p.name, paramTypeIt.next)
+//				}
+//				val args = o.parameters.map[name].join(", ")
+//				if (op.returnType?.simpleName != "void")
+//					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+//				else
+//					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+//			] // and we can navigate to the original method
 	}
 
 	def toMethodDelegate(XtraitjTraitOperationWrapper op, String delegateFieldName, String methodName, String methodToDelegate) {
@@ -254,6 +253,8 @@ class XtraitjGeneratorExtensions {
 		val m = op.operation
 		m.toMethod(methodName, op.returnType) [
 			documentation = m.documentation
+			
+			copyTypeParameters(op.typeParameters)
 			
 			for (p : op.parameters) {
 				parameters += p.toParameter(p.name, p.parameterType)
