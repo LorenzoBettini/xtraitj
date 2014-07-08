@@ -2,14 +2,12 @@ package xtraitj.jvmmodel
 
 import com.google.inject.Inject
 import java.util.Map
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor.IPostIndexingInitializing
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.types.XtraitjTraitOperationWrapperFactory
@@ -38,7 +36,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjGeneratorExtensions
 	@Inject XtraitjTraitOperationWrapperFactory xtraitjTraitOperationWrapperFactory
-	@Inject IJvmModelAssociator associator
 
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -732,10 +729,5 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		return mapped.newTypeRef(typeArguments)
 	}
 
-	def protected <T extends EObject> T associate(EObject sourceElement, T target) {
-		if(sourceElement != null && target != null)
-			associator.associate(sourceElement, target);
-		return target;
-	}
 }
 
