@@ -38,6 +38,7 @@
 					<id>MavenSurefirePluginTest</id>
 					<phase>test</phase>
 					<configuration>
+						<skip>${swtbot.tests.only}</skip>
 						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
 						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
 						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
@@ -65,6 +66,7 @@
 					<id>default-test</id>
 					<phase>test</phase>
 					<configuration>
+						<skip>${swtbot.tests.only}</skip>
 						<useUIHarness>false</useUIHarness>
 						<useUIThread>false</useUIThread>
 						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
@@ -81,6 +83,7 @@
 					<id>TychoSurefirePluginUiTest</id>
 					<phase>test</phase>
 					<configuration>
+						<skip>${swtbot.tests.only}</skip>
 						<useUIHarness>true</useUIHarness>
 						<useUIThread>true</useUIThread>
 						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
