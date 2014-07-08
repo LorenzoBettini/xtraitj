@@ -51,22 +51,29 @@ package tests;
 
 trait T {
 	String f;
+	boolean b;
 }
 
 trait UsesT uses 
-	T[rename field f to g]
+	T[rename field f to g, rename field b to h]
 {
 	void useFields() {
 		println(g)
 		println(f)
+		println(b)
+		println(h)
 		g = "foo"
 		f = "bar"
+		b = false
+		h = false
 	}
 }
 		'''.parse.assertErrorsAsStrings(
 '''
 The method getF() is not visible
-The method setF(String) is not visible'''
+The method isB() is not visible
+The method setF(String) is not visible
+The method setB(boolean) is not visible'''
 )
 	}
 
