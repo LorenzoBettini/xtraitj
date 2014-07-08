@@ -37,6 +37,7 @@ import xtraitj.xtraitj.TJTraitReference
 import static extension xtraitj.util.XtraitjModelUtil.*
 import org.eclipse.xtext.util.Strings
 import xtraitj.xtraitj.TJTraitOperation
+import com.google.inject.Singleton
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -44,6 +45,7 @@ import xtraitj.xtraitj.TJTraitOperation
  * <p>The JVM model should contain all elements that would appear in the Java code 
  * which is generated from the source model. Other models link against the JVM model rather than the source model.</p>     
  */
+@Singleton
 class XtraitjJvmModelUtil {
 
 	@Inject extension TypeReferences

@@ -45,6 +45,32 @@ trait UsesTGeneric uses
 		'''.parse.assertErrorsAsStrings("The method returnList() is not visible")
 	}
 
+	@Test def void testAccessToRenamedField() {
+		'''
+package tests;
+
+trait T {
+	String f;
+}
+
+trait UsesT uses 
+	T[rename field f to g]
+{
+	void useFields() {
+		println(g)
+		println(f)
+		g = "foo"
+		f = "bar"
+	}
+}
+		'''.parse.assertErrorsAsStrings(
+'''
+The method getF() is not visible
+The method setF(String) is not visible'''
+)
+	}
+
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

@@ -48,6 +48,10 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	def TJTraitOperationImpl getOperation() {
 		return operation as TJTraitOperationImpl;
 	}
+
+	def isReferredMemberProxy() {
+		getOperation().basicGetMember().eIsProxy()
+	}
 	
 	def IResolvedOperation getResolvedOperation() {
 		if (resolvedOperation == null) {

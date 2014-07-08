@@ -1,17 +1,11 @@
-/**
- * 
- */
-package xtraitj.types;
+package xtraitj.types
 
-import org.eclipse.xtext.util.Strings
+import xtraitj.types.XtraitjTraitPrivateOperationWrapper
 import org.eclipse.xtext.xbase.typesystem.InferredTypeIndicator
+import org.eclipse.xtext.util.Strings
 
-/**
- * @author Lorenzo Bettini
- *
- */
-public class XtraitjTraitRenameGetterOperationWrapper extends XtraitjTraitRenameOperationWrapper {
-
+class XtraitjTraitPrivateGetterOperationWrapper extends XtraitjTraitPrivateOperationWrapper {
+	
 	override String getSimpleName() {
 		// when members are not yet resolved we simply use "get" as a prefix
 		// later, when they are resolved, we can use the correct prefix
@@ -25,7 +19,6 @@ public class XtraitjTraitRenameGetterOperationWrapper extends XtraitjTraitRename
 			}
 		}
 
-		return prefix + Strings.toFirstUpper(renameOperation.getNewname());
+		return prefix + Strings.toFirstUpper(super.getSimpleName());
 	}
-	
 }
