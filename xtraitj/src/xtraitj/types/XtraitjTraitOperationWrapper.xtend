@@ -35,6 +35,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	@Inject extension JvmTypesBuilder
 	
+	@Inject extension XtraitjTypeParameterHelper
+	
 	var IResolvedOperation resolvedOperation = null;
 	
 	var EList<JvmAnnotationReference> annotations = null;
@@ -66,7 +68,8 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	override JvmTypeReference getReturnType() {
-		return getResolvedOperation().getResolvedReturnType().toTypeReference();
+		return getResolvedOperation.getResolvedReturnType.toTypeReference.
+			rebindOperationTypeParameters;
 	}
 
 	override EList<JvmTypeParameter> getTypeParameters() {
@@ -81,10 +84,16 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		// replace original parameter types with the resolved ones
 		if (parameters == null) {
 			parameters = superGetParameters()
-			parameters.addAll(getJvmOperation.parameters.map[cloneWithProxies])
-			val iterator = getResolvedOperation.resolvedParameterTypes.iterator
-			for (parameter : parameters) {
-				parameter.parameterType = iterator.next.toTypeReference.cloneWithProxies
+			
+			val op = getJvmOperation
+			if (op !== null) {
+				val iterator = getResolvedOperation.resolvedParameterTypes.iterator
+			
+				for (p : op.parameters) {
+					parameters += p.toParameter(p.name, 
+						iterator.next.toTypeReference.rebindOperationTypeParameters
+					)
+				}
 			}
 		}
 		
@@ -121,5 +130,13 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		if (declaringType == null)
 			return simpleName;
 		return declaringType.getQualifiedName(innerClassDelimiter) + '.' + simpleName;
+	}
+
+	/**
+	 * Rebinds references to a type parameter of the original operation to the
+	 * type parameter of this wrapper operation.
+	 */
+	def rebindOperationTypeParameters(JvmTypeReference typeRef) {
+		typeRef.rebindTypeParameters(null, this)
 	}
 }

@@ -2892,7 +2892,16 @@ public class UsesTGeneric implements UsesTGenericInterface {
       }
     };
     final List<String> stringList = ObjectExtensions.<List<String>>operator_doubleArrow(_returnList, _function);
-    return stringList.toString();
+    List<Integer> _returnListOfInteger = this.<Integer>returnListOfInteger(Integer.valueOf(0));
+    final Procedure1<List<Integer>> _function_1 = new Procedure1<List<Integer>>() {
+      public void apply(final List<Integer> it) {
+        it.add(Integer.valueOf(1));
+      }
+    };
+    final List<Integer> intList = ObjectExtensions.<List<Integer>>operator_doubleArrow(_returnListOfInteger, _function_1);
+    String _string = stringList.toString();
+    String _string_1 = intList.toString();
+    return (_string + _string_1);
   }
   
   @XtraitjDefinedMethod
@@ -2944,7 +2953,7 @@ public class C implements UsesTGenericInterface {
 }
 '''
 )
-			executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[bar, foo]")
+			executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[bar, foo][0, 1]")
 		]
 	}
 }

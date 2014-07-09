@@ -18,11 +18,14 @@ class XtraitjTypeParameterHelper {
 	@Inject extension JvmTypesBuilder
 	
 	/**
-	 * It is crucial to rebind the type parameter reference to the
-	 * interface inferred for the trait, otherwise the type parameter
-	 * will point to the class inferred for the trait and we
-	 * get IllegalArgumentException during the typing (the reference owner
-	 * is different)
+	 * It is crucial to rebind the type parameter references to the
+	 * correct type parameter declarator, otherwise the type parameter
+	 * will be the wrong one, leading to failures in the typing of expressions and
+	 * IllegalArgumentException during the typing (the reference owner
+	 * is different).
+	 * 
+	 * This is used both for rebinding methods type parameters for wrapper operations, and
+	 * for every type parameters in the interfaces created during the model generation.
 	 */
 	def JvmTypeReference rebindTypeParameters(JvmTypeReference typeRef, JvmTypeParameterDeclarator containerTypeDecl, JvmTypeParameterDeclarator containerOperation) {
 		typeRef.rebindTypeParameters(containerTypeDecl, containerOperation, newHashMap())
@@ -81,6 +84,8 @@ class XtraitjTypeParameterHelper {
 	}
 	
 	def findCorrespondingTypeParameter(JvmTypeParameterDeclarator declarator, JvmParameterizedTypeReference reboundTypeRef) {
+		if (declarator === null)
+			return null
 		declarator.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
 	}
 	

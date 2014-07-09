@@ -1563,9 +1563,8 @@ trait UsesTGeneric uses
 {
 	String useLists() {
 		val stringList = returnList("bar") => [add("foo")]
-		//val intList = returnListOfInteger(0)// => [add(1)]
-		//(stringList.toString)
-		return stringList.toString
+		val intList = returnListOfInteger(0) => [add(1)]
+		return stringList.toString + intList.toString
 	}
 }
 
