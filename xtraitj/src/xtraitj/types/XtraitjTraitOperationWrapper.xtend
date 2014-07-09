@@ -68,8 +68,12 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	override JvmTypeReference getReturnType() {
-		return getResolvedOperation.getResolvedReturnType.toTypeReference.
-			rebindOperationTypeParameters;
+		if (returnType == null) {
+			returnType = getResolvedOperation.getResolvedReturnType.toTypeReference.
+				rebindOperationTypeParameters
+		}
+		
+		return returnType;
 	}
 
 	override EList<JvmTypeParameter> getTypeParameters() {

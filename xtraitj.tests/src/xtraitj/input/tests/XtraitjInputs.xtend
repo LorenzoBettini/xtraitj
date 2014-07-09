@@ -1522,6 +1522,7 @@ class C uses UsesTGeneric {}
 			String T2meth() {
 				println(fieldS)
 				val t = fieldS
+				println(t)
 				return "foo" // fieldS + fieldB;
 			}
 		}

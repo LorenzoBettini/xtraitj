@@ -2707,6 +2707,7 @@ public class T2<G1, G2> implements T2Interface<G1, G2> {
     G1 _fieldS = this.getFieldS();
     InputOutput.<G1>println(_fieldS);
     final G1 t = this.getFieldS();
+    InputOutput.<G1>println(t);
     return "foo";
   }
   
