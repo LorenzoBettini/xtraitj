@@ -52,6 +52,18 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testRenameIncompleteMethod() {
+		'''
+		trait T {
+			String m
+		}
+		
+		class C uses T[rename m ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 	} 
