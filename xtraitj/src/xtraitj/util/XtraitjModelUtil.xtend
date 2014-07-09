@@ -18,11 +18,11 @@ import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitExpression
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
+import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import xtraitj.xtraitj.TJTraitOperation
-import xtraitj.xtraitj.XtraitjPackage
 
 class XtraitjModelUtil {
 	
@@ -160,6 +160,9 @@ class XtraitjModelUtil {
 	 */
 	def static getOperationMemberName(TJTraitOperation op) {
 		val nodes = NodeModelUtils.findNodesForFeature(op, XtraitjPackage.eINSTANCE.TJTraitOperation_Member)
-		NodeModelUtils.getTokenText(nodes.head)
+		val head = nodes.head
+		if (head == null)
+			return null
+		NodeModelUtils.getTokenText(head)
 	}
 }

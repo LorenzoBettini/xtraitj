@@ -57,7 +57,9 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	def IResolvedOperation getResolvedOperation() {
 		if (resolvedOperation == null) {
-			resolvedOperation = jvmModelHelper.getResolvedOperation(typeReference, operation, getJvmOperation());
+			val jvmOperation = getJvmOperation()
+			if (jvmOperation != null)
+				resolvedOperation = jvmModelHelper.getResolvedOperation(typeReference, operation, jvmOperation);
 		}
 		
 		return resolvedOperation;
@@ -69,8 +71,10 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 
 	override JvmTypeReference getReturnType() {
 		if (returnType == null) {
-			returnType = getResolvedOperation.getResolvedReturnType.toTypeReference.
-				rebindOperationTypeParameters
+			val resolvedOperation = getResolvedOperation
+			if (resolvedOperation != null)
+				returnType = resolvedOperation.getResolvedReturnType.toTypeReference.
+					rebindOperationTypeParameters
 		}
 		
 		return returnType;
@@ -79,7 +83,9 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	override EList<JvmTypeParameter> getTypeParameters() {
 		if (typeParameters == null) {
 			typeParameters = super.getTypeParameters
-			typeParameters.addAll(getResolvedOperation.resolvedTypeParameters.map[cloneWithProxies])
+			val resolvedOperation = getResolvedOperation
+			if (resolvedOperation != null)
+				typeParameters.addAll(resolvedOperation.resolvedTypeParameters.map[cloneWithProxies])
 		}
 		return typeParameters
 	}
@@ -109,12 +115,18 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	override JvmVisibility getVisibility() {
+		val jvmOperation = getJvmOperation()
+		if (jvmOperation == null)
+			return JvmVisibility.DEFAULT
 		return getJvmOperation().getVisibility();
 	}
 
 	override getAnnotations() {
 		if (annotations == null) {
-			annotations = new BasicEList(getJvmOperation().annotations)
+			val jvmOperation = getJvmOperation()
+			annotations = new BasicEList()
+			if (jvmOperation != null)
+				annotations += jvmOperation.annotations
 			processOperationSpecificAnnotations
 		}
 		return annotations
