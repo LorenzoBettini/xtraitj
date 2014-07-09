@@ -64,6 +64,30 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testReferenceToNonExistentTrait() {
+		'''
+		trait T {
+			String m
+		}
+		
+		trait T2 uses T1 {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testReferenceToNonExistentTraitWithOperations() {
+		'''
+		trait T {
+			String m
+		}
+		
+		trait T2 uses T1[rename m ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 	} 

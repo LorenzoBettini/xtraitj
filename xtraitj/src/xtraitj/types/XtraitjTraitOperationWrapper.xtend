@@ -73,7 +73,10 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	}
 
 	def JvmOperation getJvmOperation() {
-		return operation.getMember() as JvmOperation;
+		val operationMember = operation.getMember()
+		if (operationMember instanceof JvmOperation)
+			return operationMember
+		return null;
 	}
 
 	override JvmTypeReference getReturnType() {
