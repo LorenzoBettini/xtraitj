@@ -10,7 +10,7 @@ class XtraitjTraitPrivateGetterOperationWrapper extends XtraitjTraitPrivateOpera
 		// when members are not yet resolved we simply use "get" as a prefix
 		// later, when they are resolved, we can use the correct prefix
 		var prefix = "get";
-		if (!isReferredMemberProxy()) {
+		if (!isReferredMemberProxyOrNull()) {
 			val typeRef = jvmOperation.returnType
 			if (typeRef != null && !typeRef.eIsProxy() && !InferredTypeIndicator.isInferred(typeRef) 
 					&& typeRef.getType()!=null 

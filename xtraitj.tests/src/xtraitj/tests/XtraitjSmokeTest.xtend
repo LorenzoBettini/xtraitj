@@ -40,6 +40,18 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testNoMemberInRenameFieldYet() {
+		'''
+		trait T {
+			
+		}
+		
+		class C uses T[rename field ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 	} 

@@ -13,7 +13,9 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmVisibility
+import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.common.types.impl.JvmOperationImpl
+import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
@@ -37,6 +39,10 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	
 	@Inject extension XtraitjTypeParameterHelper
 	
+	@Inject extension TypeReferences
+	
+	@Inject TypesFactory typesFactory
+	
 	var IResolvedOperation resolvedOperation = null;
 	
 	var EList<JvmAnnotationReference> annotations = null;
@@ -51,8 +57,9 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 		return operation as TJTraitOperationImpl;
 	}
 
-	def isReferredMemberProxy() {
-		getOperation().basicGetMember().eIsProxy()
+	def isReferredMemberProxyOrNull() {
+		val basicGetMember = getOperation().basicGetMember()
+		basicGetMember == null || basicGetMember.eIsProxy()
 	}
 	
 	def IResolvedOperation getResolvedOperation() {
@@ -154,5 +161,12 @@ public abstract class XtraitjTraitOperationWrapper extends JvmOperationImpl {
 	 */
 	def rebindOperationTypeParameters(JvmTypeReference typeRef) {
 		typeRef.rebindTypeParameters(null, this)
+	}
+
+	def safeVoidType() {
+		val jvmOperation = getJvmOperation
+		if (jvmOperation == null)
+			return typesFactory.createAnyTypeReference
+		Void.TYPE.getTypeForName(jvmOperation)
 	}
 }

@@ -6,7 +6,6 @@ package xtraitj.types;
 import com.google.inject.Inject
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.common.types.JvmFormalParameter
-import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
@@ -19,7 +18,6 @@ public class XtraitjTraitRenameSetterOperationWrapper extends XtraitjTraitRename
 
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension JvmTypesBuilder
-	@Inject extension TypeReferences
 	@Inject extension XtraitjAnnotatedElementHelper
 	
 	override processOperationSpecificAnnotations() {
@@ -35,17 +33,19 @@ public class XtraitjTraitRenameSetterOperationWrapper extends XtraitjTraitRename
 		// resolved operation
 		if (parameters == null) {
 			parameters = superGetParameters()
-			parameters += 
-				getJvmOperation.toParameter(renameOperation.newname, 
-					resolvedOperation.resolvedReturnType.toTypeReference
-				)
+			val resolvedOperation = getResolvedOperation
+			if (resolvedOperation != null)
+				parameters += 
+					getJvmOperation.toParameter(renameOperation.newname, 
+						resolvedOperation.resolvedReturnType.toTypeReference
+					)
 		}
 		
 		return parameters;
 	}
 
 	override getReturnType() {
-		Void.TYPE.getTypeForName(jvmOperation)
+		safeVoidType
 	}
 	
 }
