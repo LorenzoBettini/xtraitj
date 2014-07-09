@@ -55,7 +55,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		newBuilder.append(
 		T + '''
 		trait T1 uses T[rename '''
-		).assertText('m', 's')
+		).assertText('field', 'm', 's')
 	}
 
 	@Test
@@ -92,7 +92,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		}
 		
 		trait T1 uses T[rename '''
-		).assertText('n')
+		).assertText('field', 'n')
 	}
 
 	@Test
