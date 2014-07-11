@@ -549,6 +549,27 @@ class C uses T {
 		'''
 	}
 
+	def classRenameFields() {
+		'''
+		package tests;
+		
+		trait T1 {
+			String fieldS;
+			String m() { return fieldS; }
+		}
+		
+		trait T2 uses T1 {
+			boolean fieldB;
+			boolean n() { return fieldB; }
+		}
+		
+		class C uses T2[ rename field fieldS to s, rename field fieldB to b ] {
+			String s = "foo";
+			boolean b = false;
+		}
+		'''
+	}
+
 	def traitHide() {
 		'''
 package tests;

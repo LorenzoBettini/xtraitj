@@ -2833,4 +2833,12 @@ public class T3 implements T3Interface {
 		]
 	}
 
+	@Test def void testClassRenameField() {
+		classRenameFields.compile[
+			// call the method which uses the renamed field
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "foo")
+			executeGeneratedJavaClassMethodAndAssert("C", "n", "false")
+		]
+	}
+
 }

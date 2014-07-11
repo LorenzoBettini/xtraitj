@@ -285,7 +285,7 @@ class XtraitjJvmModelUtil {
 	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.trait.getXtraitjResolvedOperations.requiredFields.
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredFields.
 					createXtraitjJvmOperations
 			].flatten
 	}
@@ -308,7 +308,7 @@ class XtraitjJvmModelUtil {
 		e.traitExpression.traitReferences.
 			map[
 				traitRef |
-				traitRef.trait.getXtraitjResolvedOperations.requiredMethods.
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredMethods.
 					createXtraitjJvmOperations
 			].flatten
 	}
@@ -316,22 +316,14 @@ class XtraitjJvmModelUtil {
 	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.trait.getXtraitjResolvedOperations.declaredMethods.
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.declaredMethods.
 					createXtraitjJvmOperations
 			].flatten
-	}
-
-	def xtraitjJvmAllDefinedMethodOperations(TJTraitReference e) {
-		e.trait.xtraitjJvmAllDefinedMethodOperations(e)
 	}
 
 	def xtraitjJvmAllDefinedMethodOperations(JvmTypeReference e, EObject context) {
 		e.getXtraitjResolvedOperations(context).definedMethods.
 					createXtraitjJvmOperations
-	}
-
-	def xtraitjJvmAllMethodOperations(TJTraitReference e) {
-		e.trait.xtraitjJvmAllMethodOperations(e)
 	}
 
 	def xtraitjJvmAllMethodOperations(JvmTypeReference e, EObject context) {
@@ -730,6 +722,13 @@ class XtraitjJvmModelUtil {
 				)
 			}
 		]
+	}
+
+	def traitReferenceJavaType(TJTraitReference t) {
+		if (t.operations.empty)
+			t.trait.cloneWithProxies as JvmParameterizedTypeReference
+		else
+			t.newTypeRef(t.traitExpressionClassName) as JvmParameterizedTypeReference
 	}
 
 }

@@ -14,6 +14,7 @@ import xtraitj.typing.XtraitjTypingUtil
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import xtraitj.input.tests.^override.required.UsesRequiresProvides
 import xtraitj.input.tests.^override.required.UsesProvidesRequires
+import xtraitj.input.tests.^override.renamed.MyAnnotatedJavaInterfaceWithRenamedField
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -37,6 +38,15 @@ getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequi
 getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithRenamed
 getRenamed() : String - [XtraitjRenamedMethod] - MyAnnotatedJavaInterfaceWithRenamed
 getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
+		)
+	}
+
+	@Test def void testResolvedOperationsWithRenamedField() {
+		MyAnnotatedJavaInterfaceWithRenamedField.assertAllOperations(
+'''
+getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithRenamedField
+getRenamedField() : String - [XtraitjRenamedMethod, XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRenamedField
+getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined'''
 		)
 	}
 

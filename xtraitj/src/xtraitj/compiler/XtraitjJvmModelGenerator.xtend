@@ -601,12 +601,4 @@ class XtraitjJvmModelGenerator extends JvmModelGenerator {
 		]
 	}
 
-	def traitReferenceJavaType(TJTraitReference t) {
-		if (t.operations.empty)
-			t.trait.cloneWithProxies as JvmParameterizedTypeReference
-		else
-			t.newTypeRef(t.traitExpressionClassName) as JvmParameterizedTypeReference
-	}
-
-
 }
