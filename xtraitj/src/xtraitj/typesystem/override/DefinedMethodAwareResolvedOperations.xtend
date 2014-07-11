@@ -45,8 +45,7 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 						if (isOverridden(operation, processedOperations.get(simpleName))) {
 							if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
 								
-								if (!hasAlreadyBeenRenamed(result, simpleName) &&
-										removeRequiredOperations(result, simpleName)) {
+								if (removeRequiredOperations(result, simpleName)) {
 									processedOperations.removeAll(simpleName)
 									addAsResolved(operation, processedOperations, simpleName, result);
 								}
