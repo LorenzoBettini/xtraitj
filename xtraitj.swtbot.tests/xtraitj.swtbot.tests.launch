@@ -47,7 +47,6 @@
 <setEntry value="org.eclipse.equinox.p2.user.ui:default"/>
 <setEntry value="org.eclipse.help:default"/>
 <setEntry value="org.eclipse.jdt:default"/>
-<setEntry value="org.eclipse.pde:default"/>
 <setEntry value="org.eclipse.platform:default"/>
 <setEntry value="org.eclipse.rcp:default"/>
 <setEntry value="org.eclipse.swtbot.generator.feature:default"/>

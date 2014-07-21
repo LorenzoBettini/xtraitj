@@ -1,8 +1,10 @@
 package xtraitj.swtbot.tests;
 
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
 import org.junit.Test
 import org.junit.runner.RunWith
+import xtraitj.swtbot.tests.utils.SWTBotEclipseEditorCustom
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
@@ -29,7 +31,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		
 		editor.selectRange(6, 13, 1)
 		
-		editor.quickfix(0)
+		editor.quickfixCustom
 		
 		editor.saveAndWaitForAutoBuild
 		
@@ -68,7 +70,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		
 		editor.selectRange(6, 13, 1)
 		
-		editor.quickfix(0)
+		editor.quickfixCustom
 		
 		editor.saveAndWaitForAutoBuild
 		
@@ -87,5 +89,8 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		
 	}
 
+	def private quickfixCustom(SWTBotEclipseEditor editor) {
+		new SWTBotEclipseEditorCustom(editor.reference, bot).quickfix(0)
+	}
 
 }
