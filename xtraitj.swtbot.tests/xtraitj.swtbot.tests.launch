@@ -41,10 +41,6 @@
 <setEntry value="org.eclipse.e4.rcp:default"/>
 <setEntry value="org.eclipse.emf.common:default"/>
 <setEntry value="org.eclipse.emf.ecore:default"/>
-<setEntry value="org.eclipse.emf.mwe2.language.sdk.source:default"/>
-<setEntry value="org.eclipse.emf.mwe2.language.sdk:default"/>
-<setEntry value="org.eclipse.emf.mwe2.runtime.sdk.source:default"/>
-<setEntry value="org.eclipse.emf.mwe2.runtime.sdk:default"/>
 <setEntry value="org.eclipse.equinox.p2.core.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.extras.feature:default"/>
 <setEntry value="org.eclipse.equinox.p2.rcp.feature:default"/>
