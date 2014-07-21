@@ -53,6 +53,17 @@
 
 	<profiles>
 		<profile>
+			<id>kepler</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			
+			<properties>
+				<target-file-name>kepler</target-file-name>
+			</properties>
+		</profile>
+	
+		<profile>
 			<id>build-ide</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -60,6 +71,7 @@
 			
 			<properties>
 				<findbugs.skip>true</findbugs.skip>
+				<target-file-name>kepler</target-file-name>
 			</properties>
 
 			<modules>
@@ -206,7 +218,8 @@
 						<artifact>
 							<groupId>xtraitj</groupId>
 							<artifactId>xtraitj.targetplatform</artifactId>
-							<version>2.0.0-SNAPSHOT</version>
+							<version>${project.version}</version>
+							<classifier>${target-file-name}</classifier> 
 						</artifact>
 					</target>
 					<environments>
