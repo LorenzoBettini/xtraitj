@@ -37,14 +37,6 @@
          id="xtraitj.examples.feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.emf.mwe2.language.sdk"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.mwe2.runtime.sdk"
-         version="0.0.0"/>
-
    <plugin
          id="xtraitj.swtbot.tests"
          download-size="0"
