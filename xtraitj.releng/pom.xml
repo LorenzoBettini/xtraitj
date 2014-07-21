@@ -62,6 +62,13 @@
 				<target-file-name>kepler</target-file-name>
 			</properties>
 		</profile>
+		
+		<profile>
+			<id>local</id>
+			<properties>
+				<target-file-name>local</target-file-name>
+			</properties>
+		</profile>
 	
 		<profile>
 			<id>build-ide</id>
