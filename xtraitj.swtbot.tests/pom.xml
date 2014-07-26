@@ -36,15 +36,27 @@
 				<includes>
 					<include>**/Xtraitj*Test*.java</include>
 				</includes>
-				<dependencies>
-					<dependency>
-					  <type>p2-installable-unit</type>
-					  <artifactId>xtraitj.swtbot.tests.feature.feature.group</artifactId>
-					  <version>0.0.0</version>
-					</dependency>
-				</dependencies>
 			</configuration>
 	    </plugin>
+	    
+	    <plugin>
+			<groupId>org.eclipse.tycho</groupId>
+			<artifactId>target-platform-configuration</artifactId>
+			<configuration>
+				<dependency-resolution>
+					<extraRequirements>
+						<!-- to get the org.eclipse.osgi.compatibility.state plugin iff 
+						the targeted Eclipse version (e.g., Luna) has it
+						(backwards compatible with kepler and previous versions) -->
+						<requirement>
+							<type>eclipse-feature</type>
+							<id>xtraitj.swtbot.tests.feature</id>
+							<versionRange>0.0.0</versionRange>
+						</requirement>
+					</extraRequirements>
+				</dependency-resolution>
+			</configuration>
+		</plugin>
   	</plugins>
   </build>
 </project>

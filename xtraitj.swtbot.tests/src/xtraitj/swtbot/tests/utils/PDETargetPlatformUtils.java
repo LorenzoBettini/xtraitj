@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.framework.internal.core.AbstractBundle;
+import org.eclipse.osgi.internal.framework.EquinoxBundle;
+import org.eclipse.osgi.storage.BundleInfo.Generation;
 import org.eclipse.pde.core.target.ITargetDefinition;
 import org.eclipse.pde.core.target.ITargetLocation;
 import org.eclipse.pde.core.target.ITargetPlatformService;
@@ -59,11 +59,11 @@ public class PDETargetPlatformUtils {
 		System.out.println("Bundles for the target platform:");
 		for (Bundle bundle : bundles) {
 			System.out.print(bundle);
-			AbstractBundle bundleImpl = (AbstractBundle) bundle;
-			BaseData bundleData = (BaseData) bundleImpl.getBundleData();
-//			EquinoxBundle bundleImpl = (EquinoxBundle) bundle;
-//			Generation generation = (Generation) bundleImpl.getModule().getCurrentRevision().getRevisionInfo();
-			File file = bundleData.getBundleFile().getBaseFile();
+//			AbstractBundle bundleImpl = (AbstractBundle) bundle;
+//			BaseData bundleData = (BaseData) bundleImpl.getBundleData();
+			EquinoxBundle bundleImpl = (EquinoxBundle) bundle;
+			Generation generation = (Generation) bundleImpl.getModule().getCurrentRevision().getRevisionInfo();
+			File file = generation.getBundleFile().getBaseFile();
 			File folder = file.getParentFile();
 			if (!dirs.contains(folder)) {
 				dirs.add(folder);
