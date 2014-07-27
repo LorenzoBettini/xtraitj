@@ -64,7 +64,7 @@
 	        	<execution>
 	        		<!--  compiler tests need an OSGI environment, but no UI  -->
 					<id>default-test</id>
-					<phase>test</phase>
+					<phase>integration-test</phase>
 					<configuration>
 						<skip>${swtbot.tests.only}</skip>
 						<useUIHarness>false</useUIHarness>
@@ -81,7 +81,7 @@
 				</execution>
 				<execution>
 					<id>TychoSurefirePluginUiTest</id>
-					<phase>test</phase>
+					<phase>integration-test</phase>
 					<configuration>
 						<skip>${swtbot.tests.only}</skip>
 						<useUIHarness>true</useUIHarness>

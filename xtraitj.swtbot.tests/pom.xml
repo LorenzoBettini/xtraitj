@@ -27,7 +27,7 @@
 				<useUIHarness>true</useUIHarness>
 				<useUIThread>false</useUIThread>
 				<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
-				<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true -Dorg.eclipse.swtbot.search.timeout=150000</argLine>
+				<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true -Dorg.eclipse.swtbot.search.timeout=180000</argLine>
 				<excludes>
 					<exclude>**/*AbstractTest*.java</exclude>
 					<exclude>**/utils/*.java</exclude>
@@ -36,6 +36,9 @@
 				<includes>
 					<include>**/Xtraitj*Test*.java</include>
 				</includes>
+				<environmentVariables>
+					<SWT_GTK3>0</SWT_GTK3>
+				</environmentVariables>
 			</configuration>
 	    </plugin>
 	    
