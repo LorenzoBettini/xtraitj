@@ -23,8 +23,8 @@
 	</modules>
 
 	<properties>
-		<tycho-version>0.20.0</tycho-version>
-		<tycho-extras-version>0.20.0</tycho-extras-version>
+		<tycho-version>0.21.0</tycho-version>
+		<tycho-extras-version>0.21.0</tycho-extras-version>
 		<maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<junit-version>4.11</junit-version>
@@ -54,9 +54,20 @@
 
 	<profiles>
 		<profile>
-			<id>kepler</id>
+			<id>luna</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
+			</activation>
+			
+			<properties>
+				<target-file-name>luna</target-file-name>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>kepler</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			
 			<properties>
@@ -79,7 +90,7 @@
 			
 			<properties>
 				<findbugs.skip>true</findbugs.skip>
-				<target-file-name>kepler</target-file-name>
+				<target-file-name>luna</target-file-name>
 			</properties>
 
 			<modules>

@@ -61,7 +61,9 @@ public class XtraitjSwtbotAbstractTests {
 		// in SwtBot 2.2.0 we must use part name since the title
 		// of the problems view also contains the items count
 		// see also http://www.eclipse.org/forums/index.php/t/640194/
-		bot.viewByPartName("Error Log").close();
+		
+		// In Luna Error Log is not visible by default in Plug-in Perspective
+		//bot.viewByPartName("Error Log").close();
 		bot.viewByPartName("Problems").show();
 	}
 
