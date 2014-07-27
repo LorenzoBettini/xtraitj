@@ -7,6 +7,7 @@ import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.waitForAutoBu
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,10 +15,13 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.ListResult;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -179,7 +183,9 @@ public class XtraitjSwtbotAbstractTests {
 
 		SWTBotShell shell = bot.shell("New Project");
 		shell.activate();
-		bot.tree().expandNode("Xtraitj").select(projectType);
+		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
+		waitForNodes(xtraitjNode);
+		xtraitjNode.select(projectType);
 		bot.button("Next >").click();
 
 		bot.textWithLabel("Project name:").setText(TEST_PROJECT);
@@ -200,7 +206,9 @@ public class XtraitjSwtbotAbstractTests {
 
 		SWTBotShell shell = bot.shell("New");
 		shell.activate();
-		bot.tree().expandNode("Examples").expandNode("Xtraitj Examples")
+		SWTBotTreeItem examplesNode = bot.tree().expandNode("Xtraitj");
+		waitForNodes(examplesNode);
+		examplesNode.expandNode("Examples")
 				.select(projectType);
 		bot.button("Next >").click();
 
@@ -212,6 +220,40 @@ public class XtraitjSwtbotAbstractTests {
 		
 		waitForAutoBuild();
 		assertErrorsInProject(0);
+	}
+
+	public void waitForNodes(final SWTBotTreeItem treeItem) {
+		int retries = 3;
+		int msecs = 2000;
+		int count = 0;
+		while (count < retries) {
+			System.out.println("Checking that tree item has children...");
+			List<SWTBotTreeItem> foundItems = UIThreadRunnable.syncExec(new ListResult<SWTBotTreeItem>() {
+				public List<SWTBotTreeItem> run() {
+					TreeItem[] items = treeItem.widget.getItems();
+					List<SWTBotTreeItem> results = new ArrayList<SWTBotTreeItem>();
+					for (TreeItem treeItem : items) {
+						results.add(new SWTBotTreeItem(treeItem));
+					}
+					return results;
+				}
+			});
+			if (foundItems.isEmpty()) {
+				treeItem.collapse();
+				System.out.println("No chilren... retrying in " + msecs + " milliseconds..."); //$NON-NLS-1$
+				try {
+					Thread.sleep(msecs);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				treeItem.expand();
+			} else {
+				System.out.println("Found " + foundItems.size() + " items. OK!");
+				return;
+			}
+			
+			count++;
+		}
 	}
 
 	protected SWTBotView outline() {
