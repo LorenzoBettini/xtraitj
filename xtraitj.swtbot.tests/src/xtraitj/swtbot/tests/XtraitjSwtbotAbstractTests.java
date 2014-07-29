@@ -184,7 +184,7 @@ public class XtraitjSwtbotAbstractTests {
 		SWTBotShell shell = bot.shell("New Project");
 		shell.activate();
 		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
-		waitForNodes(xtraitjNode);
+		waitForTreeItems(xtraitjNode);
 		xtraitjNode.select(projectType);
 		bot.button("Next >").click();
 
@@ -206,10 +206,11 @@ public class XtraitjSwtbotAbstractTests {
 
 		SWTBotShell shell = bot.shell("New");
 		shell.activate();
-		SWTBotTreeItem examplesNode = bot.tree().expandNode("Xtraitj");
-		waitForNodes(examplesNode);
-		examplesNode.expandNode("Examples")
-				.select(projectType);
+		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
+		waitForTreeItems(xtraitjNode);
+		SWTBotTreeItem examplesNode = xtraitjNode.expandNode("Examples");
+		waitForTreeItems(examplesNode);
+		examplesNode.select(projectType);
 		bot.button("Next >").click();
 
 		bot.button("Finish").click();
@@ -222,12 +223,12 @@ public class XtraitjSwtbotAbstractTests {
 		assertErrorsInProject(0);
 	}
 
-	public void waitForNodes(final SWTBotTreeItem treeItem) {
+	public void waitForTreeItems(final SWTBotTreeItem treeItem) {
 		int retries = 3;
 		int msecs = 2000;
 		int count = 0;
 		while (count < retries) {
-			System.out.println("Checking that tree item has children...");
+			System.out.println("Checking that tree item " + treeItem.getText() + " has children...");
 			List<SWTBotTreeItem> foundItems = UIThreadRunnable.syncExec(new ListResult<SWTBotTreeItem>() {
 				public List<SWTBotTreeItem> run() {
 					TreeItem[] items = treeItem.widget.getItems();
@@ -241,6 +242,15 @@ public class XtraitjSwtbotAbstractTests {
 			if (foundItems.isEmpty()) {
 				treeItem.collapse();
 				System.out.println("No chilren... retrying in " + msecs + " milliseconds..."); //$NON-NLS-1$
+				try {
+					Thread.sleep(msecs);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				treeItem.expand();
+			} else if (foundItems.size() == 1 && foundItems.get(0).getText().trim().isEmpty()) {
+				treeItem.collapse();
+				System.out.println("Only one child with empty text... retrying in " + msecs + " milliseconds..."); //$NON-NLS-1$
 				try {
 					Thread.sleep(msecs);
 				} catch (InterruptedException e) {
