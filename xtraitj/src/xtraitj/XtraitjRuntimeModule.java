@@ -22,7 +22,6 @@ import xtraitj.generator.XtraitjOutputConfigurationProvider;
 import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
 import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
-import xtraitj.scoping.XtraitjXbaseScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 import xtraitj.typesystem.override.XtraitjOverrideHelper;
 
@@ -46,11 +45,6 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		return XtraitjXbaseBatchScopeProvider.class;
 	}
 	
-	@Override
-	public Class<? extends IScopeProvider> bindIScopeProvider() {
-		return XtraitjXbaseScopeProvider.class;
-	}
-
 	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
         return XtraitjOutputConfigurationProvider.class;
     }
