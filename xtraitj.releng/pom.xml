@@ -29,7 +29,7 @@
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<junit-version>4.11</junit-version>
 		<jacoco-version>0.5.8.201207111220</jacoco-version>
-		<findbugs-version>2.5.4-SNAPSHOT</findbugs-version>
+		<findbugs-version>2.5.5</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<xtext.version>2.7.2</xtext.version>
@@ -332,20 +332,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
-	
-		<pluginRepository>
-			<!-- required for findbugs plugin 2.5.4-SNAPSHOT (using findbugs 2.0.3) -->
-			<id>codehaus-snapshots</id>
-			<name>codehaus snapshot repository</name>
-			<!--<url>http://snapshots.repository.codehaus.org/</url> -->
 
-			<url>http://maven.wso2.org/nexus/content/repositories/codehaus-snapshots</url>
+		<pluginRepository>
+			<id>sonatype_snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
 		</pluginRepository>
 		
 		<!-- Repository to resolve fornax-oaw-m2-plugin -->
