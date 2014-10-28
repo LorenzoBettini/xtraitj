@@ -22,10 +22,14 @@ Require-Bundle: xtraitj;visibility:=reexport,
  org.eclipse.xtend,
  org.eclipse.xpand,
  org.eclipse.jdt.core;bundle-version="3.7.0",
- org.eclipse.jdt.ui;bundle-version="3.7.0"
+ org.eclipse.jdt.ui;bundle-version="3.7.0",
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.jdt.debug.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: xtraitj.ui.quickfix,xtraitj.ui.contentassist,xtraitj.u
- i.contentassist.antlr,xtraitj.ui.internal
+Export-Package: xtraitj.ui.quickfix,
+ xtraitj.ui.contentassist,
+ xtraitj.ui.contentassist.antlr,
+ xtraitj.ui.internal
 Bundle-Activator: xtraitj.ui.internal.XtraitjActivator
