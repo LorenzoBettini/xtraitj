@@ -1,13 +1,18 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import org.eclipse.xtext.junit4.TemporaryFolder
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
+import org.junit.Rule
 
 import static extension org.junit.Assert.*
 
 class AbstractXtraitjCompilerTest {
 	@Inject extension ReflectExtensions
+	
+	@Rule
+	@Inject public TemporaryFolder temporaryFolder 
 	
 	def protected void assertTraitAdapterJavaInterface(CompilationTestHelper.Result r, String name, CharSequence expected) {
 		r.assertTraitJavaInterface(name + "_Adapter", expected)
