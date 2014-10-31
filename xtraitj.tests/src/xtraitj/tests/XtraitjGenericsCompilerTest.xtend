@@ -1332,6 +1332,60 @@ public interface TStringExtensions extends TGenericExtensions<String> {
 '''
 )
 
+assertTraitJavaClass("tests", "TStringExtensions",
+'''
+package tests;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TGenericExtensions;
+import tests.TStringExtensionsInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TStringExtensions implements TStringExtensionsInterface {
+  private TStringExtensionsInterface _delegate;
+  
+  private TGenericExtensions<String> _TGenericExtensions;
+  
+  public TStringExtensions(final TStringExtensionsInterface delegate) {
+    this._delegate = delegate;
+    _TGenericExtensions = new TGenericExtensions(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public <R> List<R> mapToList(final Function1<? super String, ? extends R> mapper) {
+    return _delegate.mapToList(mapper);
+  }
+  
+  public <R> List<R> _mapToList(final Function1<? super String, ? extends R> mapper) {
+    return _TGenericExtensions._mapToList(mapper);
+  }
+  
+  @XtraitjDefinedMethod
+  public List<String> mapToList2(final Function1<? super String, ? extends String> mapper) {
+    return _delegate.mapToList2(mapper);
+  }
+  
+  public List<String> _mapToList2(final Function1<? super String, ? extends String> mapper) {
+    return _TGenericExtensions._mapToList2(mapper);
+  }
+  
+  @XtraitjRequiredField
+  public Iterable<String> getIterable() {
+    return _delegate.getIterable();
+  }
+  
+  public void setIterable(final Iterable<String> iterable) {
+    _delegate.setIterable(iterable);
+  }
+}
+'''
+)
+
 			assertGeneratedJavaCodeCompiles
 		]
 	}
