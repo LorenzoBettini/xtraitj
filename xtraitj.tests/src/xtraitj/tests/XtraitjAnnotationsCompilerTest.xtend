@@ -28,7 +28,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface {
+public interface T1 {
   @XtraitjRequiredField
   public abstract String getS();
   
@@ -48,7 +48,7 @@ assertTraitJavaClass("tests", "T1",
 '''
 package tests;
 
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
@@ -56,10 +56,10 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1 implements T1Interface {
-  private T1Interface _delegate;
+public class T1Impl implements T1 {
+  private T1 _delegate;
   
-  public T1(final T1Interface delegate) {
+  public T1Impl(final T1 delegate) {
     this._delegate = delegate;
   }
   
@@ -96,12 +96,12 @@ package tests;
 
 import com.google.inject.Inject;
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import tests.T2;
-import tests.T2Interface;
+import tests.T2Impl;
 
 @SuppressWarnings("all")
-public class C implements T1Interface, T2Interface {
+public class C implements T1, T2 {
   @Inject
   private String s = "bar";
   
@@ -113,14 +113,14 @@ public class C implements T1Interface, T2Interface {
     this.s = s;
   }
   
-  private T1 _T1 = new T1(this);
+  private T1Impl _T1 = new T1Impl(this);
   
   @SuppressWarnings("all")
   public String m() {
     return _T1._m();
   }
   
-  private T2 _T2 = new T2(this);
+  private T2Impl _T2 = new T2Impl(this);
   
   public String req() {
     return _T2._req();
