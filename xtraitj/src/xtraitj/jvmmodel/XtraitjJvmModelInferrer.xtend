@@ -22,6 +22,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -105,7 +106,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 		inferTypesForTraitReferencesWithOperations(c, inferredClass, acceptor, typesMap)
    		
-   		acceptor.accept(inferredClass).initializeLater[
+   		acceptor.accept(inferredClass) [
    			documentation = c.documentation
    			
    			for (i : c.interfaces) {
@@ -133,6 +134,26 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			c.addSuperTypesFromTraitReferences(it, typesMap)
    			
+   			for (traitRef : c.traitReferences) {
+//				val realRef = traitRef.traitReferenceJavaType
+				val realRef = traitRef.traitClassReferenceCopy(it, typesMap)
+				
+				members += traitRef.toField(traitRef.traitFieldName, realRef) [
+					initializer = [
+						append('''new ''')
+						append(realRef.type)
+						append("(this)")
+					]
+				]
+				
+				// do not delegate to a trait who requires that operation
+	   			// but to the one which actually implements it
+				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
+					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
+						copyAnnotationsFrom(traitMethod)
+					]
+			}
+   			
 //   			for (traitRef : c.traitReferences) {
 //   				// we need these supertypes for validation
 //   				// but we'll remove them in the generator
@@ -159,43 +180,46 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
-   		// this is a minimal inference, the interface will be filled up by
-   		// XtraitjJvmModelGenerator
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
-			documentation = t.documentation
-			
 			t.annotateAsTrait(it)
-
-//   			copyTypeParameters(t.traitTypeParameters)
-   			
-//   			// it is crucial to insert, at this stage, into the inferred interface all
-//   			// members which are specified in the trait, so that, later
-//   			// we also add the members we "inherit" from used traits 
-//			for (field : t.fields) {
-//				members += field.toGetterAbstract => [
-//					field.annotateAsRequiredField(it)
-//				]
-//				members += field.toSetterAbstract
-//			}
-//			
-//			for (method : t.methods) {
-//				if (!method.isPrivate)
-//					members += method.toAbstractMethod => [
-//	   					translateAnnotations(method.annotations)
-//	   					method.annotateAsDefinedMethod(it)
-//	   				]
-//			}
-//			
-//			for (method : t.requiredMethods) {
-//				members += method.toAbstractMethod => [
-//					method.annotateAsRequiredMethod(it)
-//				]
-//			}
 		]
 		
 		typesMap.put(t.traitInterfaceName, traitInterface)
 		
-		acceptor.accept(traitInterface)
+		acceptor.accept(traitInterface) [
+			t.addSuperTypesFromTraitReferences(it, typesMap)
+			
+			documentation = t.documentation
+			
+			copyTypeParameters(t.traitTypeParameters)
+   			
+   			// it is crucial to insert, at this stage, into the inferred interface all
+   			// members which are specified in the trait, so that, later
+   			// we also add the members we "inherit" from used traits 
+			for (field : t.fields) {
+				members += field.toGetter(field.name, field.type) => [
+					field.annotateAsRequiredField(it)
+					abstract = true
+				]
+				members += field.toSetter(field.name, field.type) => [
+		   			abstract = true
+		   		]
+			}
+			
+			for (method : t.methods) {
+				if (!method.isPrivate)
+					members += method.toAbstractMethod => [
+	   					translateAnnotations(method.annotations)
+	   					method.annotateAsDefinedMethod(it)
+	   				]
+			}
+			
+			for (method : t.requiredMethods) {
+				members += method.toAbstractMethod => [
+					method.annotateAsRequiredMethod(it)
+				]
+			}
+		]
 
 //		// it is crucial to infer interfaces for trait operation expressions
 //		// first, so that when we add methods to the interface of this
@@ -497,17 +521,50 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// immediately copy type parameters, otherwise, when processing possible
 		// trait operations involving this trait the corresponding inferred class
 		// does not expose type parameters yet
-		traitClass.copyTypeParameters(t.traitTypeParameters)
+//		traitClass.copyTypeParameters(t.traitTypeParameters)
 		
-		typesMap.put(t.name, traitClass)
+		typesMap.put(t.traitClassName, traitClass)
 		
 	   	inferTypesForTraitReferencesWithOperations(t, traitClass, acceptor, typesMap)
    		
-		acceptor.accept(traitClass).initializeLater[
+		acceptor.accept(traitClass) [
+		
+			// the interface is surely associated in the model inferrer
+			// since the trait element is in the input file we're processing
+			val traitInterfaceTypeRef = t.associatedInterface
+			
+			val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
+						transformTypeParametersIntoTypeArguments(t)
+			
+			superTypes += transformedTraitInterfaceTypeRef
+			
+			traitClass.copyTypeParameters(t.traitTypeParameters)
 
    			documentation = t.documentation
    			
    			t.annotateAsTraitClass(it)
+
+			members += t.toField(delegateFieldName, transformedTraitInterfaceTypeRef)
+   			
+   			for (traitExp : t.traitReferences)
+				members += traitExp.toField
+					(traitExp.traitFieldName, traitExp.traitReferenceJavaType)
+
+			members += t.toConstructor[
+				simpleName = t.name
+				parameters += t.toParameter("delegate", transformedTraitInterfaceTypeRef)
+				body = [
+					it.append('''this.«delegateFieldName» = delegate;''')
+					for (traitExp : t.traitExpression.traitReferences) {
+		   				newLine.append('''«traitExp.traitFieldName» = ''')
+		   				append('''new ''')
+						append(traitExp.traitReferenceJavaType.type)
+						append("(delegate);")
+					}
+	   			]
+			]
+			
+   			
 
 //   			val traitInterfaceTypeRef = t.associatedInterface
 //			
@@ -647,12 +704,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		// we need these supertypes for validation
 		// but we'll remove them in the generator
-		for (tRef : d.traitReferences.filter[operations.empty]) {
-			superTypes += tRef.traitReferenceCopy(it, typesMap)
-		}
+//		for (tRef : d.traitReferences.filter[operations.empty]) {
+//			superTypes += tRef.traitReferenceCopy(it, typesMap)
+//		}
+//		
+//		for (tRef : d.traitReferences.filter[!operations.empty]) {
+//			superTypes += tRef.traitReferenceCopy(it, typesMap)
+//		}
 		
-		for (tRef : d.traitReferences.filter[!operations.empty]) {
-			superTypes += tRef.traitReferenceCopy(it, typesMap)
+		for (tRef : d.traitReferences) {
+			superTypes += tRef.traitReferenceCopy(it, typesMap).cloneWithProxies
 		}
 	}
 
@@ -710,7 +771,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			//return traitRef.newTypeRef(traitRef.traitExpressionClassName)
 			return traitRef.buildTypeRefForTraitExpression(containingDeclarationInferredType, typesMap)
 		} else {
-			return traitRef.trait.cloneWithProxies
+//			return traitRef.trait.cloneWithProxies
+			return traitRef.buildTypeRef(typesMap)
 		}
 	}
 
@@ -731,6 +793,59 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		val typeArguments = containingDeclTypeParams.map[newTypeRef]
 		return mapped.newTypeRef(typeArguments)
 	}
+
+	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
+		val typeRef = t.trait
+		// here instead proxy resolution seems to be necessary
+		// val type = typeRef.getTypeWithoutProxyResolution
+		val type = typeRef.type
+		if (type.eIsProxy()) {
+			val mapped = typesMap.get(typeRef.getJvmTypeReferenceString)
+			if (mapped !== null)
+				return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
+		}
+		typeRef
+	}
+
+	def protected traitClassReferenceCopy(TJTraitReference traitRef, 
+		JvmGenericType containingDeclarationInferredType, Map<String, JvmGenericType> typesMap
+	) {
+		if (!traitRef.operations.empty) {
+			//return traitRef.newTypeRef(traitRef.traitExpressionClassName)
+			return traitRef.buildTypeRefForTraitExpression(containingDeclarationInferredType, typesMap)
+		} else {
+//			return traitRef.trait.cloneWithProxies
+			return traitRef.buildTraitClassTypeRef(typesMap)
+		}
+	}
+
+	def buildTraitClassTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
+		val typeRef = t.trait
+		val typeKey = typeRef.traitClassName
+		val mapped = typesMap.get(typeKey)
+		if (mapped != null) {
+			return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
+		} else {
+			return typeRef(typeKey, typeRef.arguments.map[cloneWithProxies])
+		}
+	}
+
+	def toAbstractMethod(TJMethodDeclaration m) {
+		m.toMethod(m.name, m.type) [
+			documentation = m.documentation
+
+			copyTypeParameters(m.typeParameters)
+			
+			//returnType = returnType.rebindTypeParameters(target, it)
+
+			for (p : m.params) {
+				//parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target, it))
+				parameters += p.toParameter(p.name, p.parameterType)
+			}
+			abstract = true
+		]
+	}
+
 
 }
 

@@ -43,7 +43,7 @@ class XtraitjGeneratorExtensions {
 	@Inject	IJvmModelAssociator associator
 
 	def traitInterfaceName(String n) {
-   		n + "Interface"
+   		n //+ "Interface"
 //   		n.skipLast(1).append("traits").
 //   			append(n.lastSegment).toString// + "Interface"
    	}
@@ -58,19 +58,25 @@ class XtraitjGeneratorExtensions {
    		val n = t.fullyQualifiedName
    		n. // skipLast(1). /* append("traits").append("impl"). */ 
    			/* append(n.lastSegment). */ 
-   			toString // + "Impl"
+   			toString.traitClassName
+   	}
+
+	def traitClassName(String n) {
+   		n // skipLast(1). /* append("traits").append("impl"). */ 
+   			/* append(n.lastSegment). */ 
+   			+ "Impl"
    	}
 
    	def traitExpressionInterfaceName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
    		n //.skipLast(1).toString // append("traits").
-   			+ t.adapterName + "Interface"
+   			+ t.adapterName // + "Interface"
    	}
 
    	def traitExpressionClassName(TJTraitReference t) {
    		val n = t.containingDeclaration.fullyQualifiedName
    		n // .skipLast(1).toString /* append("traits").append("impl").*/
-   			+ t.adapterName
+   			+ t.adapterName + "Impl"
    	}
 
 	def adapterName(TJTraitReference t) {
@@ -107,20 +113,20 @@ class XtraitjGeneratorExtensions {
 		t.typeNameWithoutTypeArgs
 	}
 
-//	def traitClassName(JvmTypeReference t) {
-//   		var n = t.identifier
-//   		
-//   		var pos = n.indexOf("<")
-//   		if (pos > 0)
-//   			n = n.substring(0, pos)
-//   		
-//   		pos = n.lastIndexOf(".")
-//   		var name = ""
-//   		if (pos > 0)
-//   			name = n.substring(0, pos) + "."
-//   		
-//   		name + n.substring(pos+1) + "Impl"
-//   	}
+	def traitClassName(JvmTypeReference t) {
+   		var n = t.identifier
+   		
+   		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			n = n.substring(0, pos)
+   		
+   		pos = n.lastIndexOf(".")
+   		var name = ""
+   		if (pos > 0)
+   			name = n.substring(0, pos) + "."
+   		
+   		name + n.substring(pos+1) + "Impl"
+   	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
 		t.jvmTypeReferenceString
@@ -224,7 +230,9 @@ class XtraitjGeneratorExtensions {
 				val paramTypeIt = op.parametersTypes.iterator
 				for (p : o.parameters) {
 					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-					parameters += p.toParameter(p.name, paramTypeIt.next)
+					// don't associate the parameter to p, since p is not part of the source tree
+					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
+					parameters += m.toParameter(p.name, paramTypeIt.next)
 				}
 				val args = o.parameters.map[name].join(", ")
 				if (op.returnType?.simpleName != "void")

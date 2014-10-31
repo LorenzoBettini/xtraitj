@@ -39,7 +39,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TInterface {
+public interface T {
   @XtraitjRequiredField
   public abstract List<Integer> getF();
   
@@ -72,10 +72,10 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T implements TInterface {
-  private TInterface _delegate;
+public class TImpl implements T {
+  private T _delegate;
   
-  public T(final TInterface delegate) {
+  public TImpl(final T delegate) {
     this._delegate = delegate;
   }
   
@@ -159,7 +159,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TInterface {
+public interface T {
   @XtraitjRequiredField
   public abstract List<Integer> getF();
   
@@ -189,10 +189,10 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T implements TInterface {
-  private TInterface _delegate;
+public class TImpl implements T {
+  private T _delegate;
   
-  public T(final TInterface delegate) {
+  public TImpl(final T delegate) {
     this._delegate = delegate;
   }
   
@@ -247,7 +247,7 @@ assertJavaClass("C",
 import java.util.List;
 
 @SuppressWarnings("all")
-public class C implements TInterface {
+public class C implements T {
   private List<Integer> f;
   
   public List<Integer> getF() {
@@ -268,7 +268,7 @@ public class C implements TInterface {
     this.b = b;
   }
   
-  private T _T = new T(this);
+  private TImpl _T = new TImpl(this);
   
   public Object m(final List<String> l, final String s) {
     return _T._m(l, s);
@@ -466,15 +466,15 @@ assertTraitJavaInterface("tests", "T",
 '''
 package tests;
 
-import tests.T1Interface;
-import tests.T2Interface;
-import tests.T3Interface;
+import tests.T1;
+import tests.T2;
+import tests.T3;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TInterface extends T1Interface, T2Interface, T3Interface {
+public interface T extends T1, T2, T3 {
   @XtraitjDefinedMethod
   public abstract String m();
 }
@@ -491,7 +491,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface {
+public interface T1 {
   @XtraitjDefinedMethod
   public abstract Object t1();
   
@@ -508,17 +508,17 @@ assertTraitJavaClass("tests", "T1",
 '''
 package tests;
 
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1 implements T1Interface {
-  private T1Interface _delegate;
+public class T1Impl implements T1 {
+  private T1 _delegate;
   
-  public T1(final T1Interface delegate) {
+  public T1Impl(final T1 delegate) {
     this._delegate = delegate;
   }
   

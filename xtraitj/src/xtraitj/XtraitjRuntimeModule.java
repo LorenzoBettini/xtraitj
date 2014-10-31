@@ -67,10 +67,10 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 				.to(XtraitjImportedNamespaceScopeProvider.class);
 	}
 	
-	@Override
-	public Class<? extends IGenerator> bindIGenerator() {
-		return XtraitjJvmModelGenerator.class;
-	}
+//	@Override
+//	public Class<? extends IGenerator> bindIGenerator() {
+//		return XtraitjJvmModelGenerator.class;
+//	}
 	
 	public Class<? extends ErrorSafeExtensions> bindErrorSafeExtensions() {
 		return XtraitjErrorSafeExtensions.class;
