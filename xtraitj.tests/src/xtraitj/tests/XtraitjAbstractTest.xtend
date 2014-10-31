@@ -3,29 +3,32 @@ package xtraitj.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.xtraitj.TJProgram
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.common.types.JvmTypeReference
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 abstract class XtraitjAbstractTest {
 	
-	@Inject extension JvmTypesBuilder
+	@Inject extension TypeReferences
 	@Inject extension ParseHelper<TJProgram>
 	
 	def protected toTypeRef(Class<?> clazz) {
-		'''
-		trait T {}
-		'''.
-		parse.newTypeRef(clazz)
+		// the parsed element is used only as the context for
+		// TypeReferences.getTypeForName
+		getTypeForName(clazz,
+			'''
+			trait T {}
+			'''.
+			parse)
 	}
 
 	def protected getJavaMethod(Class<?> clazz, String methodName) {
