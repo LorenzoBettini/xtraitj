@@ -560,12 +560,12 @@ assertTraitJavaInterface("tests", "TUsesGeneric",
 package tests;
 
 import java.util.List;
-import tests.TGenericInterface;
+import tests.TGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGenericInterface extends TGenericInterface<List<String>> {
+public interface TUsesGeneric extends TGeneric<List<String>> {
 }
 '''
 )
@@ -575,20 +575,20 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 package tests;
 
 import java.util.List;
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<List<String>> _TGeneric;
+  private TGenericImpl<List<String>> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
 }
 '''
@@ -600,11 +600,11 @@ package tests;
 
 import java.util.List;
 import tests.TGeneric;
-import tests.TGenericInterface;
+import tests.TGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TGenericInterface<List<String>> {
-  private TGeneric<List<String>> _TGeneric = new TGeneric(this);
+public class CUsesGeneric implements TGeneric<List<String>> {
+  private TGenericImpl<List<String>> _TGeneric = new TGenericImpl(this);
 }
 '''
 )
@@ -1240,7 +1240,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TGenericExtensionsInterface<T> {
+public interface TGenericExtensions<T> {
   @XtraitjRequiredField
   public abstract Iterable<T> getIterable();
   
@@ -1262,17 +1262,17 @@ package tests;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import tests.TGenericExtensionsInterface;
+import tests.TGenericExtensions;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TGenericExtensions<T> implements TGenericExtensionsInterface<T> {
-  private TGenericExtensionsInterface<T> _delegate;
+public class TGenericExtensionsImpl<T> implements TGenericExtensions<T> {
+  private TGenericExtensions<T> _delegate;
   
-  public TGenericExtensions(final TGenericExtensionsInterface<T> delegate) {
+  public TGenericExtensionsImpl(final TGenericExtensions<T> delegate) {
     this._delegate = delegate;
   }
   
@@ -1322,12 +1322,12 @@ assertTraitJavaInterface("tests", "TStringExtensions",
 '''
 package tests;
 
-import tests.TGenericExtensionsInterface;
+import tests.TGenericExtensions;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TStringExtensionsInterface extends TGenericExtensionsInterface<String> {
+public interface TStringExtensions extends TGenericExtensions<String> {
 }
 '''
 )
