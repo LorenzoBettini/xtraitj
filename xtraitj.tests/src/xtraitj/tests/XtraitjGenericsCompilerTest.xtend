@@ -1806,6 +1806,8 @@ public interface T2 extends T1 {
 
 assertTraitJavaClass("tests", "T2",
 '''
+package tests;
+
 import tests.T1Impl;
 import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
