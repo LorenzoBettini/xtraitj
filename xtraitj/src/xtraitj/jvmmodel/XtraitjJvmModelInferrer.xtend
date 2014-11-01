@@ -1,12 +1,11 @@
 package xtraitj.jvmmodel
 
 import com.google.inject.Inject
+import java.util.HashMap
 import java.util.List
 import java.util.Map
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -24,7 +23,8 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import java.util.HashMap
+import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator.JvmDeclaredTypeAcceptor
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -38,6 +38,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjGeneratorExtensions
+	@Inject extension IJvmModelAssociations
 	@Inject XtraitjTraitOperationWrapperFactory xtraitjTraitOperationWrapperFactory
 
 	/**
@@ -63,7 +64,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 *            rely on linking using the index if isPreIndexingPhase is
 	 *            <code>true</code>.
 	 */
-   	def dispatch void infer(TJProgram p, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
+   	def dispatch void infer(TJProgram p, JvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
    		val Map<String,JvmGenericType> typesMap = newHashMap()
    		val traitInterfaceResolvedOperationsMap = new HashMap<TJTraitReference, XtraitjResolvedOperations>
    		
@@ -89,18 +90,36 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				}
 			}
 		}
-		
+
+		for (e : dependiences) {
+			switch(e) {
+				TJClass: {
+					e.inferClass(acceptor, typesMap, traitInterfaceResolvedOperationsMap)
+				}
+			}
+		}
+
 		for (e : dependiences) {
 			switch(e) {
 				TJTrait: {
 					e.inferTraitClass(acceptor, typesMap, traitInterfaceResolvedOperationsMap)
 				}
-				TJClass: e.inferClass(acceptor, typesMap)
+				TJClass: {
+					e.inferClassContents(acceptor, typesMap, traitInterfaceResolvedOperationsMap)
+				}
 			}
 		}
    	}
    	
-   	def void inferClass(TJClass c, IJvmDeclaredTypeAcceptor acceptor, Map<String,JvmGenericType> typesMap) {
+   	/**
+   	 * This method only infers the JvmDeclaredType for the TJClass and record the
+   	 * resolvedOperations for its trait references; these must be computed and resolved
+   	 * before inferring traits' Java classes (see the method {@link #collectInterfaceResolvedOperations}).
+   	 */
+   	def void inferClass(TJClass c, JvmDeclaredTypeAcceptor acceptor,
+   		Map<String,JvmGenericType> typesMap, 
+   		Map<TJTraitReference, XtraitjResolvedOperations> resolvedOperationsMap
+   	) {
    		val inferredClass = c.toClass(c.fullyQualifiedName)
    		
    		inferredClass.copyTypeParameters(c.typeParameters)
@@ -113,6 +132,24 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		inferTypesForTraitReferencesWithOperations(c, inferredClass, acceptor, typesMap)
    		
    		acceptor.accept(inferredClass) [
+   			c.traitReferences.collectInterfaceResolvedOperations(it, typesMap, resolvedOperationsMap)
+   		]
+   	}
+
+	/**
+	 * This actually infers class contents.
+	 * 
+	 * For a TJClass we need to split the inference since it depends both on the
+	 * resolved methods of trait references and the inferred classes for traits.
+	 */
+   	def void inferClassContents(TJClass c, JvmDeclaredTypeAcceptor acceptor,
+   		Map<String,JvmGenericType> typesMap, 
+   		Map<TJTraitReference, XtraitjResolvedOperations> resolvedOperationsMap
+   	) {
+   		val inferredClass = c.jvmElements.filter(JvmGenericType).head
+   		acceptor.later.add(inferredClass -> [
+   			declaredType |
+   			val it = declaredType as JvmGenericType
    			documentation = c.documentation
    			
    			for (i : c.interfaces) {
@@ -154,7 +191,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				
 				// do not delegate to a trait who requires that operation
 	   			// but to the one which actually implements it
-				for (traitMethod : realRef.xtraitjJvmAllDefinedMethodOperations(traitRef))
+				for (traitMethod : traitRef.getAllDefinedMethodOperationsFromMap(resolvedOperationsMap))
 					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
 						copyAnnotationsFrom(traitMethod)
 					]
@@ -182,7 +219,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 ////   						copyAnnotationsFrom(traitMethod)
 ////   					]
 //   			}
-   		]
+   		])
    	}
 
    	def inferTraitInterface(TJTrait t, IJvmDeclaredTypeAcceptor acceptor, 

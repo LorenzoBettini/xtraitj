@@ -1785,13 +1785,13 @@ assertTraitJavaInterface("tests", "T2",
 '''
 package tests;
 
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T2Interface extends T1Interface {
+public interface T2 extends T1 {
   @XtraitjDefinedMethod
   public abstract String useIdentity2();
   
@@ -1806,23 +1806,21 @@ public interface T2Interface extends T1Interface {
 
 assertTraitJavaClass("tests", "T2",
 '''
-package tests;
-
-import tests.T1;
-import tests.T2Interface;
+import tests.T1Impl;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2 implements T2Interface {
-  private T2Interface _delegate;
+public class T2Impl implements T2 {
+  private T2 _delegate;
   
-  private T1 _T1;
+  private T1Impl _T1;
   
-  public T2(final T2Interface delegate) {
+  public T2Impl(final T2 delegate) {
     this._delegate = delegate;
-    _T1 = new T1(delegate);
+    _T1 = new T1Impl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -2157,11 +2155,11 @@ package tests;
 
 import java.util.List;
 import tests.T2;
-import tests.T2Interface;
+import tests.T2Impl;
 
 @SuppressWarnings("all")
-public class C implements T2Interface {
-  private T2 _T2 = new T2(this);
+public class C implements T2 {
+  private T2Impl _T2 = new T2Impl(this);
   
   public <T extends List<String>> String getFirst(final T t) {
     return _T2._getFirst(t);
@@ -2180,11 +2178,11 @@ package tests;
 
 import java.util.List;
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 
 @SuppressWarnings("all")
-public class C2 implements T1Interface {
-  private T1 _T1 = new T1(this);
+public class C2 implements T1 {
+  private T1Impl _T1 = new T1Impl(this);
   
   public <T extends List<String>> String getFirst(final T t) {
     return _T1._getFirst(t);
