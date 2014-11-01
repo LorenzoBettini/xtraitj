@@ -291,7 +291,7 @@ class XtraitjJvmModelUtil {
 	}
 
 	def xtraitjJvmAllRequiredFieldOperations(JvmTypeReference ref, EObject context) {
-		ref.getXtraitjResolvedOperations(context).requiredFields.
+		ref.computeXtraitjResolvedOperations(context).requiredFields.
 					createXtraitjJvmOperations
 	}
 
@@ -300,8 +300,12 @@ class XtraitjJvmModelUtil {
 	}
 
 	def xtraitjJvmAllRequiredMethodOperations(JvmTypeReference ref, EObject context) {
-		ref.getXtraitjResolvedOperations(context).requiredMethods.
+		ref.computeXtraitjResolvedOperations(context).requiredMethods.
 					createXtraitjJvmOperations
+	}
+
+	def computeXtraitjResolvedOperations(JvmTypeReference ref, EObject context) {
+		ref.getXtraitjResolvedOperations(context)
 	}
 
 	def xtraitjJvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
@@ -322,18 +326,22 @@ class XtraitjJvmModelUtil {
 	}
 
 	def xtraitjJvmAllDefinedMethodOperations(JvmTypeReference e, EObject context) {
-		e.getXtraitjResolvedOperations(context).definedMethods.
+		e.computeXtraitjResolvedOperations(context).definedMethods.
 					createXtraitjJvmOperations
 	}
 
 	def xtraitjJvmAllMethodOperations(JvmTypeReference e, EObject context) {
-		e.getXtraitjResolvedOperations(context).declaredMethods.
+		e.computeXtraitjResolvedOperations(context).declaredMethods.
 					createXtraitjJvmOperations
 	}
 
 	def xtraitjJvmAllOperations(TJTraitReference e) {
 		e.trait.getXtraitjResolvedOperations.allDeclarations.
 					createXtraitjJvmOperations
+	}
+
+	def computeAndResolveXtraitjResolvedOperations(JvmTypeReference e, EObject context) {
+		e.computeXtraitjResolvedOperations(context) => [resolveAll]
 	}
 
 	def xtraitjJvmAllRequiredOperations(TJTraitReference e) {

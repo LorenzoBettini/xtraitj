@@ -51,4 +51,20 @@ class XtraitjResolvedOperations {
 	def getAllRequirements() {
 		return requiredFields + requiredMethods
 	}
+
+	/**
+	 * Triggers resolution of return type and parameter types
+	 */
+	def resolveAll() {
+		requiredFields.resolve
+		requiredMethods.resolve
+		definedMethods.resolve
+	}
+
+	def private resolve(Iterable<IResolvedOperation> resolvedOperations) {
+		for (o : resolvedOperations) {
+			o.resolvedReturnType
+			o.resolvedParameterTypes
+		}
+	} 
 }

@@ -1338,22 +1338,22 @@ package tests;
 
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import tests.TGenericExtensions;
-import tests.TStringExtensionsInterface;
+import tests.TGenericExtensionsImpl;
+import tests.TStringExtensions;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TStringExtensions implements TStringExtensionsInterface {
-  private TStringExtensionsInterface _delegate;
+public class TStringExtensionsImpl implements TStringExtensions {
+  private TStringExtensions _delegate;
   
-  private TGenericExtensions<String> _TGenericExtensions;
+  private TGenericExtensionsImpl<String> _TGenericExtensions;
   
-  public TStringExtensions(final TStringExtensionsInterface delegate) {
+  public TStringExtensionsImpl(final TStringExtensions delegate) {
     this._delegate = delegate;
-    _TGenericExtensions = new TGenericExtensions(delegate);
+    _TGenericExtensions = new TGenericExtensionsImpl(delegate);
   }
   
   @XtraitjDefinedMethod

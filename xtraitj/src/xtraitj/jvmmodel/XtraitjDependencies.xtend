@@ -7,7 +7,7 @@ import xtraitj.xtraitj.TJProgram
 import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
- * Dependencies among traits and classes during the inferrer (when trait references, that is,
+ * Dependencies among traits and classes during the inferrer when trait references (that is,
  * JvmParameterizedTypeReferences) are still not resolved.
  */
 class XtraitjDependencies {
