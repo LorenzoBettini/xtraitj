@@ -77,7 +77,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T extends List<String>, U> {
+public interface T1<T extends List<String>, U> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -101,17 +101,17 @@ package tests;
 
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1<T extends List<String>, U> implements T1Interface<T, U> {
-  private T1Interface<T, U> _delegate;
+public class T1Impl<T extends List<String>, U> implements T1<T, U> {
+  private T1<T, U> _delegate;
   
-  public T1(final T1Interface<T, U> delegate) {
+  public T1Impl(final T1<T, U> delegate) {
     this._delegate = delegate;
   }
   
@@ -165,6 +165,81 @@ public class T1<T extends List<String>, U> implements T1Interface<T, U> {
 		]
 	}
 
+	@Test def void testGenericTraitWithRecursiveTypeParameterNotUsed() {
+		genericTraitWithRecursiveTypeParameterNotUsed.compile[
+
+assertTraitJavaInterface("tests", "T1",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T1<T extends Comparable<T>> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import tests.T1;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1Impl<T extends Comparable<T>> implements T1<T> {
+  private T1<T> _delegate;
+  
+  public T1Impl(final T1<T> delegate) {
+    this._delegate = delegate;
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testGenericTraitWithRecursiveTypeParameterUsedInMethod() {
+		genericTraitWithRecursiveTypeParameterUsedInMethod.compile[
+
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import tests.T1;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1Impl<T extends Comparable<T>> implements T1<T> {
+  private T1<T> _delegate;
+  
+  public T1Impl(final T1<T> delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjDefinedMethod
+  public int compare(final T t1, final T t2) {
+    return _delegate.compare(t1, t2);
+  }
+  
+  public int _compare(final T t1, final T t2) {
+    return t1.compareTo(t2);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testGenericTraitWithRecursiveTypeParameter() {
 		genericTraitWithRecursiveTypeParameter.compile[
 
@@ -178,7 +253,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T extends Comparable<T>> {
+public interface T1<T extends Comparable<T>> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -194,17 +269,17 @@ assertTraitJavaClass("tests", "T1",
 '''
 package tests;
 
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1<T extends Comparable<T>> implements T1Interface<T> {
-  private T1Interface<T> _delegate;
+public class T1Impl<T extends Comparable<T>> implements T1<T> {
+  private T1<T> _delegate;
   
-  public T1(final T1Interface<T> delegate) {
+  public T1Impl(final T1<T> delegate) {
     this._delegate = delegate;
   }
   
@@ -248,7 +323,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T extends Comparable<T>, U extends List<? extends T>> {
+public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -265,17 +340,17 @@ assertTraitJavaClass("tests", "T1",
 package tests;
 
 import java.util.List;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1<T extends Comparable<T>, U extends List<? extends T>> implements T1Interface<T, U> {
-  private T1Interface<T, U> _delegate;
+public class T1Impl<T extends Comparable<T>, U extends List<? extends T>> implements T1<T, U> {
+  private T1<T, U> _delegate;
   
-  public T1(final T1Interface<T, U> delegate) {
+  public T1Impl(final T1<T, U> delegate) {
     this._delegate = delegate;
   }
   

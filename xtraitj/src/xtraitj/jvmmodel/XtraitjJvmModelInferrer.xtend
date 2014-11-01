@@ -6,6 +6,7 @@ import java.util.List
 import java.util.Map
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
@@ -14,6 +15,7 @@ import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator.JvmDeclaredTypeAccept
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.types.XtraitjTraitOperationWrapperFactory
+import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJMember
@@ -25,7 +27,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.types.XtraitjTypeParameterHelper
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -595,6 +596,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //   			t.addSuperTypesFromTraitReferences(it, typesMap)
 			
 			traitClass.copyTypeParameters(t.traitTypeParameters)
+			
+			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
+		   	for (typePar : typeParameters) {
+		   		typePar.rebindConstraintsTypeParameters(it, null, map)
+		   	}
 
    			documentation = t.documentation
    			
@@ -776,9 +782,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-   	def toGetterDelegate(JvmGenericType type, TJMember m) {
+   	def toGetterDelegate(JvmGenericType target, TJMember m) {
    		// m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [
-   		m.toGetter(m.name, m.type) => [
+   		m.toGetter(m.name, m.type.rebindTypeParameters(target, null)) => [
    			method |
    			method.body = [
    				append('''return «delegateFieldName».«method.simpleName»();''')
@@ -931,11 +937,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				if (!members.alreadyDefined(op.op)) {
    					// this is the getter
    					members += op.toMethodDelegate(it,
-					delegateFieldName,
-					op.op.simpleName, op.op.simpleName) => [
-	   					op.op.annotateAsRequiredField(it)
-	   				]
-	   				members += op.toSetterDelegateFromGetter
+						delegateFieldName,
+						op.op.simpleName, op.op.simpleName) => [
+		   					op.op.annotateAsRequiredField(it)
+		   				]
+	   				members += op.toSetterDelegateFromGetter(it)
    				}
 			}
 			
@@ -1045,5 +1051,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
 //			] // and we can navigate to the original method
 	}
+	
+	def private toSetterDelegateFromGetter(XtraitjJvmOperation op, JvmGenericType target) {
+   		val fieldName = op.op.simpleName.stripGetter
+   		op.op.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
+   			method |
+   			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
+   		]
+   	}
 }
 

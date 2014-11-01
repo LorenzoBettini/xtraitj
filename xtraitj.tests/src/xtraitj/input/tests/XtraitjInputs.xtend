@@ -1081,6 +1081,27 @@ trait T3 uses T1<String>, T2 {
 		'''
 	}
 
+	def genericTraitWithRecursiveTypeParameterNotUsed() {
+		'''
+		package tests;
+		
+		trait T1 <T extends Comparable<T>> {
+		}
+		'''
+	}
+
+	def genericTraitWithRecursiveTypeParameterUsedInMethod() {
+		'''
+		package tests;
+		
+		trait T1 <T extends Comparable<T>> {
+			int compare(T t1, T t2) {
+				return t1.compareTo(t2)
+			}
+		}
+		'''
+	}
+
 	def genericTraitWithRecursiveTypeParameter() {
 		'''
 		package tests;
