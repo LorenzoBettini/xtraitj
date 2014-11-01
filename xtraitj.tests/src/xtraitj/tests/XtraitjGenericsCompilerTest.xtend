@@ -1781,6 +1781,149 @@ public class T1Impl implements T1 {
 '''
 )
 
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests;
+
+import tests.T1Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T2Interface extends T1Interface {
+  @XtraitjDefinedMethod
+  public abstract String useIdentity2();
+  
+  @XtraitjDefinedMethod
+  public abstract String useIdentityNested2();
+  
+  @XtraitjDefinedMethod
+  public abstract void useNoReturn2();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import tests.T1;
+import tests.T2Interface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2 implements T2Interface {
+  private T2Interface _delegate;
+  
+  private T1 _T1;
+  
+  public T2(final T2Interface delegate) {
+    this._delegate = delegate;
+    _T1 = new T1(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity2() {
+    return _delegate.useIdentity2();
+  }
+  
+  public String _useIdentity2() {
+    final String s = this.<String>identity("bar");
+    String _useIdentity = this.useIdentity();
+    return ((s + ",") + _useIdentity);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested2() {
+    return _delegate.useIdentityNested2();
+  }
+  
+  public String _useIdentityNested2() {
+    String _identity = this.<String>identity("bar");
+    final String s = this.<String>identity(_identity);
+    String _useIdentityNested = this.useIdentityNested();
+    return ((s + ",") + _useIdentityNested);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn2() {
+    _delegate.useNoReturn2();
+  }
+  
+  public void _useNoReturn2() {
+    this.<String>noReturn("foo");
+    this.<Integer>noReturn(Integer.valueOf(0));
+  }
+  
+  @XtraitjDefinedMethod
+  public <T> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T> T _identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    return _T1._useIdentity();
+  }
+  
+  @XtraitjDefinedMethod
+  public <V> V recursive(final V v) {
+    return _delegate.recursive(v);
+  }
+  
+  public <V> V _recursive(final V v) {
+    return _T1._recursive(v);
+  }
+  
+  @XtraitjDefinedMethod
+  public <U> void noReturn(final U u) {
+    _delegate.noReturn(u);
+  }
+  
+  public <U> void _noReturn(final U u) {
+    _T1._noReturn(u);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useRecursive() {
+    _delegate.useRecursive();
+  }
+  
+  public void _useRecursive() {
+    _T1._useRecursive();
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested() {
+    return _delegate.useIdentityNested();
+  }
+  
+  public String _useIdentityNested() {
+    return _T1._useIdentityNested();
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn() {
+    _delegate.useNoReturn();
+  }
+  
+  public void _useNoReturn() {
+    _T1._useNoReturn();
+  }
+}
+'''
+)
+
 assertJavaClass("tests", "C",
 '''
 package tests;
