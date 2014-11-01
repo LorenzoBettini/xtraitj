@@ -323,7 +323,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T> {
+public interface T1<T> {
   @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
 }
@@ -335,16 +335,16 @@ assertTraitJavaClass("tests", "T1",
 package tests;
 
 import java.util.List;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1<T> implements T1Interface<T> {
-  private T1Interface<T> _delegate;
+public class T1Impl<T> implements T1<T> {
+  private T1<T> _delegate;
   
-  public T1(final T1Interface<T> delegate) {
+  public T1Impl(final T1<T> delegate) {
     this._delegate = delegate;
   }
   
@@ -377,21 +377,21 @@ package tests;
 
 import java.util.List;
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import tests.T2;
-import tests.T2Interface;
+import tests.T2Impl;
 import xtraitj.input.tests.MyGenericTestInterface;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer>, T1Interface, T2Interface {
-  private T1 _T1 = new T1(this);
+public class C implements MyGenericTestInterface<String>, MyGenericTestInterface2<Integer>, T1, T2 {
+  private T1Impl _T1 = new T1Impl(this);
   
   public int m(final List<String> l) {
     return _T1._m(l);
   }
   
-  private T2 _T2 = new T2(this);
+  private T2Impl _T2 = new T2Impl(this);
   
   public List<Integer> n(final int i) {
     return _T2._n(i);
@@ -411,12 +411,12 @@ assertJavaClass("tests", "C",
 package tests;
 
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface3;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface3<Integer>, T1Interface {
-  private T1 _T1 = new T1(this);
+public class C implements MyGenericTestInterface3<Integer>, T1 {
+  private T1Impl _T1 = new T1Impl(this);
   
   public Integer n(final int i) {
     return _T1._n(i);
@@ -436,12 +436,12 @@ assertJavaClass("tests", "C",
 package tests;
 
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface3;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface3<U>, T1Interface<U> {
-  private T1<U> _T1 = new T1(this);
+public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
+  private T1Impl<U> _T1 = new T1Impl(this);
   
   public U n(final int i) {
     return _T1._n(i);
@@ -466,7 +466,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<U> {
+public interface T1<U> {
   @XtraitjDefinedMethod
   public abstract ArrayList<U> n(final int i);
 }
@@ -478,16 +478,16 @@ assertTraitJavaClass("tests", "T1",
 package tests;
 
 import java.util.ArrayList;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1<U> implements T1Interface<U> {
-  private T1Interface<U> _delegate;
+public class T1Impl<U> implements T1<U> {
+  private T1<U> _delegate;
   
-  public T1(final T1Interface<U> delegate) {
+  public T1Impl(final T1<U> delegate) {
     this._delegate = delegate;
   }
   
@@ -509,12 +509,12 @@ package tests;
 
 import java.util.ArrayList;
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface2<U>, T1Interface<U> {
-  private T1<U> _T1 = new T1(this);
+public class C<U> implements MyGenericTestInterface2<U>, T1<U> {
+  private T1Impl<U> _T1 = new T1Impl(this);
   
   public ArrayList<U> n(final int i) {
     return _T1._n(i);
@@ -535,12 +535,12 @@ package tests;
 
 import java.util.ArrayList;
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C implements MyGenericTestInterface2<String>, T1Interface<String> {
-  private T1<String> _T1 = new T1(this);
+public class C implements MyGenericTestInterface2<String>, T1<String> {
+  private T1Impl<String> _T1 = new T1Impl(this);
   
   public ArrayList<String> n(final int i) {
     return _T1._n(i);
@@ -620,21 +620,21 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 '''
 package tests;
 
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<String> _TGeneric;
+  private TGenericImpl<String> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjRequiredMethod
@@ -650,15 +650,15 @@ assertJavaClass("tests", "CUsesGeneric",
 package tests;
 
 import tests.T2;
-import tests.T2Interface;
+import tests.T2Impl;
 import tests.TUsesGeneric;
-import tests.TUsesGenericInterface;
+import tests.TUsesGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGenericInterface, T2Interface {
-  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+public class CUsesGeneric implements TUsesGeneric, T2 {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
   
-  private T2 _T2 = new T2(this);
+  private T2Impl _T2 = new T2Impl(this);
   
   public Iterable<String> iterableOfStrings() {
     return _T2._iterableOfStrings();
@@ -672,15 +672,15 @@ assertJavaClass("tests", "CUsesGeneric2",
 package tests;
 
 import tests.T2;
-import tests.T2Interface;
+import tests.T2Impl;
 import tests.TGeneric;
-import tests.TGenericInterface;
+import tests.TGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric2 implements TGenericInterface<String>, T2Interface {
-  private TGeneric<String> _TGeneric = new TGeneric(this);
+public class CUsesGeneric2 implements TGeneric<String>, T2 {
+  private TGenericImpl<String> _TGeneric = new TGenericImpl(this);
   
-  private T2 _T2 = new T2(this);
+  private T2Impl _T2 = new T2Impl(this);
   
   public Iterable<String> iterableOfStrings() {
     return _T2._iterableOfStrings();
@@ -705,7 +705,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T> {
+public interface T1<T> {
   @XtraitjRequiredMethod
   public abstract int i();
   
@@ -719,13 +719,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T1Interface;
-import tests.T2Interface;
+import tests.T1;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T1Interface<String>, T2Interface {
+public interface T3 extends T1<String>, T2 {
 }
 '''
 )
@@ -747,7 +747,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T> {
+public interface T1<T> {
   @XtraitjRequiredMethod
   public abstract int i();
   
@@ -761,13 +761,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T1Interface;
-import tests.T2Interface;
+import tests.T1;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T1Interface<String>, T2Interface {
+public interface T3 extends T1<String>, T2 {
 }
 '''
 )
@@ -784,21 +784,21 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 package tests;
 
 import java.util.List;
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<String> _TGeneric;
+  private TGenericImpl<String> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -819,11 +819,11 @@ package tests;
 
 import java.util.List;
 import tests.TUsesGeneric;
-import tests.TUsesGenericInterface;
+import tests.TUsesGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGenericInterface {
-  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+public class CUsesGeneric implements TUsesGeneric {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
   
   public String searchInList(final List<String> l, final String arg) {
     return _TUsesGeneric._searchInList(l, arg);
@@ -848,7 +848,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T> {
+public interface T1<T> {
   @XtraitjRequiredField
   public abstract int getI();
   
@@ -866,13 +866,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T1Interface;
-import tests.T2Interface;
+import tests.T1;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T1Interface<String>, T2Interface {
+public interface T3 extends T1<String>, T2 {
 }
 '''
 )
@@ -882,25 +882,25 @@ assertTraitJavaClass("tests", "T3",
 package tests;
 
 import java.util.List;
-import tests.T1;
-import tests.T2;
-import tests.T3Interface;
+import tests.T1Impl;
+import tests.T2Impl;
+import tests.T3;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3 implements T3Interface {
-  private T3Interface _delegate;
+public class T3Impl implements T3 {
+  private T3 _delegate;
   
-  private T1<String> _T1;
+  private T1Impl<String> _T1;
   
-  private T2 _T2;
+  private T2Impl _T2;
   
-  public T3(final T3Interface delegate) {
+  public T3Impl(final T3 delegate) {
     this._delegate = delegate;
-    _T1 = new T1(delegate);
-    _T2 = new T2(delegate);
+    _T1 = new T1Impl(delegate);
+    _T2 = new T2Impl(delegate);
   }
   
   @XtraitjRequiredField
@@ -941,7 +941,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TGenericInterface<T extends Collection<String>, U extends Collection<Integer>> {
+public interface TGeneric<T extends Collection<String>, U extends Collection<Integer>> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -966,12 +966,12 @@ package tests;
 
 import java.util.List;
 import java.util.Set;
-import tests.TGenericInterface;
+import tests.TGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGenericInterface extends TGenericInterface<List<String>, Set<Integer>> {
+public interface TUsesGeneric extends TGeneric<List<String>, Set<Integer>> {
 }
 '''
 )
@@ -983,21 +983,21 @@ package tests;
 
 import java.util.List;
 import java.util.Set;
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<List<String>, Set<Integer>> _TGeneric;
+  private TGenericImpl<List<String>, Set<Integer>> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjRequiredField
@@ -1036,21 +1036,21 @@ package tests;
 
 import java.util.List;
 import java.util.Set;
-import tests.T2Interface;
-import tests.TUsesGeneric;
+import tests.T2;
+import tests.TUsesGenericImpl;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2 implements T2Interface {
-  private T2Interface _delegate;
+public class T2Impl implements T2 {
+  private T2 _delegate;
   
-  private TUsesGeneric _TUsesGeneric;
+  private TUsesGenericImpl _TUsesGeneric;
   
-  public T2(final T2Interface delegate) {
+  public T2Impl(final T2 delegate) {
     this._delegate = delegate;
-    _TUsesGeneric = new TUsesGeneric(delegate);
+    _TUsesGeneric = new TUsesGenericImpl(delegate);
   }
   
   @XtraitjRequiredField
@@ -1090,10 +1090,10 @@ package tests;
 import java.util.List;
 import java.util.Set;
 import tests.TGeneric;
-import tests.TGenericInterface;
+import tests.TGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TGenericInterface<List<String>, Set<Integer>> {
+public class CUsesGeneric implements TGeneric<List<String>, Set<Integer>> {
   private List<String> t;
   
   public List<String> getT() {
@@ -1124,7 +1124,7 @@ public class CUsesGeneric implements TGenericInterface<List<String>, Set<Integer
     this.iterableOfIntegers = iterableOfIntegers;
   }
   
-  private TGeneric<List<String>, Set<Integer>> _TGeneric = new TGeneric(this);
+  private TGenericImpl<List<String>, Set<Integer>> _TGeneric = new TGenericImpl(this);
 }
 '''
 )
@@ -1145,7 +1145,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface<T> {
+public interface T1<T> {
   @XtraitjRequiredField
   public abstract int getI();
   
@@ -1163,13 +1163,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T1Interface;
-import tests.T2Interface;
+import tests.T1;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T1Interface<String>, T2Interface {
+public interface T3 extends T1<String>, T2 {
 }
 '''
 )
@@ -1179,25 +1179,25 @@ assertTraitJavaClass("tests", "T3",
 package tests;
 
 import java.util.List;
-import tests.T1;
-import tests.T2;
-import tests.T3Interface;
+import tests.T1Impl;
+import tests.T2Impl;
+import tests.T3;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3 implements T3Interface {
-  private T3Interface _delegate;
+public class T3Impl implements T3 {
+  private T3 _delegate;
   
-  private T1<String> _T1;
+  private T1Impl<String> _T1;
   
-  private T2 _T2;
+  private T2Impl _T2;
   
-  public T3(final T3Interface delegate) {
+  public T3Impl(final T3 delegate) {
     this._delegate = delegate;
-    _T1 = new T1(delegate);
-    _T2 = new T2(delegate);
+    _T1 = new T1Impl(delegate);
+    _T2 = new T2Impl(delegate);
   }
   
   @XtraitjRequiredField
@@ -1404,7 +1404,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TGenericInterface<T> {
+public interface TGeneric<T> {
   @XtraitjRequiredField
   public abstract List<T> getMyL();
   
@@ -1429,13 +1429,13 @@ assertTraitJavaInterface("tests", "TUsesGeneric",
 '''
 package tests;
 
-import tests.TGenericInterface;
+import tests.TGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGenericInterface extends TGenericInterface<String> {
+public interface TUsesGeneric extends TGeneric<String> {
   @XtraitjDefinedMethod
   public abstract String updateAndReturn();
 }
@@ -1447,22 +1447,22 @@ assertTraitJavaClass("tests", "TUsesGeneric",
 package tests;
 
 import java.util.List;
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<String> _TGeneric;
+  private TGenericImpl<String> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -1538,10 +1538,10 @@ package tests;
 import java.util.ArrayList;
 import java.util.List;
 import tests.TUsesGeneric;
-import tests.TUsesGenericInterface;
+import tests.TUsesGenericImpl;
 
 @SuppressWarnings("all")
-public class C implements TUsesGenericInterface {
+public class C implements TUsesGeneric {
   private List<String> myL = new ArrayList<String>();
   
   public List<String> getMyL() {
@@ -1552,7 +1552,7 @@ public class C implements TUsesGenericInterface {
     this.myL = myL;
   }
   
-  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
   
   public String updateAndReturn() {
     return _TUsesGeneric._updateAndReturn();
@@ -1589,13 +1589,13 @@ package tests;
 
 import java.util.List;
 import java.util.Set;
-import tests.TGenericInterface;
+import tests.TGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TUsesGenericInterface extends TGenericInterface<String, Set<Integer>> {
+public interface TUsesGeneric extends TGeneric<String, Set<Integer>> {
   @XtraitjDefinedMethod
   public abstract Iterable<String> iterableOfStrings();
   
@@ -1612,21 +1612,21 @@ package tests;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import tests.TGeneric;
-import tests.TUsesGenericInterface;
+import tests.TGenericImpl;
+import tests.TUsesGeneric;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TUsesGeneric implements TUsesGenericInterface {
-  private TUsesGenericInterface _delegate;
+public class TUsesGenericImpl implements TUsesGeneric {
+  private TUsesGeneric _delegate;
   
-  private TGeneric<String, Set<Integer>> _TGeneric;
+  private TGenericImpl<String, Set<Integer>> _TGeneric;
   
-  public TUsesGeneric(final TUsesGenericInterface delegate) {
+  public TUsesGenericImpl(final TUsesGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -1656,11 +1656,11 @@ package tests;
 
 import java.util.List;
 import tests.TUsesGeneric;
-import tests.TUsesGenericInterface;
+import tests.TUsesGenericImpl;
 
 @SuppressWarnings("all")
-public class CUsesGeneric implements TUsesGenericInterface {
-  private TUsesGeneric _TUsesGeneric = new TUsesGeneric(this);
+public class CUsesGeneric implements TUsesGeneric {
+  private TUsesGenericImpl _TUsesGeneric = new TUsesGenericImpl(this);
   
   public Iterable<String> iterableOfStrings() {
     return _TUsesGeneric._iterableOfStrings();
@@ -1686,16 +1686,16 @@ package tests;
 import java.util.ArrayList;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.InputOutput;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1 implements T1Interface {
-  private T1Interface _delegate;
+public class T1Impl implements T1 {
+  private T1 _delegate;
   
-  public T1(final T1Interface delegate) {
+  public T1Impl(final T1 delegate) {
     this._delegate = delegate;
   }
   
@@ -1786,11 +1786,11 @@ assertJavaClass("tests", "C",
 package tests;
 
 import tests.T1;
-import tests.T1Interface;
+import tests.T1Impl;
 
 @SuppressWarnings("all")
-public class C implements T1Interface {
-  private T1 _T1 = new T1(this);
+public class C implements T1 {
+  private T1Impl _T1 = new T1Impl(this);
   
   public <T> T identity(final T t) {
     return _T1._identity(t);
@@ -1844,7 +1844,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1Interface {
+public interface T1 {
   @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
   
@@ -1859,16 +1859,16 @@ assertTraitJavaClass("tests", "T1",
 package tests;
 
 import java.util.List;
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1 implements T1Interface {
-  private T1Interface _delegate;
+public class T1Impl implements T1 {
+  private T1 _delegate;
   
-  public T1(final T1Interface delegate) {
+  public T1Impl(final T1 delegate) {
     this._delegate = delegate;
   }
   
@@ -1898,12 +1898,12 @@ assertTraitJavaInterface("tests", "T2",
 '''
 package tests;
 
-import tests.T1Interface;
+import tests.T1;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T2Interface extends T1Interface {
+public interface T2 extends T1 {
 }
 '''
 )
@@ -1913,21 +1913,21 @@ assertTraitJavaClass("tests", "T2",
 package tests;
 
 import java.util.List;
-import tests.T1;
-import tests.T2Interface;
+import tests.T1Impl;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2 implements T2Interface {
-  private T2Interface _delegate;
+public class T2Impl implements T2 {
+  private T2 _delegate;
   
-  private T1 _T1;
+  private T1Impl _T1;
   
-  public T2(final T2Interface delegate) {
+  public T2Impl(final T2 delegate) {
     this._delegate = delegate;
-    _T1 = new T1(delegate);
+    _T1 = new T1Impl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -1955,12 +1955,12 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T2Interface;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T2Interface {
+public interface T3 extends T2 {
 }
 '''
 )
@@ -1970,21 +1970,21 @@ assertTraitJavaClass("tests", "T3",
 package tests;
 
 import java.util.List;
-import tests.T2;
-import tests.T3Interface;
+import tests.T2Impl;
+import tests.T3;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3 implements T3Interface {
-  private T3Interface _delegate;
+public class T3Impl implements T3 {
+  private T3 _delegate;
   
-  private T2 _T2;
+  private T2Impl _T2;
   
-  public T3(final T3Interface delegate) {
+  public T3Impl(final T3 delegate) {
     this._delegate = delegate;
-    _T2 = new T2(delegate);
+    _T2 = new T2Impl(delegate);
   }
   
   @XtraitjDefinedMethod
