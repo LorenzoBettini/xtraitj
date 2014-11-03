@@ -172,6 +172,24 @@ class C uses T {
 		'''
 	}
 
+	def traitRenameOperationsNotUsed() {
+		'''
+		trait T1 {
+			String s;
+			int m() { return 0; }
+			int t1() { return 0; }
+		}
+		
+		trait T2 uses T1 {
+			int n();
+		}
+		
+		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
+			
+		}
+		'''
+	}
+
 	def traitRenameOperations() {
 		'''
 		trait T1 {
