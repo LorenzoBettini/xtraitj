@@ -203,6 +203,7 @@ assertTraitAdapterJavaClass("T3_T2_0",
 '''
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
@@ -263,14 +264,11 @@ public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
 
 assertTraitJavaInterface("T3",
 '''
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T3_T2_0_AdapterInterface {
-  @XtraitjDefinedMethod
-  public abstract int foo();
+public interface T3 extends T3_T2_0_Adapter {
 }
 '''
 )
