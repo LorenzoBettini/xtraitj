@@ -492,25 +492,30 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   			]
 			]
 			
+			// we need the JvmOperation with resolved type arguments
+			val allDeclarations = t.getAllDeclaredOperationsFromMap(maps.traitInterfaceResolvedOperationsMap).toList
+			
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
 						if (!tOp.field) {
-							val origOp = tOp.member as JvmOperation
-							val origName = origOp.simpleName
+							// and we need to retrieve the corresponding resolved operation
+							// i.e., the one where type arguments are already resolved
+							val resolvedOp = allDeclarations.map[op].findFirst[tOp.newname == simpleName]
+							val origName = tOp.member.simpleName
 	
-							val requiredMethod = origOp.annotatedRequiredMethod()
+							val requiredMethod = resolvedOp.annotatedRequiredMethod()
 							
 							if (requiredMethod) {
 								// make sure we take the jvmOp's name
 								// since the member in the rename operation is bound
 								// to the getter in case of a field
 								val newname = 
-									origOp.simpleName.renameGetterOrSetter(tOp.newname)
+									resolvedOp.simpleName.renameGetterOrSetter(tOp.newname)
 								// m is forwarded to this.m2()
 								members += tOp.
 									toMethodDelegate(
-										origOp,
+										resolvedOp,
 										"this",
 										origName,
 										newname
@@ -518,13 +523,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								// m2 is forwarded to delegate.m2()
 								members += tOp.
 									toMethodDelegate(
-										origOp,
+										resolvedOp,
 										delegateFieldName,
 										newname,
 										newname
 									) => [
-										copyAllAnnotationsFrom(origOp)
-										tOp.annotateAsRenamedMethod(it, origName) 
+										copyAllAnnotationsFrom(resolvedOp)
 									]
 								
 							} else {
@@ -533,7 +537,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								
 								members += tOp.
 									toMethodDelegate(
-										origOp,
+										resolvedOp,
 										"this",
 										origName,
 										newname
@@ -541,18 +545,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								// m2 is forwarded to delegate.m2
 								members += tOp.
 									toMethodDelegate(
-										origOp,
+										resolvedOp,
 										delegateFieldName,
 										newname,
 										newname
 									) => [ 
-										copyAllAnnotationsFrom(origOp)
-										tOp.annotateAsRenamedMethod(it, origName) 
+										copyAllAnnotationsFrom(resolvedOp)
 									]
 								// _m2 is forwarded to T1._m
 								members += tOp.
 									toMethodDelegate(
-										origOp,
+										resolvedOp,
 										traitFieldName,
 										newname.underscoreName,
 										origName.underscoreName
@@ -1264,6 +1267,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			return computed
 		}
 		return result
+	}
+
+	def private getAllDeclaredOperationsFromMap(TJTraitReference tRef, XtraitjResolvedOperationsMap map) {
+		tRef.getXtraitjResolvedOperationsFromMap(map).allDeclarations.
+					createXtraitjJvmOperations
 	}
 
 	def private getAllDefinedMethodOperationsFromMap(TJTraitReference tRef, XtraitjResolvedOperationsMap map) {

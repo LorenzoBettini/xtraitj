@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(InjectorProviderCustom))
 class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerTest {
+
 	@Test def void testTraitUsesGenericTraitWithRenameSimpler() {
 		traitUsesGenericTraitWithRenameSimpler.compile[
 
@@ -15,13 +16,13 @@ assertTraitJavaInterface("tests", "UsesTGeneric",
 '''
 package tests;
 
-import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
+import tests.UsesTGeneric_TGeneric_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface UsesTGenericInterface extends UsesTGeneric_TGeneric_0_AdapterInterface {
+public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter {
   @XtraitjDefinedMethod
   public abstract String useLists();
 }
@@ -33,11 +34,17 @@ assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
 package tests;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public interface UsesTGeneric_TGeneric_0_AdapterInterface {
+public interface UsesTGeneric_TGeneric_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("returnList")
   public abstract List<Integer> returnListOfInteger();
   
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("printList")
   public abstract void printListOfInteger(final List<Integer> l);
 }
 '''
@@ -49,20 +56,20 @@ package tests;
 
 import java.util.List;
 import tests.TGeneric;
-import tests.TGenericInterface;
-import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
+import tests.TGenericImpl;
+import tests.UsesTGeneric_TGeneric_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class UsesTGeneric_TGeneric_0_Adapter implements UsesTGeneric_TGeneric_0_AdapterInterface, TGenericInterface<Integer> {
-  private UsesTGeneric_TGeneric_0_AdapterInterface _delegate;
+public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
+  private UsesTGeneric_TGeneric_0_Adapter _delegate;
   
-  private TGeneric<Integer> _TGeneric_0;
+  private TGenericImpl<Integer> _TGeneric_0;
   
-  public UsesTGeneric_TGeneric_0_Adapter(final UsesTGeneric_TGeneric_0_AdapterInterface delegate) {
+  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
     this._delegate = delegate;
-    _TGeneric_0 = new TGeneric(this);
+    _TGeneric_0 = new TGenericImpl(this);
   }
   
   public List<Integer> returnList() {
@@ -103,21 +110,21 @@ package tests;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import tests.UsesTGenericInterface;
-import tests.UsesTGeneric_TGeneric_0_Adapter;
+import tests.UsesTGeneric;
+import tests.UsesTGeneric_TGeneric_0_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class UsesTGeneric implements UsesTGenericInterface {
-  private UsesTGenericInterface _delegate;
+public class UsesTGenericImpl implements UsesTGeneric {
+  private UsesTGeneric _delegate;
   
-  private UsesTGeneric_TGeneric_0_Adapter _TGeneric_0;
+  private UsesTGeneric_TGeneric_0_AdapterImpl _TGeneric_0;
   
-  public UsesTGeneric(final UsesTGenericInterface delegate) {
+  public UsesTGenericImpl(final UsesTGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric_0 = new UsesTGeneric_TGeneric_0_Adapter(delegate);
+    _TGeneric_0 = new UsesTGeneric_TGeneric_0_AdapterImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -164,11 +171,11 @@ package tests;
 
 import java.util.List;
 import tests.UsesTGeneric;
-import tests.UsesTGenericInterface;
+import tests.UsesTGenericImpl;
 
 @SuppressWarnings("all")
-public class C implements UsesTGenericInterface {
-  private UsesTGeneric _UsesTGeneric = new UsesTGeneric(this);
+public class C implements UsesTGeneric {
+  private UsesTGenericImpl _UsesTGeneric = new UsesTGenericImpl(this);
   
   public String useLists() {
     return _UsesTGeneric._useLists();
@@ -195,15 +202,15 @@ assertTraitJavaInterface("tests", "UsesTGeneric",
 '''
 package tests;
 
-import tests.TGenericInterface;
-import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
-import tests.UsesTGeneric_TGeneric_1_AdapterInterface;
+import tests.TGeneric;
+import tests.UsesTGeneric_TGeneric_0_Adapter;
+import tests.UsesTGeneric_TGeneric_1_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface UsesTGenericInterface extends UsesTGeneric_TGeneric_0_AdapterInterface, UsesTGeneric_TGeneric_1_AdapterInterface, TGenericInterface<String> {
+public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter, UsesTGeneric_TGeneric_1_Adapter, TGeneric<String> {
   @XtraitjDefinedMethod
   public abstract String useLists();
 }
@@ -217,29 +224,29 @@ package tests;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import tests.TGeneric;
-import tests.UsesTGenericInterface;
-import tests.UsesTGeneric_TGeneric_0_Adapter;
-import tests.UsesTGeneric_TGeneric_1_Adapter;
+import tests.TGenericImpl;
+import tests.UsesTGeneric;
+import tests.UsesTGeneric_TGeneric_0_AdapterImpl;
+import tests.UsesTGeneric_TGeneric_1_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class UsesTGeneric implements UsesTGenericInterface {
-  private UsesTGenericInterface _delegate;
+public class UsesTGenericImpl implements UsesTGeneric {
+  private UsesTGeneric _delegate;
   
-  private UsesTGeneric_TGeneric_0_Adapter _TGeneric_0;
+  private UsesTGeneric_TGeneric_0_AdapterImpl _TGeneric_0;
   
-  private UsesTGeneric_TGeneric_1_Adapter _TGeneric_1;
+  private UsesTGeneric_TGeneric_1_AdapterImpl _TGeneric_1;
   
-  private TGeneric<String> _TGeneric;
+  private TGenericImpl<String> _TGeneric;
   
-  public UsesTGeneric(final UsesTGenericInterface delegate) {
+  public UsesTGenericImpl(final UsesTGeneric delegate) {
     this._delegate = delegate;
-    _TGeneric_0 = new UsesTGeneric_TGeneric_0_Adapter(delegate);
-    _TGeneric_1 = new UsesTGeneric_TGeneric_1_Adapter(delegate);
-    _TGeneric = new TGeneric(delegate);
+    _TGeneric_0 = new UsesTGeneric_TGeneric_0_AdapterImpl(delegate);
+    _TGeneric_1 = new UsesTGeneric_TGeneric_1_AdapterImpl(delegate);
+    _TGeneric = new TGenericImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -267,7 +274,7 @@ public class UsesTGeneric implements UsesTGenericInterface {
       List<List<Integer>> _returnListOfListOfInteger = this.returnListOfListOfInteger();
       final Procedure1<List<List<Integer>>> _function_2 = new Procedure1<List<List<Integer>>>() {
         public void apply(final List<List<Integer>> it) {
-          List<Integer> _returnListOfInteger = UsesTGeneric.this.returnListOfInteger();
+          List<Integer> _returnListOfInteger = UsesTGenericImpl.this.returnListOfInteger();
           final Procedure1<List<Integer>> _function = new Procedure1<List<Integer>>() {
             public void apply(final List<Integer> it) {
               it.add(Integer.valueOf(2));
@@ -322,9 +329,13 @@ assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
 package tests;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public interface UsesTGeneric_TGeneric_0_AdapterInterface {
+public interface UsesTGeneric_TGeneric_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("returnList")
   public abstract List<Integer> returnListOfInteger();
 }
 '''
@@ -336,20 +347,20 @@ package tests;
 
 import java.util.List;
 import tests.TGeneric;
-import tests.TGenericInterface;
-import tests.UsesTGeneric_TGeneric_0_AdapterInterface;
+import tests.TGenericImpl;
+import tests.UsesTGeneric_TGeneric_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class UsesTGeneric_TGeneric_0_Adapter implements UsesTGeneric_TGeneric_0_AdapterInterface, TGenericInterface<Integer> {
-  private UsesTGeneric_TGeneric_0_AdapterInterface _delegate;
+public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
+  private UsesTGeneric_TGeneric_0_Adapter _delegate;
   
-  private TGeneric<Integer> _TGeneric_0;
+  private TGenericImpl<Integer> _TGeneric_0;
   
-  public UsesTGeneric_TGeneric_0_Adapter(final UsesTGeneric_TGeneric_0_AdapterInterface delegate) {
+  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
     this._delegate = delegate;
-    _TGeneric_0 = new TGeneric(this);
+    _TGeneric_0 = new TGenericImpl(this);
   }
   
   public List<Integer> returnList() {
@@ -808,9 +819,13 @@ assertTraitAdapterJavaInterface("tests", "UsesTGeneric_T1_0",
 package tests;
 
 import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public interface UsesTGeneric_T1_0_AdapterInterface {
+public interface UsesTGeneric_T1_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("returnList")
   public abstract <T> List<T> returnListOfInteger(final T t);
 }
 '''
@@ -823,20 +838,20 @@ package tests;
 
 import java.util.List;
 import tests.T1;
-import tests.T1Interface;
-import tests.UsesTGeneric_T1_0_AdapterInterface;
+import tests.T1Impl;
+import tests.UsesTGeneric_T1_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 
 @SuppressWarnings("all")
-public class UsesTGeneric_T1_0_Adapter implements UsesTGeneric_T1_0_AdapterInterface, T1Interface {
-  private UsesTGeneric_T1_0_AdapterInterface _delegate;
+public class UsesTGeneric_T1_0_AdapterImpl implements UsesTGeneric_T1_0_Adapter, T1 {
+  private UsesTGeneric_T1_0_Adapter _delegate;
   
-  private T1 _T1_0;
+  private T1Impl _T1_0;
   
-  public UsesTGeneric_T1_0_Adapter(final UsesTGeneric_T1_0_AdapterInterface delegate) {
+  public UsesTGeneric_T1_0_AdapterImpl(final UsesTGeneric_T1_0_Adapter delegate) {
     this._delegate = delegate;
-    _T1_0 = new T1(this);
+    _T1_0 = new T1Impl(this);
   }
   
   public <T> List<T> returnList(final T t) {
@@ -856,6 +871,24 @@ public class UsesTGeneric_T1_0_Adapter implements UsesTGeneric_T1_0_AdapterInter
 '''
 )
 
+assertTraitJavaInterface("tests", "UsesTGeneric",
+'''
+package tests;
+
+import tests.T1;
+import tests.UsesTGeneric_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface UsesTGeneric extends UsesTGeneric_T1_0_Adapter, T1 {
+  @XtraitjDefinedMethod
+  public abstract String useLists();
+}
+'''
+)
+
 assertTraitJavaClass("tests", "UsesTGeneric",
 '''
 package tests;
@@ -863,25 +896,25 @@ package tests;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import tests.T1;
-import tests.UsesTGenericInterface;
-import tests.UsesTGeneric_T1_0_Adapter;
+import tests.T1Impl;
+import tests.UsesTGeneric;
+import tests.UsesTGeneric_T1_0_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class UsesTGeneric implements UsesTGenericInterface {
-  private UsesTGenericInterface _delegate;
+public class UsesTGenericImpl implements UsesTGeneric {
+  private UsesTGeneric _delegate;
   
-  private UsesTGeneric_T1_0_Adapter _T1_0;
+  private UsesTGeneric_T1_0_AdapterImpl _T1_0;
   
-  private T1 _T1;
+  private T1Impl _T1;
   
-  public UsesTGeneric(final UsesTGenericInterface delegate) {
+  public UsesTGenericImpl(final UsesTGeneric delegate) {
     this._delegate = delegate;
-    _T1_0 = new UsesTGeneric_T1_0_Adapter(delegate);
-    _T1 = new T1(delegate);
+    _T1_0 = new UsesTGeneric_T1_0_AdapterImpl(delegate);
+    _T1 = new T1Impl(delegate);
   }
   
   @XtraitjDefinedMethod
