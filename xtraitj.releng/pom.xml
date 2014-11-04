@@ -50,6 +50,7 @@
 		
 		<findbugs.skip>false</findbugs.skip>
 		<swtbot.tests.only>false</swtbot.tests.only>
+		<swtbot.tests.skip>true</swtbot.tests.skip>
 	</properties>
 
 	<profiles>
