@@ -1,18 +1,13 @@
 package xtraitj.tests
 
-import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.input.tests.XtraitjInputs
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(InjectorProviderCustom))
 class XtraitjWithOperationsCompilerTest extends AbstractXtraitjCompilerTest {
-	@Inject extension CompilationTestHelper
-	@Inject extension XtraitjInputs
 	
 	@Test def void testTraitRenamedRequiredMethodDoesNotConflict() {
 		traitRenamedRequiredMethodDoesNotConflict.compile[

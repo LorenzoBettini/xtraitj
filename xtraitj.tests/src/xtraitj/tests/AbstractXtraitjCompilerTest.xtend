@@ -1,10 +1,13 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.xtext.junit4.TemporaryFolder
+import org.eclipse.xtext.resource.FileExtensionProvider
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Rule
+import xtraitj.input.tests.XtraitjInputs
 
 import static extension org.junit.Assert.*
 
@@ -13,6 +16,12 @@ class AbstractXtraitjCompilerTest {
 	
 	@Rule
 	@Inject public TemporaryFolder temporaryFolder 
+	
+	@Inject private FileExtensionProvider extensionProvider
+	
+	@Inject protected extension CompilationTestHelper
+	
+	@Inject protected extension XtraitjInputs
 	
 	def protected void assertTraitAdapterJavaInterface(CompilationTestHelper.Result r, String name, CharSequence expected) {
 		r.assertTraitJavaInterface(name + "_Adapter", expected)
@@ -77,4 +86,16 @@ class AbstractXtraitjCompilerTest {
 	def protected assertGeneratedJavaCodeCompiles(CompilationTestHelper.Result r) {
 		r.compiledClass // check Java compilation succeeds
 	}
+
+	def protected createResourceSet(List<CharSequence> inputs) {
+		val pairs = newArrayList() => [
+			list |
+			inputs.forEach[e, i|
+				list += "MyFile" + i + "." + 
+					extensionProvider.getPrimaryFileExtension() -> e
+			]
+		] 
+		resourceSet(pairs)
+	}
+	
 }
