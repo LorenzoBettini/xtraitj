@@ -42,7 +42,7 @@ trait UsesTGeneric uses
 		return (intList1.toString + intList2.toString)
 	}
 }
-		'''.parse.assertErrorsAsStrings("The method returnList() is not visible")
+		'''.parse.assertErrorsAsStrings("The method returnList() is undefined")
 	}
 
 	@Test def void testAccessToRenamedField() {
@@ -70,10 +70,10 @@ trait UsesT uses
 }
 		'''.parse.assertErrorsAsStrings(
 '''
-The method getF() is not visible
-The method isB() is not visible
-The method setF(String) is not visible
-The method setB(boolean) is not visible'''
+Couldn't resolve reference to JvmIdentifiableElement 'f'.
+Couldn't resolve reference to JvmIdentifiableElement 'b'.
+The method f(String) is undefined
+The method b(boolean) is undefined'''
 )
 	}
 
