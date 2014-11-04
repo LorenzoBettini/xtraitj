@@ -3,7 +3,6 @@ package xtraitj.jvmmodel
 import com.google.inject.Inject
 import java.util.HashMap
 import java.util.List
-import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
@@ -46,7 +45,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IJvmModelAssociations
 	@Inject extension XtraitjTypeParameterHelper
 	@Inject extension XtraitjAnnotatedElementHelper
-
+	
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
 	 * given element's type that is contained in a resource.
@@ -378,7 +377,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						copyAllAnnotationsFrom(op)
 					]
 					if (op.annotatedRequiredField())
-						members += jvmOp.toAbstractSetterDelegateFromGetter
+						members += t.toAbstractSetterDelegateFromGetter(jvmOp)
 				} else {
 					if (renameOperation != null) {
 						val newname = renameOperation.newname
@@ -389,8 +388,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 										op.annotateAsRenamedMethod(it, origName) 
 									]
 						if (op.annotatedRequiredField()) {
-							members += jvmOp.toAbstractSetterDelegateFromGetter
-								(newname)
+							members += t.toAbstractSetterDelegateFromGetter
+								(jvmOp, newname)
 						}
 					}
 	//					// hidden methods are simply not inserted in this interface
@@ -1206,7 +1205,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						op.op.simpleName, op.op.simpleName) => [
 		   					op.op.annotateAsRequiredField(it)
 		   				]
-	   				members += op.toSetterDelegateFromGetter(it)
+	   				members += tRef.toSetterDelegateFromGetter(op, it)
    				}
 			}
 			
@@ -1330,11 +1329,24 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //			] // and we can navigate to the original method
 	}
 	
-	def private toSetterDelegateFromGetter(XtraitjJvmOperation op, JvmGenericType target) {
+	def private toSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op, JvmGenericType target) {
    		val fieldName = op.op.simpleName.stripGetter
-   		op.op.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
+   		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
+   		]
+   	}
+
+	def private toAbstractSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op) {
+   		val fieldName = op.op.simpleName.stripGetter
+   		source.toSetter(fieldName, op.returnType) => [
+   			abstract = true
+   		]
+   	}
+
+	def private toAbstractSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op, String newName) {
+   		source.toSetter(newName, op.returnType) => [
+   			abstract = true
    		]
    	}
 }
