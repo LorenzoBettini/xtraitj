@@ -489,6 +489,8 @@ class C uses T {
 			String n() { return "T2.n;"; }
 		}
 		
+		// since m and n are renamed, we can (re)define a new
+		// version in this trait
 		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
 			String m() {
 				return "T3." + m2();
