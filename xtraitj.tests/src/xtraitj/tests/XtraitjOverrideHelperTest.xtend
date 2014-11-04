@@ -37,6 +37,7 @@ getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequi
 '''
 getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithRenamed
 getRenamed() : String - [XtraitjRenamedMethod] - MyAnnotatedJavaInterfaceWithRenamed
+getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
 getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
 		)
 	}
@@ -46,7 +47,8 @@ getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequi
 '''
 getRequired() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithRenamedField
 getRenamedField() : String - [XtraitjRenamedMethod, XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRenamedField
-getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined'''
+getDefined() : String - [XtraitjDefinedMethod] - MyAnnotatedJavaInterfaceWithDefined
+getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequirements'''
 		)
 	}
 

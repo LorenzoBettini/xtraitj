@@ -40,7 +40,7 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			val operations = type.getDeclaredOperations();
 			for(JvmOperation operation: operations) {
 				val simpleName = operation.getSimpleName();
-				if (!hasAlreadyBeenRenamed(result, simpleName)) {
+//				if (!hasAlreadyBeenRenamed(result, simpleName)) {
 					if (processedOperations.containsKey(simpleName)) {
 						if (isOverridden(operation, processedOperations.get(simpleName))) {
 							if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
@@ -54,7 +54,7 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 					} else {
 						addAsResolved(operation, processedOperations, simpleName, result);
 					}
-				}
+//				}
 			}
 			for(JvmTypeReference superType: type.getSuperTypes()) {
 				val rawSuperType = superType.getType();
@@ -75,12 +75,12 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 		])
 	}
 
-	protected def hasAlreadyBeenRenamed(List<IResolvedOperation> result, String simpleName) {
-		result.exists[
-			o | 
-			annotatedElementHelper.annotatedRenamedMethodFor(o.declaration, simpleName)
-		]
-	}
+//	protected def hasAlreadyBeenRenamed(List<IResolvedOperation> result, String simpleName) {
+//		result.exists[
+//			o | 
+//			annotatedElementHelper.annotatedRenamedMethodFor(o.declaration, simpleName)
+//		]
+//	}
 	
 	private def addAsResolved(JvmOperation operation, Multimap<String, AbstractResolvedOperation> processedOperations, String simpleName, List<IResolvedOperation> result) {
 		val resolvedOperation = createResolvedOperation(operation);

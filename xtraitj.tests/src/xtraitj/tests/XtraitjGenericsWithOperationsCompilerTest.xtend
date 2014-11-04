@@ -2,6 +2,7 @@ package xtraitj.tests
 
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -197,221 +198,230 @@ public class C implements UsesTGeneric {
 
 	@Test def void testTraitUsesGenericTraitWithRename() {
 		traitUsesGenericTraitWithRename.compile[
-
-assertTraitJavaInterface("tests", "UsesTGeneric",
-'''
-package tests;
-
-import tests.TGeneric;
-import tests.UsesTGeneric_TGeneric_0_Adapter;
-import tests.UsesTGeneric_TGeneric_1_Adapter;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter, UsesTGeneric_TGeneric_1_Adapter, TGeneric<String> {
-  @XtraitjDefinedMethod
-  public abstract String useLists();
-}
-'''
-)
-
-assertTraitJavaClass("tests", "UsesTGeneric",
-'''
-package tests;
-
-import java.util.List;
-import org.eclipse.xtext.xbase.lib.ObjectExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import tests.TGenericImpl;
-import tests.UsesTGeneric;
-import tests.UsesTGeneric_TGeneric_0_AdapterImpl;
-import tests.UsesTGeneric_TGeneric_1_AdapterImpl;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class UsesTGenericImpl implements UsesTGeneric {
-  private UsesTGeneric _delegate;
-  
-  private UsesTGeneric_TGeneric_0_AdapterImpl _TGeneric_0;
-  
-  private UsesTGeneric_TGeneric_1_AdapterImpl _TGeneric_1;
-  
-  private TGenericImpl<String> _TGeneric;
-  
-  public UsesTGenericImpl(final UsesTGeneric delegate) {
-    this._delegate = delegate;
-    _TGeneric_0 = new UsesTGeneric_TGeneric_0_AdapterImpl(delegate);
-    _TGeneric_1 = new UsesTGeneric_TGeneric_1_AdapterImpl(delegate);
-    _TGeneric = new TGenericImpl(delegate);
-  }
-  
-  @XtraitjDefinedMethod
-  public String useLists() {
-    return _delegate.useLists();
-  }
-  
-  public String _useLists() {
-    String _xblockexpression = null;
-    {
-      List<String> _returnList = this.returnList();
-      final Procedure1<List<String>> _function = new Procedure1<List<String>>() {
-        public void apply(final List<String> it) {
-          it.add("foo");
-        }
-      };
-      final List<String> stringList = ObjectExtensions.<List<String>>operator_doubleArrow(_returnList, _function);
-      List<Integer> _returnListOfInteger = this.returnListOfInteger();
-      final Procedure1<List<Integer>> _function_1 = new Procedure1<List<Integer>>() {
-        public void apply(final List<Integer> it) {
-          it.add(Integer.valueOf(1));
-        }
-      };
-      final List<Integer> intList = ObjectExtensions.<List<Integer>>operator_doubleArrow(_returnListOfInteger, _function_1);
-      List<List<Integer>> _returnListOfListOfInteger = this.returnListOfListOfInteger();
-      final Procedure1<List<List<Integer>>> _function_2 = new Procedure1<List<List<Integer>>>() {
-        public void apply(final List<List<Integer>> it) {
-          List<Integer> _returnListOfInteger = UsesTGenericImpl.this.returnListOfInteger();
-          final Procedure1<List<Integer>> _function = new Procedure1<List<Integer>>() {
-            public void apply(final List<Integer> it) {
-              it.add(Integer.valueOf(2));
-            }
-          };
-          List<Integer> _doubleArrow = ObjectExtensions.<List<Integer>>operator_doubleArrow(_returnListOfInteger, _function);
-          it.add(_doubleArrow);
-        }
-      };
-      final List<List<Integer>> intListList = ObjectExtensions.<List<List<Integer>>>operator_doubleArrow(_returnListOfListOfInteger, _function_2);
-      String _string = stringList.toString();
-      String _string_1 = intList.toString();
-      String _plus = (_string + _string_1);
-      String _string_2 = intListList.toString();
-      _xblockexpression = (_plus + _string_2);
-    }
-    return _xblockexpression;
-  }
-  
-  @XtraitjDefinedMethod
-  public List<Integer> returnListOfInteger() {
-    return _delegate.returnListOfInteger();
-  }
-  
-  public List<Integer> _returnListOfInteger() {
-    return _TGeneric_0._returnListOfInteger();
-  }
-  
-  @XtraitjDefinedMethod
-  public List<List<Integer>> returnListOfListOfInteger() {
-    return _delegate.returnListOfListOfInteger();
-  }
-  
-  public List<List<Integer>> _returnListOfListOfInteger() {
-    return _TGeneric_1._returnListOfListOfInteger();
-  }
-  
-  @XtraitjDefinedMethod
-  public List<String> returnList() {
-    return _delegate.returnList();
-  }
-  
-  public List<String> _returnList() {
-    return _TGeneric._returnList();
-  }
-}
-'''
-)
-
-assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
-'''
-package tests;
-
-import java.util.List;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public interface UsesTGeneric_TGeneric_0_Adapter {
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("returnList")
-  public abstract List<Integer> returnListOfInteger();
-}
-'''
-)
-
-assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
-'''
-package tests;
-
-import java.util.List;
-import tests.TGeneric;
-import tests.TGenericImpl;
-import tests.UsesTGeneric_TGeneric_0_Adapter;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
-  private UsesTGeneric_TGeneric_0_Adapter _delegate;
-  
-  private TGenericImpl<Integer> _TGeneric_0;
-  
-  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
-    this._delegate = delegate;
-    _TGeneric_0 = new TGenericImpl(this);
-  }
-  
-  public List<Integer> returnList() {
-    return this.returnListOfInteger();
-  }
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("returnList")
-  public List<Integer> returnListOfInteger() {
-    return _delegate.returnListOfInteger();
-  }
-  
-  public List<Integer> _returnListOfInteger() {
-    return _TGeneric_0._returnList();
-  }
-}
-'''
-)
-
-assertJavaClass("tests", "C",
-'''
-package tests;
-
-import java.util.List;
-import tests.UsesTGeneric;
-import tests.UsesTGenericInterface;
-
-@SuppressWarnings("all")
-public class C implements UsesTGenericInterface {
-  private UsesTGeneric _UsesTGeneric = new UsesTGeneric(this);
-  
-  public String useLists() {
-    return _UsesTGeneric._useLists();
-  }
-  
-  public List<String> returnList() {
-    return _UsesTGeneric._returnList();
-  }
-  
-  public List<Integer> returnListOfInteger() {
-    return _UsesTGeneric._returnListOfInteger();
-  }
-  
-  public List<List<Integer>> returnListOfListOfInteger() {
-    return _UsesTGeneric._returnListOfListOfInteger();
-  }
-}
-'''
-)
-			executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[foo][1][[2]]")
+			expectationsForTraitUsesGenericTraitWithRename(it)
 		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithRenameSeparateFiles() {
+		traitUsesGenericTraitWithRenameSeparateFiles.createResourceSet.compile[
+			expectationsForTraitUsesGenericTraitWithRename(it)
+		]
+	}
+	
+	private def expectationsForTraitUsesGenericTraitWithRename(Result it) {
+		assertTraitJavaInterface("tests", "UsesTGeneric",
+		'''
+		package tests;
+		
+		import tests.TGeneric;
+		import tests.UsesTGeneric_TGeneric_0_Adapter;
+		import tests.UsesTGeneric_TGeneric_1_Adapter;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+		
+		@XtraitjTraitInterface
+		@SuppressWarnings("all")
+		public interface UsesTGeneric extends UsesTGeneric_TGeneric_0_Adapter, UsesTGeneric_TGeneric_1_Adapter, TGeneric<String> {
+		  @XtraitjDefinedMethod
+		  public abstract String useLists();
+		}
+		'''
+		)
+		
+		assertTraitJavaClass("tests", "UsesTGeneric",
+		'''
+		package tests;
+		
+		import java.util.List;
+		import org.eclipse.xtext.xbase.lib.ObjectExtensions;
+		import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+		import tests.TGenericImpl;
+		import tests.UsesTGeneric;
+		import tests.UsesTGeneric_TGeneric_0_AdapterImpl;
+		import tests.UsesTGeneric_TGeneric_1_AdapterImpl;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+		
+		@XtraitjTraitClass
+		@SuppressWarnings("all")
+		public class UsesTGenericImpl implements UsesTGeneric {
+		  private UsesTGeneric _delegate;
+		  
+		  private UsesTGeneric_TGeneric_0_AdapterImpl _TGeneric_0;
+		  
+		  private UsesTGeneric_TGeneric_1_AdapterImpl _TGeneric_1;
+		  
+		  private TGenericImpl<String> _TGeneric;
+		  
+		  public UsesTGenericImpl(final UsesTGeneric delegate) {
+		    this._delegate = delegate;
+		    _TGeneric_0 = new UsesTGeneric_TGeneric_0_AdapterImpl(delegate);
+		    _TGeneric_1 = new UsesTGeneric_TGeneric_1_AdapterImpl(delegate);
+		    _TGeneric = new TGenericImpl(delegate);
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String useLists() {
+		    return _delegate.useLists();
+		  }
+		  
+		  public String _useLists() {
+		    String _xblockexpression = null;
+		    {
+		      List<String> _returnList = this.returnList();
+		      final Procedure1<List<String>> _function = new Procedure1<List<String>>() {
+		        public void apply(final List<String> it) {
+		          it.add("foo");
+		        }
+		      };
+		      final List<String> stringList = ObjectExtensions.<List<String>>operator_doubleArrow(_returnList, _function);
+		      List<Integer> _returnListOfInteger = this.returnListOfInteger();
+		      final Procedure1<List<Integer>> _function_1 = new Procedure1<List<Integer>>() {
+		        public void apply(final List<Integer> it) {
+		          it.add(Integer.valueOf(1));
+		        }
+		      };
+		      final List<Integer> intList = ObjectExtensions.<List<Integer>>operator_doubleArrow(_returnListOfInteger, _function_1);
+		      List<List<Integer>> _returnListOfListOfInteger = this.returnListOfListOfInteger();
+		      final Procedure1<List<List<Integer>>> _function_2 = new Procedure1<List<List<Integer>>>() {
+		        public void apply(final List<List<Integer>> it) {
+		          List<Integer> _returnListOfInteger = UsesTGenericImpl.this.returnListOfInteger();
+		          final Procedure1<List<Integer>> _function = new Procedure1<List<Integer>>() {
+		            public void apply(final List<Integer> it) {
+		              it.add(Integer.valueOf(2));
+		            }
+		          };
+		          List<Integer> _doubleArrow = ObjectExtensions.<List<Integer>>operator_doubleArrow(_returnListOfInteger, _function);
+		          it.add(_doubleArrow);
+		        }
+		      };
+		      final List<List<Integer>> intListList = ObjectExtensions.<List<List<Integer>>>operator_doubleArrow(_returnListOfListOfInteger, _function_2);
+		      String _string = stringList.toString();
+		      String _string_1 = intList.toString();
+		      String _plus = (_string + _string_1);
+		      String _string_2 = intListList.toString();
+		      _xblockexpression = (_plus + _string_2);
+		    }
+		    return _xblockexpression;
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public List<Integer> returnListOfInteger() {
+		    return _delegate.returnListOfInteger();
+		  }
+		  
+		  public List<Integer> _returnListOfInteger() {
+		    return _TGeneric_0._returnListOfInteger();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public List<List<Integer>> returnListOfListOfInteger() {
+		    return _delegate.returnListOfListOfInteger();
+		  }
+		  
+		  public List<List<Integer>> _returnListOfListOfInteger() {
+		    return _TGeneric_1._returnListOfListOfInteger();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public List<String> returnList() {
+		    return _delegate.returnList();
+		  }
+		  
+		  public List<String> _returnList() {
+		    return _TGeneric._returnList();
+		  }
+		}
+		'''
+		)
+		
+		assertTraitAdapterJavaInterface("tests", "UsesTGeneric_TGeneric_0",
+		'''
+		package tests;
+		
+		import java.util.List;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+		
+		@SuppressWarnings("all")
+		public interface UsesTGeneric_TGeneric_0_Adapter {
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("returnList")
+		  public abstract List<Integer> returnListOfInteger();
+		}
+		'''
+		)
+		
+		assertTraitAdapterJavaClass("tests", "UsesTGeneric_TGeneric_0",
+		'''
+		package tests;
+		
+		import java.util.List;
+		import tests.TGeneric;
+		import tests.TGenericImpl;
+		import tests.UsesTGeneric_TGeneric_0_Adapter;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+		
+		@SuppressWarnings("all")
+		public class UsesTGeneric_TGeneric_0_AdapterImpl implements UsesTGeneric_TGeneric_0_Adapter, TGeneric<Integer> {
+		  private UsesTGeneric_TGeneric_0_Adapter _delegate;
+		  
+		  private TGenericImpl<Integer> _TGeneric_0;
+		  
+		  public UsesTGeneric_TGeneric_0_AdapterImpl(final UsesTGeneric_TGeneric_0_Adapter delegate) {
+		    this._delegate = delegate;
+		    _TGeneric_0 = new TGenericImpl(this);
+		  }
+		  
+		  public List<Integer> returnList() {
+		    return this.returnListOfInteger();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("returnList")
+		  public List<Integer> returnListOfInteger() {
+		    return _delegate.returnListOfInteger();
+		  }
+		  
+		  public List<Integer> _returnListOfInteger() {
+		    return _TGeneric_0._returnList();
+		  }
+		}
+		'''
+		)
+		
+		assertJavaClass("tests", "C",
+		'''
+		package tests;
+		
+		import java.util.List;
+		import tests.UsesTGeneric;
+		import tests.UsesTGenericImpl;
+		
+		@SuppressWarnings("all")
+		public class C implements UsesTGeneric {
+		  private UsesTGenericImpl _UsesTGeneric = new UsesTGenericImpl(this);
+		  
+		  public String useLists() {
+		    return _UsesTGeneric._useLists();
+		  }
+		  
+		  public List<Integer> returnListOfInteger() {
+		    return _UsesTGeneric._returnListOfInteger();
+		  }
+		  
+		  public List<List<Integer>> returnListOfListOfInteger() {
+		    return _UsesTGeneric._returnListOfListOfInteger();
+		  }
+		  
+		  public List<String> returnList() {
+		    return _UsesTGeneric._returnList();
+		  }
+		}
+		'''
+		)
+					executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[foo][1][[2]]")
 	}
 
 	@Test def void traitRenameGenericFieldInstantiated() {
@@ -971,22 +981,22 @@ package tests;
 
 import java.util.List;
 import tests.UsesTGeneric;
-import tests.UsesTGenericInterface;
+import tests.UsesTGenericImpl;
 
 @SuppressWarnings("all")
-public class C implements UsesTGenericInterface {
-  private UsesTGeneric _UsesTGeneric = new UsesTGeneric(this);
+public class C implements UsesTGeneric {
+  private UsesTGenericImpl _UsesTGeneric = new UsesTGenericImpl(this);
   
   public String useLists() {
     return _UsesTGeneric._useLists();
   }
   
-  public <T> List<T> returnList(final T t) {
-    return _UsesTGeneric._returnList(t);
-  }
-  
   public <T> List<T> returnListOfInteger(final T t) {
     return _UsesTGeneric._returnListOfInteger(t);
+  }
+  
+  public <T> List<T> returnList(final T t) {
+    return _UsesTGeneric._returnList(t);
   }
 }
 '''

@@ -195,7 +195,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				
 				// do not delegate to a trait who requires that operation
 	   			// but to the one which actually implements it
-				for (traitMethod : traitRef.getAllDefinedMethodOperationsFromMap(maps.traitInterfaceResolvedOperationsMap))
+				val allDefinedOperations = traitRef.getAllDefinedMethodOperationsFromMap(maps.traitInterfaceResolvedOperationsMap)
+				for (traitMethod : allDefinedOperations)
 					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
 						copyAnnotationsFrom(traitMethod)
 					]
@@ -493,7 +494,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			]
 			
 			// we need the JvmOperation with resolved type arguments
-			val allDeclarations = t.getAllDeclaredOperationsFromMap(maps.traitInterfaceResolvedOperationsMap).toList
+			val allDeclarations = t.getAllDeclaredOperationsFromMap(maps.traitInterfaceResolvedOperationsMap)
 			
 			for (tOp : t.operations) {
 				switch(tOp) {
