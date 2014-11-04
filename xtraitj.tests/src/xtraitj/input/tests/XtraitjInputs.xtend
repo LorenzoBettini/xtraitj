@@ -532,6 +532,45 @@ class C uses T {
 		'''
 	}
 
+	def traitDoubleRenamingSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2[ rename m to m2, rename n to n2 ], 
+		              T2[ rename m to m3, rename n to n3 ] {
+			String m() {
+				return "T3." + m2();
+			}
+			String foo() { 
+				return n3() + m();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2 uses T1 {
+			String n() { return "T2.n;"; }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			String m() { return "T1.m;"; }
+		}
+		'''
+		]
+	}
+
 	def traitRenameField() {
 		'''
 		package tests;
@@ -1240,6 +1279,81 @@ class C uses T1 {}
 
 class C2 uses T2 {}
 '''
+	}
+
+	def traitUsingGenericMethodSeparateFiles() {
+#[
+'''
+package tests;
+
+trait T1 {
+	<T> T identity(T t) {
+		return t
+	}
+	
+	String useIdentity() {
+		val s = identity("foo")
+		val i = identity(0)
+		val l = identity(newArrayList(true, false))
+		return s + "," + i + "," + l
+	}
+
+	<V> V recursive(V v) {
+		return recursive(recursive(v))
+	}
+
+	<U> void noReturn(U u) {
+		println(u)
+	}
+
+	void useRecursive() {
+		println(recursive(0) + recursive("foo"))
+	}
+
+	String useIdentityNested() {
+		val s = identity(identity("foo"))
+		val i = identity(identity(0))
+		val l = identity(identity(newArrayList(true, false)))
+		return s + "," + i + "," + l
+	}
+	
+	void useNoReturn() {
+		noReturn("foo")
+		noReturn(0)
+	}
+}
+''',
+'''
+package tests;
+
+trait T2 uses T1 {
+	String useIdentity2() {
+		val s = identity("bar")
+		return s + "," + useIdentity()
+	}
+	
+	String useIdentityNested2() {
+		val s = identity(identity("bar"))
+		return s + "," + useIdentityNested()
+	}
+	
+	void useNoReturn2() {
+		noReturn("foo")
+		noReturn(0)
+	}
+}
+''',
+'''
+package tests;
+
+class C2 uses T2 {}
+''',
+'''
+package tests;
+
+class C uses T1 {}
+'''
+]
 	}
 
 	def traitWithGenericMethodShadowingTraitTypeParameter() {

@@ -2,6 +2,7 @@ package xtraitj.tests
 
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -144,140 +145,171 @@ public class TImpl implements T {
 			boolean b=false;
 		}
 		'''.compile [
-
-assertTraitJavaInterface("T",
-'''
-import java.util.List;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T {
-  @XtraitjRequiredField
-  public abstract List<Integer> getF();
-  
-  public abstract void setF(final List<Integer> f);
-  
-  @XtraitjRequiredField
-  public abstract boolean isB();
-  
-  public abstract void setB(final boolean b);
-  
-  @XtraitjDefinedMethod
-  public abstract Object m(final List<String> l, final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract Object n();
-}
-''')
-assertTraitJavaClass("T",
-'''
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class TImpl implements T {
-  private T _delegate;
-  
-  public TImpl(final T delegate) {
-    this._delegate = delegate;
-  }
-  
-  @XtraitjRequiredField
-  public List<Integer> getF() {
-    return _delegate.getF();
-  }
-  
-  public void setF(final List<Integer> f) {
-    _delegate.setF(f);
-  }
-  
-  @XtraitjRequiredField
-  public boolean isB() {
-    return _delegate.isB();
-  }
-  
-  public void setB(final boolean b) {
-    _delegate.setB(b);
-  }
-  
-  @XtraitjDefinedMethod
-  public Object m(final List<String> l, final String s) {
-    return _delegate.m(l, s);
-  }
-  
-  public Object _m(final List<String> l, final String s) {
-    ArrayList<Integer> _newArrayList = CollectionLiterals.<Integer>newArrayList(Integer.valueOf(1));
-    this.setF(_newArrayList);
-    int _size = l.size();
-    String _plus = (Integer.valueOf(_size) + s);
-    List<Integer> _f = this.getF();
-    String _plus_1 = (_plus + _f);
-    boolean _isB = this.isB();
-    return (_plus_1 + Boolean.valueOf(_isB));
-  }
-  
-  @XtraitjDefinedMethod
-  public Object n() {
-    return _delegate.n();
-  }
-  
-  public Object _n() {
-    LinkedList<String> _newLinkedList = CollectionLiterals.<String>newLinkedList("bar");
-    return this.m(_newLinkedList, "foo");
-  }
-}
-''')
-
-assertJavaClass("C",
-'''
-import java.util.List;
-
-@SuppressWarnings("all")
-public class C implements T {
-  private List<Integer> f;
-  
-  public List<Integer> getF() {
-    return this.f;
-  }
-  
-  public void setF(final List<Integer> f) {
-    this.f = f;
-  }
-  
-  private boolean b = false;
-  
-  public boolean isB() {
-    return this.b;
-  }
-  
-  public void setB(final boolean b) {
-    this.b = b;
-  }
-  
-  private TImpl _T = new TImpl(this);
-  
-  public Object m(final List<String> l, final String s) {
-    return _T._m(l, s);
-  }
-  
-  public Object n() {
-    return _T._n();
-  }
-}
-'''
-)
-
-			executeGeneratedJavaClassMethodAndAssert("C", "n", "1foo[1]false")
+			expectationsForTraitAndClass(it)
 		]
+	}
+
+	@Test def void testTraitAndClassSeparateFiles() {
+		#[
+		'''
+		import java.util.List
+		
+		class C uses T {
+			List<Integer> f;
+			boolean b=false;
+		}
+		''',
+		'''
+		import java.util.List
+		
+		trait T {
+			List<Integer> f;
+			boolean b;
+			Object m(List<String> l, String s) {
+				f = newArrayList(1)
+				return l.size + s + f + b;
+			}
+			Object n() { m(newLinkedList("bar"), "foo"); }
+		}
+		'''
+		].createResourceSet.compile [
+			expectationsForTraitAndClass(it)
+		]
+	}
+	
+	private def expectationsForTraitAndClass(Result it) {
+		assertTraitJavaInterface("T",
+		'''
+		import java.util.List;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+		
+		@XtraitjTraitInterface
+		@SuppressWarnings("all")
+		public interface T {
+		  @XtraitjRequiredField
+		  public abstract List<Integer> getF();
+		  
+		  public abstract void setF(final List<Integer> f);
+		  
+		  @XtraitjRequiredField
+		  public abstract boolean isB();
+		  
+		  public abstract void setB(final boolean b);
+		  
+		  @XtraitjDefinedMethod
+		  public abstract Object m(final List<String> l, final String s);
+		  
+		  @XtraitjDefinedMethod
+		  public abstract Object n();
+		}
+		''')
+		assertTraitJavaClass("T",
+		'''
+		import java.util.ArrayList;
+		import java.util.LinkedList;
+		import java.util.List;
+		import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+		
+		@XtraitjTraitClass
+		@SuppressWarnings("all")
+		public class TImpl implements T {
+		  private T _delegate;
+		  
+		  public TImpl(final T delegate) {
+		    this._delegate = delegate;
+		  }
+		  
+		  @XtraitjRequiredField
+		  public List<Integer> getF() {
+		    return _delegate.getF();
+		  }
+		  
+		  public void setF(final List<Integer> f) {
+		    _delegate.setF(f);
+		  }
+		  
+		  @XtraitjRequiredField
+		  public boolean isB() {
+		    return _delegate.isB();
+		  }
+		  
+		  public void setB(final boolean b) {
+		    _delegate.setB(b);
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public Object m(final List<String> l, final String s) {
+		    return _delegate.m(l, s);
+		  }
+		  
+		  public Object _m(final List<String> l, final String s) {
+		    ArrayList<Integer> _newArrayList = CollectionLiterals.<Integer>newArrayList(Integer.valueOf(1));
+		    this.setF(_newArrayList);
+		    int _size = l.size();
+		    String _plus = (Integer.valueOf(_size) + s);
+		    List<Integer> _f = this.getF();
+		    String _plus_1 = (_plus + _f);
+		    boolean _isB = this.isB();
+		    return (_plus_1 + Boolean.valueOf(_isB));
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public Object n() {
+		    return _delegate.n();
+		  }
+		  
+		  public Object _n() {
+		    LinkedList<String> _newLinkedList = CollectionLiterals.<String>newLinkedList("bar");
+		    return this.m(_newLinkedList, "foo");
+		  }
+		}
+		''')
+		
+		assertJavaClass("C",
+		'''
+		import java.util.List;
+		
+		@SuppressWarnings("all")
+		public class C implements T {
+		  private List<Integer> f;
+		  
+		  public List<Integer> getF() {
+		    return this.f;
+		  }
+		  
+		  public void setF(final List<Integer> f) {
+		    this.f = f;
+		  }
+		  
+		  private boolean b = false;
+		  
+		  public boolean isB() {
+		    return this.b;
+		  }
+		  
+		  public void setB(final boolean b) {
+		    this.b = b;
+		  }
+		  
+		  private TImpl _T = new TImpl(this);
+		  
+		  public Object m(final List<String> l, final String s) {
+		    return _T._m(l, s);
+		  }
+		  
+		  public Object n() {
+		    return _T._n();
+		  }
+		}
+		'''
+		)
+		
+					executeGeneratedJavaClassMethodAndAssert("C", "n", "1foo[1]false")
 	}
 
 	@Test def void testTraitPrivateMethod() {

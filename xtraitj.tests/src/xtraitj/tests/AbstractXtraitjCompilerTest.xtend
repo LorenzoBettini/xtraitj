@@ -87,7 +87,7 @@ class AbstractXtraitjCompilerTest {
 		r.compiledClass // check Java compilation succeeds
 	}
 
-	def protected createResourceSet(List<CharSequence> inputs) {
+	def protected createResourceSet(List<? extends CharSequence> inputs) {
 		val pairs = newArrayList() => [
 			list |
 			inputs.forEach[e, i|

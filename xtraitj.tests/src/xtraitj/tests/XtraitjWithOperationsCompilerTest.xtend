@@ -2,6 +2,7 @@ package xtraitj.tests
 
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -661,206 +662,215 @@ public class T3 implements T3Interface {
 
 	@Test def void testTraitDoubleRenaming() {
 		traitDoubleRenaming.compile[
-
-assertTraitAdapterJavaInterface("tests", "T3_T2_0",
-'''
-package tests;
-
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("n")
-  public abstract String n2();
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("m")
-  public abstract String m2();
-}
-'''
-)
-
-assertTraitAdapterJavaInterface("tests", "T3_T2_1",
-'''
-package tests;
-
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public interface T3_T2_1_Adapter {
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("n")
-  public abstract String n3();
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("m")
-  public abstract String m3();
-}
-'''
-)
-
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests;
-
-import tests.T3_T2_0_Adapter;
-import tests.T3_T2_1_Adapter;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3 extends T3_T2_0_Adapter, T3_T2_1_Adapter {
-  @XtraitjDefinedMethod
-  public abstract String m();
-  
-  @XtraitjDefinedMethod
-  public abstract String foo();
-}
-'''
-)
-
-assertTraitAdapterJavaClass("tests", "T3_T2_0",
-'''
-package tests;
-
-import tests.T2;
-import tests.T2Impl;
-import tests.T3_T2_0_Adapter;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
-  private T3_T2_0_Adapter _delegate;
-  
-  private T2Impl _T2_0;
-  
-  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
-    this._delegate = delegate;
-    _T2_0 = new T2Impl(this);
-  }
-  
-  public String m() {
-    return this.m2();
-  }
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("m")
-  public String m2() {
-    return _delegate.m2();
-  }
-  
-  public String _m2() {
-    return _T2_0._m();
-  }
-  
-  public String n() {
-    return this.n2();
-  }
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("n")
-  public String n2() {
-    return _delegate.n2();
-  }
-  
-  public String _n2() {
-    return _T2_0._n();
-  }
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T3",
-'''
-package tests;
-
-import tests.T3;
-import tests.T3_T2_0_AdapterImpl;
-import tests.T3_T2_1_AdapterImpl;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-
-@XtraitjTraitClass
-@SuppressWarnings("all")
-public class T3Impl implements T3 {
-  private T3 _delegate;
-  
-  private T3_T2_0_AdapterImpl _T2_0;
-  
-  private T3_T2_1_AdapterImpl _T2_1;
-  
-  public T3Impl(final T3 delegate) {
-    this._delegate = delegate;
-    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
-    _T2_1 = new T3_T2_1_AdapterImpl(delegate);
-  }
-  
-  @XtraitjDefinedMethod
-  public String m() {
-    return _delegate.m();
-  }
-  
-  public String _m() {
-    String _m2 = this.m2();
-    return ("T3." + _m2);
-  }
-  
-  @XtraitjDefinedMethod
-  public String foo() {
-    return _delegate.foo();
-  }
-  
-  public String _foo() {
-    String _n3 = this.n3();
-    String _m = this.m();
-    return (_n3 + _m);
-  }
-  
-  @XtraitjDefinedMethod
-  public String n2() {
-    return _delegate.n2();
-  }
-  
-  public String _n2() {
-    return _T2_0._n2();
-  }
-  
-  @XtraitjDefinedMethod
-  public String m2() {
-    return _delegate.m2();
-  }
-  
-  public String _m2() {
-    return _T2_0._m2();
-  }
-  
-  @XtraitjDefinedMethod
-  public String n3() {
-    return _delegate.n3();
-  }
-  
-  public String _n3() {
-    return _T2_1._n3();
-  }
-  
-  @XtraitjDefinedMethod
-  public String m3() {
-    return _delegate.m3();
-  }
-  
-  public String _m3() {
-    return _T2_1._m3();
-  }
-}
-'''
-)
-			executeGeneratedJavaClassMethodAndAssert("C", "foo", "T2.n;T3.T1.m;")
+			expectationsForTraitDoubleRenaming(it)
 		]
+	}
+
+	@Test def void testTraitDoubleRenamingSeparateFiles() {
+		traitDoubleRenamingSeparateFiles.createResourceSet.compile[
+			expectationsForTraitDoubleRenaming(it)
+		]
+	}
+	
+	private def expectationsForTraitDoubleRenaming(Result it) {
+		assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+		'''
+		package tests;
+		
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+		
+		@SuppressWarnings("all")
+		public interface T3_T2_0_Adapter {
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("n")
+		  public abstract String n2();
+		  
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("m")
+		  public abstract String m2();
+		}
+		'''
+		)
+		
+		assertTraitAdapterJavaInterface("tests", "T3_T2_1",
+		'''
+		package tests;
+		
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+		
+		@SuppressWarnings("all")
+		public interface T3_T2_1_Adapter {
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("n")
+		  public abstract String n3();
+		  
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("m")
+		  public abstract String m3();
+		}
+		'''
+		)
+		
+		assertTraitJavaInterface("tests", "T3",
+		'''
+		package tests;
+		
+		import tests.T3_T2_0_Adapter;
+		import tests.T3_T2_1_Adapter;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+		
+		@XtraitjTraitInterface
+		@SuppressWarnings("all")
+		public interface T3 extends T3_T2_0_Adapter, T3_T2_1_Adapter {
+		  @XtraitjDefinedMethod
+		  public abstract String m();
+		  
+		  @XtraitjDefinedMethod
+		  public abstract String foo();
+		}
+		'''
+		)
+		
+		assertTraitAdapterJavaClass("tests", "T3_T2_0",
+		'''
+		package tests;
+		
+		import tests.T2;
+		import tests.T2Impl;
+		import tests.T3_T2_0_Adapter;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+		
+		@SuppressWarnings("all")
+		public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
+		  private T3_T2_0_Adapter _delegate;
+		  
+		  private T2Impl _T2_0;
+		  
+		  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+		    this._delegate = delegate;
+		    _T2_0 = new T2Impl(this);
+		  }
+		  
+		  public String m() {
+		    return this.m2();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("m")
+		  public String m2() {
+		    return _delegate.m2();
+		  }
+		  
+		  public String _m2() {
+		    return _T2_0._m();
+		  }
+		  
+		  public String n() {
+		    return this.n2();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  @XtraitjRenamedMethod("n")
+		  public String n2() {
+		    return _delegate.n2();
+		  }
+		  
+		  public String _n2() {
+		    return _T2_0._n();
+		  }
+		}
+		'''
+		)
+		
+		assertTraitJavaClass("tests", "T3",
+		'''
+		package tests;
+		
+		import tests.T3;
+		import tests.T3_T2_0_AdapterImpl;
+		import tests.T3_T2_1_AdapterImpl;
+		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+		import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+		
+		@XtraitjTraitClass
+		@SuppressWarnings("all")
+		public class T3Impl implements T3 {
+		  private T3 _delegate;
+		  
+		  private T3_T2_0_AdapterImpl _T2_0;
+		  
+		  private T3_T2_1_AdapterImpl _T2_1;
+		  
+		  public T3Impl(final T3 delegate) {
+		    this._delegate = delegate;
+		    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
+		    _T2_1 = new T3_T2_1_AdapterImpl(delegate);
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String m() {
+		    return _delegate.m();
+		  }
+		  
+		  public String _m() {
+		    String _m2 = this.m2();
+		    return ("T3." + _m2);
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String foo() {
+		    return _delegate.foo();
+		  }
+		  
+		  public String _foo() {
+		    String _n3 = this.n3();
+		    String _m = this.m();
+		    return (_n3 + _m);
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String n2() {
+		    return _delegate.n2();
+		  }
+		  
+		  public String _n2() {
+		    return _T2_0._n2();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String m2() {
+		    return _delegate.m2();
+		  }
+		  
+		  public String _m2() {
+		    return _T2_0._m2();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String n3() {
+		    return _delegate.n3();
+		  }
+		  
+		  public String _n3() {
+		    return _T2_1._n3();
+		  }
+		  
+		  @XtraitjDefinedMethod
+		  public String m3() {
+		    return _delegate.m3();
+		  }
+		  
+		  public String _m3() {
+		    return _T2_1._m3();
+		  }
+		}
+		'''
+		)
+					executeGeneratedJavaClassMethodAndAssert("C", "foo", "T2.n;T3.T1.m;")
 	}
 
 	@Test def void testTraitRedefinitionByRenaming() {
