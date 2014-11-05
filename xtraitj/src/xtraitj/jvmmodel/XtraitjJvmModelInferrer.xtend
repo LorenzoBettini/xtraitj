@@ -197,7 +197,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   			// but to the one which actually implements it
 				val allDefinedOperations = traitRef.getAllDefinedMethodOperationsFromMap(maps.traitInterfaceResolvedOperationsMap)
 				for (traitMethod : allDefinedOperations)
-					members += traitMethod.toMethodDelegate(traitRef.traitFieldName) => [
+					members += traitRef.toMethodDelegateNoRebinding(traitMethod, traitRef.traitFieldName) => [
 						copyAnnotationsFrom(traitMethod)
 					]
 			}
@@ -1247,13 +1247,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				if (!members.alreadyDefined(traitMethod.op)) {
    					val methodName = traitMethod.op.simpleName
    					// m() { _delegate.m(); }
-   					members += traitMethod.toMethodDelegate(it,
+   					members += tRef.toMethodDelegate(traitMethod, it,
 	   						delegateFieldName, methodName, methodName
 	   					) => [ 
 		   					traitMethod.op.annotateAsDefinedMethod(it)
 		   				]
    					// _m() { delegate to trait defining the method }
-   					members += traitMethod.toMethodDelegate(it,
+   					members += tRef.toMethodDelegate(traitMethod, it,
    						tRef.traitFieldName, methodName.underscoreName,
    						methodName.underscoreName
    					)
@@ -1265,7 +1265,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (op : tRef.getAllRequiredFieldOperationsFromMap(map)) {
 				if (!members.alreadyDefined(op.op)) {
    					// this is the getter
-   					members += op.toMethodDelegate(it,
+   					members += tRef.toMethodDelegate(op, it,
 						delegateFieldName,
 						op.op.simpleName, op.op.simpleName) => [
 		   					op.op.annotateAsRequiredField(it)
@@ -1279,7 +1279,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// see old xtraitjJvmAllRequiredOperations
 			for (op : tRef.getAllRequiredMethodOperationsFromMap(map))
 				if (!members.alreadyDefined(op.op) && !members.alreadyDefined(op.op)) {
-					members += op.toMethodDelegate(it,
+					members += tRef.toMethodDelegate(op, it,
 						delegateFieldName,
 						op.op.simpleName, op.op.simpleName) => [
 		   					op.op.annotateAsRequiredMethod(it)
@@ -1351,15 +1351,45 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					createXtraitjJvmOperations
 	}
 
+	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName) {
+		source.toMethodDelegateNoRebinding(op, delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
+	}
+
+	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+		val o = op.op
+		val m = o.originalSource ?: source
+//		if (!o.typeParameters.empty)
+			m.toMethod(methodName, op.returnType) [
+				documentation = m.documentation
+				
+//				if (m instanceof TJMethodDeclaration) {
+					copyTypeParameters(o.typeParameters)
+//				}
+	
+				val paramTypeIt = op.parametersTypes.iterator
+				for (p : o.parameters) {
+					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
+					// don't associate the parameter to p, since p is not part of the source tree
+					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
+					parameters += m.toParameter(p.name, paramTypeIt.next)
+				}
+				val args = o.parameters.map[name].join(", ")
+				if (op.returnType?.simpleName != "void")
+					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+				else
+					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+			]
+	}
+
 	/**
 	 * This also rebinds type parameters since the inferred methods are based on signatures of
 	 * resolved operations taken from interfaces and possible type parameter references would
 	 * be resolved (scoped) to the original elements, while they must be solved using the
 	 * current target (the JvmGenericType that will own these methods).
 	 */
-	def private toMethodDelegate(XtraitjJvmOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
+	def private toMethodDelegate(EObject source, XtraitjJvmOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
 		val o = op.op
-		val m = o.originalSource ?: o
+		val m = o.originalSource ?: source
 //		if (!o.typeParameters.empty)
 			m.toMethod(methodName, op.returnType) [
 				documentation = m.documentation
