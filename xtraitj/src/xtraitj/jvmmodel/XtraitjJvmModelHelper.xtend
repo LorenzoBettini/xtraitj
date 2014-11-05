@@ -10,12 +10,14 @@ import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
+import xtraitj.types.XtraitjTypeParameterHelper
 
 @Singleton
 class XtraitjJvmModelHelper {
 	@Inject extension OverrideHelper
 	@Inject extension XtraitjAnnotatedElementHelper
 	@Inject extension XtraitjTypingUtil
+	@Inject XtraitjTypeParameterHelper typeParameterHelper
 	
 	/**
 	 * Excludes methods declared in java.lang.Object.
@@ -70,6 +72,6 @@ class XtraitjJvmModelHelper {
 				definedMethods += o
 		}
 		
-		new XtraitjResolvedOperations(requiredFields, requiredMethods, definedMethods)
+		new XtraitjResolvedOperations(requiredFields, requiredMethods, definedMethods, typeParameterHelper)
 	}
 }
