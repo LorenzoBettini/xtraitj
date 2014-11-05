@@ -1774,15 +1774,18 @@ trait TGeneric<T> {
 		trait T2<G1,G2> uses T1<G1> {
 			G2 fieldB;
 			
+			/*
 			String T2meth() {
 				println(fieldS)
 				val t = fieldS
 				println(t)
 				return "foo" // fieldS + fieldB;
 			}
+			*/
 		}
 		
 		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
+			/*
 			String meth() {
 				println(s)
 				val t1 = s
@@ -1792,6 +1795,7 @@ trait TGeneric<T> {
 				b = t2
 				return "foo" // s + b;
 			}
+			*/
 		}
 		
 		class C3<U extends String,V> uses T3<U,V>{

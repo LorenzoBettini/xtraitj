@@ -364,7 +364,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.accept(traitExpressionInterface) [
 			copyTypeParameters(t.containingDeclaration.typeParameters)
 			
-			for (jvmOp : t.xtraitjJvmAllOperations) {
+			for (jvmOp : t.getAllDeclaredOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap)) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
 				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
 	//				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
@@ -462,7 +462,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		acceptor.accept(traitReferenceClass) [
 			
-//			copyTypeParameters(t.containingDeclaration.typeParameters)
+			traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
 			
 			// the interface for the adapter class
 //			val traitRefAssociatedInterface = t.associatedAdapterInterface

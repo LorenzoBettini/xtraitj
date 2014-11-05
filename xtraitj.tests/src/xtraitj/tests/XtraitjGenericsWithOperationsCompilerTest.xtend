@@ -593,7 +593,7 @@ public class T3 implements T3Interface {
 
 	@Test def void testRenameGenericFieldNotInstantiated() {
 		traitRenameGenericFieldNotInstantiated.compile[
-
+			
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
 package tests;
@@ -609,23 +609,6 @@ public interface T3_T2_0_AdapterInterface<U extends String, V> {
   public abstract void setS(final U s);
   
   public abstract String T2meth();
-}
-'''
-)
-
-assertTraitJavaInterface("tests", "T3",
-'''
-package tests;
-
-import tests.T3_T2_0_AdapterInterface;
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-
-@XtraitjTraitInterface
-@SuppressWarnings("all")
-public interface T3Interface<U extends String, V> extends T3_T2_0_AdapterInterface<U, V> {
-  @XtraitjDefinedMethod
-  public abstract String meth();
 }
 '''
 )
@@ -696,6 +679,23 @@ public class T3_T2_0_Adapter<U extends String, V> implements T3_T2_0_AdapterInte
   public String _T2meth() {
     return _T2_0._T2meth();
   }
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_AdapterInterface;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3Interface<U extends String, V> extends T3_T2_0_AdapterInterface<U, V> {
+  @XtraitjDefinedMethod
+  public abstract String meth();
 }
 '''
 )
