@@ -1074,7 +1074,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			copyTypeParameters(op.typeParameters)
 			
 			for (p : op.parameters) {
-				parameters += p.toParameter(p.name, p.parameterType)
+				parameters += source.toParameter(p.name, p.parameterType)
 			}
 			val args = op.parameters.map[name].join(", ")
 			if (op.returnType?.simpleName != "void")
@@ -1228,7 +1228,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			val paramTypeIt = m.parametersTypes.iterator
 			for (p : m.op.parameters) {
-				parameters += p.toParameter(p.name, paramTypeIt.next)
+				parameters += source.toParameter(p.name, paramTypeIt.next)
 			}
 			abstract = true
 		]
