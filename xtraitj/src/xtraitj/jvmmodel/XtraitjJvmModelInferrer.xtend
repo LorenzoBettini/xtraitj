@@ -1167,15 +1167,24 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def buildTypeRef(TJTraitReference t, XtraitjMaps maps) {
 		val typeRef = t.trait
-		// here instead proxy resolution seems to be necessary
-		// val type = typeRef.getTypeWithoutProxyResolution
-		val type = typeRef.type
-		if (type.eIsProxy()) {
-			val mapped = maps.typesMap.get(typeRef.getJvmTypeReferenceString)
-			if (mapped !== null)
-				return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
+		
+//		// here instead proxy resolution seems to be necessary
+//		// val type = typeRef.getTypeWithoutProxyResolution
+//		val type = typeRef.type
+//		if (type.eIsProxy()) {
+//			val mapped = maps.typesMap.get(typeRef.getJvmTypeReferenceString)
+//			if (mapped !== null)
+//				return mapped.newTypeRef(typeRef.arguments.map[cloneWithProxies])
+//		}
+//		typeRef
+		
+		val typeKey = typeRef.traitInterfaceName
+		val mapped = maps.typesMap.get(typeKey)
+		if (mapped != null) {
+			return typeRef(mapped, typeRef.arguments.map[cloneWithProxies])
+		} else {
+			return typeRef(typeKey, typeRef.arguments.map[cloneWithProxies])
 		}
-		typeRef
 	}
 
 	def private traitReferenceToClassJvmTypeReference(TJTraitReference traitRef, 

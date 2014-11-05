@@ -128,6 +128,21 @@ class XtraitjGeneratorExtensions {
    		name + n.substring(pos+1) + "Impl"
    	}
 
+	def traitInterfaceName(JvmTypeReference t) {
+   		var n = t.identifier
+   		
+   		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			n = n.substring(0, pos)
+   		
+   		pos = n.lastIndexOf(".")
+   		var name = ""
+   		if (pos > 0)
+   			name = n.substring(0, pos) + "."
+   		
+   		name + n.substring(pos+1)
+   	}
+
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
 		t.jvmTypeReferenceString
 	}
