@@ -374,17 +374,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val op = jvmOp.op
 				
 				if (relatedOperations.empty) {
-					members += jvmOp.toAbstractMethod(op.simpleName) => [
+					members += t.toAbstractMethod(jvmOp, op.simpleName) => [
 						copyAllAnnotationsFrom(op)
 					]
 					if (op.annotatedRequiredField())
 						members += t.toAbstractSetterDelegateFromGetter(jvmOp)
 				} else {
-					if (renameOperation != null) {
+					if (renameOperation != null && renameOperation.newname != null) {
 						val newname = renameOperation.newname
 						val origName = op.simpleName
-						members += jvmOp.toAbstractMethod
-							(origName.renameGetterOrSetter(newname)) => [
+						members += t.toAbstractMethod
+							(jvmOp, origName.renameGetterOrSetter(newname)) => [
 										copyAllAnnotationsFrom(op)
 										op.annotateAsRenamedMethod(it, origName) 
 									]
@@ -462,11 +462,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		acceptor.accept(traitReferenceClass) [
 			
-			// the interface for the adapter class
-			val traitRefAssociatedInterface = t.associatedAdapterInterface
+//			copyTypeParameters(t.containingDeclaration.typeParameters)
 			
-			val transformedTraitInterfaceTypeRef = traitRefAssociatedInterface.
-							transformTypeParametersIntoTypeArguments(t.containingDeclaration)
+			// the interface for the adapter class
+//			val traitRefAssociatedInterface = t.associatedAdapterInterface
+//			
+//			val transformedTraitInterfaceTypeRef = traitRefAssociatedInterface.
+//							transformTypeParametersIntoTypeArguments(t.containingDeclaration)
+			
+			val transformedTraitInterfaceTypeRef = t.traitReferenceToInterfaceJvmTypeReference(it, maps)
 			
 			superTypes += transformedTraitInterfaceTypeRef.cloneWithProxies
 			superTypes += t.trait.cloneWithProxies
@@ -499,20 +503,82 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
-						val origName = tOp.member.simpleName
+						val origName = tOp.member?.simpleName
+						
+						val newname = if (!tOp.field) {
+							tOp.newname
+						} else {
+							// make sure we take the jvmOp's name
+							// since the member in the rename operation is bound
+							// to the getter in case of a field
+							origName.renameGetterOrSetter(tOp.newname)
+						}
+						
+						// and we need to retrieve the corresponding resolved operation
+						// i.e., the one where type arguments are already resolved
+						val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
 
-						if (!tOp.field) {
-							// and we need to retrieve the corresponding resolved operation
-							// i.e., the one where type arguments are already resolved
-							val resolvedOp = allDeclarations.map[op].findFirst[tOp.newname == simpleName]
-							val requiredMethod = resolvedOp.annotatedRequiredMethod()
-							
-							if (requiredMethod) {
-								// make sure we take the jvmOp's name
-								// since the member in the rename operation is bound
-								// to the getter in case of a field
-								val newname = 
-									resolvedOp.simpleName.renameGetterOrSetter(tOp.newname)
+						if (resolvedOp != null) {
+							if (!tOp.field) {
+								// and we need to retrieve the corresponding resolved operation
+								// i.e., the one where type arguments are already resolved
+								val requiredMethod = resolvedOp.annotatedRequiredMethod()
+								
+								if (requiredMethod) {
+									// make sure we take the jvmOp's name
+									// since the member in the rename operation is bound
+									// to the getter in case of a field
+									
+									// m is forwarded to this.m2()
+									members += tOp.
+										toMethodDelegate(
+											resolvedOp,
+											"this",
+											origName,
+											newname
+										)
+									// m2 is forwarded to delegate.m2()
+									members += tOp.
+										toMethodDelegate(
+											resolvedOp,
+											delegateFieldName,
+											newname,
+											newname
+										) => [
+											copyAllAnnotationsFrom(resolvedOp)
+										]
+									
+								} else {
+									// m is forwarded to this.m2
+									members += tOp.
+										toMethodDelegate(
+											resolvedOp,
+											"this",
+											origName,
+											newname
+										)
+									// m2 is forwarded to delegate.m2
+									members += tOp.
+										toMethodDelegate(
+											resolvedOp,
+											delegateFieldName,
+											newname,
+											newname
+										) => [ 
+											copyAllAnnotationsFrom(resolvedOp)
+										]
+									// _m2 is forwarded to T1._m
+									members += tOp.
+										toMethodDelegate(
+											resolvedOp,
+											traitFieldName,
+											newname.underscoreName,
+											origName.underscoreName
+										)
+								}
+							} else {
+								// example T1[rename field m -> m2]
+						
 								// m is forwarded to this.m2()
 								members += tOp.
 									toMethodDelegate(
@@ -528,89 +594,29 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 										delegateFieldName,
 										newname,
 										newname
-									) => [
-										copyAllAnnotationsFrom(resolvedOp)
-									]
+									) => [ copyAllAnnotationsFrom(resolvedOp) ]
 								
-							} else {
-								// m is forwarded to this.m2
-								val newname = tOp.newname
+								// and now the setter
+								val origSetterName = origName.stripGetter
+								val newSetterName = newname.stripGetter
 								
 								members += tOp.
-									toMethodDelegate(
+									toSetterMethodDelegate(
 										resolvedOp,
 										"this",
-										origName,
-										newname
+										origSetterName,
+										newSetterName
 									)
-								// m2 is forwarded to delegate.m2
+								// m2 is forwarded to delegate.m2()
 								members += tOp.
-									toMethodDelegate(
+									toSetterMethodDelegate(
 										resolvedOp,
 										delegateFieldName,
-										newname,
-										newname
-									) => [ 
-										copyAllAnnotationsFrom(resolvedOp)
-									]
-								// _m2 is forwarded to T1._m
-								members += tOp.
-									toMethodDelegate(
-										resolvedOp,
-										traitFieldName,
-										newname.underscoreName,
-										origName.underscoreName
+										newSetterName,
+										newSetterName
 									)
 							}
-						} else {
-							// make sure we take the jvmOp's name
-							// since the member in the rename operation is bound
-							// to the getter in case of a field
-							val newname = origName.renameGetterOrSetter(tOp.newname)
-							// and we need to retrieve the corresponding resolved operation
-							// i.e., the one where type arguments are already resolved
-							val resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
-
-							// example T1[rename field m -> m2]
-					
-							// m is forwarded to this.m2()
-							members += tOp.
-								toMethodDelegate(
-									resolvedOp,
-									"this",
-									origName,
-									newname
-								)
-							// m2 is forwarded to delegate.m2()
-							members += tOp.
-								toMethodDelegate(
-									resolvedOp,
-									delegateFieldName,
-									newname,
-									newname
-								) => [ copyAllAnnotationsFrom(resolvedOp) ]
-							
-							// and now the setter
-							val origSetterName = origName.stripGetter
-							val newSetterName = newname.stripGetter
-							
-							members += tOp.
-								toSetterMethodDelegate(
-									resolvedOp,
-									"this",
-									origSetterName,
-									newSetterName
-								)
-							// m2 is forwarded to delegate.m2()
-							members += tOp.
-								toSetterMethodDelegate(
-									resolvedOp,
-									delegateFieldName,
-									newSetterName,
-									newSetterName
-								)
 						}
-					
 					}
 				}
 			}
@@ -1199,9 +1205,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-	def private toAbstractMethod(XtraitjJvmOperation m, String name) {
-		m.op.originalSource.toAbstractMethod(m, name)
-	}
+//	def private toAbstractMethod(XtraitjJvmOperation m, String name) {
+//		m.op.originalSource.toAbstractMethod(m, name)
+//	}
 
 	def private toAbstractMethod(TJMethodDeclaration m) {
 		m.toMethod(m.name, m.type) [
