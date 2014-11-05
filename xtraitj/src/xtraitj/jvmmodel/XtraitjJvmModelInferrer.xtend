@@ -499,12 +499,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (tOp : t.operations) {
 				switch(tOp) {
 					TJRenameOperation: {
+						val origName = tOp.member.simpleName
+
 						if (!tOp.field) {
 							// and we need to retrieve the corresponding resolved operation
 							// i.e., the one where type arguments are already resolved
 							val resolvedOp = allDeclarations.map[op].findFirst[tOp.newname == simpleName]
-							val origName = tOp.member.simpleName
-	
 							val requiredMethod = resolvedOp.annotatedRequiredMethod()
 							
 							if (requiredMethod) {
@@ -562,6 +562,53 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 										origName.underscoreName
 									)
 							}
+						} else {
+							// make sure we take the jvmOp's name
+							// since the member in the rename operation is bound
+							// to the getter in case of a field
+							val newname = origName.renameGetterOrSetter(tOp.newname)
+							// and we need to retrieve the corresponding resolved operation
+							// i.e., the one where type arguments are already resolved
+							val resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
+
+							// example T1[rename field m -> m2]
+					
+							// m is forwarded to this.m2()
+							members += tOp.
+								toMethodDelegate(
+									resolvedOp,
+									"this",
+									origName,
+									newname
+								)
+							// m2 is forwarded to delegate.m2()
+							members += tOp.
+								toMethodDelegate(
+									resolvedOp,
+									delegateFieldName,
+									newname,
+									newname
+								) => [ copyAllAnnotationsFrom(resolvedOp) ]
+							
+							// and now the setter
+							val origSetterName = origName.stripGetter
+							val newSetterName = newname.stripGetter
+							
+							members += tOp.
+								toSetterMethodDelegate(
+									resolvedOp,
+									"this",
+									origSetterName,
+									newSetterName
+								)
+							// m2 is forwarded to delegate.m2()
+							members += tOp.
+								toSetterMethodDelegate(
+									resolvedOp,
+									delegateFieldName,
+									newSetterName,
+									newSetterName
+								)
 						}
 					
 					}
@@ -1034,6 +1081,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
 			else
 				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+		]
+	}
+
+	def private toSetterMethodDelegate(EObject source, JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+		source.toSetter(methodName, op.returnType) => [
+			val origFieldName = methodToDelegate.stripGetter
+			parameters.head.name = origFieldName
+			body = [append('''«delegateFieldName».«methodToDelegate.toSetterName»(«origFieldName»);''')]
 		]
 	}
 
