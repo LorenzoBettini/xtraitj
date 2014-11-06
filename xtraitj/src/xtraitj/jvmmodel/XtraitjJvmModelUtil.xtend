@@ -95,7 +95,7 @@ class XtraitjJvmModelUtil {
 //	}
 
 	def associatedAdapterInterface(TJTraitReference t) {
-		t.newTypeRef(t.traitExpressionInterfaceName //,
+		t.traitExpressionInterfaceName.getTypeForName(t //,
 			//t.trait.arguments.map[cloneWithProxies]
 		) as JvmParameterizedTypeReference
 	}
@@ -736,7 +736,7 @@ class XtraitjJvmModelUtil {
 		if (t.operations.empty)
 			t.trait.cloneWithProxies as JvmParameterizedTypeReference
 		else
-			t.newTypeRef(t.traitExpressionClassName) as JvmParameterizedTypeReference
+			t.traitExpressionClassName.getTypeForName(t) as JvmParameterizedTypeReference
 	}
 
 }
