@@ -629,7 +629,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
-public interface T3_T2_0_Adapter<U extends String, V> {
+public interface T3_T2_0_Adapter<U extends String, V extends Object> {
   @XtraitjRequiredField
   @XtraitjRenamedMethod("getFieldB")
   public abstract V getB();
@@ -660,7 +660,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
-public class T3_T2_0_AdapterImpl<U extends String, V> implements T3_T2_0_Adapter<U, V>, T2<U, V> {
+public class T3_T2_0_AdapterImpl<U extends String, V extends Object> implements T3_T2_0_Adapter<U, V>, T2<U, V> {
   private T3_T2_0_Adapter<U, V> _delegate;
   
   private T2Impl<U, V> _T2_0;
@@ -728,7 +728,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3<U extends String, V> extends T3_T2_0_Adapter<U, V> {
+public interface T3<U extends String, V extends Object> extends T3_T2_0_Adapter<U, V> {
   @XtraitjDefinedMethod
   public abstract String meth();
 }
@@ -748,7 +748,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2Impl<G1, G2> implements T2<G1, G2> {
+public class T2Impl<G1 extends Object, G2 extends Object> implements T2<G1, G2> {
   private T2<G1, G2> _delegate;
   
   private T1Impl<G1> _T1;
@@ -805,7 +805,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3Impl<U extends String, V> implements T3<U, V> {
+public class T3Impl<U extends String, V extends Object> implements T3<U, V> {
   private T3<U, V> _delegate;
   
   private T3_T2_0_AdapterImpl<U, V> _T2_0;
@@ -879,7 +879,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 public interface UsesTGeneric_T1_0_Adapter {
   @XtraitjDefinedMethod
   @XtraitjRenamedMethod("returnList")
-  public abstract <T> List<T> returnListOfInteger(final T t);
+  public abstract <T extends Object> List<T> returnListOfInteger(final T t);
 }
 '''
 )
@@ -907,17 +907,17 @@ public class UsesTGeneric_T1_0_AdapterImpl implements UsesTGeneric_T1_0_Adapter,
     _T1_0 = new T1Impl(this);
   }
   
-  public <T> List<T> returnList(final T t) {
+  public <T extends Object> List<T> returnList(final T t) {
     return this.returnListOfInteger(t);
   }
   
   @XtraitjDefinedMethod
   @XtraitjRenamedMethod("returnList")
-  public <T> List<T> returnListOfInteger(final T t) {
+  public <T extends Object> List<T> returnListOfInteger(final T t) {
     return _delegate.returnListOfInteger(t);
   }
   
-  public <T> List<T> _returnListOfInteger(final T t) {
+  public <T extends Object> List<T> _returnListOfInteger(final T t) {
     return _T1_0._returnList(t);
   }
 }
@@ -996,20 +996,20 @@ public class UsesTGenericImpl implements UsesTGeneric {
   }
   
   @XtraitjDefinedMethod
-  public <T> List<T> returnListOfInteger(final T t) {
+  public <T extends Object> List<T> returnListOfInteger(final T t) {
     return _delegate.returnListOfInteger(t);
   }
   
-  public <T> List<T> _returnListOfInteger(final T t) {
+  public <T extends Object> List<T> _returnListOfInteger(final T t) {
     return _T1_0._returnListOfInteger(t);
   }
   
   @XtraitjDefinedMethod
-  public <T> List<T> returnList(final T t) {
+  public <T extends Object> List<T> returnList(final T t) {
     return _delegate.returnList(t);
   }
   
-  public <T> List<T> _returnList(final T t) {
+  public <T extends Object> List<T> _returnList(final T t) {
     return _T1._returnList(t);
   }
 }
@@ -1034,11 +1034,11 @@ public class C implements UsesTGeneric {
     return _UsesTGeneric._useLists();
   }
   
-  public <T> List<T> returnListOfInteger(final T t) {
+  public <T extends Object> List<T> returnListOfInteger(final T t) {
     return _UsesTGeneric._returnListOfInteger(t);
   }
   
-  public <T> List<T> returnList(final T t) {
+  public <T extends Object> List<T> returnList(final T t) {
     return _UsesTGeneric._returnList(t);
   }
 }

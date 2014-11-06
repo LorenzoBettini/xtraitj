@@ -14,6 +14,8 @@ import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmStringAnnotationValue
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
+import org.eclipse.xtext.common.types.JvmUpperBound
+import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
@@ -61,7 +63,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension XtraitjAnnotatedElementHelper
 	
 	@Inject	IJvmModelAssociator associator
-	
+	@Inject TypesFactory typesFactory
 	
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -874,6 +876,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //	   	inferTypesForTraitReferencesWithOperations(t, traitClass, acceptor, typesMap, resolvedOperationsMap)
    		
 		acceptor.accept(traitClass) [
+			traitClass.copyTypeParameters(t.traitTypeParameters)
+			
+			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
+		   	for (typePar : typeParameters) {
+		   		typePar.rebindConstraintsTypeParameters(it, null, map)
+		   	}
 		
 			// the interface is surely associated in the model inferrer
 			// since the trait element is in the input file we're processing
@@ -886,12 +894,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 //   			t.addSuperTypesFromTraitReferences(it, typesMap)
 			
-			traitClass.copyTypeParameters(t.traitTypeParameters)
-			
-			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
-		   	for (typePar : typeParameters) {
-		   		typePar.rebindConstraintsTypeParameters(it, null, map)
-		   	}
 
    			documentation = t.documentation
    			
@@ -1545,6 +1547,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			if (clonedTypeParameter != null) {
 				target.typeParameters += clonedTypeParameter
 				associator.associate(typeParameter, clonedTypeParameter);
+			}
+		}
+		target.fixTypeParameters
+	}
+
+	def private void fixTypeParameters(JvmTypeParameterDeclarator target) {
+		for (typeParameter : target.getTypeParameters()) {
+			var upperBoundSeen = 
+				typeParameter.constraints.exists[it instanceof JvmUpperBound]
+			if (!upperBoundSeen) {
+				val upperBound = typesFactory.createJvmUpperBound();
+				upperBound.setTypeReference(typeRef(Object))
+				typeParameter.getConstraints().add(upperBound);
 			}
 		}
 	}

@@ -92,6 +92,19 @@ class XtraitjResolvedOperations {
 				 * T of List<T> must be bound to the Java interface MyTrait<T>, and
 				 * NOT to the Java class MyTraitImpl<T>.
 				 * 
+				 * The same holds for type parameter references of generic methods: they might have been bound
+				 * to the method of the inferred Java class, but we need them to be bound to
+				 * the method of the inferred interface.
+				 * 
+				 * For example,
+				 * 
+				 * trait MyTrait {
+				 *    <T> List<T> m() {...}
+				 * }
+				 * 
+				 * The T of List<T> must be bound to the Java interface MyTrait.m()'s T, and
+				 * NOT to the Java class MyTraitImpl.m()'s T.
+				 * 
 				 * To be sure that it happens consistently we need to perform a
 				 * manual rebinding.
 				 * 
@@ -113,12 +126,12 @@ class XtraitjResolvedOperations {
 				val owner = contextType.getOwner();
 				val typeRefToResolve = declaration.returnType
 				val resolved = resolveTypeRef(owner, typeRefToResolve)
-				declaration.returnType = typeParameterHelper.rebindTypeParameters(resolved, typeDeclarator, null)
+				declaration.returnType = typeParameterHelper.rebindTypeParameters(resolved, typeDeclarator, declaration)
 				
 				for (p : declaration.parameters) {
 					val unresolvedTypePar = p.parameterType
 					val resolvedTypePar = resolveTypeRef(owner, unresolvedTypePar)
-					p.parameterType = typeParameterHelper.rebindTypeParameters(resolvedTypePar, typeDeclarator, null)
+					p.parameterType = typeParameterHelper.rebindTypeParameters(resolvedTypePar, typeDeclarator, declaration)
 				}
 			}
 			

@@ -22,7 +22,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 @SuppressWarnings("all")
-public class C<T extends List<String>, U> {
+public class C<T extends List<String>, U extends Object> {
   private T t;
   
   public T getT() {
@@ -73,7 +73,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T extends List<String>, U> {
+public interface T1<T extends List<String>, U extends Object> {
   @XtraitjRequiredField
   public abstract T getT();
   
@@ -104,7 +104,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl<T extends List<String>, U> implements T1<T, U> {
+public class T1Impl<T extends List<String>, U extends Object> implements T1<T, U> {
   private T1<T, U> _delegate;
   
   public T1Impl(final T1<T, U> delegate) {
@@ -394,7 +394,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1<T extends Object> {
   @XtraitjDefinedMethod
   public abstract <T extends List<String>> String getFirst(final T t);
 }
@@ -412,7 +412,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl<T> implements T1<T> {
+public class T1Impl<T extends Object> implements T1<T> {
   private T1<T> _delegate;
   
   public T1Impl(final T1<T> delegate) {
@@ -511,7 +511,7 @@ import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface3;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface3<U>, T1<U> {
+public class C<U extends Object> implements MyGenericTestInterface3<U>, T1<U> {
   private T1Impl<U> _T1 = new T1Impl(this);
   
   public U n(final int i) {
@@ -537,7 +537,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<U> {
+public interface T1<U extends Object> {
   @XtraitjDefinedMethod
   public abstract ArrayList<U> n(final int i);
 }
@@ -555,7 +555,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T1Impl<U> implements T1<U> {
+public class T1Impl<U extends Object> implements T1<U> {
   private T1<U> _delegate;
   
   public T1Impl(final T1<U> delegate) {
@@ -584,7 +584,7 @@ import tests.T1Impl;
 import xtraitj.input.tests.MyGenericTestInterface2;
 
 @SuppressWarnings("all")
-public class C<U> implements MyGenericTestInterface2<U>, T1<U> {
+public class C<U extends Object> implements MyGenericTestInterface2<U>, T1<U> {
   private T1Impl<U> _T1 = new T1Impl(this);
   
   public ArrayList<U> n(final int i) {
@@ -776,7 +776,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1<T extends Object> {
   @XtraitjRequiredMethod
   public abstract int i();
   
@@ -818,7 +818,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1<T extends Object> {
   @XtraitjRequiredMethod
   public abstract int i();
   
@@ -919,7 +919,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1<T extends Object> {
   @XtraitjRequiredField
   public abstract int getI();
   
@@ -1216,7 +1216,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T1<T> {
+public interface T1<T extends Object> {
   @XtraitjRequiredField
   public abstract int getI();
   
@@ -1311,14 +1311,14 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TGenericExtensions<T> {
+public interface TGenericExtensions<T extends Object> {
   @XtraitjRequiredField
   public abstract Iterable<T> getIterable();
   
   public abstract void setIterable(final Iterable<T> iterable);
   
   @XtraitjDefinedMethod
-  public abstract <R> List<R> mapToList(final Function1<? super T, ? extends R> mapper);
+  public abstract <R extends Object> List<R> mapToList(final Function1<? super T, ? extends R> mapper);
   
   @XtraitjDefinedMethod
   public abstract List<T> mapToList2(final Function1<? super T, ? extends T> mapper);
@@ -1340,7 +1340,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class TGenericExtensionsImpl<T> implements TGenericExtensions<T> {
+public class TGenericExtensionsImpl<T extends Object> implements TGenericExtensions<T> {
   private TGenericExtensions<T> _delegate;
   
   public TGenericExtensionsImpl(final TGenericExtensions<T> delegate) {
@@ -1357,11 +1357,11 @@ public class TGenericExtensionsImpl<T> implements TGenericExtensions<T> {
   }
   
   @XtraitjDefinedMethod
-  public <R> List<R> mapToList(final Function1<? super T, ? extends R> mapper) {
+  public <R extends Object> List<R> mapToList(final Function1<? super T, ? extends R> mapper) {
     return _delegate.mapToList(mapper);
   }
   
-  public <R> List<R> _mapToList(final Function1<? super T, ? extends R> mapper) {
+  public <R extends Object> List<R> _mapToList(final Function1<? super T, ? extends R> mapper) {
     final ArrayList<R> result = new ArrayList<R>();
     Iterable<T> _iterable = this.getIterable();
     for (final T e : _iterable) {
@@ -1428,11 +1428,11 @@ public class TStringExtensionsImpl implements TStringExtensions {
   }
   
   @XtraitjDefinedMethod
-  public <R> List<R> mapToList(final Function1<? super String, ? extends R> mapper) {
+  public <R extends Object> List<R> mapToList(final Function1<? super String, ? extends R> mapper) {
     return _delegate.mapToList(mapper);
   }
   
-  public <R> List<R> _mapToList(final Function1<? super String, ? extends R> mapper) {
+  public <R extends Object> List<R> _mapToList(final Function1<? super String, ? extends R> mapper) {
     return _TGenericExtensions._mapToList(mapper);
   }
   
@@ -1475,7 +1475,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface TGeneric<T> {
+public interface TGeneric<T extends Object> {
   @XtraitjRequiredField
   public abstract List<T> getMyL();
   
@@ -1781,11 +1781,11 @@ public class CUsesGeneric implements TUsesGeneric {
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <T> T identity(final T t) {
+		  public <T extends Object> T identity(final T t) {
 		    return _delegate.identity(t);
 		  }
 		  
-		  public <T> T _identity(final T t) {
+		  public <T extends Object> T _identity(final T t) {
 		    return t;
 		  }
 		  
@@ -1803,21 +1803,21 @@ public class CUsesGeneric implements TUsesGeneric {
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <V> V recursive(final V v) {
+		  public <V extends Object> V recursive(final V v) {
 		    return _delegate.recursive(v);
 		  }
 		  
-		  public <V> V _recursive(final V v) {
+		  public <V extends Object> V _recursive(final V v) {
 		    V _recursive = this.<V>recursive(v);
 		    return this.<V>recursive(_recursive);
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <U> void noReturn(final U u) {
+		  public <U extends Object> void noReturn(final U u) {
 		    _delegate.noReturn(u);
 		  }
 		  
-		  public <U> void _noReturn(final U u) {
+		  public <U extends Object> void _noReturn(final U u) {
 		    InputOutput.<Object>println(u);
 		  }
 		  
@@ -1940,11 +1940,11 @@ public class CUsesGeneric implements TUsesGeneric {
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <T> T identity(final T t) {
+		  public <T extends Object> T identity(final T t) {
 		    return _delegate.identity(t);
 		  }
 		  
-		  public <T> T _identity(final T t) {
+		  public <T extends Object> T _identity(final T t) {
 		    return _T1._identity(t);
 		  }
 		  
@@ -1958,20 +1958,20 @@ public class CUsesGeneric implements TUsesGeneric {
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <V> V recursive(final V v) {
+		  public <V extends Object> V recursive(final V v) {
 		    return _delegate.recursive(v);
 		  }
 		  
-		  public <V> V _recursive(final V v) {
+		  public <V extends Object> V _recursive(final V v) {
 		    return _T1._recursive(v);
 		  }
 		  
 		  @XtraitjDefinedMethod
-		  public <U> void noReturn(final U u) {
+		  public <U extends Object> void noReturn(final U u) {
 		    _delegate.noReturn(u);
 		  }
 		  
-		  public <U> void _noReturn(final U u) {
+		  public <U extends Object> void _noReturn(final U u) {
 		    _T1._noReturn(u);
 		  }
 		  
@@ -2016,7 +2016,7 @@ public class CUsesGeneric implements TUsesGeneric {
 		public class C implements T1 {
 		  private T1Impl _T1 = new T1Impl(this);
 		  
-		  public <T> T identity(final T t) {
+		  public <T extends Object> T identity(final T t) {
 		    return _T1._identity(t);
 		  }
 		  
@@ -2024,11 +2024,11 @@ public class CUsesGeneric implements TUsesGeneric {
 		    return _T1._useIdentity();
 		  }
 		  
-		  public <V> V recursive(final V v) {
+		  public <V extends Object> V recursive(final V v) {
 		    return _T1._recursive(v);
 		  }
 		  
-		  public <U> void noReturn(final U u) {
+		  public <U extends Object> void noReturn(final U u) {
 		    _T1._noReturn(u);
 		  }
 		  
@@ -2307,7 +2307,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3Impl<G3> implements T3<G3> {
+public class T3Impl<G3 extends Object> implements T3<G3> {
   private T3<G3> _delegate;
   
   private T2Impl<G3> _T2;
@@ -2381,7 +2381,7 @@ import tests.T3;
 import tests.T3Impl;
 
 @SuppressWarnings("all")
-public class C3<U> implements T3<U> {
+public class C3<U extends Object> implements T3<U> {
   private U fieldT1;
   
   public U getFieldT1() {
