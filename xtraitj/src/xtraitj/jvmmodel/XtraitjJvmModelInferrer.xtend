@@ -4,18 +4,31 @@ import com.google.inject.Inject
 import java.util.HashMap
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.common.types.JvmAnnotationTarget
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmStringAnnotationValue
 import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
 import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator.JvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import xtraitj.generator.XtraitjGeneratorExtensions
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
@@ -46,6 +59,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IJvmModelAssociations
 	@Inject extension XtraitjTypeParameterHelper
 	@Inject extension XtraitjAnnotatedElementHelper
+	
+	@Inject	IJvmModelAssociator associator
+	
 	
 	/**
 	 * The dispatch method {@code infer} is called for each instance of the
@@ -1488,5 +1504,83 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			abstract = true
    		]
    	}
+
+	def private void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
+		target.annotations += element.toAnnotation(XtraitjTraitInterface)
+	}
+
+	def private void annotateAsTraitClass(TJTrait element, JvmAnnotationTarget target) {
+		target.annotations += element.toAnnotation(XtraitjTraitClass)
+	}
+
+	def private void annotateAsRequiredField(EObject element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjRequiredField)
+	}
+
+	def private void annotateAsRequiredMethod(EObject element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
+	}
+
+	def private void annotateAsDefinedMethod(EObject element, JvmMember target) {
+		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
+	}
+
+	def private void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
+		// we need to keep track of all the methods renamed, that is, the
+		// method renamed by this method and recursively possible methods renamed
+		// by the renamed method (this will make method resolution work as expected).
+		var annot = target.annotations.findFirst[renameAnnotation]
+		if (annot == null) {
+			annot = element.toAnnotation(XtraitjRenamedMethod, originalName)
+			target.annotations += annot
+		} else {
+			annot.getExplicitValues().filter(JvmStringAnnotationValue).head.
+				values += originalName
+		}
+	}
+
+	def private void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
+		for (typeParameter : typeParameters) {
+			val clonedTypeParameter = typeParameter.cloneWithProxies();
+			if (clonedTypeParameter != null) {
+				target.typeParameters += clonedTypeParameter
+				associator.associate(typeParameter, clonedTypeParameter);
+			}
+		}
+	}
+
+	def private void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
+		target.annotations += xop.op.annotations.
+			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
+	def private void copyAllAnnotationsFrom(JvmOperation target, JvmOperation op) {
+		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
+	def private void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
+		target.annotations += op.annotations.
+			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
+
+	def private void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
+		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
+	}
+
+	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
+		val newRef = typeRef.cloneWithProxies 
+		if (newRef instanceof JvmParameterizedTypeReference) {
+			newRef.arguments.clear
+		
+			for (typePar : typeRef.arguments) {
+//				val type = typesFactory.createJvmGenericType
+//				type.setSimpleName(typePar.simpleName)
+				newRef.arguments += newTypeRef(typePar.type)
+			}
+		
+		}
+		
+		newRef
+	}
 }
 

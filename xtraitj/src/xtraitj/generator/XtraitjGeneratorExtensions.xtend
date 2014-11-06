@@ -2,32 +2,9 @@ package xtraitj.generator
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.util.List
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.common.types.JvmAnnotationTarget
-import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmMember
-import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmStringAnnotationValue
-import org.eclipse.xtext.common.types.JvmTypeParameter
-import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import xtraitj.jvmmodel.XtraitjJvmOperation
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
-import xtraitj.runtime.lib.annotation.XtraitjRequiredField
-import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
-import xtraitj.types.XtraitjTraitOperationWrapper
-import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
@@ -37,10 +14,6 @@ import static extension xtraitj.util.XtraitjModelUtil.*
 class XtraitjGeneratorExtensions {
 	
 	@Inject extension IQualifiedNameProvider
-	@Inject extension JvmTypesBuilder
-	@Inject extension XtraitjAnnotatedElementHelper
-	@Inject extension XtraitjJvmModelUtil
-	@Inject	IJvmModelAssociator associator
 
 	def traitInterfaceName(String n) {
    		n //+ "Interface"
@@ -147,173 +120,97 @@ class XtraitjGeneratorExtensions {
 		t.jvmTypeReferenceString
 	}
 	
-	def void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
-		target.annotations += element.toAnnotation(XtraitjTraitInterface)
-	}
 
-	def void annotateAsTraitClass(TJTrait element, JvmAnnotationTarget target) {
-		target.annotations += element.toAnnotation(XtraitjTraitClass)
-	}
 
-	def void annotateAsRequiredField(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredField)
-	}
-
-	def void annotateAsRequiredMethod(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
-	}
-
-	def void annotateAsDefinedMethod(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
-	}
-
-	def void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
-		// we need to keep track of all the methods renamed, that is, the
-		// method renamed by this method and recursively possible methods renamed
-		// by the renamed method (this will make method resolution work as expected).
-		var annot = target.annotations.findFirst[renameAnnotation]
-		if (annot == null) {
-			annot = element.toAnnotation(XtraitjRenamedMethod, originalName)
-			target.annotations += annot
-		} else {
-			annot.getExplicitValues().filter(JvmStringAnnotationValue).head.
-				values += originalName
-		}
-	}
-
-	def void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
-		for (typeParameter : typeParameters) {
-			val clonedTypeParameter = typeParameter.cloneWithProxies();
-			if (clonedTypeParameter != null) {
-				target.typeParameters += clonedTypeParameter
-				associator.associate(typeParameter, clonedTypeParameter);
-			}
-		}
-	}
-
-	def void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
-		target.annotations += xop.op.annotations.
-			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
-
-	def void copyAllAnnotationsFrom(JvmOperation target, JvmOperation op) {
-		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
-
-	def void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
-		target.annotations += op.annotations.
-			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
-
-	def void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
-		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
-	}
-
-	def transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
-		val newRef = typeRef.cloneWithProxies 
-		if (newRef instanceof JvmParameterizedTypeReference) {
-			newRef.arguments.clear
-		
-			for (typePar : typeRef.arguments) {
-//				val type = typesFactory.createJvmGenericType
-//				type.setSimpleName(typePar.simpleName)
-				newRef.arguments += newTypeRef(typePar.type)
-			}
-		
-		}
-		
-		newRef
-	}
-
-	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName) {
-		op.toMethodDelegate(delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
-	}
-
-	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-		val o = op.op
-		val m = o.originalSource ?: o
-//		if (!o.typeParameters.empty)
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-//				if (m instanceof TJMethodDeclaration) {
-					copyTypeParameters(o.typeParameters)
-//				}
-	
-				//returnType = returnType.rebindTypeParameters(it)
-		
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-					// don't associate the parameter to p, since p is not part of the source tree
-					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
-					parameters += m.toParameter(p.name, paramTypeIt.next)
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			]
-//		else // if there's no type params we can make things simpler
+//	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName) {
+//		op.toMethodDelegate(delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
+//	}
+//
+//	def toMethodDelegate(XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+//		val o = op.op
+//		val m = o.originalSource ?: o
+////		if (!o.typeParameters.empty)
 //			m.toMethod(methodName, op.returnType) [
 //				documentation = m.documentation
 //				
+////				if (m instanceof TJMethodDeclaration) {
+//					copyTypeParameters(o.typeParameters)
+////				}
+//	
+//				//returnType = returnType.rebindTypeParameters(it)
+//		
 //				val paramTypeIt = op.parametersTypes.iterator
 //				for (p : o.parameters) {
-//					parameters += p.toParameter(p.name, paramTypeIt.next)
+//					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
+//					// don't associate the parameter to p, since p is not part of the source tree
+//					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
+//					parameters += m.toParameter(p.name, paramTypeIt.next)
 //				}
 //				val args = o.parameters.map[name].join(", ")
 //				if (op.returnType?.simpleName != "void")
 //					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
 //				else
 //					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-//			] // and we can navigate to the original method
-	}
+//			]
+////		else // if there's no type params we can make things simpler
+////			m.toMethod(methodName, op.returnType) [
+////				documentation = m.documentation
+////				
+////				val paramTypeIt = op.parametersTypes.iterator
+////				for (p : o.parameters) {
+////					parameters += p.toParameter(p.name, paramTypeIt.next)
+////				}
+////				val args = o.parameters.map[name].join(", ")
+////				if (op.returnType?.simpleName != "void")
+////					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+////				else
+////					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+////			] // and we can navigate to the original method
+//	}
 
-	def toMethodDelegate(XtraitjTraitOperationWrapper op, String delegateFieldName, String methodName, String methodToDelegate) {
-		//val o = op.jvmOperation
-		val m = op.operation
-		m.toMethod(methodName, op.returnType) [
-			documentation = m.documentation
-			
-			copyTypeParameters(op.typeParameters)
-			
-			for (p : op.parameters) {
-				parameters += p.toParameter(p.name, p.parameterType)
-			}
-			val args = op.parameters.map[name].join(", ")
-			if (op.returnType?.simpleName != "void")
-				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-			else
-				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-		]
-	}
+//	def toMethodDelegate(XtraitjTraitOperationWrapper op, String delegateFieldName, String methodName, String methodToDelegate) {
+//		//val o = op.jvmOperation
+//		val m = op.operation
+//		m.toMethod(methodName, op.returnType) [
+//			documentation = m.documentation
+//			
+//			copyTypeParameters(op.typeParameters)
+//			
+//			for (p : op.parameters) {
+//				parameters += p.toParameter(p.name, p.parameterType)
+//			}
+//			val args = op.parameters.map[name].join(", ")
+//			if (op.returnType?.simpleName != "void")
+//				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+//			else
+//				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+//		]
+//	}
 
-   	def toSetterDelegateFromGetter(XtraitjJvmOperation op) {
-   		val fieldName = op.op.simpleName.stripGetter
-   		op.op.toSetter(fieldName, op.returnType) => [
-   			method |
-   			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
-   		]
-   	}
+//   	def toSetterDelegateFromGetter(XtraitjJvmOperation op) {
+//   		val fieldName = op.op.simpleName.stripGetter
+//   		op.op.toSetter(fieldName, op.returnType) => [
+//   			method |
+//   			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
+//   		]
+//   	}
+//
+//	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op) {
+//   		val fieldName = op.op.simpleName.stripGetter
+//   		op.op.toSetter(fieldName, op.returnType) => [
+//   			abstract = true
+//   		]
+//   	}
 
-	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op) {
-   		val fieldName = op.op.simpleName.stripGetter
-   		op.op.toSetter(fieldName, op.returnType) => [
-   			abstract = true
-   		]
-   	}
+//	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op, String newName) {
+//   		op.op.toSetter(newName, op.returnType) => [
+//   			abstract = true
+//   		]
+//   	}
 
-	def toAbstractSetterDelegateFromGetter(XtraitjJvmOperation op, String newName) {
-   		op.op.toSetter(newName, op.returnType) => [
-   			abstract = true
-   		]
-   	}
-
-	def typeParametersOfReferredType(JvmParameterizedTypeReference typeRef) {
-		(typeRef.type as JvmGenericType).typeParameters.map[cloneWithProxies]
-	}
+//	def typeParametersOfReferredType(JvmParameterizedTypeReference typeRef) {
+//		(typeRef.type as JvmGenericType).typeParameters.map[cloneWithProxies]
+//	}
 
 //	def buildTypeRef(TJTraitReference t, Map<String, JvmGenericType> typesMap) {
 //		val typeRef = t.trait

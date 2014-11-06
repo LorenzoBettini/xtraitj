@@ -3,11 +3,9 @@
  */
 package xtraitj;
 
-import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
-import org.eclipse.xtext.xbase.compiler.ErrorSafeExtensions;
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
@@ -15,8 +13,6 @@ import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
-import xtraitj.compiler.XtraitjErrorSafeExtensions;
-import xtraitj.compiler.XtraitjJvmModelGenerator;
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.XtraitjOutputConfigurationProvider;
 import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
@@ -72,9 +68,9 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 //		return XtraitjJvmModelGenerator.class;
 //	}
 	
-	public Class<? extends ErrorSafeExtensions> bindErrorSafeExtensions() {
-		return XtraitjErrorSafeExtensions.class;
-	}
+//	public Class<? extends ErrorSafeExtensions> bindErrorSafeExtensions() {
+//		return XtraitjErrorSafeExtensions.class;
+//	}
 	
 	public Class<? extends OverrideHelper> bindOverrideHelper() {
 		return XtraitjOverrideHelper.class;
