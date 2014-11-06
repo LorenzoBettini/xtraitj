@@ -247,27 +247,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				// of the inferred Java interface's type parameters)
    				traitInterface.copyTypeParameters(t.traitTypeParameters)
    				
-   				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
+//   				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
    			]
 		)
 
 		inferInterfaceForTraitReferencesWithOperations(t, traitInterface, acceptor, maps)
 		
-		// TODO: this should be optmized so that we don't resolve the operations
-		// for something that has already been resolved in the first run
-		// or simply in the first run we infer only for trait references without
-		// alteration operations?
-		
-		// this second run ensures that we collect resolved operations also for interfaces
-		// inferred for trait references with alteration operations
-		acceptor.later.add(
-			traitInterface -> [
-   				declaredType |
-   				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
-   			]
-		)
-
 		acceptor.accept(traitInterface) [
+			// this ensures that we collect resolved operations also for interfaces
+			// inferred for trait references with alteration operations
+			t.traitReferences.collectInterfaceResolvedOperations(it, maps)
+			
 			t.addSuperTypesFromTraitReferences(it, maps)
 			
 			documentation = t.documentation
