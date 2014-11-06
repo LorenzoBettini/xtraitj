@@ -5,8 +5,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.util.Primitives
-import org.eclipse.xtext.xbase.typesystem.legacy.StandardTypeReferenceOwner
-import org.eclipse.xtext.xbase.typesystem.references.OwnedConverter
+import org.eclipse.xtext.xbase.typesystem.references.StandardTypeReferenceOwner
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
 
 class XtraitjTypingUtil {
@@ -47,8 +46,11 @@ class XtraitjTypingUtil {
 	}
 	
 	def toLightweightTypeReference(JvmTypeReference typeRef, EObject context) {
-		val converter = new OwnedConverter(new StandardTypeReferenceOwner(services, context))
-		converter.toLightweightReference(typeRef)
+		return newTypeReferenceOwner(context).toLightweightTypeReference(typeRef)
+	}
+
+	def protected newTypeReferenceOwner(EObject context) {
+		return new StandardTypeReferenceOwner(services, context);
 	}
 
 	def isNotJavaLangObject(JvmType type) {
