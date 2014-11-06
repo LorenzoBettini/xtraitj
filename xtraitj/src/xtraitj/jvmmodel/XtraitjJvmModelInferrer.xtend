@@ -1136,8 +1136,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// parameters of the containing inferred JvmGenericType
 		// DON'T use references to the original type parameters of the
 		// trait element in the AST! 
-		val typeArguments = containingDeclTypeParams.map[newTypeRef]
-		return mapped.newTypeRef(typeArguments)
+		val typeArguments = containingDeclTypeParams.map[typeRef]
+		return mapped.typeRef(typeArguments)
 	}
 
 	/**
@@ -1154,8 +1154,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		// parameters of the containing inferred JvmGenericType
 		// DON'T use references to the original type parameters of the
 		// trait element in the AST! 
-		val typeArguments = containingDeclTypeParams.map[newTypeRef]
-		return mapped.newTypeRef(typeArguments)
+		val typeArguments = containingDeclTypeParams.map[typeRef]
+		return mapped.typeRef(typeArguments)
 	}
 
 	def buildTypeRef(TJTraitReference t, XtraitjMaps maps) {
