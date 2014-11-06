@@ -2085,6 +2085,8 @@ class C2 uses T4 {
 	
 	def traitUsesGenericTraitWithHide() {
 		'''
+package tests;
+
 import java.util.List
 
 trait T1<T> {
@@ -2136,6 +2138,88 @@ class C2 uses T4 {
 	List < String > l = newArrayList("foo", "bar");
 }
 		'''
+	}
+
+	def traitUsesGenericTraitWithHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > l = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+class C2 uses T4 {
+	List < String > l = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + m(10);
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> l;
+	/* original version of m */
+	T m() { 
+		return l.get(0);
+	}
+	T n() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T2 uses T1<String> {
+	String p() { return m(); }
+}
+		'''
+		]
 	}
 
 	def traitUsesGenericTraitWithRedirect() {

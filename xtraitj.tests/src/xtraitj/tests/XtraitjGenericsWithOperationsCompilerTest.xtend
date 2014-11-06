@@ -1047,4 +1047,134 @@ public class C implements UsesTGeneric {
 			executeGeneratedJavaClassMethodAndAssert("C", "useLists", "[bar, foo][0, 1]")
 		]
 	}
+
+	@Test def void testTraitUsesGenericTraitWithHide() {
+		traitUsesGenericTraitWithHide.compile[
+			expectationsForTraitUsesGenericTraitWithHide(it)
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithHideSeparateFiles() {
+		traitUsesGenericTraitWithHideSeparateFiles.createResourceSet.compile[
+			expectationsForTraitUsesGenericTraitWithHide(it)
+		]
+	}
+	
+	def expectationsForTraitUsesGenericTraitWithHide(Result it) {
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
+  private T3_T2_0_Adapter _delegate;
+  
+  private T2Impl _T2_0;
+  
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2Impl(this);
+  }
+  
+  /**
+   * original version of m
+   */
+  public String m() {
+    return _T2_0._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjRequiredField
+  public List<String> getL() {
+    return _delegate.getL();
+  }
+  
+  public void setL(final List<String> l) {
+    _delegate.setL(l);
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T4_T1_0",
+'''
+package tests;
+
+import java.util.List;
+import tests.T1;
+import tests.T1Impl;
+import tests.T4_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T4_T1_0_AdapterImpl implements T4_T1_0_Adapter, T1<String> {
+  private T4_T1_0_Adapter _delegate;
+  
+  private T1Impl<String> _T1_0;
+  
+  public T4_T1_0_AdapterImpl(final T4_T1_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1Impl(this);
+  }
+  
+  /**
+   * original version of m
+   */
+  public String m() {
+    return _T1_0._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T1_0._n();
+  }
+  
+  @XtraitjRequiredField
+  public List<String> getL() {
+    return _delegate.getL();
+  }
+  
+  public void setL(final List<String> l) {
+    _delegate.setL(l);
+  }
+}
+'''
+)
+		
+		executeGeneratedJavaClassMethodAndAssert("C", "callN", "foofoo")
+		executeGeneratedJavaClassMethodAndAssert("C", "callM", "10")
+		
+		// in this case we call the new m(10)
+		executeGeneratedJavaClassMethodAndAssert("C2", "callN", "foo10")
+		executeGeneratedJavaClassMethodAndAssert("C2", "callM", "10")
+	}
 }

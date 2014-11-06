@@ -350,13 +350,21 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			traitExpressionInterface -> [
    				declaredType |
    				val jvmGenericType = declaredType as JvmGenericType
+   				
+   				// type parameters must be set in the inferred Java interface at this
+   				// stage, otherwise operation resolution will not work correctly in the
+   				// presence of type parameters and type arguments
+   				// (type arguments would be bound to the trait's type parameters, instead
+   				// of the inferred Java interface's type parameters)
+   				traitExpressionInterface.copyTypeParameters(t.containingDeclaration.typeParameters)
+   				
 				t.collectUnmodifiedInterfaceResolvedOperations(jvmGenericType, maps)
 //   				t.collectInterfaceResolvedOperations(jvmGenericType, maps)
    			]
 		)	
 
 		acceptor.accept(traitExpressionInterface) [
-			copyTypeParameters(t.containingDeclaration.typeParameters)
+//			copyTypeParameters(t.containingDeclaration.typeParameters)
 			
 			for (jvmOp : t.getAllDeclaredOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap)) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
@@ -506,7 +514,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						// and we need to retrieve the corresponding resolved operation
 						// i.e., the one where type arguments are already resolved
 						// but we need to search in the original declarations
-						val JvmOperation resolvedOp = allOriginalDeclarations.map[op].findFirst[origName == simpleName]
+						val XtraitjJvmOperation resolvedOp = allOriginalDeclarations.findFirst[origName == op.simpleName]
 						
 						if (resolvedOp != null) {
 							// example T1[hide m]
@@ -516,6 +524,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							members += tOp.
 								toMethodDelegate(
 									resolvedOp,
+									it,
 									traitFieldName,
 									origName,
 									origName.underscoreName
@@ -1035,7 +1044,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-	def addSuperTypesFromTraitReferences(TJDeclaration d, JvmGenericType it, XtraitjMaps maps) {
+	def private addSuperTypesFromTraitReferences(TJDeclaration d, JvmGenericType it, XtraitjMaps maps) {
 		// Xbase collects candidate features starting with the first superTypes (it looks so)
 		// Since trait references with operations could make some methods as private
 		// it is crucial to put the trait references WITHOUT operations first, so that,
@@ -1059,7 +1068,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-   	def toGetterDelegate(JvmGenericType target, TJMember m) {
+   	def private toGetterDelegate(JvmGenericType target, TJMember m) {
    		// m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [
    		m.toGetter(m.name, m.type.rebindTypeParameters(target, null)) => [
    			method |
@@ -1069,14 +1078,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-   	def toSetterDelegate(TJMember m) {
+   	def private toSetterDelegate(TJMember m) {
    		m.toSetter(m.name, m.type) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«m.name»);''')]
    		]
    	}
 
-	def toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
+	def private toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 

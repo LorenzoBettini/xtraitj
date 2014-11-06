@@ -298,18 +298,6 @@ public interface T2_T1_0_Adapter {
 		]
 	}
 
-	@Test def void testTraitUsesGenericTraitWithHide() {
-		traitUsesGenericTraitWithHide.compile[
-
-			executeGeneratedJavaClassMethodAndAssert("C", "callN", "foofoo")
-			executeGeneratedJavaClassMethodAndAssert("C", "callM", "10")
-			
-			// in this case we call the new m(10)
-			executeGeneratedJavaClassMethodAndAssert("C2", "callN", "foo10")
-			executeGeneratedJavaClassMethodAndAssert("C2", "callM", "10")
-		]
-	}
-
 	@Test def void testTraitUsesGenericTraitWithRedirect() {
 		traitUsesGenericTraitWithRedirect.compile[
 
