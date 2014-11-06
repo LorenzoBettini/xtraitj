@@ -248,7 +248,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		XtraitjMaps maps
    	) {
    		val traitInterface = t.toInterface(t.traitInterfaceName) [
-			t.annotateAsTrait(it)
+			annotateAsTrait
 		]
 		
 		maps.typesMap.put(t.traitInterfaceName, traitInterface)
@@ -281,7 +281,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
 			for (field : t.fields) {
 				members += field.toGetter(field.name, field.type) => [
-					field.annotateAsRequiredField(it)
+					annotateAsRequiredField
 					abstract = true
 				]
 				members += field.toSetter(field.name, field.type) => [
@@ -293,13 +293,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				if (!method.isPrivate)
 					members += method.toAbstractMethod => [
 	   					translateAnnotations(method.annotations)
-	   					method.annotateAsDefinedMethod(it)
+	   					annotateAsDefinedMethod
 	   				]
 			}
 			
 			for (method : t.requiredMethods) {
 				members += method.toAbstractMethod => [
-					method.annotateAsRequiredMethod(it)
+					annotateAsRequiredMethod
 				]
 			}
 			
@@ -404,7 +404,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						members += t.toAbstractMethod
 							(jvmOp, origName.renameGetterOrSetter(newname)) => [
 										copyAllAnnotationsFrom(op)
-										op.annotateAsRenamedMethod(it, origName) 
+										annotateAsRenamedMethod(origName) 
 									]
 						if (op.annotatedRequiredField()) {
 							members += t.toAbstractSetterDelegateFromGetter
@@ -895,7 +895,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
    			documentation = t.documentation
    			
-   			t.annotateAsTraitClass(it)
+   			annotateAsTraitClass
 
 			members += t.toField(delegateFieldName, transformedTraitInterfaceTypeRef)
    			
@@ -949,14 +949,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (field : t.fields) {
    				members += toGetterDelegate(field) => [
-   					field.annotateAsRequiredField(it)
+   					annotateAsRequiredField
    				]
    				members += field.toSetterDelegate
    			}
    			
    			for (aMethod : t.requiredMethods)
    				members += aMethod.toMethodDelegate(delegateFieldName) => [
-   					aMethod.annotateAsRequiredMethod(it)
+   					annotateAsRequiredMethod
    				]
    			
    			for (method : t.methods) {
@@ -973,7 +973,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					
    					// m() { _delegate.m(); }
    					val delegateMethod = method.toMethodDelegate(delegateFieldName) => [
-	   					method.annotateAsDefinedMethod(it)
+	   					annotateAsDefinedMethod
 	   				]
    					
    					delegateMethod.translateAnnotations(method.annotations)
@@ -1305,7 +1305,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					members += tRef.toMethodDelegate(traitMethod, it,
 	   						delegateFieldName, methodName, methodName
 	   					) => [ 
-		   					traitMethod.op.annotateAsDefinedMethod(it)
+		   					annotateAsDefinedMethod
 		   				]
    					// _m() { delegate to trait defining the method }
    					members += tRef.toMethodDelegate(traitMethod, it,
@@ -1323,7 +1323,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					members += tRef.toMethodDelegate(op, it,
 						delegateFieldName,
 						op.op.simpleName, op.op.simpleName) => [
-		   					op.op.annotateAsRequiredField(it)
+		   					annotateAsRequiredField
 		   				]
 	   				members += tRef.toSetterDelegateFromGetter(op, it)
    				}
@@ -1337,7 +1337,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					members += tRef.toMethodDelegate(op, it,
 						delegateFieldName,
 						op.op.simpleName, op.op.simpleName) => [
-		   					op.op.annotateAsRequiredMethod(it)
+		   					annotateAsRequiredMethod
 		   				]
 				}
 		}
@@ -1505,33 +1505,33 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-	def private void annotateAsTrait(TJTrait element, JvmAnnotationTarget target) {
-		target.annotations += element.toAnnotation(XtraitjTraitInterface)
+	def private void annotateAsTrait(JvmAnnotationTarget target) {
+		target.annotations += annotationRef(XtraitjTraitInterface)
 	}
 
-	def private void annotateAsTraitClass(TJTrait element, JvmAnnotationTarget target) {
-		target.annotations += element.toAnnotation(XtraitjTraitClass)
+	def private void annotateAsTraitClass(JvmAnnotationTarget target) {
+		target.annotations += annotationRef(XtraitjTraitClass)
 	}
 
-	def private void annotateAsRequiredField(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredField)
+	def private void annotateAsRequiredField(JvmMember target) {
+		target.annotations += annotationRef(XtraitjRequiredField)
 	}
 
-	def private void annotateAsRequiredMethod(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjRequiredMethod)
+	def private void annotateAsRequiredMethod(JvmMember target) {
+		target.annotations += annotationRef(XtraitjRequiredMethod)
 	}
 
-	def private void annotateAsDefinedMethod(EObject element, JvmMember target) {
-		target.annotations += element.toAnnotation(XtraitjDefinedMethod)
+	def private void annotateAsDefinedMethod(JvmMember target) {
+		target.annotations += annotationRef(XtraitjDefinedMethod)
 	}
 
-	def private void annotateAsRenamedMethod(EObject element, JvmMember target, String originalName) {
+	def private void annotateAsRenamedMethod(JvmMember target, String originalName) {
 		// we need to keep track of all the methods renamed, that is, the
 		// method renamed by this method and recursively possible methods renamed
 		// by the renamed method (this will make method resolution work as expected).
 		var annot = target.annotations.findFirst[renameAnnotation]
 		if (annot == null) {
-			annot = element.toAnnotation(XtraitjRenamedMethod, originalName)
+			annot = annotationRef(XtraitjRenamedMethod, originalName)
 			target.annotations += annot
 		} else {
 			annot.getExplicitValues().filter(JvmStringAnnotationValue).head.
@@ -1558,13 +1558,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
-	def private void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
-		target.annotations += op.annotations.
-			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-	}
+//	def private void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
+//		target.annotations += op.annotations.
+//			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+//	}
 
 	def private void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
-		annotations.filterNull.filter[annotationType != null].translateAnnotationsTo(target);
+		target.addAnnotations(annotations.filterNull.filter[annotationType != null])
 	}
 
 	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
@@ -1575,7 +1575,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (typePar : typeRef.arguments) {
 //				val type = typesFactory.createJvmGenericType
 //				type.setSimpleName(typePar.simpleName)
-				newRef.arguments += newTypeRef(typePar.type)
+				newRef.arguments += typeRef(typePar.type)
 			}
 		
 		}
