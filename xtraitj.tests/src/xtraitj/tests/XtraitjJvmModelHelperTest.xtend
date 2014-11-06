@@ -7,12 +7,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.MyGenericAnnotatedJavaInterface
+import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceDerived
 import xtraitj.input.tests.MyGenericTestInterface
 import xtraitj.input.tests.MyGenericTestInterfaceWithTwoTypeParameters
+import xtraitj.input.tests.MyGenericThirdTestInterface
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
-import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceDerived
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -34,6 +35,13 @@ class XtraitjJvmModelHelperTest extends XtraitjAbstractTest {
 		MyGenericTestInterfaceWithTwoTypeParameters.assertResolvedOperations(
 			"m1(List<Integer>) : String; m2(List<String>, String) : Integer",
 			String, Integer
+		)
+	}
+
+	@Test def void testResolvedOperationsWithDifferentTypeArgumentNames() {
+		MyGenericThirdTestInterface.assertResolvedOperations(
+			"m3(List<Integer>) : Integer; m2(List<Integer>) : Integer; m1(List<Integer>) : Integer",
+			Integer
 		)
 	}
 

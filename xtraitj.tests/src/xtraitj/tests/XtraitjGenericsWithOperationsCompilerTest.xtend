@@ -440,12 +440,19 @@ assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
 package tests;
 
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
 @SuppressWarnings("all")
-public interface T3_T2_0_AdapterInterface {
+public interface T3_T2_0_Adapter {
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldB")
   public abstract Boolean getB();
   
   public abstract void setB(final Boolean b);
   
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldS")
   public abstract String getS();
   
   public abstract void setS(final String s);
@@ -457,13 +464,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T3_T2_0_AdapterInterface;
+import tests.T3_T2_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface extends T3_T2_0_AdapterInterface {
+public interface T3 extends T3_T2_0_Adapter {
   @XtraitjDefinedMethod
   public abstract String meth();
 }
@@ -475,20 +482,20 @@ assertTraitAdapterJavaClass("tests", "T3_T2_0",
 package tests;
 
 import tests.T2;
-import tests.T2Interface;
-import tests.T3_T2_0_AdapterInterface;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
-public class T3_T2_0_Adapter implements T3_T2_0_AdapterInterface, T2Interface<String, Boolean> {
-  private T3_T2_0_AdapterInterface _delegate;
+public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2<String, Boolean> {
+  private T3_T2_0_Adapter _delegate;
   
-  private T2<String, Boolean> _T2_0;
+  private T2Impl<String, Boolean> _T2_0;
   
-  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface delegate) {
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
     this._delegate = delegate;
-    _T2_0 = new T2(this);
+    _T2_0 = new T2Impl(this);
   }
   
   public String getFieldS() {
@@ -534,22 +541,22 @@ assertTraitJavaClass("tests", "T3",
 '''
 package tests;
 
-import tests.T3Interface;
-import tests.T3_T2_0_Adapter;
+import tests.T3;
+import tests.T3_T2_0_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3 implements T3Interface {
-  private T3Interface _delegate;
+public class T3Impl implements T3 {
+  private T3 _delegate;
   
-  private T3_T2_0_Adapter _T2_0;
+  private T3_T2_0_AdapterImpl _T2_0;
   
-  public T3(final T3Interface delegate) {
+  public T3Impl(final T3 delegate) {
     this._delegate = delegate;
-    _T2_0 = new T3_T2_0_Adapter(delegate);
+    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -566,21 +573,21 @@ public class T3 implements T3Interface {
   }
   
   @XtraitjRequiredField
-  public String getS() {
-    return _delegate.getS();
-  }
-  
-  public void setS(final String s) {
-    _delegate.setS(s);
-  }
-  
-  @XtraitjRequiredField
   public Boolean getB() {
     return _delegate.getB();
   }
   
   public void setB(final Boolean b) {
     _delegate.setB(b);
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
   }
 }
 '''
@@ -598,16 +605,25 @@ assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
 package tests;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
 @SuppressWarnings("all")
-public interface T3_T2_0_AdapterInterface<U extends String, V> {
+public interface T3_T2_0_Adapter<U extends String, V> {
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldB")
   public abstract V getB();
   
   public abstract void setB(final V b);
   
+  @XtraitjRequiredField
+  @XtraitjRenamedMethod("getFieldS")
   public abstract U getS();
   
   public abstract void setS(final U s);
   
+  @XtraitjDefinedMethod
   public abstract String T2meth();
 }
 '''
@@ -618,21 +634,21 @@ assertTraitAdapterJavaClass("tests", "T3_T2_0",
 package tests;
 
 import tests.T2;
-import tests.T2Interface;
-import tests.T3_T2_0_AdapterInterface;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
-public class T3_T2_0_Adapter<U extends String, V> implements T3_T2_0_AdapterInterface<U, V>, T2Interface<U, V> {
-  private T3_T2_0_AdapterInterface<U, V> _delegate;
+public class T3_T2_0_AdapterImpl<U extends String, V> implements T3_T2_0_Adapter<U, V>, T2<U, V> {
+  private T3_T2_0_Adapter<U, V> _delegate;
   
-  private T2<U, V> _T2_0;
+  private T2Impl<U, V> _T2_0;
   
-  public T3_T2_0_Adapter(final T3_T2_0_AdapterInterface<U, V> delegate) {
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter<U, V> delegate) {
     this._delegate = delegate;
-    _T2_0 = new T2(this);
+    _T2_0 = new T2Impl(this);
   }
   
   public U getFieldS() {
@@ -687,13 +703,13 @@ assertTraitJavaInterface("tests", "T3",
 '''
 package tests;
 
-import tests.T3_T2_0_AdapterInterface;
+import tests.T3_T2_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
 @SuppressWarnings("all")
-public interface T3Interface<U extends String, V> extends T3_T2_0_AdapterInterface<U, V> {
+public interface T3<U extends String, V> extends T3_T2_0_Adapter<U, V> {
   @XtraitjDefinedMethod
   public abstract String meth();
 }
@@ -705,22 +721,22 @@ assertTraitJavaClass("tests", "T2",
 package tests;
 
 import org.eclipse.xtext.xbase.lib.InputOutput;
-import tests.T1;
-import tests.T2Interface;
+import tests.T1Impl;
+import tests.T2;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T2<G1, G2> implements T2Interface<G1, G2> {
-  private T2Interface<G1, G2> _delegate;
+public class T2Impl<G1, G2> implements T2<G1, G2> {
+  private T2<G1, G2> _delegate;
   
-  private T1<G1> _T1;
+  private T1Impl<G1> _T1;
   
-  public T2(final T2Interface<G1, G2> delegate) {
+  public T2Impl(final T2<G1, G2> delegate) {
     this._delegate = delegate;
-    _T1 = new T1(delegate);
+    _T1 = new T1Impl(delegate);
   }
   
   @XtraitjRequiredField
@@ -762,22 +778,22 @@ assertTraitJavaClass("tests", "T3",
 package tests;
 
 import org.eclipse.xtext.xbase.lib.InputOutput;
-import tests.T3Interface;
-import tests.T3_T2_0_Adapter;
+import tests.T3;
+import tests.T3_T2_0_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 @XtraitjTraitClass
 @SuppressWarnings("all")
-public class T3<U extends String, V> implements T3Interface<U, V> {
-  private T3Interface<U, V> _delegate;
+public class T3Impl<U extends String, V> implements T3<U, V> {
+  private T3<U, V> _delegate;
   
-  private T3_T2_0_Adapter<U, V> _T2_0;
+  private T3_T2_0_AdapterImpl<U, V> _T2_0;
   
-  public T3(final T3Interface<U, V> delegate) {
+  public T3Impl(final T3<U, V> delegate) {
     this._delegate = delegate;
-    _T2_0 = new T3_T2_0_Adapter(delegate);
+    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
   }
   
   @XtraitjDefinedMethod
@@ -807,21 +823,21 @@ public class T3<U extends String, V> implements T3Interface<U, V> {
   }
   
   @XtraitjRequiredField
-  public U getS() {
-    return _delegate.getS();
-  }
-  
-  public void setS(final U s) {
-    _delegate.setS(s);
-  }
-  
-  @XtraitjRequiredField
   public V getB() {
     return _delegate.getB();
   }
   
   public void setB(final V b) {
     _delegate.setB(b);
+  }
+  
+  @XtraitjRequiredField
+  public U getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final U s) {
+    _delegate.setS(s);
   }
 }
 '''

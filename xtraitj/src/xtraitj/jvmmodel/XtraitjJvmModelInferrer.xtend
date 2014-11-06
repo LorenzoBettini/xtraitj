@@ -239,6 +239,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		acceptor.later.add(
 			traitInterface -> [
    				declaredType |
+   				
+   				// type parameters must be set in the inferred Java interface at this
+   				// stage, otherwise operation resolution will not work correctly in the
+   				// presence of type parameters and type arguments
+   				// (type arguments would be bound to the trait's type parameters, instead
+   				// of the inferred Java interface's type parameters)
+   				traitInterface.copyTypeParameters(t.traitTypeParameters)
+   				
    				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
    			]
 		)
@@ -263,12 +271,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			t.addSuperTypesFromTraitReferences(it, maps)
 			
 			documentation = t.documentation
-			
-			copyTypeParameters(t.traitTypeParameters)
    			
-   			// it is crucial to insert, at this stage, into the inferred interface all
-   			// members which are specified in the trait, so that, later
-   			// we also add the members we "inherit" from used traits 
 			for (field : t.fields) {
 				members += field.toGetter(field.name, field.type) => [
 					field.annotateAsRequiredField(it)

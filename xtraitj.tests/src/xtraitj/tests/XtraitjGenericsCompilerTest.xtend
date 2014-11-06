@@ -2281,4 +2281,145 @@ public class C2 implements T1 {
 		]
 	}
 
+	@Test def void testTraitWithTypeParametersWithDifferentNames() {
+		traitWithTypeParametersWithDifferentNames.compile[
+			expectationsForTraitWithTypeParametersWithDifferentNames(it)
+		]
+	}
+
+	@Test def void testTraitWithTypeParametersWithDifferentNamesSeparateFiles() {
+		traitWithTypeParametersWithDifferentNamesSeparateFiles.createResourceSet.compile[
+			expectationsForTraitWithTypeParametersWithDifferentNames(it)
+		]
+	}
+	
+	private def expectationsForTraitWithTypeParametersWithDifferentNames(Result it) {
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import tests.T2Impl;
+import tests.T3;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl<G3> implements T3<G3> {
+  private T3<G3> _delegate;
+  
+  private T2Impl<G3> _T2;
+  
+  public T3Impl(final T3<G3> delegate) {
+    this._delegate = delegate;
+    _T2 = new T2Impl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String meth() {
+    return _delegate.meth();
+  }
+  
+  public String _meth() {
+    G3 _fieldT1 = this.getFieldT1();
+    InputOutput.<G3>println(_fieldT1);
+    final G3 t1 = this.getFieldT1();
+    this.setFieldT1(t1);
+    G3 _fieldT2 = this.getFieldT2();
+    InputOutput.<G3>println(_fieldT2);
+    final G3 t2 = this.getFieldT2();
+    this.setFieldT2(t2);
+    return "foo";
+  }
+  
+  @XtraitjDefinedMethod
+  public G3 mT2() {
+    return _delegate.mT2();
+  }
+  
+  public G3 _mT2() {
+    return _T2._mT2();
+  }
+  
+  @XtraitjDefinedMethod
+  public G3 mT1() {
+    return _delegate.mT1();
+  }
+  
+  public G3 _mT1() {
+    return _T2._mT1();
+  }
+  
+  @XtraitjRequiredField
+  public G3 getFieldT2() {
+    return _delegate.getFieldT2();
+  }
+  
+  public void setFieldT2(final G3 fieldT2) {
+    _delegate.setFieldT2(fieldT2);
+  }
+  
+  @XtraitjRequiredField
+  public G3 getFieldT1() {
+    return _delegate.getFieldT1();
+  }
+  
+  public void setFieldT1(final G3 fieldT1) {
+    _delegate.setFieldT1(fieldT1);
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C3",
+'''
+package tests;
+
+import tests.T3;
+import tests.T3Impl;
+
+@SuppressWarnings("all")
+public class C3<U> implements T3<U> {
+  private U fieldT1;
+  
+  public U getFieldT1() {
+    return this.fieldT1;
+  }
+  
+  public void setFieldT1(final U fieldT1) {
+    this.fieldT1 = fieldT1;
+  }
+  
+  private U fieldT2;
+  
+  public U getFieldT2() {
+    return this.fieldT2;
+  }
+  
+  public void setFieldT2(final U fieldT2) {
+    this.fieldT2 = fieldT2;
+  }
+  
+  private T3Impl<U> _T3 = new T3Impl(this);
+  
+  public String meth() {
+    return _T3._meth();
+  }
+  
+  public U mT2() {
+    return _T3._mT2();
+  }
+  
+  public U mT1() {
+    return _T3._mT1();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+	}
+
 }

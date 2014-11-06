@@ -1588,6 +1588,83 @@ class CUsesGeneric2 uses T2 {
 		'''
 	}
 
+	def traitWithTypeParametersWithDifferentNames() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldT1;
+			E1 mT1() { return null; }
+		}
+		
+		trait T2<G2> uses T1<G2> {
+			G2 fieldT2;
+			G2 mT2() { return null; }
+		}
+		
+		trait T3<G3> uses T2<G3> {
+			String meth() {
+				println(fieldT1)
+				val t1 = fieldT1
+				fieldT1 = t1
+				println(fieldT2)
+				val t2 = fieldT2
+				fieldT2 = t2
+				return "foo" // t1 + t2;
+			}
+		}
+		
+		class C3<U> uses T3<U>{
+			U fieldT1;
+			U fieldT2;
+		}
+		'''
+	}
+
+	def traitWithTypeParametersWithDifferentNamesSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		trait T3<G3> uses T2<G3> {
+			String meth() {
+				println(fieldT1)
+				val t1 = fieldT1
+				fieldT1 = t1
+				println(fieldT2)
+				val t2 = fieldT2
+				fieldT2 = t2
+				return "foo" // t1 + t2;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		class C3<U> uses T3<U>{
+			U fieldT1;
+			U fieldT2;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G2> uses T1<G2> {
+			G2 fieldT2;
+			G2 mT2() { return null; }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldT1;
+			E1 mT1() { return null; }
+		}
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithRenameSimpler() {
 		'''
 package tests;
@@ -1774,18 +1851,15 @@ trait TGeneric<T> {
 		trait T2<G1,G2> uses T1<G1> {
 			G2 fieldB;
 			
-			/*
 			String T2meth() {
 				println(fieldS)
 				val t = fieldS
 				println(t)
 				return "foo" // fieldS + fieldB;
 			}
-			*/
 		}
 		
 		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
-			/*
 			String meth() {
 				println(s)
 				val t1 = s
@@ -1795,7 +1869,6 @@ trait TGeneric<T> {
 				b = t2
 				return "foo" // s + b;
 			}
-			*/
 		}
 		
 		class C3<U extends String,V> uses T3<U,V>{
