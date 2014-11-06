@@ -1840,6 +1840,44 @@ trait TGeneric<T> {
 		'''
 	}
 
+	def classUsesTraitWithGenericRenamedFieldsInstantiatedSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			Boolean b = true;
+			String s = "test";
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2<String,Boolean>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				s = "foo"
+				b = false
+				return s + b;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		'''
+		]
+	}
+
 	def traitRenameGenericFieldNotInstantiated() {
 		'''
 		package tests;
@@ -1876,6 +1914,55 @@ trait TGeneric<T> {
 			V b;
 		}
 		'''
+	}
+
+	def traitRenameGenericFieldNotInstantiatedSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C3<U extends String,V> uses T3<U,V>{
+			U s;
+			V b;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				println(s)
+				val t1 = s
+				s = t1
+				println(b)
+				val t2 = b
+				b = t2
+				return "foo" // s + b;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+			
+			String T2meth() {
+				println(fieldS)
+				val t = fieldS
+				println(t)
+				return "foo" // fieldS + fieldB;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		'''
+		]
 	}
 
 	def traitUsesTraitWithRenameGenericMethod() {

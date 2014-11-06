@@ -435,7 +435,17 @@ class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerT
 
 	@Test def void traitRenameGenericFieldInstantiated() {
 		classUsesTraitWithGenericRenamedFieldsInstantiated.compile[
+			expectationsForTraitRenameGenericFieldInstantiated(it)
+		]
+	}
 
+	@Test def void traitRenameGenericFieldInstantiatedSeparateFiles() {
+		classUsesTraitWithGenericRenamedFieldsInstantiatedSeparateFiles.createResourceSet.compile[
+			expectationsForTraitRenameGenericFieldInstantiated(it)
+		]
+	}
+	
+	private def expectationsForTraitRenameGenericFieldInstantiated(Result it) {
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
 package tests;
@@ -595,12 +605,21 @@ public class T3Impl implements T3 {
 
 			// call the method which uses the renamed field
 			executeGeneratedJavaClassMethodAndAssert("C", "meth", "foofalse")
-		]
 	}
 
 	@Test def void testRenameGenericFieldNotInstantiated() {
 		traitRenameGenericFieldNotInstantiated.compile[
-			
+			expectationsForRenameGenericFieldNotInstantiated(it)
+		]
+	}
+
+	@Test def void testRenameGenericFieldNotInstantiatedSeparateFiles() {
+		traitRenameGenericFieldNotInstantiatedSeparateFiles.createResourceSet.compile[
+			expectationsForRenameGenericFieldNotInstantiated(it)
+		]
+	}
+	
+	private def expectationsForRenameGenericFieldNotInstantiated(Result it) {
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
 '''
 package tests;
@@ -842,8 +861,7 @@ public class T3Impl<U extends String, V> implements T3<U, V> {
 }
 '''
 )
-			assertGeneratedJavaCodeCompiles
-		]
+		assertGeneratedJavaCodeCompiles
 	}
 
 	@Test def void testUsesTraitWithRenameGenericMethod() {
