@@ -663,6 +663,51 @@ class C uses T3 {
 		'''
 	}
 
+	def traitHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+class C uses T3 {
+	String s = "";
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1 {
+	String p() { return m(); }
+}
+		''',
+		'''
+package tests;
+
+trait T1 {
+	String s;
+	/* original version of m */
+	String m() { return "T1.m;"; }
+	String n() { return m(); }
+}
+		'''
+		]
+	}
+
 	def traitAlias() {
 		'''
 package tests;

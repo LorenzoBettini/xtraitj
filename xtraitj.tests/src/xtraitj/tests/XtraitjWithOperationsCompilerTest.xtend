@@ -1822,4 +1822,218 @@ public class T3Impl implements T3 {
 		]
 	}
 
+	@Test def void testTraitHide() {
+		// m will be hidden by T3
+		traitHide.compile[
+			expectationsForTraitHide(it)
+		]
+	}
+
+	@Test def void testTraitHideSeparateFiles() {
+		// m will be hidden by T3
+		traitHideSeparateFiles.createResourceSet.compile[
+			expectationsForTraitHide(it)
+		]
+	}
+	
+	private def expectationsForTraitHide(Result it) {
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_Adapter {
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String p();
+  
+  @XtraitjDefinedMethod
+  public abstract String n();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3 extends T3_T2_0_Adapter {
+  /**
+   * independent new version of m
+   */
+  @XtraitjDefinedMethod
+  public abstract int m(final int i);
+  
+  @XtraitjDefinedMethod
+  public abstract String callN();
+  
+  @XtraitjDefinedMethod
+  public abstract int callM();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
+  private T3_T2_0_Adapter _delegate;
+  
+  private T2Impl _T2_0;
+  
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2Impl(this);
+  }
+  
+  /**
+   * original version of m
+   */
+  public String m() {
+    return _T2_0._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3;
+import tests.T3_T2_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl implements T3 {
+  private T3 _delegate;
+  
+  private T3_T2_0_AdapterImpl _T2_0;
+  
+  public T3Impl(final T3 delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
+  }
+  
+  /**
+   * independent new version of m
+   */
+  @XtraitjDefinedMethod
+  public int m(final int i) {
+    return _delegate.m(i);
+  }
+  
+  /**
+   * independent new version of m
+   */
+  public int _m(final int i) {
+    return i;
+  }
+  
+  @XtraitjDefinedMethod
+  public String callN() {
+    return _delegate.callN();
+  }
+  
+  public String _callN() {
+    String _n = this.n();
+    String _p = this.p();
+    return (_n + _p);
+  }
+  
+  @XtraitjDefinedMethod
+  public int callM() {
+    return _delegate.callM();
+  }
+  
+  public int _callM() {
+    return this.m(10);
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+			// call the new version of m
+			executeGeneratedJavaClassMethodAndAssert("C", "callM", "10")
+			
+			// n in T1 will call its own m
+			executeGeneratedJavaClassMethodAndAssert("C", "callN", "T1.m;T1.m;")
+	}
 }
