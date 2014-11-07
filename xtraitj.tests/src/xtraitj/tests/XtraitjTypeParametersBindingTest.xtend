@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
@@ -13,12 +14,10 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -47,6 +46,16 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitRequiredFieldTypeParameterReference() {
+		'''
+		trait T1<T> {
+			T f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType
+		]
+	}
+
 	@Test def void testTraitGenericDefinedMethodTypeParameterReference() {
 		'''
 		trait T1 {
@@ -66,6 +75,16 @@ class XtraitjTypeParametersBindingTest {
 			assertTypeParameterBoundToContainingMethod
 		]
 	}
+
+	@Test def void testTraitShadowedGenericRequiredMethodTypeParameterReference() {
+		'''
+		trait T1<T> {
+			<T> T m(T t);
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingMethod
+		]
+	}
 	
 	private def assertTypeParameterBoundToContainingType(TJProgram it) {
 		it.assertJvmOperationTypeParameterBindings[declaringType as JvmGenericType]
@@ -79,18 +98,22 @@ class XtraitjTypeParametersBindingTest {
 		assertNoErrors
 		val associatedElements = associatedJvmOperations(it)
 //		println(associatedElements)
+		assertFalse("No associated elements", associatedElements.empty)
 		for (op : associatedElements) {
 			op.assertJvmOperationTypeParameterBindings(expectedTypeParameterDeclarator)
 		}
 	}
 	
 	private def associatedJvmOperations(TJProgram it) {
-		elements.filter(TJTrait).head.members.filter(TJMethodDeclaration).
+		elements.filter(TJTrait).head.members.
 			head.jvmElements.filter(JvmOperation).toList
 	}
 
 	def private assertJvmOperationTypeParameterBindings(JvmOperation op, (JvmOperation)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
-		op.assertJvmOperationTypeParameterBinding(op.returnType, expectedTypeParameterDeclarator)
+		if (!op.simpleName.startsWith("set")) {
+			// the setter method is void
+			op.assertJvmOperationTypeParameterBinding(op.returnType, expectedTypeParameterDeclarator)
+		}
 		for (p : op.parameters) {
 			op.assertJvmOperationTypeParameterBinding(p.parameterType, expectedTypeParameterDeclarator)
 		}

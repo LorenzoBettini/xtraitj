@@ -958,8 +958,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			for (field : t.fields) {
    				members += toGetterDelegate(field) => [
    					annotateAsRequiredField
+   					rebindTypeParameters(traitClass)
    				]
-   				members += field.toSetterDelegate
+   				members += field.toSetterDelegate => [
+   					rebindTypeParameters(traitClass)
+   				]
    			}
    			
    			for (aMethod : t.requiredMethods)
@@ -1094,7 +1097,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
    	def private toGetterDelegate(JvmGenericType target, TJMember m) {
    		// m.toGetter(m.name, m.type.rebindTypeParameters(type)) => [
-   		m.toGetter(m.name, m.type.rebindTypeParameters(target, null)) => [
+   		m.toGetter(m.name, m.type) => [
    			method |
    			method.body = [
    				append('''return «delegateFieldName».«method.simpleName»();''')
