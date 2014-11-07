@@ -887,8 +887,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// since the trait element is in the input file we're processing
 			val traitInterfaceTypeRef = t.associatedInterface
 			
-			val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
-						transformTypeParametersIntoTypeArguments(t)
+//			val transformedTraitInterfaceTypeRef = traitInterfaceTypeRef.
+//						transformTypeParametersIntoTypeArguments(t)
+
+			val transformedTraitInterfaceTypeRef = 
+				traitInterfaceTypeRef.
+						transformTypeParametersIntoTypeArguments(traitClass)
 			
 			superTypes += transformedTraitInterfaceTypeRef
 
@@ -1582,15 +1586,31 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		target.addAnnotations(annotations.filterNull.filter[annotationType != null])
 	}
 
-	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
+//	that was WRONG: we must use as type arguments type references to the type parameters
+//  of the inferred JvmGenericType
+//	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, EObject ctx) {
+//		val newRef = typeRef.cloneWithProxies 
+//		if (newRef instanceof JvmParameterizedTypeReference) {
+//			newRef.arguments.clear
+//		
+//			for (typePar : typeRef.arguments) {
+////				val type = typesFactory.createJvmGenericType
+////				type.setSimpleName(typePar.simpleName)
+//				newRef.arguments += typeRef(typePar.type)
+//			}
+//		
+//		}
+//		
+//		newRef
+//	}
+
+	def private transformTypeParametersIntoTypeArguments(JvmParameterizedTypeReference typeRef, JvmGenericType traitClassInferredType) {
 		val newRef = typeRef.cloneWithProxies 
 		if (newRef instanceof JvmParameterizedTypeReference) {
 			newRef.arguments.clear
 		
-			for (typePar : typeRef.arguments) {
-//				val type = typesFactory.createJvmGenericType
-//				type.setSimpleName(typePar.simpleName)
-				newRef.arguments += typeRef(typePar.type)
+			for (typePar : traitClassInferredType.typeParameters) {
+				newRef.arguments += typeRef(typePar)
 			}
 		
 		}
