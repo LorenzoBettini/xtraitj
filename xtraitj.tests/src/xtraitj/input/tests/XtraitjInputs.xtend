@@ -1284,6 +1284,12 @@ trait T1 {
 		return recursive(recursive(v))
 	}
 
+	/**
+	 * IMPORTANT:
+	 * The generated Java code in T1Impl._noReturn() must be
+	 * InputOutput.<U>println(u);
+	 * Otherwise it means type parameter references are not correctly bound!
+	 */
 	<U> void noReturn(U u) {
 		println(u)
 	}
@@ -1349,6 +1355,12 @@ trait T1 {
 		return recursive(recursive(v))
 	}
 
+	/**
+	 * IMPORTANT:
+	 * The generated Java code in T1Impl._noReturn() must be
+	 * InputOutput.<U>println(u);
+	 * Otherwise it means type parameter references are not correctly bound!
+	 */
 	<U> void noReturn(U u) {
 		println(u)
 	}

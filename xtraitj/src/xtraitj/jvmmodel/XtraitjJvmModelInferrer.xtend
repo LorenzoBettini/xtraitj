@@ -285,22 +285,24 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				members += field.toGetter(field.name, field.type) => [
 					annotateAsRequiredField
 					abstract = true
+					rebindTypeParameters(traitInterface)
 				]
 				members += field.toSetter(field.name, field.type) => [
 		   			abstract = true
+		   			rebindTypeParameters(traitInterface)
 		   		]
 			}
 			
 			for (method : t.methods) {
 				if (!method.isPrivate)
-					members += method.toAbstractMethod => [
+					members += method.toAbstractMethod(traitInterface) => [
 	   					translateAnnotations(method.annotations)
 	   					annotateAsDefinedMethod
 	   				]
 			}
 			
 			for (method : t.requiredMethods) {
-				members += method.toAbstractMethod => [
+				members += method.toAbstractMethod(traitInterface) => [
 					annotateAsRequiredMethod
 				]
 			}
@@ -961,13 +963,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			}
    			
    			for (aMethod : t.requiredMethods)
-   				members += aMethod.toMethodDelegate(delegateFieldName) => [
+   				members += aMethod.toMethodDelegate(traitClass, delegateFieldName) => [
    					annotateAsRequiredMethod
    				]
    			
    			for (method : t.methods) {
    				if (method.isPrivate) {
-   					members += method.toTraitMethod(method.name) => [
+   					members += method.toTraitMethod(traitClass, method.name) => [
 	   					translateAnnotations(method.annotations)
 	   				]
    				} else {
@@ -975,10 +977,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					// type parameters work correctly
    					
 	   				// _m() { original m's body }
-	   				val actualMethod = method.toTraitMethod(method.name.underscoreName)
+	   				val actualMethod = method.toTraitMethod(traitClass, method.name.underscoreName)
    					
    					// m() { _delegate.m(); }
-   					val delegateMethod = method.toMethodDelegate(delegateFieldName) => [
+   					val delegateMethod = method.toMethodDelegate(traitClass, delegateFieldName) => [
 	   					annotateAsDefinedMethod
 	   				]
    					
@@ -1107,14 +1109,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
-	def private toMethodDelegate(TJMethodDeclaration m, String delegateFieldName) {
+	def private toMethodDelegate(TJMethodDeclaration m, JvmGenericType containerTypeDecl, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
 			copyTypeParameters(m.typeParameters)
+			
+			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType)
+				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
 			}
 			val args = m.params.map[name].join(", ")
 			if (m.type?.simpleName != "void")
@@ -1150,14 +1154,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def toTraitMethod(TJMethod method, String name) {
+	def private toTraitMethod(TJMethod method, JvmGenericType containerTypeDecl, String name) {
 		method.toMethod(name, method.type) [
 			documentation = method.documentation
 			
 			copyTypeParameters(method.typeParameters)
 			
+			returnType = method.type.rebindTypeParameters(containerTypeDecl, it)
+			
 			for (p : method.params) {
-				parameters += p.toParameter(p.name, p.parameterType)
+				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
 			}
 			body = method.body
 		]
@@ -1270,17 +1276,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //		m.op.originalSource.toAbstractMethod(m, name)
 //	}
 
-	def private toAbstractMethod(TJMethodDeclaration m) {
+	def private toAbstractMethod(TJMethodDeclaration m, JvmGenericType containerTypeDecl) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
 			copyTypeParameters(m.typeParameters)
 			
-			//returnType = returnType.rebindTypeParameters(target, it)
+			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
-				//parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(target, it))
-				parameters += p.toParameter(p.name, p.parameterType)
+				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
+//				parameters += p.toParameter(p.name, p.parameterType)
 			}
 			abstract = true
 		]

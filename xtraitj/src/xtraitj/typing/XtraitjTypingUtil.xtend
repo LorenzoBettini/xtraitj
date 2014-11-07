@@ -49,7 +49,7 @@ class XtraitjTypingUtil {
 		return newTypeReferenceOwner(context).toLightweightTypeReference(typeRef)
 	}
 
-	def protected newTypeReferenceOwner(EObject context) {
+	def newTypeReferenceOwner(EObject context) {
 		return new StandardTypeReferenceOwner(services, context);
 	}
 

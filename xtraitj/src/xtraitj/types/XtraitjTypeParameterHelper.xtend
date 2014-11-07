@@ -1,22 +1,30 @@
 package xtraitj.types
 
+import com.google.inject.Inject
+import com.google.inject.Singleton
 import java.util.Map
 import org.eclipse.xtext.common.types.JvmConstraintOwner
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
-import org.eclipse.xtext.xtype.XFunctionTypeRef
-import com.google.inject.Singleton
-import com.google.inject.Inject
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 
 @Singleton
 class XtraitjTypeParameterHelper {
 	
 	@Inject extension JvmTypesBuilder
-	
+
+	def void rebindTypeParameters(JvmOperation op, JvmTypeParameterDeclarator containerTypeDecl) {
+		op.returnType = op.returnType.rebindTypeParameters(containerTypeDecl, op)
+		for (p : op.parameters) {
+			p.parameterType = p.parameterType.rebindTypeParameters(containerTypeDecl, op)
+		}
+	}
+
 	/**
 	 * It is crucial to rebind the type parameter references to the
 	 * correct type parameter declarator, otherwise the type parameter
@@ -37,17 +45,27 @@ class XtraitjTypeParameterHelper {
 		val reboundTypeRef = typeRef.cloneWithProxies
 		
 		if (reboundTypeRef instanceof JvmParameterizedTypeReference) {
-			val type = reboundTypeRef.type
+			var type = reboundTypeRef.type
+			
+			if (type.eIsProxy) {
+				// use the original type reference to resolve the type
+				// since the cloned one might not be contained in any resource
+				type = typeRef.type
+			}
 			
 			if (type instanceof JvmTypeParameter) {
 				var typePar = visited.get(type)
 				
 				if (typePar === null) {
-					typePar = findCorrespondingTypeParameter(containerTypeDecl, reboundTypeRef)
-					
-					// the typePar can now be null if it refers to a method's generic type
-					if (typePar === null && containerOperation !== null) {
-						typePar = findCorrespondingTypeParameter(containerOperation, reboundTypeRef)
+					// the type parameter of a method might shadow the one in the
+					// declaring type, so we must inspect the former first
+					if (containerOperation !== null) {
+						typePar = findCorrespondingTypeParameter(containerOperation, typeRef)
+					}
+
+					// the typePar can now be null if it refers to the containing type's type parameter
+					if (typePar === null) {
+						typePar = findCorrespondingTypeParameter(containerTypeDecl, typeRef)
 					}					
 					
 					if (typePar !== null) {
@@ -83,7 +101,7 @@ class XtraitjTypeParameterHelper {
 		return typeRef
 	}
 	
-	def findCorrespondingTypeParameter(JvmTypeParameterDeclarator declarator, JvmParameterizedTypeReference reboundTypeRef) {
+	def findCorrespondingTypeParameter(JvmTypeParameterDeclarator declarator, JvmTypeReference reboundTypeRef) {
 		if (declarator === null)
 			return null
 		declarator.typeParameters.findFirst[name == reboundTypeRef.type.simpleName]
@@ -96,4 +114,5 @@ class XtraitjTypeParameterHelper {
 			constraint.typeReference = constraint.typeReference.rebindTypeParameters(containerDecl, containerOperation, visited)
 		}
 	}
+
 }

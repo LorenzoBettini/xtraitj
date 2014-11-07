@@ -1760,298 +1760,328 @@ public class CUsesGeneric implements TUsesGeneric {
 	}
 	
 	private def expectationsForTraitUsingGenericMethod(Result it) {
-		assertTraitJavaClass("tests", "T1",
-		'''
-		package tests;
-		
-		import java.util.ArrayList;
-		import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-		import org.eclipse.xtext.xbase.lib.InputOutput;
-		import tests.T1;
-		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-		import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-		
-		@XtraitjTraitClass
-		@SuppressWarnings("all")
-		public class T1Impl implements T1 {
-		  private T1 _delegate;
-		  
-		  public T1Impl(final T1 delegate) {
-		    this._delegate = delegate;
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <T extends Object> T identity(final T t) {
-		    return _delegate.identity(t);
-		  }
-		  
-		  public <T extends Object> T _identity(final T t) {
-		    return t;
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentity() {
-		    return _delegate.useIdentity();
-		  }
-		  
-		  public String _useIdentity() {
-		    final String s = this.<String>identity("foo");
-		    final Integer i = this.<Integer>identity(Integer.valueOf(0));
-		    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
-		    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
-		    return ((((s + ",") + i) + ",") + l);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <V extends Object> V recursive(final V v) {
-		    return _delegate.recursive(v);
-		  }
-		  
-		  public <V extends Object> V _recursive(final V v) {
-		    V _recursive = this.<V>recursive(v);
-		    return this.<V>recursive(_recursive);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <U extends Object> void noReturn(final U u) {
-		    _delegate.noReturn(u);
-		  }
-		  
-		  public <U extends Object> void _noReturn(final U u) {
-		    InputOutput.<Object>println(u);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public void useRecursive() {
-		    _delegate.useRecursive();
-		  }
-		  
-		  public void _useRecursive() {
-		    Integer _recursive = this.<Integer>recursive(Integer.valueOf(0));
-		    String _recursive_1 = this.<String>recursive("foo");
-		    String _plus = (_recursive + _recursive_1);
-		    InputOutput.<String>println(_plus);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentityNested() {
-		    return _delegate.useIdentityNested();
-		  }
-		  
-		  public String _useIdentityNested() {
-		    String _identity = this.<String>identity("foo");
-		    final String s = this.<String>identity(_identity);
-		    Integer _identity_1 = this.<Integer>identity(Integer.valueOf(0));
-		    final Integer i = this.<Integer>identity(_identity_1);
-		    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
-		    ArrayList<Boolean> _identity_2 = this.<ArrayList<Boolean>>identity(_newArrayList);
-		    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_identity_2);
-		    return ((((s + ",") + i) + ",") + l);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public void useNoReturn() {
-		    _delegate.useNoReturn();
-		  }
-		  
-		  public void _useNoReturn() {
-		    this.<String>noReturn("foo");
-		    this.<Integer>noReturn(Integer.valueOf(0));
-		  }
-		}
-		'''
-		)
-		
-		assertTraitJavaInterface("tests", "T2",
-		'''
-		package tests;
-		
-		import tests.T1;
-		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-		import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-		
-		@XtraitjTraitInterface
-		@SuppressWarnings("all")
-		public interface T2 extends T1 {
-		  @XtraitjDefinedMethod
-		  public abstract String useIdentity2();
-		  
-		  @XtraitjDefinedMethod
-		  public abstract String useIdentityNested2();
-		  
-		  @XtraitjDefinedMethod
-		  public abstract void useNoReturn2();
-		}
-		'''
-		)
-		
-		assertTraitJavaClass("tests", "T2",
-		'''
-		package tests;
-		
-		import tests.T1Impl;
-		import tests.T2;
-		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-		import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
-		
-		@XtraitjTraitClass
-		@SuppressWarnings("all")
-		public class T2Impl implements T2 {
-		  private T2 _delegate;
-		  
-		  private T1Impl _T1;
-		  
-		  public T2Impl(final T2 delegate) {
-		    this._delegate = delegate;
-		    _T1 = new T1Impl(delegate);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentity2() {
-		    return _delegate.useIdentity2();
-		  }
-		  
-		  public String _useIdentity2() {
-		    final String s = this.<String>identity("bar");
-		    String _useIdentity = this.useIdentity();
-		    return ((s + ",") + _useIdentity);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentityNested2() {
-		    return _delegate.useIdentityNested2();
-		  }
-		  
-		  public String _useIdentityNested2() {
-		    String _identity = this.<String>identity("bar");
-		    final String s = this.<String>identity(_identity);
-		    String _useIdentityNested = this.useIdentityNested();
-		    return ((s + ",") + _useIdentityNested);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public void useNoReturn2() {
-		    _delegate.useNoReturn2();
-		  }
-		  
-		  public void _useNoReturn2() {
-		    this.<String>noReturn("foo");
-		    this.<Integer>noReturn(Integer.valueOf(0));
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <T extends Object> T identity(final T t) {
-		    return _delegate.identity(t);
-		  }
-		  
-		  public <T extends Object> T _identity(final T t) {
-		    return _T1._identity(t);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentity() {
-		    return _delegate.useIdentity();
-		  }
-		  
-		  public String _useIdentity() {
-		    return _T1._useIdentity();
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <V extends Object> V recursive(final V v) {
-		    return _delegate.recursive(v);
-		  }
-		  
-		  public <V extends Object> V _recursive(final V v) {
-		    return _T1._recursive(v);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public <U extends Object> void noReturn(final U u) {
-		    _delegate.noReturn(u);
-		  }
-		  
-		  public <U extends Object> void _noReturn(final U u) {
-		    _T1._noReturn(u);
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public void useRecursive() {
-		    _delegate.useRecursive();
-		  }
-		  
-		  public void _useRecursive() {
-		    _T1._useRecursive();
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public String useIdentityNested() {
-		    return _delegate.useIdentityNested();
-		  }
-		  
-		  public String _useIdentityNested() {
-		    return _T1._useIdentityNested();
-		  }
-		  
-		  @XtraitjDefinedMethod
-		  public void useNoReturn() {
-		    _delegate.useNoReturn();
-		  }
-		  
-		  public void _useNoReturn() {
-		    _T1._useNoReturn();
-		  }
-		}
-		'''
-		)
-		
-		assertJavaClass("tests", "C",
-		'''
-		package tests;
-		
-		import tests.T1;
-		import tests.T1Impl;
-		
-		@SuppressWarnings("all")
-		public class C implements T1 {
-		  private T1Impl _T1 = new T1Impl(this);
-		  
-		  public <T extends Object> T identity(final T t) {
-		    return _T1._identity(t);
-		  }
-		  
-		  public String useIdentity() {
-		    return _T1._useIdentity();
-		  }
-		  
-		  public <V extends Object> V recursive(final V v) {
-		    return _T1._recursive(v);
-		  }
-		  
-		  public <U extends Object> void noReturn(final U u) {
-		    _T1._noReturn(u);
-		  }
-		  
-		  public void useRecursive() {
-		    _T1._useRecursive();
-		  }
-		  
-		  public String useIdentityNested() {
-		    return _T1._useIdentityNested();
-		  }
-		  
-		  public void useNoReturn() {
-		    _T1._useNoReturn();
-		  }
-		}
-		'''
-		)
-		
-					executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
-					executeGeneratedJavaClassMethodAndAssert("C2", "useIdentity2", "bar,foo,0,[true, false]")
-					executeGeneratedJavaClassMethodAndAssert("C", "useIdentityNested", "foo,0,[true, false]")
-					executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested", "foo,0,[true, false]")
-					executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested2", "bar,foo,0,[true, false]")
+assertTraitJavaClass("tests", "T1",
+'''
+package tests;
+
+import java.util.ArrayList;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.InputOutput;
+import tests.T1;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T1Impl implements T1 {
+  private T1 _delegate;
+  
+  public T1Impl(final T1 delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjDefinedMethod
+  public <T extends Object> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T extends Object> T _identity(final T t) {
+    return t;
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    final String s = this.<String>identity("foo");
+    final Integer i = this.<Integer>identity(Integer.valueOf(0));
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_newArrayList);
+    return ((((s + ",") + i) + ",") + l);
+  }
+  
+  @XtraitjDefinedMethod
+  public <V extends Object> V recursive(final V v) {
+    return _delegate.recursive(v);
+  }
+  
+  public <V extends Object> V _recursive(final V v) {
+    V _recursive = this.<V>recursive(v);
+    return this.<V>recursive(_recursive);
+  }
+  
+  /**
+   * IMPORTANT:
+   * The generated Java code in T1Impl._noReturn() must be
+   * InputOutput.<U>println(u);
+   * Otherwise it means type parameter references are not correctly bound!
+   */
+  @XtraitjDefinedMethod
+  public <U extends Object> void noReturn(final U u) {
+    _delegate.noReturn(u);
+  }
+  
+  /**
+   * IMPORTANT:
+   * The generated Java code in T1Impl._noReturn() must be
+   * InputOutput.<U>println(u);
+   * Otherwise it means type parameter references are not correctly bound!
+   */
+  public <U extends Object> void _noReturn(final U u) {
+    InputOutput.<U>println(u);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useRecursive() {
+    _delegate.useRecursive();
+  }
+  
+  public void _useRecursive() {
+    Integer _recursive = this.<Integer>recursive(Integer.valueOf(0));
+    String _recursive_1 = this.<String>recursive("foo");
+    String _plus = (_recursive + _recursive_1);
+    InputOutput.<String>println(_plus);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested() {
+    return _delegate.useIdentityNested();
+  }
+  
+  public String _useIdentityNested() {
+    String _identity = this.<String>identity("foo");
+    final String s = this.<String>identity(_identity);
+    Integer _identity_1 = this.<Integer>identity(Integer.valueOf(0));
+    final Integer i = this.<Integer>identity(_identity_1);
+    ArrayList<Boolean> _newArrayList = CollectionLiterals.<Boolean>newArrayList(Boolean.valueOf(true), Boolean.valueOf(false));
+    ArrayList<Boolean> _identity_2 = this.<ArrayList<Boolean>>identity(_newArrayList);
+    final ArrayList<Boolean> l = this.<ArrayList<Boolean>>identity(_identity_2);
+    return ((((s + ",") + i) + ",") + l);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn() {
+    _delegate.useNoReturn();
+  }
+  
+  public void _useNoReturn() {
+    this.<String>noReturn("foo");
+    this.<Integer>noReturn(Integer.valueOf(0));
+  }
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests;
+
+import tests.T1;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T2 extends T1 {
+  @XtraitjDefinedMethod
+  public abstract String useIdentity2();
+  
+  @XtraitjDefinedMethod
+  public abstract String useIdentityNested2();
+  
+  @XtraitjDefinedMethod
+  public abstract void useNoReturn2();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import tests.T1Impl;
+import tests.T2;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private T1Impl _T1;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity2() {
+    return _delegate.useIdentity2();
+  }
+  
+  public String _useIdentity2() {
+    final String s = this.<String>identity("bar");
+    String _useIdentity = this.useIdentity();
+    return ((s + ",") + _useIdentity);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested2() {
+    return _delegate.useIdentityNested2();
+  }
+  
+  public String _useIdentityNested2() {
+    String _identity = this.<String>identity("bar");
+    final String s = this.<String>identity(_identity);
+    String _useIdentityNested = this.useIdentityNested();
+    return ((s + ",") + _useIdentityNested);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn2() {
+    _delegate.useNoReturn2();
+  }
+  
+  public void _useNoReturn2() {
+    this.<String>noReturn("foo");
+    this.<Integer>noReturn(Integer.valueOf(0));
+  }
+  
+  @XtraitjDefinedMethod
+  public <T extends Object> T identity(final T t) {
+    return _delegate.identity(t);
+  }
+  
+  public <T extends Object> T _identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentity() {
+    return _delegate.useIdentity();
+  }
+  
+  public String _useIdentity() {
+    return _T1._useIdentity();
+  }
+  
+  @XtraitjDefinedMethod
+  public <V extends Object> V recursive(final V v) {
+    return _delegate.recursive(v);
+  }
+  
+  public <V extends Object> V _recursive(final V v) {
+    return _T1._recursive(v);
+  }
+  
+  /**
+   * IMPORTANT:
+   * The generated Java code in T1Impl._noReturn() must be
+   * InputOutput.<U>println(u);
+   * Otherwise it means type parameter references are not correctly bound!
+   */
+  @XtraitjDefinedMethod
+  public <U extends Object> void noReturn(final U u) {
+    _delegate.noReturn(u);
+  }
+  
+  /**
+   * IMPORTANT:
+   * The generated Java code in T1Impl._noReturn() must be
+   * InputOutput.<U>println(u);
+   * Otherwise it means type parameter references are not correctly bound!
+   */
+  public <U extends Object> void _noReturn(final U u) {
+    _T1._noReturn(u);
+  }
+  
+  @XtraitjDefinedMethod
+  public void useRecursive() {
+    _delegate.useRecursive();
+  }
+  
+  public void _useRecursive() {
+    _T1._useRecursive();
+  }
+  
+  @XtraitjDefinedMethod
+  public String useIdentityNested() {
+    return _delegate.useIdentityNested();
+  }
+  
+  public String _useIdentityNested() {
+    return _T1._useIdentityNested();
+  }
+  
+  @XtraitjDefinedMethod
+  public void useNoReturn() {
+    _delegate.useNoReturn();
+  }
+  
+  public void _useNoReturn() {
+    _T1._useNoReturn();
+  }
+}
+'''
+)
+
+assertJavaClass("tests", "C",
+'''
+package tests;
+
+import tests.T1;
+import tests.T1Impl;
+
+@SuppressWarnings("all")
+public class C implements T1 {
+  private T1Impl _T1 = new T1Impl(this);
+  
+  public <T extends Object> T identity(final T t) {
+    return _T1._identity(t);
+  }
+  
+  public String useIdentity() {
+    return _T1._useIdentity();
+  }
+  
+  public <V extends Object> V recursive(final V v) {
+    return _T1._recursive(v);
+  }
+  
+  /**
+   * IMPORTANT:
+   * The generated Java code in T1Impl._noReturn() must be
+   * InputOutput.<U>println(u);
+   * Otherwise it means type parameter references are not correctly bound!
+   */
+  public <U extends Object> void noReturn(final U u) {
+    _T1._noReturn(u);
+  }
+  
+  public void useRecursive() {
+    _T1._useRecursive();
+  }
+  
+  public String useIdentityNested() {
+    return _T1._useIdentityNested();
+  }
+  
+  public void useNoReturn() {
+    _T1._useNoReturn();
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentity", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentity2", "bar,foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested", "foo,0,[true, false]")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useIdentityNested2", "bar,foo,0,[true, false]")
 	}
 
 	@Test def void testTraitWithGenericMethod() {
