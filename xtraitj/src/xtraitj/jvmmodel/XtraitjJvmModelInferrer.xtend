@@ -400,7 +400,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						copyAllAnnotationsFrom(op)
 					]
 					if (op.annotatedRequiredField())
-						members += t.toAbstractSetterDelegateFromGetter(jvmOp)
+						members += t.toAbstractSetterDelegateFromGetter(jvmOp) => [
+							rebindTypeParameters(traitExpressionInterface)
+						]
 				} else {
 					if (renameOperation != null && renameOperation.newname != null) {
 						val newname = renameOperation.newname
@@ -412,7 +414,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 									]
 						if (op.annotatedRequiredField()) {
 							members += t.toAbstractSetterDelegateFromGetter
-								(jvmOp, newname)
+								(jvmOp, newname) => [
+									rebindTypeParameters(traitExpressionInterface)
+								]
 						}
 					}
 	//					// hidden methods are simply not inserted in this interface
@@ -773,6 +777,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m is forwarded to this.m2()
 					members += tOp.
 						toMethodDelegate(
+							it,
 							resolvedOp,
 							"this",
 							origName,
@@ -781,6 +786,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m2 is forwarded to delegate.m2()
 					members += tOp.
 						toMethodDelegate(
+							it,
 							resolvedOp,
 							delegateFieldName,
 							newname,
@@ -793,6 +799,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m is forwarded to this.m2
 					members += tOp.
 						toMethodDelegate(
+							it,
 							resolvedOp,
 							"this",
 							origName,
@@ -801,6 +808,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m2 is forwarded to delegate.m2
 					members += tOp.
 						toMethodDelegate(
+							it,
 							resolvedOp,
 							delegateFieldName,
 							newname,
@@ -811,6 +819,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// _m2 is forwarded to T1._m
 					members += tOp.
 						toMethodDelegate(
+							it,
 							resolvedOp,
 							traitFieldName,
 							newname.underscoreName,
@@ -823,6 +832,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				// m is forwarded to this.m2()
 				members += tOp.
 					toMethodDelegate(
+						it,
 						resolvedOp,
 						"this",
 						origName,
@@ -831,6 +841,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				// m2 is forwarded to delegate.m2()
 				members += tOp.
 					toMethodDelegate(
+						it,
 						resolvedOp,
 						delegateFieldName,
 						newname,
@@ -847,7 +858,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						"this",
 						origSetterName,
 						newSetterName
-					)
+					) => [m | m.rebindTypeParameters(it)]
 				// m2 is forwarded to delegate.m2()
 				members += tOp.
 					toSetterMethodDelegate(
@@ -855,7 +866,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						delegateFieldName,
 						newSetterName,
 						newSetterName
-					)
+					) => [m | m.rebindTypeParameters(it)]
 			}
 		}
 	}
@@ -1131,15 +1142,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def private toMethodDelegate(EObject source, JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+	def private toMethodDelegate(EObject source, JvmGenericType containerTypeDecl, JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
 		//val o = op.jvmOperation
 		source.toMethod(methodName, op.returnType) [
 			documentation = op.documentation
 			
 			copyTypeParameters(op.typeParameters)
 			
+			returnType = op.returnType.rebindTypeParameters(containerTypeDecl, it)
+			
 			for (p : op.parameters) {
-				parameters += source.toParameter(p.name, p.parameterType)
+				parameters += source.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
 			}
 			val args = op.parameters.map[name].join(", ")
 			if (op.returnType?.simpleName != "void")
