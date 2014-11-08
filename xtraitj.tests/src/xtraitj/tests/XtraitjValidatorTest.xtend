@@ -19,6 +19,106 @@ class XtraitjValidatorTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
 
+	@Test def void testWrongReturnExpressionWithGenerics() {
+		'''
+package tests;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		return f;
+	}
+}
+		'''.parse.assertErrorsAsStrings("Type mismatch: cannot convert from T to String")
+	}
+
+	@Test def void testWrongReturnExpressionWithGenerics2() {
+		'''
+package tests;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		val v = f;
+		return v;
+	}
+}
+		'''.parse.assertErrorsAsStrings("Type mismatch: cannot convert from T to String")
+	}
+
+	@Test def void testWrongReturnExpressionWithGenerics3() {
+		'''
+package tests;
+
+trait T2<U> {
+	U f;
+}
+
+trait T1<T> uses T2<T> {
+	String m() {
+		val v = f;
+		return v;
+	}
+}
+		'''.parse.assertErrorsAsStrings("Type mismatch: cannot convert from T to String")
+	}
+
+	@Test def void testWrongReturnExpressionWithGenerics4() {
+		'''
+package tests;
+
+trait T3<U> {
+	U f;
+}
+
+trait T2<V> uses T3<V> {
+
+}
+
+trait T1<T> uses T2<T> {
+	String m() {
+		val v = f;
+		return v;
+	}
+}
+		'''.parse.assertErrorsAsStrings("Type mismatch: cannot convert from T to String")
+	}
+
+	@Test def void testWrongReturnExpressionWithGenerics5() {
+		'''
+package tests;
+
+trait T1<E1> {
+	E1 fieldT1;
+	E1 mT1() { return null; }
+}
+
+trait T2<G2> uses T1<G2> {
+	G2 fieldT2;
+	G2 mT2() { return null; }
+}
+
+trait T3<G3> uses T2<G3> {
+	String meth() {
+		println(fieldT1)
+		val t1 = fieldT1
+		fieldT1 = t1
+		println(fieldT2)
+		val t2 = fieldT2
+		fieldT2 = t2
+		return fieldT2; // + t2; // "foo" // t1 + t2;
+	}
+}
+
+class C3<U> uses T3<U>{
+	U fieldT1;
+	U fieldT2;
+}
+		'''.parse.assertErrorsAsStrings("Type mismatch: cannot convert from G3 to String")
+	}
+
 	@Test def void testAccessToRenamedMethod() {
 		'''
 package tests;
