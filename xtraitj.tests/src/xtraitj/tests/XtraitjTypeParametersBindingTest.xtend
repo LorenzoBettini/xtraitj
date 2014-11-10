@@ -14,12 +14,19 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 
 import static org.junit.Assert.*
-import static extension xtraitj.util.XtraitjModelUtil.*
 
+import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJDeclaration
+
+/**
+ * Tests that type parameter references in the inferred Java interfaces and
+ * classes are correct: they refer to the containing type parameter declarator.
+ */
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjTypeParametersBindingTest {
@@ -30,11 +37,17 @@ class XtraitjTypeParametersBindingTest {
 	/** 1 in the interface, 2 in the class */
 	val static EXPECTED_OPS_FOR_DEFINED_METHOD = 3
 
+	/** 1 in the class */
+	val static CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD = 1
+
 	/** 1 in the interface, 1 in the class */
 	val static EXPECTED_OPS_FOR_REQUIRED_METHOD = 2
 
 	/** 2 in the interface, 2 in the class */
 	val static EXPECTED_OPS_FOR_REQUIRED_FIELD = 4
+
+	/** 2 in the class */
+	val static CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD = 2
 
 	/** 2 in the class */
 	val static EXPECTED_OPS_FOR_USED_DEFINED_METHOD = 2
@@ -197,6 +210,48 @@ class XtraitjTypeParametersBindingTest {
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
 		]
 	}
+
+	@Test def void testClassDefinedMethodTypeParameterReference() {
+		'''
+		trait T1<T> {
+			T m(T t) { return null; }
+		}
+		
+		class C<U> uses T1<U> {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassRequiredMethodTypeParameterReference() {
+		'''
+		trait T1<T> {
+			T m(T t);
+		}
+		
+		trait T2<V> {
+			V m(V t) { return null; }
+		}
+		
+		class C<U> uses T1<U>, T2<U> {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassFieldTypeParameterReference() {
+		'''
+		class C<U> {
+			U f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
 	
 	private def assertTypeParameterBoundToContainingType(TJProgram it,
 			int expectedAssociatedElements) {
@@ -214,7 +269,7 @@ class XtraitjTypeParametersBindingTest {
 	) {
 		assertNoErrors
 		val associatedElements = associatedJvmOperations(it)
-		//println(associatedElements)
+		println(associatedElements)
 		assertFalse("No associated elements", associatedElements.empty)
 		assertEquals(expectedAssociatedElements, associatedElements.size)
 		for (op : associatedElements) {
@@ -223,14 +278,17 @@ class XtraitjTypeParametersBindingTest {
 	}
 	
 	/**
-	 * Retrieves all the JvmOperations associated to the first trait in the program,
+	 * Retrieves all the JvmOperations associated to the first class or 
+	 * trait in the program, (if there's a class, then uses that class, otherwise,
+	 * it uses the first trait)
 	 * including the ones generated for used traits with alteration operations
 	 */
 	private def associatedJvmOperations(TJProgram it) {
-		val trait = elements.filter(TJTrait).head
-		trait.jvmElements.filter(JvmGenericType).
+		val TJDeclaration programElement = 
+			elements.filter(TJClass).head ?: elements.filter(TJTrait).head
+		programElement.jvmElements.filter(JvmGenericType).
 				map[declaredOperations].flatten +
-		trait.traitReferences.map[jvmElements.filter(JvmGenericType).
+		programElement.traitReferences.map[jvmElements.filter(JvmGenericType).
 				map[declaredOperations].flatten].flatten
 	}
 

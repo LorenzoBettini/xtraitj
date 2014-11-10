@@ -126,6 +126,39 @@ class XtraitjWorkbencTest extends AbstractWorkbenchTest {
 		waitForAutoBuildAndAssertNoErrors(file2)
 	}
 
+	@Test
+	def void testForClassRequiredProjectsAfterwards() {
+		createXtraitjPluginProject("testProject2", "testProject1")
+		val file2 = createFile("testProject2" + "/src/test.xtraitj",
+		'''
+		package tests;
+		
+		class C<U> uses T1<U> {
+			U f;
+		}
+		'''
+		)
+		// the required project is still not there
+		// so we expect errors
+		waitForAutoBuildAndAssertErrors(file2)
+
+		createXtraitjPluginProject("testProject1")
+		createFile("testProject1" + "/src/test.xtraitj",
+		'''
+		package tests;
+		
+		trait T1<T> {
+			T f;
+			
+			T m() { return f; }
+		}
+		'''
+		)
+		
+		// the required project there and the errors should go away
+		waitForAutoBuildAndAssertNoErrors(file2)
+	}
+
 	def waitForAutoBuildAndAssertNoErrors(IFile file) {
 		waitForAutoBuild();
 		assertNoErrors(file)
