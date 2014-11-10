@@ -105,6 +105,42 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testRenameNonExistantMethod() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[rename foo to bar] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testNoMemberInHideYet() {
+		'''
+		trait T {
+			
+		}
+		
+		class C uses T[hide ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testHideNonExistantMethod() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[hide foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	@Test def void testReferenceToNonExistentTrait() {
 		'''
 		trait T {
