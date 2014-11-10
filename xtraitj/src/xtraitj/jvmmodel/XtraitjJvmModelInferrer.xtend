@@ -33,6 +33,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.util.XtraitjAnnotatedElementHelper
+import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJHideOperation
@@ -41,6 +42,7 @@ import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
@@ -389,9 +391,9 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (jvmOp : t.getAllDeclaredOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap)) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
 				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
-//				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
-	//				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
-	//				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
+				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
+				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
+				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				
 				val op = jvmOp.op
 				
@@ -419,14 +421,29 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								]
 						}
 					}
-	//					// hidden methods are simply not inserted in this interface
-	//					if (aliasOperation != null) {
-	//						members += jvmOp.toAbstractMethod(aliasOperation.newname)
-	//						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
-	//							// we need to add also the original method
-	//							members += jvmOp.toAbstractMethod(aliasOperation.member.simpleName)
-	//						}
-	//					}
+					// hidden methods are simply not inserted in this interface
+
+					if (aliasOperation != null && aliasOperation.newname != null) {
+						
+						val newname = aliasOperation.newname
+						val origName = op.simpleName
+						
+						members += t.toAbstractMethod
+							(jvmOp, newname) => [
+								copyAllAnnotationsFrom(op)
+//								annotateAsRenamedMethod(origName) 
+							]
+						
+//						members += jvmOp.toAbstractMethod(aliasOperation.newname)
+						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
+							// we need to add also the original method
+							members += t.toAbstractMethod
+								(jvmOp, origName) => [
+									copyAllAnnotationsFrom(op)
+	//								annotateAsRenamedMethod(origName) 
+								]
+						}
+					}
 	//					// restricted methods are added and associated to the
 	//					// operation itself
 	//					if (restrictOperation != null) {
@@ -528,13 +545,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			val allOriginalDeclarations = t.getAllDeclaredOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap)
 			
 			for (tOp : t.operations) {
+				val origName = tOp.member?.simpleName
 				switch(tOp) {
 					TJRenameOperation: {
 						handleRenameOperation(tOp, allDeclarations, it, traitFieldName)
 					}
 					TJHideOperation: {
-						val origName = tOp.member?.simpleName
-		
 						// and we need to retrieve the corresponding resolved operation
 						// i.e., the one where type arguments are already resolved
 						// but we need to search in the original declarations
@@ -554,6 +570,36 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 									origName.underscoreName
 								)
 						}
+					}
+					TJAliasOperation: {
+						val newname = tOp.newname
+						// and we need to retrieve the corresponding resolved operation
+						// i.e., the one where type arguments are already resolved
+						val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
+						
+						// example T1[alias m as oldm]
+						// m cannot be required
+						
+						// oldm is forwarded to delegate.oldm
+						members += tOp.
+							toMethodDelegate(
+								it,
+								resolvedOp,
+								delegateFieldName,
+								newname,
+								newname
+							)
+						// _oldm is forwarded to T1._m
+						members += tOp.
+							toMethodDelegate(
+								it,
+								resolvedOp,
+								traitFieldName,
+								newname.underscoreName,
+								origName.underscoreName
+							) => [
+								copyAllAnnotationsFrom(resolvedOp)
+							]
 					}
 				}
 			}
