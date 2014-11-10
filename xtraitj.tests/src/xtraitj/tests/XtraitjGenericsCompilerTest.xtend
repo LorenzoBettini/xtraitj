@@ -2452,4 +2452,21 @@ public class C3<U extends Object> implements T3<U> {
 			assertGeneratedJavaCodeCompiles
 	}
 
+	@Test def void testTraitUsesGenericTraitClass() {
+		traitUsesGenericClass.compile[
+			expectationsForTraitUsesGenericClass(it)
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitClassSeparateFiles() {
+		traitUsesGenericClassSeparateFiles.createResourceSet.compile[
+			expectationsForTraitUsesGenericClass(it)
+		]
+	}
+	
+	def expectationsForTraitUsesGenericClass(Result it) {
+		executeGeneratedJavaClassMethodAndAssert("CString", "m", "test")
+		executeGeneratedJavaClassMethodAndAssert("CInteger", "m", "10")
+		executeGeneratedJavaClassMethodAndAssert("CListOfStrings", "m", "[a, b, c]")
+	}
 }

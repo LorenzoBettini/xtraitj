@@ -2022,6 +2022,98 @@ trait TGeneric<T> {
 		]
 	}
 
+	def traitUsesGenericClass() {
+'''
+package tests;
+
+import java.util.List;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		val c = new C<T>()
+		// the class' field will be null
+		// so we set it using our field
+		// which is initialized by the specific class
+		// where type parameters are instantiated
+		c.f = f
+		return c.n()
+	}
+	
+	String n() {
+		return f.toString;
+	}
+}
+
+class C<U> uses T1<U> {
+	U f;
+}
+
+class CString uses T1<String> {
+	String f = "test";
+}
+
+class CInteger uses T1<Integer> {
+	Integer f = 10;
+}
+
+class CListOfStrings uses T1<List<String>> {
+	List<String> f = #["a", "b", "c"];
+}
+'''
+	}
+
+	def traitUsesGenericClassSeparateFiles() {
+		#[
+'''
+package tests;
+
+class C<U> uses T1<U> {
+	U f;
+}
+''',
+'''
+package tests;
+
+import java.util.List;
+
+class CString uses T1<String> {
+	String f = "test";
+}
+
+class CInteger uses T1<Integer> {
+	Integer f = 10;
+}
+
+class CListOfStrings uses T1<List<String>> {
+	List<String> f = #["a", "b", "c"];
+}
+''',
+'''
+package tests;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		val c = new C<T>()
+		// the class' field will be null
+		// so we set it using our field
+		// which is initialized by the specific class
+		// where type parameters are instantiated
+		c.f = f
+		return c.n()
+	}
+	
+	String n() {
+		return f.toString;
+	}
+}
+'''
+		]
+	}
+
 	def traitUsesTraitWithRenameGenericMethod() {
 		'''
 package tests;
