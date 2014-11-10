@@ -129,6 +129,34 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testReferenceToNonExistentTraitFromClass() {
+		'''
+		class C uses T1 {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testReferenceToNonExistentGenericTraitFromClass() {
+		'''
+		class C<T> uses T1<T> {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testReferenceWithWrongTypeArgs() {
+		'''
+		trait T1<T> {
+			
+		}
+		
+		trait T2<U,V> uses T1<U,V> {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 		//	.map[message].forEach[println(it)] // useful for debugging

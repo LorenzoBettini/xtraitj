@@ -269,7 +269,7 @@ class XtraitjTypeParametersBindingTest {
 	) {
 		assertNoErrors
 		val associatedElements = associatedJvmOperations(it)
-		println(associatedElements)
+		// println(associatedElements)
 		assertFalse("No associated elements", associatedElements.empty)
 		assertEquals(expectedAssociatedElements, associatedElements.size)
 		for (op : associatedElements) {

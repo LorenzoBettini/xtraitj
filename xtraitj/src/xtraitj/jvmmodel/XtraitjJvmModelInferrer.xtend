@@ -1253,11 +1253,28 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //		typeRef
 		
 		val typeKey = typeRef.traitInterfaceName
+		buildTypeRefInternal(typeRef, typeKey, maps)
+	}
+	
+	private def buildTypeRefInternal(JvmParameterizedTypeReference typeRef, String typeKey, XtraitjMaps maps) {
 		val mapped = maps.typesMap.get(typeKey)
+		val typeArguments = typeRef.arguments.map[cloneWithProxies]
+		
 		if (mapped != null) {
-			return typeRef(mapped, typeRef.arguments.map[cloneWithProxies])
+			if (mapped.typeParameters.size != typeArguments.size) {
+				// we can't assume that the referred type exists
+				// nor that the type arguments we pass are correct
+				return typeRef(mapped)
+			} else {
+				return typeRef(mapped, typeArguments)
+			}
 		} else {
-			return typeRef(typeKey, typeRef.arguments.map[cloneWithProxies])
+			if (typeKey != "void") {
+				return typeRef(typeKey, typeArguments)
+			} else {
+				// we'll deal with void problems in the validator
+				return typeRef(typeKey)
+			}
 		}
 	}
 
@@ -1280,12 +1297,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	
 	private def buildTraitClassTypeRef(JvmParameterizedTypeReference typeRef, XtraitjMaps maps) {
 		val typeKey = typeRef.traitClassName
-		val mapped = maps.typesMap.get(typeKey)
-		if (mapped != null) {
-			return typeRef(mapped, typeRef.arguments.map[cloneWithProxies])
-		} else {
-			return typeRef(typeKey, typeRef.arguments.map[cloneWithProxies])
-		}
+		buildTypeRefInternal(typeRef, typeKey, maps)
 	}
 
 //	def private toAbstractMethod(XtraitjJvmOperation m, String name) {
