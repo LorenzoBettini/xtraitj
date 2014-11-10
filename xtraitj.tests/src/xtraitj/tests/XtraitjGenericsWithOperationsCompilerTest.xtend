@@ -1177,4 +1177,142 @@ public class T4_T1_0_AdapterImpl implements T4_T1_0_Adapter, T1<String> {
 		executeGeneratedJavaClassMethodAndAssert("C2", "callN", "foo10")
 		executeGeneratedJavaClassMethodAndAssert("C2", "callM", "10")
 	}
+
+	@Test def void testTraitUsesGenericTraitWithAlias() {
+		traitUsesGenericTraitWithAlias.compile[
+
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests;
+
+import tests.T2_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+/**
+ * alias on a directly instantiated type parameter
+ */
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T2 extends T2_T1_0_Adapter {
+  @XtraitjDefinedMethod
+  public abstract String p();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2;
+import tests.T2_T1_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+/**
+ * alias on a directly instantiated type parameter
+ */
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2Impl implements T2 {
+  private T2 _delegate;
+  
+  private T2_T1_0_AdapterImpl _T1_0;
+  
+  public T2Impl(final T2 delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T2_T1_0_AdapterImpl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    String _m = this.m();
+    String _oldm = this.oldm();
+    return (_m + _oldm);
+  }
+  
+  @XtraitjDefinedMethod
+  public String oldm() {
+    return _delegate.oldm();
+  }
+  
+  public String _oldm() {
+    return _T1_0._oldm();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m() {
+    return _delegate.m();
+  }
+  
+  public String _m() {
+    return _T1_0._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String n() {
+    return _delegate.n();
+  }
+  
+  public String _n() {
+    return _T1_0._n();
+  }
+  
+  @XtraitjRequiredField
+  public List<String> getL() {
+    return _delegate.getL();
+  }
+  
+  public void setL(final List<String> l) {
+    _delegate.setL(l);
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "T2_T1_0",
+'''
+package tests;
+
+import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public interface T2_T1_0_Adapter {
+  @XtraitjRequiredField
+  public abstract List<String> getL();
+  
+  public abstract void setL(final List<String> l);
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  public abstract String oldm();
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  public abstract String m();
+  
+  @XtraitjDefinedMethod
+  public abstract String n();
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "p", "foofoo")
+			executeGeneratedJavaClassMethodAndAssert("C2", "p", "foofoo")
+		]
+	}
+
 }
