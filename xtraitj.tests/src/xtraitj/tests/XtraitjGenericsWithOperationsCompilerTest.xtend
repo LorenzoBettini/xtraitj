@@ -1373,4 +1373,373 @@ public interface T2_T1_0_Adapter {
 			executeGeneratedJavaClassMethodAndAssert("C2", "callN", "T3.m;foo")
 		]
 	}
+
+	@Test def void testGenericFunctionAsField() {
+		genericFunctionAsField.compile[
+
+assertTraitJavaInterface("tests", "TTransformerIterator",
+'''
+package tests;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TTransformerIterator_TIterator_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface TTransformerIterator<T extends Object, R extends Object> extends TTransformerIterator_TIterator_0_Adapter<T, R> {
+  @XtraitjRequiredField
+  public abstract Function1<? super T, ? extends R> getFunction();
+  
+  public abstract void setFunction(final Function1<? super T, ? extends R> function);
+  
+  @XtraitjDefinedMethod
+  public abstract R next();
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TTransformerIterator",
+'''
+package tests;
+
+import java.util.Iterator;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TTransformerIterator;
+import tests.TTransformerIterator_TIterator_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TTransformerIteratorImpl<T extends Object, R extends Object> implements TTransformerIterator<T, R> {
+  private TTransformerIterator<T, R> _delegate;
+  
+  private TTransformerIterator_TIterator_0_AdapterImpl<T, R> _TIterator_0;
+  
+  public TTransformerIteratorImpl(final TTransformerIterator<T, R> delegate) {
+    this._delegate = delegate;
+    _TIterator_0 = new TTransformerIterator_TIterator_0_AdapterImpl(delegate);
+  }
+  
+  @XtraitjRequiredField
+  public Function1<? super T, ? extends R> getFunction() {
+    return _delegate.getFunction();
+  }
+  
+  public void setFunction(final Function1<? super T, ? extends R> function) {
+    _delegate.setFunction(function);
+  }
+  
+  @XtraitjDefinedMethod
+  public R next() {
+    return _delegate.next();
+  }
+  
+  public R _next() {
+    final T o = this.origNext();
+    Function1<? super T, ? extends R> _function = this.getFunction();
+    return _function.apply(o);
+  }
+  
+  @XtraitjDefinedMethod
+  public boolean hasNext() {
+    return _delegate.hasNext();
+  }
+  
+  public boolean _hasNext() {
+    return _TIterator_0._hasNext();
+  }
+  
+  @XtraitjDefinedMethod
+  public T origNext() {
+    return _delegate.origNext();
+  }
+  
+  public T _origNext() {
+    return _TIterator_0._origNext();
+  }
+  
+  @XtraitjDefinedMethod
+  public void remove() {
+    _delegate.remove();
+  }
+  
+  public void _remove() {
+    _TIterator_0._remove();
+  }
+  
+  @XtraitjRequiredField
+  public Iterator<T> getIterator() {
+    return _delegate.getIterator();
+  }
+  
+  public void setIterator(final Iterator<T> iterator) {
+    _delegate.setIterator(iterator);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testPassTypeParameterAsTypeArgument() {
+		passTypeParameterAsTypeArgument.compile[
+			expectationsForPassTypeParameterAsTypeArgument(it)
+		]
+	}
+
+	@Test def void testPassTypeParameterAsTypeArgumentSeparateFiles() {
+		passTypeParameterAsTypeArgumentSeparateFiles.createResourceSet.compile[
+			expectationsForPassTypeParameterAsTypeArgument(it)
+		]
+	}
+	
+	private def expectationsForPassTypeParameterAsTypeArgument(Result it) {
+assertTraitJavaInterface("tests", "T2",
+'''
+package tests;
+
+import tests.T1;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T2<W extends Object> extends T1<W> {
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "TWithOp_T1_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public interface TWithOp_T1_0_Adapter<Z extends Object> {
+  @XtraitjRequiredField
+  public abstract Z getS();
+  
+  public abstract void setS(final Z s);
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "TWithOp_T1_0",
+'''
+package tests;
+
+import tests.T1;
+import tests.T1Impl;
+import tests.TWithOp_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class TWithOp_T1_0_AdapterImpl<Z extends Object> implements TWithOp_T1_0_Adapter<Z>, T1<Z> {
+  private TWithOp_T1_0_Adapter<Z> _delegate;
+  
+  private T1Impl<Z> _T1_0;
+  
+  public TWithOp_T1_0_AdapterImpl(final TWithOp_T1_0_Adapter<Z> delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1Impl(this);
+  }
+  
+  public Z m() {
+    return _T1_0._m();
+  }
+  
+  @XtraitjRequiredField
+  public Z getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final Z s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "TWithOp",
+'''
+package tests;
+
+import tests.TWithOp;
+import tests.TWithOp_T1_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TWithOpImpl<Z extends Object> implements TWithOp<Z> {
+  private TWithOp<Z> _delegate;
+  
+  private TWithOp_T1_0_AdapterImpl<Z> _T1_0;
+  
+  public TWithOpImpl(final TWithOp<Z> delegate) {
+    this._delegate = delegate;
+    _T1_0 = new TWithOp_T1_0_AdapterImpl(delegate);
+  }
+  
+  @XtraitjRequiredField
+  public Z getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final Z s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T2",
+'''
+package tests;
+
+import tests.T1Impl;
+import tests.T2;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T2Impl<W extends Object> implements T2<W> {
+  private T2<W> _delegate;
+  
+  private T1Impl<W> _T1;
+  
+  public T2Impl(final T2<W> delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public W m() {
+    return _delegate.m();
+  }
+  
+  public W _m() {
+    return _T1._m();
+  }
+  
+  @XtraitjRequiredField
+  public W getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final W s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3<V extends Object> extends T2<List<V>> {
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import java.util.List;
+import tests.T2Impl;
+import tests.T3;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl<V extends Object> implements T3<V> {
+  private T3<V> _delegate;
+  
+  private T2Impl<List<V>> _T2;
+  
+  public T3Impl(final T3<V> delegate) {
+    this._delegate = delegate;
+    _T2 = new T2Impl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public List<V> m() {
+    return _delegate.m();
+  }
+  
+  public List<V> _m() {
+    return _T2._m();
+  }
+  
+  @XtraitjRequiredField
+  public List<V> getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final List<V> s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "CWithOp_T1_0",
+'''
+package tests;
+
+import tests.CWithOp_T1_0_Adapter;
+import tests.T1;
+import tests.T1Impl;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class CWithOp_T1_0_AdapterImpl<Z extends Object> implements CWithOp_T1_0_Adapter<Z>, T1<Z> {
+  private CWithOp_T1_0_Adapter<Z> _delegate;
+  
+  private T1Impl<Z> _T1_0;
+  
+  public CWithOp_T1_0_AdapterImpl(final CWithOp_T1_0_Adapter<Z> delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1Impl(this);
+  }
+  
+  public Z m() {
+    return _T1_0._m();
+  }
+  
+  @XtraitjRequiredField
+  public Z getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final Z s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+			executeGeneratedJavaClassMethodAndAssert("C", "m", "foo")
+			executeGeneratedJavaClassMethodAndAssert("C3", "m", "[foo, bar]")
+	}
+
 }

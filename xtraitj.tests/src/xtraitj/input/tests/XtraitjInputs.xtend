@@ -2784,6 +2784,73 @@ class CWithOp<Z> uses T1<Z>[hide m] {
 '''
 	}
 
+	def passTypeParameterAsTypeArgumentSeparateFiles() {
+		#[
+'''
+package tests;
+
+class CWithOp<Z> uses T1<Z>[hide m] {
+	Z s;
+}
+''',
+'''
+package tests;
+
+class C uses T2<String> {
+	String s = "foo";
+}
+''',
+'''
+package tests;
+
+class C1<U> uses T2<U> {
+	U s;
+}
+''',
+'''
+package tests;
+
+import java.util.List
+
+class C3 uses T3<String> {
+	List<String> s = newArrayList("foo", "bar");
+}
+''',
+'''
+package tests;
+
+import java.util.List
+
+trait T3<V> uses T2<List<V>> {
+	
+}
+''',
+'''
+package tests;
+
+trait T2<W> uses T1<W> {
+	
+}
+''',
+'''
+package tests;
+
+trait TWithOp<Z> uses T1<Z>[hide m] {
+	
+}
+
+''',
+'''
+package tests;
+
+trait T1<T> {
+	T s;
+	T m() { return s }
+}
+'''
+		]
+	}
+
 	def annotatedElements() {
 '''
 package tests;

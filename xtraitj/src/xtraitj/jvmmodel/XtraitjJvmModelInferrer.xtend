@@ -115,6 +115,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				}
 			}
 		}
+		
+		for (e : dependiences) {
+			switch(e) {
+				TJTrait: {
+					e.inferTraitClass(acceptor, maps)
+				}
+			}
+		}
 
 		for (e : dependiences) {
 			switch(e) {
@@ -126,9 +134,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 		for (e : dependiences) {
 			switch(e) {
-				TJTrait: {
-					e.inferTraitClass(acceptor, maps)
-				}
 				TJClass: {
 					e.inferClassContents(acceptor, maps)
 				}
@@ -502,7 +507,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		val traitReferenceClass = t.toClass(traitExpressionClassName)
 		
 		//traitReferenceClass.copyTypeParameters(t.containingDeclaration.typeParameters)
-		traitReferenceClass.copyTypeParameters(containingDeclarationInferredType.typeParameters)
+//		traitReferenceClass.copyTypeParameters(containingDeclarationInferredType.typeParameters)
 		
 		maps.typesMap.put(traitExpressionClassName, traitReferenceClass)
 		
@@ -528,6 +533,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			members += t.containingDeclaration.
 				toField(delegateFieldName, transformedTraitInterfaceTypeRef)
 
+			// this assumes that the Impl class for the trait has already been inferred
 			val traitFieldTypeRef = t.trait.buildTraitClassTypeRef(maps)
 			members += t.toField(traitFieldName, traitFieldTypeRef)
 			
