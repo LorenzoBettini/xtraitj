@@ -91,9 +91,9 @@ class XtraitjAnnotatedElementHelper {
 		]
 	}
 
-	def filterOutXtraitjRenamedAnnotations(Iterable<JvmAnnotationReference> annotations) {
+	def filterOutXtraitjDefinedAnnotations(Iterable<JvmAnnotationReference> annotations) {
 		annotations.filter[
-			!renameAnnotation
+			!definedAnnotation
 		]
 	}
 

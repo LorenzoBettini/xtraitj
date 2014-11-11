@@ -396,19 +396,21 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				
 				val op = jvmOp.op
+				val origName = op.simpleName
 				
 				if (relatedOperations.empty) {
 					members += t.toAbstractMethod(jvmOp, op.simpleName) => [
 						copyAllAnnotationsFrom(op)
 					]
-					if (op.annotatedRequiredField())
+					if (op.annotatedRequiredField()) {
 						members += t.toAbstractSetterDelegateFromGetter(jvmOp) => [
 							rebindTypeParameters(traitExpressionInterface)
 						]
+					}
 				} else {
 					if (renameOperation != null && renameOperation.newname != null) {
 						val newname = renameOperation.newname
-						val origName = op.simpleName
+						
 						members += t.toAbstractMethod
 							(jvmOp, origName.renameGetterOrSetter(newname)) => [
 										copyAllAnnotationsFrom(op)
@@ -426,7 +428,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					if (aliasOperation != null && aliasOperation.newname != null) {
 						
 						val newname = aliasOperation.newname
-						val origName = op.simpleName
 						
 						members += t.toAbstractMethod
 							(jvmOp, newname) => [
@@ -444,12 +445,14 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 								]
 						}
 					}
-	//					// restricted methods are added and associated to the
-	//					// operation itself
-	//					if (restrictOperation != null) {
-	//						members += 
-	//							restrictOperation.toAbstractMethod(jvmOp, op.simpleName)
-	//					}
+						
+					// restricted methods are added as required methods
+					if (restrictOperation != null) {
+						members += t.toAbstractMethod(jvmOp, op.simpleName) => [
+							copyAllAnnotationsButDefinedFrom(op)
+							annotateAsRequiredMethod
+						]
+					}
 				}
 			}
 			
@@ -600,6 +603,26 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							) => [
 								copyAllAnnotationsFrom(resolvedOp)
 							]
+					}
+					TJRestrictOperation: {
+						// and we need to retrieve the corresponding resolved operation
+						// i.e., the one where type arguments are already resolved
+						// but we need to search in the original declarations
+						val XtraitjJvmOperation resolvedOp = allOriginalDeclarations.findFirst[origName == op.simpleName]
+						
+						// example T1[restrict m]
+						
+						// m is forwarded to delegate.m
+						if (resolvedOp != null) {
+							members += tOp.
+								toMethodDelegate(
+									resolvedOp,
+									it,
+									delegateFieldName,
+									origName,
+									origName
+								)
+						}
 					}
 				}
 			}
@@ -1657,10 +1680,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		target.annotations += op.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
-//	def private void copyAllAnnotationsButRenamedFrom(JvmOperation target, JvmOperation op) {
-//		target.annotations += op.annotations.
-//			filterOutXtraitjRenamedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
-//	}
+	def private void copyAllAnnotationsButDefinedFrom(JvmOperation target, JvmOperation op) {
+		target.annotations += op.annotations.
+			filterOutXtraitjDefinedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
+	}
 
 	def private void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
 		target.addAnnotations(annotations.filterNull.filter[annotationType != null])
