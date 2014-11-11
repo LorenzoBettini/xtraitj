@@ -83,7 +83,12 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def traitFieldName(JvmParameterizedTypeReference t) {
-		t.typeNameWithoutTypeArgs
+		val n = t.typeNameWithoutTypeArgs
+		val pos = n.lastIndexOf(".")
+   		if (pos > 0) {
+   			return n.substring(pos+1)
+   		}
+   		return n
 	}
 
 	def traitClassName(JvmTypeReference t) {

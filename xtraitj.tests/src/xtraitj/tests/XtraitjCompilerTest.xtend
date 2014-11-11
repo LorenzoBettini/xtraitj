@@ -126,6 +126,51 @@ public class TImpl implements T {
 		]
 	}
 
+	@Test def void testTraitFieldName() {
+		'''
+		package tests;
+		
+		trait T1 {
+			
+		}
+		
+		trait T2 {
+			
+		}
+		
+		trait T3 uses T1, tests.T2 {
+			
+		}
+		'''.compile [
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T1Impl;
+import tests.T2Impl;
+import tests.T3;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl implements T3 {
+  private T3 _delegate;
+  
+  private T1Impl _T1;
+  
+  private T2Impl _T2;
+  
+  public T3Impl(final T3 delegate) {
+    this._delegate = delegate;
+    _T1 = new T1Impl(delegate);
+    _T2 = new T2Impl(delegate);
+  }
+}
+''')
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitAndClass() {
 		'''
 		import java.util.List
