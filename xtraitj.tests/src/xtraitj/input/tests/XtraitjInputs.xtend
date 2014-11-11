@@ -774,6 +774,53 @@ class C uses T3 {
 		'''
 	}
 
+	def traitAliasWithRenameAndHideSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			String s = "";
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+			/* independent version of n */
+			String n(int i) {
+				return oldn() + i + " - ";
+			}
+			String callN() { 
+				return n(10) + p();
+			}
+			String callM() { 
+				return m1() + oldm();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2 uses T1 {
+			String p() { return m() + n(); }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			String s;
+			/* original version of m */
+			String m() { return "T1.m;"; }
+			/* original version of n */
+			String n() { return "T1.n;"; }
+		}
+		'''
+		]
+	}
+
 	def traitRestrict() {
 		'''
 		package tests;
@@ -2520,6 +2567,77 @@ class C2 uses T4 {
 	List < String > s = newArrayList("foo", "bar");
 }
 '''
+	}
+
+	def traitUsesGenericTraitWithAliasRenameHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > s = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	List < String > s = newArrayList("foo", "bar");
+}
+''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10);
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+''',
+		'''
+package tests;
+
+trait T3 uses T2[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10) + p();
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+	String p() { return m() + n(); }
+}
+''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s;
+	/* original version of m */
+	T m() { return s.get(0); }
+	T n() { return m(); }
+}
+'''
+		]
 	}
 
 	def traitUsesGenericTraitWithWildCard() {

@@ -2275,4 +2275,307 @@ public class T3Impl implements T3 {
 		]
 	}
 
+	@Test def void testTraitAliasWithRenameAndHide() {
+		traitAliasWithRenameAndHide.compile[
+			expectationsForTraitAliasWithRenameAndHide(it)
+		]
+	}
+
+	@Test def void testTraitAliasWithRenameAndHideSeparateFiles() {
+		traitAliasWithRenameAndHideSeparateFiles.createResourceSet.compile[
+			expectationsForTraitAliasWithRenameAndHide(it)
+		]
+	}
+	
+	private def expectationsForTraitAliasWithRenameAndHide(Result it) {
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_Adapter {
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String p();
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public abstract String m1();
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  public abstract String oldm();
+  
+  /**
+   * original version of n
+   */
+  @XtraitjDefinedMethod
+  public abstract String oldn();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3 extends T3_T2_0_Adapter {
+  /**
+   * independent version of n
+   */
+  @XtraitjDefinedMethod
+  public abstract String n(final int i);
+  
+  @XtraitjDefinedMethod
+  public abstract String callN();
+  
+  @XtraitjDefinedMethod
+  public abstract String callM();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
+  private T3_T2_0_Adapter _delegate;
+  
+  private T2Impl _T2_0;
+  
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2Impl(this);
+  }
+  
+  /**
+   * original version of m
+   */
+  public String oldm() {
+    return _delegate.oldm();
+  }
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  public String _oldm() {
+    return _T2_0._m();
+  }
+  
+  /**
+   * original version of n
+   */
+  public String oldn() {
+    return _delegate.oldn();
+  }
+  
+  /**
+   * original version of n
+   */
+  @XtraitjDefinedMethod
+  public String _oldn() {
+    return _T2_0._n();
+  }
+  
+  /**
+   * original version of m
+   */
+  public String m() {
+    return this.m1();
+  }
+  
+  /**
+   * original version of m
+   */
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public String m1() {
+    return _delegate.m1();
+  }
+  
+  /**
+   * original version of m
+   */
+  public String _m1() {
+    return _T2_0._m();
+  }
+  
+  /**
+   * original version of n
+   */
+  public String n() {
+    return _T2_0._n();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3;
+import tests.T3_T2_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl implements T3 {
+  private T3 _delegate;
+  
+  private T3_T2_0_AdapterImpl _T2_0;
+  
+  public T3Impl(final T3 delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
+  }
+  
+  /**
+   * independent version of n
+   */
+  @XtraitjDefinedMethod
+  public String n(final int i) {
+    return _delegate.n(i);
+  }
+  
+  /**
+   * independent version of n
+   */
+  public String _n(final int i) {
+    String _oldn = this.oldn();
+    String _plus = (_oldn + Integer.valueOf(i));
+    return (_plus + " - ");
+  }
+  
+  @XtraitjDefinedMethod
+  public String callN() {
+    return _delegate.callN();
+  }
+  
+  public String _callN() {
+    String _n = this.n(10);
+    String _p = this.p();
+    return (_n + _p);
+  }
+  
+  @XtraitjDefinedMethod
+  public String callM() {
+    return _delegate.callM();
+  }
+  
+  public String _callM() {
+    String _m1 = this.m1();
+    String _oldm = this.oldm();
+    return (_m1 + _oldm);
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
+  }
+  
+  @XtraitjDefinedMethod
+  public String m1() {
+    return _delegate.m1();
+  }
+  
+  public String _m1() {
+    return _T2_0._m1();
+  }
+  
+  @XtraitjDefinedMethod
+  public String oldm() {
+    return _delegate.oldm();
+  }
+  
+  public String _oldm() {
+    return _T2_0._oldm();
+  }
+  
+  @XtraitjDefinedMethod
+  public String oldn() {
+    return _delegate.oldn();
+  }
+  
+  public String _oldn() {
+    return _T2_0._oldn();
+  }
+  
+  @XtraitjRequiredField
+  public String getS() {
+    return _delegate.getS();
+  }
+  
+  public void setS(final String s) {
+    _delegate.setS(s);
+  }
+}
+'''
+)
+			// call the new alias version of m, oldm
+			executeGeneratedJavaClassMethodAndAssert("C", "oldm", "T1.m;")
+			
+			// call the renamed version of m, m1
+			executeGeneratedJavaClassMethodAndAssert("C", "m1", "T1.m;")
+			
+			// call callM which calls both m1 and oldm
+			executeGeneratedJavaClassMethodAndAssert("C", "callM", "T1.m;T1.m;")
+			
+			// call callN which calls the new version of n and p
+			// which in turns calls the original versions of m and n
+			executeGeneratedJavaClassMethodAndAssert("C", "callN", "T1.n;10 - T1.m;T1.n;")
+	}
 }
