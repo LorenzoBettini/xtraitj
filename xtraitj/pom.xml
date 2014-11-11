@@ -13,6 +13,16 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<!-- <name>Xtraitj</name> -->
+	
+	<dependencies>
+		<!-- This is required only for allowing the X
+			be used as a Maven jar with the xtext-maven-plugin  -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>xtraitj.runtime.requirements</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<!-- The following is required so that the mwe2 workflow finds the .xtext 

@@ -1,0 +1,44 @@
+package xtraitj.example.examples.stack.tests.traits;
+
+import org.junit.Before
+import org.junit.Test
+import xtraitj.example.examples.stack.CStack
+import xtraitj.example.examples.stack.IStack
+import static org.junit.Assert.*
+
+trait TStackTestCase {
+	IStack<String> fixture;
+	
+	@Test
+	void testNotEmpty() {
+		assertFalse(fixture.isEmpty())
+	}
+	
+	@Test
+	void testContents() {
+		assertEquals("foo", fixture.pop())
+		assertEquals("bar", fixture.pop())
+		assertNull(fixture.pop())
+	}
+}
+
+trait TStackSetup {
+	IStack<String> fixture;
+	
+	@Before
+	void setup() {
+		fixture = new CStack<String>(newArrayList("foo", "bar"))
+	}
+}
+
+trait TStackSetup2 {
+	IStack<String> fixture;
+	
+	@Before
+	void setup() {
+		fixture = new CStack<String>()
+		fixture.push("bar")
+		fixture.push("foo")
+	}
+}
+

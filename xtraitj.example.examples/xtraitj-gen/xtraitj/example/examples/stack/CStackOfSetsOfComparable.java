@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import xtraitj.example.examples.stack.IStack;
-import xtraitj.example.examples.stack.traits.TStack;
-import xtraitj.example.examples.stack.traits.impl.TStackImpl;
+import xtraitj.example.examples.stack.TStack;
+import xtraitj.example.examples.stack.TStackImpl;
 
 @SuppressWarnings("all")
 public class CStackOfSetsOfComparable<T extends Comparable<T>> implements IStack<Set<T>>, TStack<Set<T>> {

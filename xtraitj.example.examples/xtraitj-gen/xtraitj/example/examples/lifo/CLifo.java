@@ -3,13 +3,13 @@ package xtraitj.example.examples.lifo;
 import java.util.ArrayList;
 import java.util.List;
 import xtraitj.example.examples.lifo.ILifo;
-import xtraitj.example.examples.lifo.traits.TLifo;
-import xtraitj.example.examples.lifo.traits.TNegateIsEmpty;
-import xtraitj.example.examples.lifo.traits.impl.TLifoImpl;
-import xtraitj.example.examples.lifo.traits.impl.TNegateIsEmptyImpl;
+import xtraitj.example.examples.lifo.TLifo;
+import xtraitj.example.examples.lifo.TLifoImpl;
+import xtraitj.example.examples.lifo.TNegateIsEmpty;
+import xtraitj.example.examples.lifo.TNegateIsEmptyImpl;
 
 @SuppressWarnings("all")
-public class CLifo<T> implements ILifo<T>, TLifo<T>, TNegateIsEmpty {
+public class CLifo<T extends Object> implements ILifo<T>, TLifo<T>, TNegateIsEmpty {
   private List<T> collection = new ArrayList<T>();
   
   public List<T> getCollection() {
