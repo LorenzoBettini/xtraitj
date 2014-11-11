@@ -2682,7 +2682,7 @@ class C uses TUsesGeneric {
 		'''
 	}
 
-	def genericFunctionType() {
+	def traitWithGenericFunctionType() {
 		'''
 package tests;
 
@@ -2708,9 +2708,35 @@ trait TGenericExtensions<T> {
 		return result
 	}
 }
+		'''
+	}
+
+	def genericFunctionType() {
+		'''
+«traitWithGenericFunctionType»
 
 trait TStringExtensions uses TGenericExtensions<String> {
 	
+}
+		'''
+	}
+
+	def classUsesTraitWithGenericFunctionType() {
+		'''
+«traitWithGenericFunctionType»
+
+class StringExtensions<U> uses TGenericExtensions<U> {
+	Iterable<U> iterable
+}
+		'''
+	}
+
+	def classUsesTraitWithGenericFunctionTypeInstantiated() {
+		'''
+«traitWithGenericFunctionType»
+
+class StringExtensions uses TGenericExtensions<String> {
+	Iterable<String> iterable
 }
 		'''
 	}

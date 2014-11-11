@@ -1461,6 +1461,88 @@ public class TStringExtensionsImpl implements TStringExtensions {
 		]
 	}
 
+	@Test def void testClassUsesTraitWithGenericFunctionType() {
+		classUsesTraitWithGenericFunctionType.compile[
+
+assertJavaClass("tests", "StringExtensions",
+'''
+package tests;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TGenericExtensions;
+import tests.TGenericExtensionsImpl;
+
+@SuppressWarnings("all")
+public class StringExtensions<U extends Object> implements TGenericExtensions<U> {
+  private Iterable<U> iterable;
+  
+  public Iterable<U> getIterable() {
+    return this.iterable;
+  }
+  
+  public void setIterable(final Iterable<U> iterable) {
+    this.iterable = iterable;
+  }
+  
+  private TGenericExtensionsImpl<U> _TGenericExtensions = new TGenericExtensionsImpl(this);
+  
+  public <R extends Object> List<R> mapToList(final Function1<? super U, ? extends R> mapper) {
+    return _TGenericExtensions._mapToList(mapper);
+  }
+  
+  public List<U> mapToList2(final Function1<? super U, ? extends U> mapper) {
+    return _TGenericExtensions._mapToList2(mapper);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
+	@Test def void testClassUsesTraitWithGenericFunctionTypeInstantiated() {
+		classUsesTraitWithGenericFunctionTypeInstantiated.compile[
+
+assertJavaClass("tests", "StringExtensions",
+'''
+package tests;
+
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import tests.TGenericExtensions;
+import tests.TGenericExtensionsImpl;
+
+@SuppressWarnings("all")
+public class StringExtensions implements TGenericExtensions<String> {
+  private Iterable<String> iterable;
+  
+  public Iterable<String> getIterable() {
+    return this.iterable;
+  }
+  
+  public void setIterable(final Iterable<String> iterable) {
+    this.iterable = iterable;
+  }
+  
+  private TGenericExtensionsImpl<String> _TGenericExtensions = new TGenericExtensionsImpl(this);
+  
+  public <R extends Object> List<R> mapToList(final Function1<? super String, ? extends R> mapper) {
+    return _TGenericExtensions._mapToList(mapper);
+  }
+  
+  public List<String> mapToList2(final Function1<? super String, ? extends String> mapper) {
+    return _TGenericExtensions._mapToList2(mapper);
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 

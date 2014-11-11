@@ -75,6 +75,8 @@ class XtraitjTypeParameterHelper {
 
 						reboundTypeRef.type = typePar
 					}
+				} else {
+					reboundTypeRef.type = typePar
 				}
 			}
 			
@@ -95,6 +97,12 @@ class XtraitjTypeParameterHelper {
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
 			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(containerTypeDecl, containerOperation, visited)
 			reboundTypeRef.returnType = reboundReturnTypeRef
+			
+			val paramTypes = reboundTypeRef.paramTypes
+			for (i : 0..<paramTypes.size) {
+				paramTypes.set(i, paramTypes.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
+			}
+			
 			return reboundTypeRef
 		}
 		

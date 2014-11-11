@@ -147,6 +147,11 @@ class XtraitjResolvedOperations {
 	 */
 	private def resolveTypeRef(ITypeReferenceOwner owner, JvmTypeReference typeRefToResolve) {
 		val lightweightTypeRef = owner.toLightweightTypeReference(typeRefToResolve);
-		lightweightTypeRef.toTypeReference
+		// lightweightTypeRef.toTypeReference will not work:
+		// we need the Java compliant type reference so that a XFunctionTypeRef (T)=>R
+		// is transformed in the corresponding Function1<? super T, ? extends R>
+		// this way our rebinding will work
+		
+		lightweightTypeRef.toJavaCompliantTypeReference
 	}
 }
