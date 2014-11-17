@@ -117,6 +117,18 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testRenameReferenceToNonExistentTraitWithOperations() {
+		'''
+		trait T {
+			String m
+		}
+		
+		trait T2 uses T1[rename m ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	@Test def void testNoMemberInHideYet() {
 		'''
 		trait T {
@@ -141,6 +153,42 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testAliasNonExistantMethod() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[alias foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testAliasAsNoYetSpecified() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[alias m as ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testRestrictNonExistantMethod() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[restrict foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	@Test def void testReferenceToNonExistentTrait() {
 		'''
 		trait T {
@@ -148,18 +196,6 @@ class XtraitjSmokeTest {
 		}
 		
 		trait T2 uses T1 {
-			
-		}
-		'''.parseAndValidate
-	}
-
-	@Test def void testReferenceToNonExistentTraitWithOperations() {
-		'''
-		trait T {
-			String m
-		}
-		
-		trait T2 uses T1[rename m ] {
 			
 		}
 		'''.parseAndValidate

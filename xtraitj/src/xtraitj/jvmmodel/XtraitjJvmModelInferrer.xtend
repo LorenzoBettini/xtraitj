@@ -589,26 +589,28 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						// example T1[alias m as oldm]
 						// m cannot be required
 						
-						// oldm is forwarded to delegate.oldm
-						members += tOp.
-							toMethodDelegate(
-								it,
-								resolvedOp,
-								delegateFieldName,
-								newname,
-								newname
-							)
-						// _oldm is forwarded to T1._m
-						members += tOp.
-							toMethodDelegate(
-								it,
-								resolvedOp,
-								traitFieldName,
-								newname.underscoreName,
-								origName.underscoreName
-							) => [
-								copyAllAnnotationsFrom(resolvedOp)
+						if (resolvedOp != null) {
+							// oldm is forwarded to delegate.oldm
+							members += tOp.
+								toMethodDelegate(
+									it,
+									resolvedOp,
+									delegateFieldName,
+									newname,
+									newname
+								)
+							// _oldm is forwarded to T1._m
+							members += tOp.
+								toMethodDelegate(
+									it,
+									resolvedOp,
+									traitFieldName,
+									newname.underscoreName,
+									origName.underscoreName
+								) => [
+									copyAllAnnotationsFrom(resolvedOp)
 							]
+						}
 					}
 					TJRestrictOperation: {
 						// and we need to retrieve the corresponding resolved operation
