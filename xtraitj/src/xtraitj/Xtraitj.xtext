@@ -68,7 +68,7 @@ TJAliasOperation: {TJAliasOperation} 'alias' member=[types::JvmMember] 'as' newn
 
 TJRenameOperation: {TJRenameOperation} 'rename' (field?='field')? member=[types::JvmMember] 'to' newname=ID ;
 
-TJRedirectOperation: {TJRedirectOperation} 'redirect' member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
+TJRedirectOperation: {TJRedirectOperation} 'redirect' (field?='field')? member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
 
 TJMember:
 	=>TJField | TJMethodDeclaration;

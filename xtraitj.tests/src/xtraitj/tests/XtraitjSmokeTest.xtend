@@ -165,7 +165,7 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
-	@Test def void testAliasAsNoYetSpecified() {
+	@Test def void testAliasAsNotYetSpecified() {
 		'''
 		trait T {
 			void m() {}
@@ -184,6 +184,30 @@ class XtraitjSmokeTest {
 		}
 		
 		class C uses T[restrict foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testRedirectNonExistantMethod() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[redirect foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testRedirectToNotYetSpecified() {
+		'''
+		trait T {
+			void m() {}
+		}
+		
+		class C uses T[redirect m to ] {
 			
 		}
 		'''.parseAndValidate

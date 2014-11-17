@@ -3032,4 +3032,191 @@ public class T3Impl implements T3 {
 			executeGeneratedJavaClassMethodAndAssert("C", "callN", "T3.m;T1.m;T3.m;T1.m;")
 		]
 	}
+
+	@Test def void testTraitRedirect() {
+		traitRedirect.compile[
+
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_Adapter {
+  @XtraitjRequiredField
+  public abstract String getS2();
+  
+  public abstract void setS2(final String s2);
+  
+  @XtraitjDefinedMethod
+  public abstract String useField();
+  
+  @XtraitjDefinedMethod
+  public abstract String prov();
+  
+  @XtraitjDefinedMethod
+  public abstract String callReq();
+}
+'''
+)
+
+assertTraitJavaInterface("tests", "T3",
+'''
+package tests;
+
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T3 extends T3_T2_0_Adapter {
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T3_T2_0",
+'''
+package tests;
+
+import tests.T2;
+import tests.T2Impl;
+import tests.T3_T2_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+
+@SuppressWarnings("all")
+public class T3_T2_0_AdapterImpl implements T3_T2_0_Adapter, T2 {
+  private T3_T2_0_Adapter _delegate;
+  
+  private T2Impl _T2_0;
+  
+  public T3_T2_0_AdapterImpl(final T3_T2_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T2Impl(this);
+  }
+  
+  @XtraitjRequiredField
+  public String getS1() {
+    return _delegate.getS2();
+  }
+  
+  public void setS1(final String s2) {
+    _delegate.setS2(s2);
+  }
+  
+  @XtraitjDefinedMethod
+  public String req() {
+    return _delegate.prov();
+  }
+  
+  @XtraitjDefinedMethod
+  public String useField() {
+    return _delegate.useField();
+  }
+  
+  public String _useField() {
+    return _T2_0._useField();
+  }
+  
+  @XtraitjDefinedMethod
+  public String prov() {
+    return _delegate.prov();
+  }
+  
+  public String _prov() {
+    return _T2_0._prov();
+  }
+  
+  @XtraitjDefinedMethod
+  public String callReq() {
+    return _delegate.callReq();
+  }
+  
+  public String _callReq() {
+    return _T2_0._callReq();
+  }
+  
+  @XtraitjRequiredField
+  public String getS2() {
+    return _delegate.getS2();
+  }
+  
+  public void setS2(final String s2) {
+    _delegate.setS2(s2);
+  }
+}
+'''
+)
+
+assertTraitJavaClass("tests", "T3",
+'''
+package tests;
+
+import tests.T3;
+import tests.T3_T2_0_AdapterImpl;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class T3Impl implements T3 {
+  private T3 _delegate;
+  
+  private T3_T2_0_AdapterImpl _T2_0;
+  
+  public T3Impl(final T3 delegate) {
+    this._delegate = delegate;
+    _T2_0 = new T3_T2_0_AdapterImpl(delegate);
+  }
+  
+  @XtraitjDefinedMethod
+  public String useField() {
+    return _delegate.useField();
+  }
+  
+  public String _useField() {
+    return _T2_0._useField();
+  }
+  
+  @XtraitjDefinedMethod
+  public String prov() {
+    return _delegate.prov();
+  }
+  
+  public String _prov() {
+    return _T2_0._prov();
+  }
+  
+  @XtraitjDefinedMethod
+  public String callReq() {
+    return _delegate.callReq();
+  }
+  
+  public String _callReq() {
+    return _T2_0._callReq();
+  }
+  
+  @XtraitjRequiredField
+  public String getS2() {
+    return _delegate.getS2();
+  }
+  
+  public void setS2(final String s2) {
+    _delegate.setS2(s2);
+  }
+}
+'''
+)
+			// originally return s1 which is redirected to s2
+			executeGeneratedJavaClassMethodAndAssert("C", "useField", "s2")
+			
+			// callReq calls the required method req, which was
+			// redirected to prov
+			executeGeneratedJavaClassMethodAndAssert("C", "callReq", "prov")
+		]
+	}
+
 }

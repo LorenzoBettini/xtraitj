@@ -1751,4 +1751,27 @@ public class CWithOp_T1_0_AdapterImpl<Z extends Object> implements CWithOp_T1_0_
 			executeGeneratedJavaClassMethodAndAssert("C3", "m", "[foo, bar]")
 	}
 
+	@Test def void testTraitUsesGenericTraitWithRedirect() {
+		traitUsesGenericTraitWithRedirect.compile[
+			expectationsForTraitUsesGenericTraitWithRedirect(it)
+		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithRedirectSeparateFiles() {
+		traitUsesGenericTraitWithRedirectSeparateFiles.createResourceSet.compile[
+			expectationsForTraitUsesGenericTraitWithRedirect(it)
+		]
+	}
+	
+	private def expectationsForTraitUsesGenericTraitWithRedirect(Result it) {
+		// originally return s1 which is redirected to s2
+		executeGeneratedJavaClassMethodAndAssert("C", "useField", "foo")
+		
+		// callReq calls the required method req, which was
+		// redirected to prov
+		executeGeneratedJavaClassMethodAndAssert("C", "callReq", "foo")
+		
+		executeGeneratedJavaClassMethodAndAssert("C2", "useField", "foo")
+		executeGeneratedJavaClassMethodAndAssert("C2", "callReq", "foo")
+	}
 }

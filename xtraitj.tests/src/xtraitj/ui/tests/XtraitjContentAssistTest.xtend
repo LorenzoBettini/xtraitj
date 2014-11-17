@@ -100,7 +100,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		newBuilder.append(
 		T + '''
 		trait T1 uses T[redirect '''
-		).assertText('m', 's')
+		).assertText('field', 'm', 's')
 		.append(" m to ").assertText('m', 's')
 	}
 
