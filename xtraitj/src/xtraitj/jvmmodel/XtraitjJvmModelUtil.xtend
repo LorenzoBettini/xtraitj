@@ -1,6 +1,7 @@
 package xtraitj.jvmmodel
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import java.beans.Introspector
 import java.util.List
 import java.util.Set
@@ -17,9 +18,9 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.util.Strings
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.typing.XtraitjTypingUtil
@@ -32,12 +33,10 @@ import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.util.Strings
-import xtraitj.xtraitj.TJTraitOperation
-import com.google.inject.Singleton
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -285,14 +284,12 @@ class XtraitjJvmModelUtil {
 	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredFields.
-					createXtraitjJvmOperations
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredFields
 			].flatten
 	}
 
 	def xtraitjJvmAllRequiredFieldOperations(JvmTypeReference ref, EObject context) {
-		ref.computeXtraitjResolvedOperations(context).requiredFields.
-					createXtraitjJvmOperations
+		ref.computeXtraitjResolvedOperations(context).requiredFields
 	}
 
 	def xtraitjJvmAllRequiredMethodOperations(TJClass e) {
@@ -300,8 +297,7 @@ class XtraitjJvmModelUtil {
 	}
 
 	def xtraitjJvmAllRequiredMethodOperations(JvmTypeReference ref, EObject context) {
-		ref.computeXtraitjResolvedOperations(context).requiredMethods.
-					createXtraitjJvmOperations
+		ref.computeXtraitjResolvedOperations(context).requiredMethods
 	}
 
 	def computeXtraitjResolvedOperations(JvmTypeReference ref, EObject context) {
@@ -312,32 +308,27 @@ class XtraitjJvmModelUtil {
 		e.traitExpression.traitReferences.
 			map[
 				traitRef |
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredMethods.
-					createXtraitjJvmOperations
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredMethods
 			].flatten
 	}
 
 	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
 		e.traitExpression.traitReferences.
 			map[traitRef | 
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.declaredMethods.
-					createXtraitjJvmOperations
+				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.declaredMethods
 			].flatten
 	}
 
 	def xtraitjJvmAllDefinedMethodOperations(JvmTypeReference e, EObject context) {
-		e.computeXtraitjResolvedOperations(context).definedMethods.
-					createXtraitjJvmOperations
+		e.computeXtraitjResolvedOperations(context).definedMethods
 	}
 
 	def xtraitjJvmAllMethodOperations(JvmTypeReference e, EObject context) {
-		e.computeXtraitjResolvedOperations(context).declaredMethods.
-					createXtraitjJvmOperations
+		e.computeXtraitjResolvedOperations(context).declaredMethods
 	}
 
 	def xtraitjJvmAllOperations(TJTraitReference e) {
-		e.trait.getXtraitjResolvedOperations.allDeclarations.
-					createXtraitjJvmOperations
+		e.trait.getXtraitjResolvedOperations.allDeclarations
 	}
 
 	def computeAndResolveXtraitjResolvedOperations(JvmTypeReference e, EObject context) {
@@ -354,7 +345,7 @@ class XtraitjJvmModelUtil {
 		// TODO deal with redirect
 		// see old xtraitjJvmAllRequiredOperations
 		val ops = e.getXtraitjResolvedOperations()
-		(ops.allRequirements).createXtraitjJvmOperations
+		(ops.allRequirements)
 	}
 
 //	def xtraitjJvmAllInterfaceMethods(TJClass e) {
@@ -592,28 +583,6 @@ class XtraitjJvmModelUtil {
 		f1.op != f2.op && 
 		f1.op.simpleName == f2.op.simpleName &&
 		!f1.compliant(f2)
-	}
-
-//	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, JvmParameterizedTypeReference ref) {
-//		ops.map[
-//			op |
-//			val arguments = ref.arguments
-//			new XtraitjJvmOperation(
-//				op,
-//				op.returnType.replaceTypeParameters(arguments),
-//				op.parameters.map[
-//					parameterType.replaceTypeParameters(arguments)
-//				]
-//			)
-//		]
-//	}
-
-	def createXtraitjJvmOperations(Iterable<IResolvedOperation> ops) {
-		ops.map[createXtraitjJvmOperation(it)]
-	}
-
-	def createXtraitjJvmOperation(IResolvedOperation op) {
-		new XtraitjJvmOperation(op)
 	}
 
 	def JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {

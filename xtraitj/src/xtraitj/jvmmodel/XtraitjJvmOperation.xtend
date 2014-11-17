@@ -21,6 +21,10 @@ class XtraitjJvmOperation {
 		this.resolvedOperation = resolvedOperation;
 	}
 
+	def getResolvedOperation() {
+		return resolvedOperation
+	}
+
 	def getOp() {
 		return resolvedOperation.declaration;
 	}

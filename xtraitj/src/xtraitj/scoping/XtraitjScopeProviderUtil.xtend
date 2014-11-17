@@ -51,10 +51,10 @@ class XtraitjScopeProviderUtil {
 		// thus we must also provide a function for computing the
 		// QualifiedName (the default one relies on 'name')
 		return new SimpleScope(
-			ops.requiredFields.map[declaration].scopedElementsFor [
+			ops.requiredFields.map[getOp].scopedElementsFor [
 				QualifiedName::create(simpleName.stripGetter)
 			] +
-			ops.declaredMethods.map[declaration].scopedElementsFor [
+			ops.declaredMethods.map[getOp].scopedElementsFor [
 				QualifiedName::create(simpleName)
 			]
 		)
@@ -68,7 +68,7 @@ class XtraitjScopeProviderUtil {
 		new SimpleScope(
 			op.containingTraitOperationExpression.trait.xtraitjResolvedOperations.
 				declaredMethods.
-				map[declaration].
+				map[getOp].
 				scopedElementsFor [
 					QualifiedName::create(simpleName)
 				]
