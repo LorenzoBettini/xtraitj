@@ -3,17 +3,16 @@ package xtraitj.temporary.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.xtraitj.TJProgram
 import xtraitj.input.tests.XtraitjInputs
+import xtraitj.tests.AbstractXtraitjCompilerTest
+import xtraitj.tests.InjectorProviderCustom
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(xtraitj.tests.InjectorProviderCustom))
-class TempXtraitjCompilerTest extends xtraitj.tests.AbstractXtraitjCompilerTest {
-	@Inject extension ParseHelper<TJProgram>
+@InjectWith(typeof(InjectorProviderCustom))
+class TempXtraitjCompilerTest extends AbstractXtraitjCompilerTest {
 	@Inject extension CompilationTestHelper
 	@Inject extension XtraitjInputs
 	
@@ -192,142 +191,6 @@ public class T3Impl implements T3 {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	@Test def void testTraitAliasWhenSplitInTwoFiles() {
-		val rs = '''
-		package tests;
-		
-		trait T1 {
-			String m() { return null; }
-		}
-		'''.parse.eResource.resourceSet
-		
-		'''
-		package tests;
-		
-		trait T2 uses tests.T1[alias m as newM] {
-			
-		}
-		'''.parse(rs)
-		
-		rs.compile[
-
-assertTraitAdapterJavaInterface("tests", "T2_T1_0",
-'''
-package tests.traits;
-
-@SuppressWarnings("all")
-public interface T2_T1_0_Adapter {
-  public abstract String newM();
-  
-  public abstract String m();
-}
-'''
-)
-
-assertTraitAdapterJavaClass("tests", "T2_T1_0",
-'''
-package tests.traits.impl;
-
-import tests.traits.T1;
-import tests.traits.T2_T1_0_Adapter;
-import tests.traits.impl.T1Impl;
-
-@SuppressWarnings("all")
-public class T2_T1_0_AdapterImpl implements T2_T1_0_Adapter, T1 {
-  private T2_T1_0_Adapter _delegate;
-  
-  private T1Impl _T1_0;
-  
-  public T2_T1_0_AdapterImpl(final T2_T1_0_Adapter delegate) {
-    this._delegate = delegate;
-    _T1_0 = new T1Impl(this);
-  }
-  
-  public String m() {
-    return _delegate.m();
-  }
-  
-  public String _m() {
-    return _T1_0._m();
-  }
-  
-  public String newM() {
-    return _delegate.newM();
-  }
-  
-  public String _newM() {
-    return _T1_0._m();
-  }
-}
-'''
-)
-
-assertTraitJavaClass("tests", "T2",
-'''
-package tests.traits.impl;
-
-import tests.traits.T2;
-import tests.traits.impl.T2_T1_0_AdapterImpl;
-
-@SuppressWarnings("all")
-public class T2Impl implements T2 {
-  private T2 _delegate;
-  
-  private T2_T1_0_AdapterImpl _T2_T1_0;
-  
-  public T2Impl(final T2 delegate) {
-    this._delegate = delegate;
-    _T2_T1_0 = new T2_T1_0_AdapterImpl(delegate);
-  }
-  
-  public String newM() {
-    return _delegate.newM();
-  }
-  
-  public String _newM() {
-    return _T2_T1_0._newM();
-  }
-  
-  public String m() {
-    return _delegate.m();
-  }
-  
-  public String _m() {
-    return _T2_T1_0._m();
-  }
-}
-'''
-)
-			assertGeneratedJavaCodeCompiles
-		]
-	}
 
 
 }

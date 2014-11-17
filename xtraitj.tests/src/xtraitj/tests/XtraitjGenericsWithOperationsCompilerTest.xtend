@@ -1360,18 +1360,27 @@ public interface T2_T1_0_Adapter {
 
 	@Test def void testTraitUsesGenericTraitWithRestrictAndAlias() {
 		traitUsesGenericTraitWithRestrictAndAlias.compile[
-
-			// call callM which calls both the new version of m and the old one
-			executeGeneratedJavaClassMethodAndAssert("C", "callM", "T3.m;foo")
-
-			// call callN which calls n and p which will call the new version of m and the old one
-			executeGeneratedJavaClassMethodAndAssert("C", "callN", "T3.m;fooT3.m;foo")
-			
-			executeGeneratedJavaClassMethodAndAssert("C2", "callM", "T3.m;foo")
-
-			// call callN which calls n (no p in this case) which will call the new version of m and the old one
-			executeGeneratedJavaClassMethodAndAssert("C2", "callN", "T3.m;foo")
+			expectationsForTraitUsesGenericTraitWithRestrictAndAlias(it)
 		]
+	}
+
+	@Test def void testTraitUsesGenericTraitWithRestrictAndAliasSeparateFiles() {
+		traitUsesGenericTraitWithRestrictAndAliasSeparateFiles.createResourceSet.compile[
+			expectationsForTraitUsesGenericTraitWithRestrictAndAlias(it)
+		]
+	}
+	
+	private def expectationsForTraitUsesGenericTraitWithRestrictAndAlias(Result it) {
+		// call callM which calls both the new version of m and the old one
+		executeGeneratedJavaClassMethodAndAssert("C", "callM", "T3.m;foo")
+		
+		// call callN which calls n and p which will call the new version of m and the old one
+		executeGeneratedJavaClassMethodAndAssert("C", "callN", "T3.m;fooT3.m;foo")
+		
+		executeGeneratedJavaClassMethodAndAssert("C2", "callM", "T3.m;foo")
+		
+		// call callN which calls n (no p in this case) which will call the new version of m and the old one
+		executeGeneratedJavaClassMethodAndAssert("C2", "callN", "T3.m;foo")
 	}
 
 	@Test def void testGenericFunctionAsField() {

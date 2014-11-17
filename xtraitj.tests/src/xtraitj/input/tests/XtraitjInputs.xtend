@@ -2514,6 +2514,81 @@ class C2 uses T4 {
 		'''
 	}
 
+	def traitUsesGenericTraitWithRestrictAndAliasSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > s = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+class C2 uses T4 {
+	List < String > s = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ alias m as oldm, restrict m ] {
+	/* new version of m */
+	String m() {
+		return "T3.m;" + oldm();
+	}
+	String callN() { 
+		return n();
+	}
+	String callM() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T3 uses T2[ alias m as oldm, restrict m ] {
+	/* new version of m */
+	String m() {
+		return "T3.m;" + oldm();
+	}
+	String callN() { 
+		return n() + p();
+	}
+	String callM() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+	String p() { return m(); }
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s;
+	/* original version of m */
+	T m() { return s.get(0); }
+	T n() { return m(); }
+}
+
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithAliasRenameHide() {
 		'''
 package tests;
