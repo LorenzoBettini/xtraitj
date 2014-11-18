@@ -16,14 +16,14 @@ import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
-import xtraitj.xtraitj.TJMember
+import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJProgram
 
 /**
  * Custom validation rules. 
@@ -512,16 +512,19 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 //		}
 //	}
 //
-//	@Check
-//	def void checkConstructorName(TJConstructor cons) {
-//		if (cons.containingDeclaration.name != cons.name) {
-//			error(
-//				"Wrong constructor name '" + cons.name + "'",
-//				XtraitjPackage.eINSTANCE.TJConstructor_Name,
-//				WRONG_CONSTRUCTOR_NAME
-//			)
-//		}
-//	}
+	@Check
+	def void checkConstructorName(TJClass cl) {
+		for (cons : cl.constructors) {
+			if (cl.name != cons.name) {
+				error(
+					"Wrong constructor name '" + cons.name + "'",
+					cons,
+					XtraitjPackage.eINSTANCE.TJConstructor_Name,
+					WRONG_CONSTRUCTOR_NAME
+				)
+			}			
+		}
+	}
 //
 //	@Check
 //	def void checkDuplicateConstructors(TJConstructor cons) {

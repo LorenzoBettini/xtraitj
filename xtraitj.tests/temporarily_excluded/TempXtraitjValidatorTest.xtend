@@ -918,17 +918,6 @@ trait T2 uses T1[alias s as s2] {
 		]
 	}
 
-	@Test def void testConstructorWithTheWrongName() {
-		'''
-		class C {
-			D() {}
-		}
-		'''.parse.assertError(
-			XtraitjPackage.eINSTANCE.TJConstructor,
-			XtraitjValidator.WRONG_CONSTRUCTOR_NAME,
-			"Wrong constructor name 'D'"
-		)
-	}
 
 	@Test def void testDuplicateConstructors() {
 		'''

@@ -56,6 +56,18 @@ class XtraitjValidatorTest {
 		]
 	}
 
+	@Test def void testConstructorWithTheWrongName() {
+		'''
+		class C {
+			D() {}
+		}
+		'''.parse.assertError(
+			XtraitjPackage.eINSTANCE.TJConstructor,
+			XtraitjValidator.WRONG_CONSTRUCTOR_NAME,
+			"Wrong constructor name 'D'"
+		)
+	}
+
 	@Test def void testWrongReturnExpressionWithGenerics() {
 		'''
 package tests;

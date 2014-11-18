@@ -642,9 +642,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					TJRedirectOperation: {
 						handleRedirectOperation(tOp, allDeclarations, it, traitFieldName)
 					}
-					TJRedirectOperation: {
-						handleRedirectOperation(tOp, allDeclarations, it, traitFieldName)
-					}
 				}
 			}
 			
@@ -953,55 +950,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						resolvedOp,
 						delegateFieldName,
 						newSetterName,
-						newSetterName
-					) => [m | m.rebindTypeParameters(it)]
-			}
-		}
-	}
-
-	private def handleRedirectOperation(TJRedirectOperation tOp, Iterable<XtraitjJvmOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
-		val origName = tOp.member?.simpleName
-		
-		val newname = if (!tOp.field) {
-			tOp.member2?.simpleName
-		} else {
-			// make sure we take the jvmOp's name
-			// since the member in the redirect operation is bound
-			// to the getter in case of a field
-			origName.renameGetterOrSetter(tOp.member2?.simpleName.stripGetter)
-			// and we need to strip the getter prefix, since for redirect the
-			// the 'to' part is actually a JvmOperation (i.e., a getter for fields)
-		}
-		
-		// and we need to retrieve the corresponding resolved operation
-		// i.e., the one where type arguments are already resolved
-		val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
-		
-		if (resolvedOp != null) {
-			// example T1[redirect m to m1]
-			// m is forwarded to delegate.m1
-			members += tOp.
-				toMethodDelegate(
-					it,
-					resolvedOp,
-					delegateFieldName,
-					origName,
-					newname
-				) => [
-						copyAllAnnotationsFrom(resolvedOp)
-					]
-			if (tOp.field) {
-				// example T1[redirect field m to m2]
-		
-				// and now the setter
-				val origSetterName = origName.stripGetter
-				val newSetterName = newname.stripGetter
-				
-				members += tOp.
-					toSetterMethodDelegate(
-						resolvedOp,
-						delegateFieldName,
-						origSetterName,
 						newSetterName
 					) => [m | m.rebindTypeParameters(it)]
 			}
