@@ -55,12 +55,6 @@ class XtraitjJvmModelUtil {
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjGeneratorExtensions
 
-	def associatedAdapterInterface(TJTraitReference t) {
-		t.traitExpressionInterfaceName.getTypeForName(t //,
-			//t.trait.arguments.map[cloneWithProxies]
-		) as JvmParameterizedTypeReference
-	}
-
 	def associatedInterface(TJTrait t) {
 		t.associatedInterfaceType?.createTypeRef()
 	}
@@ -72,19 +66,6 @@ class XtraitjJvmModelUtil {
 	def _associatedInterfaceType(EObject t) {
 		t.jvmElements.filter(typeof(JvmGenericType)).
 			filter[interface].head
-	}
-
-	def associatedClass(TJTrait t) {
-		t.associatedClassType?.createTypeRef()
-	}
-
-	def associatedClassType(TJTrait t) {
-		t._associatedClassType
-	}
-
-	def _associatedClassType(EObject t) {
-		t.jvmElements.filter(typeof(JvmGenericType)).
-			filter[!interface].head
 	}
 
 	def sourceField(JvmMember f) {
