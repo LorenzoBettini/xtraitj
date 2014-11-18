@@ -5,36 +5,25 @@ package xtraitj.validation
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
+import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import xtraitj.xtraitj.TJAliasOperation
+import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
-import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
-import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJMember
-import xtraitj.xtraitj.TJMethod
-import xtraitj.xtraitj.TJMethodDeclaration
-import xtraitj.xtraitj.TJRedirectOperation
-import xtraitj.xtraitj.TJRenameOperation
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
-import xtraitj.xtraitj.TJTraitOperation
-import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.typing.XtraitjTypingUtil
-import org.eclipse.xtext.common.types.JvmUpperBound
+import xtraitj.xtraitj.TJProgram
 
 /**
  * Custom validation rules. 
@@ -234,27 +223,47 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		}
 	}
 
-	@Check def void checkDuplicateMembers(TJMember m) {
-		if (m.containingDeclaration.members.
-			exists[it != m && it.name == m.name]
-		) {
-			error(
-					"Duplicate member '" +
+	@Check def void checkDuplicateMembers(TJDeclaration d) {
+		val map = duplicatesMultimap
+		
+		for (m : d.members) {
+			map.put(m.name, m)
+		}
+		
+		for (entry : map.asMap.entrySet) {
+			val duplicates = entry.value
+			if (duplicates.size > 1) {
+				for (m : duplicates)
+					error(
+						"Duplicate member '" +
 						m.name + "'",
-					XtraitjPackage::eINSTANCE.TJMember_Name,
-					DUPLICATE_MEMBER
-				)
+						m,
+						XtraitjPackage.eINSTANCE.TJMember_Name,
+						DUPLICATE_MEMBER
+					)
+			}
 		}
 	}
 
-	@Check def void checkDuplicateDeclaration(TJDeclaration d) {
-		if (d.containingProgram.elements.exists[it != d && name == d.name]) {
-			error(
-					"Duplicate declaration '" +
-						d.name + "'",
-					XtraitjPackage::eINSTANCE.TJDeclaration_Name,
-					DUPLICATE_DECLARATION
-				)
+	@Check def void checkDuplicateDeclarations(TJProgram p) {
+		val map = duplicatesMultimap
+		
+		for (d : p.elements) {
+			map.put(d.name, d)
+		}
+		
+		for (entry : map.asMap.entrySet) {
+			val duplicates = entry.value
+			if (duplicates.size > 1) {
+				for (d : duplicates)
+					error(
+						"Duplicate declaration '" +
+							d.name + "'",
+						d,
+						XtraitjPackage.eINSTANCE.TJDeclaration_Name,
+						DUPLICATE_DECLARATION
+					)
+			}
 		}
 	}
 
@@ -577,4 +586,9 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	def private typeRefRepr(JvmTypeReference typeRef) {
 		typeRef.simpleName
 	}
+
+	def private <K, T> duplicatesMultimap() {
+		return Multimaps2.<K, T> newLinkedHashListMultimap();
+	}
+
 }

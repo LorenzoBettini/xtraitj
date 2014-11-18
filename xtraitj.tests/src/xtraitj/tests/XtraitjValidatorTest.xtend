@@ -1,6 +1,7 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
@@ -9,7 +10,9 @@ import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.validation.XtraitjValidator
 import xtraitj.xtraitj.TJProgram
+import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
@@ -18,6 +21,40 @@ import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 class XtraitjValidatorTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
+
+	@Test def void testDuplicateMember() {
+		'''
+		trait T {
+			int f;
+			int f;
+			String m();
+			String m(int i) { return null; }
+		}
+		
+		class C {
+			String c;
+			int c;
+		}
+		'''.parse => [
+			assertDuplicateMember("f", XtraitjPackage::eINSTANCE.TJField)
+			assertDuplicateMember("c", XtraitjPackage::eINSTANCE.TJField)
+			assertDuplicateMember("m", XtraitjPackage::eINSTANCE.TJMethod)
+			assertDuplicateMember("m", XtraitjPackage::eINSTANCE.TJRequiredMethod)
+		]
+	}
+
+	@Test def void testDuplicateDeclarations() {
+		'''
+		trait T {}
+		trait T {}
+		trait T1 {}
+		class T1 {}
+		'''.parse =>[
+			assertDuplicateDeclaration("T", XtraitjPackage::eINSTANCE.TJTrait)
+			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJTrait)
+			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJClass)
+		]
+	}
 
 	@Test def void testWrongReturnExpressionWithGenerics() {
 		'''
@@ -183,5 +220,17 @@ The method b(boolean) is undefined'''
 			o.validate.map[message].join("\n"))
 	}
 
+	def private assertDuplicateMember(EObject o, String memberName, EClass c) {
+		o.assertError(
+			c, XtraitjValidator.DUPLICATE_MEMBER,
+			"Duplicate member '" + memberName + "'"
+		)
+	}
 
+	def private assertDuplicateDeclaration(EObject o, String name, EClass c) {
+		o.assertError(
+			c, XtraitjValidator.DUPLICATE_DECLARATION,
+			"Duplicate declaration '" + name + "'"
+		)
+	}
 }

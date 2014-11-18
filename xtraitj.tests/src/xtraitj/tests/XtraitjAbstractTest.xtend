@@ -13,6 +13,7 @@ import xtraitj.XtraitjInjectorProvider
 import xtraitj.xtraitj.TJProgram
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.util.XtraitjModelUtil
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -20,6 +21,13 @@ abstract class XtraitjAbstractTest {
 	
 	@Inject extension TypeReferences
 	@Inject extension ParseHelper<TJProgram>
+	
+	new() {
+		// to avoid missing coverage from Jacoco
+		new XtraitjModelUtil() {
+			
+		}
+	}
 	
 	def protected toTypeRef(Class<?> clazz) {
 		// the parsed element is used only as the context for

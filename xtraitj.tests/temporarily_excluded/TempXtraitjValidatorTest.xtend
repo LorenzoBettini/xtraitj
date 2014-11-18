@@ -21,7 +21,7 @@ import static extension org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjValidatorTest {
+class TempXtraitjValidatorTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
 
@@ -528,26 +528,7 @@ class C uses T<String> {
 		)
 	}
 
-	@Test def void testDuplicateMember() {
-		'''
-		trait T {
-			int f;
-			int f;
-			String m();
-			String m(int i) { return null; }
-		}
-		
-		class C {
-			String c;
-			int c;
-		}
-		'''.parse => [
-			assertDuplicateMember("f", XtraitjPackage::eINSTANCE.TJField)
-			assertDuplicateMember("c", XtraitjPackage::eINSTANCE.TJField)
-			assertDuplicateMember("m", XtraitjPackage::eINSTANCE.TJMethod)
-			assertDuplicateMember("m", XtraitjPackage::eINSTANCE.TJRequiredMethod)
-		]
-	}
+
 
 	@Test def void testFieldConflicts() {
 		'''
@@ -917,18 +898,6 @@ trait T2 uses T1[alias s as s2] {
  		]
 	}
 
-	@Test def void testDuplicateDeclarations() {
-		'''
-		trait T {}
-		trait T {}
-		trait T1 {}
-		class T1 {}
-		'''.parse =>[
-			assertDuplicateDeclaration("T", XtraitjPackage::eINSTANCE.TJTrait)
-			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJTrait)
-			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJClass)
-		]
-	}
 
 	@Test def void testAlterationsToAlreadyExistingNames() {
 		'''
@@ -1187,19 +1156,7 @@ trait T2 uses T1<String> {
 		)
 	}
 
-	def private assertDuplicateMember(EObject o, String memberName, EClass c) {
-		o.assertError(
-			c, XtraitjValidator::DUPLICATE_MEMBER,
-			"Duplicate member '" + memberName + "'"
-		)
-	}
 
-	def private assertDuplicateDeclaration(EObject o, String name, EClass c) {
-		o.assertError(
-			c, XtraitjValidator::DUPLICATE_DECLARATION,
-			"Duplicate declaration '" + name + "'"
-		)
-	}
 
 	def private assertFieldConflict(EObject o, String repr, String traitName) {
 		o.assertError(XtraitjPackage::eINSTANCE.TJTraitReference,

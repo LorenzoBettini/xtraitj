@@ -81,14 +81,6 @@ class XtraitjModelUtil {
 		e.getContainerOfType(typeof(TJTraitReference))
 	}
 
-	def static containingClass(TJConstructor e) {
-		e.getContainerOfType(typeof(TJClass))
-	}
-
-	def static containingProgram(TJDeclaration e) {
-		e.getContainerOfType(typeof(TJProgram))
-	}
-
 	def static traitReferences(TJDeclaration t) {
 		t.traitExpression.traitReferences
 	}
