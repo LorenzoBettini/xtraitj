@@ -3,6 +3,7 @@ package xtraitj.tests
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
@@ -53,6 +54,23 @@ class XtraitjValidatorTest {
 			assertDuplicateDeclaration("T", XtraitjPackage::eINSTANCE.TJTrait)
 			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJTrait)
 			assertDuplicateDeclaration("T1", XtraitjPackage::eINSTANCE.TJClass)
+		]
+	}
+
+	@Test def void testDuplicateParameters() {
+		'''
+		trait T {
+			void req(String p1, int p2, int p1);
+			void defined(String a1, int a2, int a1) { }
+		}
+		
+		class C {
+			C(String c1, int c2, int c1)
+		}
+		'''.parse =>[
+			assertDuplicateParameter("p1", TypesPackage.eINSTANCE.jvmFormalParameter)
+			assertDuplicateParameter("a1", TypesPackage.eINSTANCE.jvmFormalParameter)
+			assertDuplicateParameter("c1", TypesPackage.eINSTANCE.jvmFormalParameter)
 		]
 	}
 
@@ -243,6 +261,13 @@ The method b(boolean) is undefined'''
 		o.assertError(
 			c, XtraitjValidator.DUPLICATE_DECLARATION,
 			"Duplicate declaration '" + name + "'"
+		)
+	}
+
+	def private assertDuplicateParameter(EObject o, String name, EClass c) {
+		o.assertError(
+			c, XtraitjValidator.DUPLICATE_PARAM,
+			"Duplicate parameter '" + name + "'"
 		)
 	}
 }

@@ -16,9 +16,9 @@ import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
-import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
+import xtraitj.xtraitj.TJOperation
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
@@ -67,6 +67,8 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val DUPLICATE_DECLARATION = PREFIX + "DuplicateDeclaration"
 
 	public static val DUPLICATE_CONSTRUCTOR = PREFIX + "DuplicateConstructor"
+	
+	public static val DUPLICATE_PARAM = PREFIX + "DuplicateParameter"
 
 	public static val FIELD_CONFLICT = PREFIX + "FieldConflict"
 	
@@ -262,6 +264,28 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 						d,
 						XtraitjPackage.eINSTANCE.TJDeclaration_Name,
 						DUPLICATE_DECLARATION
+					)
+			}
+		}
+	}
+
+	@Check def void checkDuplicateParameterNames(TJOperation op) {
+		val map = duplicatesMultimap
+		
+		for (p : op.params) {
+			map.put(p.name, p)
+		}
+		
+		for (entry : map.asMap.entrySet) {
+			val duplicates = entry.value
+			if (duplicates.size > 1) {
+				for (d : duplicates)
+					error(
+						"Duplicate parameter '" +
+							d.name + "'",
+						d,
+						TypesPackage.eINSTANCE.jvmFormalParameter_Name,
+						DUPLICATE_PARAM
 					)
 			}
 		}

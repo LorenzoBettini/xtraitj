@@ -3,7 +3,7 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="xtraitj" nsURI="http://www.Xtraitj.xtraitj" nsPrefix="xtraitj">
   <eClassifiers xsi:type="ecore:EClass" name="TJProgram">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importSection" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xtype.ecore#//XImportSection"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="importSection" eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/Xtype.ecore#//XImportSection"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//TJDeclaration" containment="true"/>
@@ -15,17 +15,17 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJTrait" eSuperTypes="#//TJDeclaration">
     <eStructuralFeatures xsi:type="ecore:EReference" name="traitTypeParameters" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
         eType="#//TJMember" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJClass" eSuperTypes="#//TJDeclaration">
     <eStructuralFeatures xsi:type="ecore:EReference" name="classTypeParameters" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="interfaces" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmParameterizedTypeReference"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmParameterizedTypeReference"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fields" upperBound="-1"
         eType="#//TJField" containment="true"/>
@@ -37,13 +37,13 @@
         eType="#//TJTraitReference" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJTraitReference">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="trait" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmParameterizedTypeReference"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trait" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmParameterizedTypeReference"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1"
         eType="#//TJTraitOperation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJTraitOperation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmMember"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TjTraitOperationForProvided" eSuperTypes="#//TJTraitOperation"/>
   <eClassifiers xsi:type="ecore:EClass" name="TJHideOperation" eSuperTypes="#//TjTraitOperationForProvided"/>
@@ -57,43 +57,46 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJRedirectOperation" eSuperTypes="#//TJTraitOperation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="field" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member2" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmMember"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member2" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJMember">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJField" eSuperTypes="#//TJMember">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/XAnnotations.ecore#//XAnnotation"
+        eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/XAnnotations.ecore#//XAnnotation"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TJMethodDeclaration" eSuperTypes="#//TJMember">
+  <eClassifiers xsi:type="ecore:EClass" name="TJMethodDeclaration" eSuperTypes="#//TJMember #//TJOperation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeParameters" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJRequiredMethod" eSuperTypes="#//TJMethodDeclaration"/>
   <eClassifiers xsi:type="ecore:EClass" name="TJMethod" eSuperTypes="#//TJMethodDeclaration">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/XAnnotations.ecore#//XAnnotation"
+        eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/XAnnotations.ecore#//XAnnotation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="private" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TJConstructor">
+  <eClassifiers xsi:type="ecore:EClass" name="TJConstructor" eSuperTypes="#//TJOperation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"
+        eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass ../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TJOperation" abstract="true" interface="true">
+    <eOperations name="getParams" upperBound="-1" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"/>
   </eClassifiers>
 </ecore:EPackage>
