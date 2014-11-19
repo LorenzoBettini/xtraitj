@@ -21,6 +21,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.util.Strings
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedConstructor
 import org.eclipse.xtext.xtype.XFunctionTypeRef
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.typing.XtraitjTypingUtil
@@ -68,6 +69,10 @@ class XtraitjJvmModelUtil {
 			filter[interface].head
 	}
 
+	def associatedJavaClass(EObject t) {
+		t.jvmElements.filter(JvmGenericType).head
+	}
+
 	def sourceField(JvmMember f) {
 		f.sourceElements.findFirst[(it instanceof TJField)] as TJField
 	}
@@ -86,6 +91,10 @@ class XtraitjJvmModelUtil {
 
 	def sourceRestricted(JvmFeature f) {
 		f.sourceElements.findFirst[(it instanceof TJRestrictOperation)] as TJRestrictOperation
+	}
+
+	def associatedSource(IResolvedConstructor cons) {
+		cons.declaration.sourceElements.head
 	}
 
 	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {

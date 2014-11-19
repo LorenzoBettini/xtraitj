@@ -16,6 +16,7 @@ import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
+import static extension org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -84,6 +85,78 @@ class XtraitjValidatorTest {
 			XtraitjValidator.WRONG_CONSTRUCTOR_NAME,
 			"Wrong constructor name 'D'"
 		)
+	}
+
+	@Test def void testDuplicateConstructors() {
+		'''
+		class C {
+			C() {}
+			C(int i) {}
+			C() {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C()'"
+			)
+			2.assertEquals(validate.size)
+		]
+	}
+
+	@Test def void testDuplicateConstructors2() {
+		'''
+		class C {
+			C(int j, String s) {}
+			C(int i) {}
+			C(int k, String s2) {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C(int, String)'"
+			)
+			2.assertEquals(validate.size)
+		]
+	}
+
+	@Test def void testDuplicateConstructorsErasedSignature() {
+		'''
+		import java.util.List
+		
+		class C {
+			C(int j, List<String> s) {}
+			C(int i) {}
+			C(int k, List<Integer> s2) {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C(int, List<Integer>)'"
+			)
+			2.assertEquals(validate.size)
+		]
+	}
+
+	@Test def void testDuplicateConstructorsErasedSignature2() {
+		'''
+		import java.util.List
+		
+		class C<T> {
+			C(int j, List<T> s) {}
+			C(int i) {}
+			C(int k, List<T> s2) {}
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJConstructor,
+				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
+				"Duplicate constructor 'C(int, List<T>)'"
+			)
+			2.assertEquals(validate.size)
+		]
 	}
 
 	@Test def void testWrongReturnExpressionWithGenerics() {

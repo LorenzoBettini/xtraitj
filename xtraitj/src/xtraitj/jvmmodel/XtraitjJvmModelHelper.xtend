@@ -11,13 +11,18 @@ import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.types.XtraitjTypeParameterHelper
+import org.eclipse.xtext.common.types.JvmGenericType
 
 @Singleton
 class XtraitjJvmModelHelper {
-	@Inject extension OverrideHelper
+	@Inject extension OverrideHelper overrideHelper
 	@Inject extension XtraitjAnnotatedElementHelper
 	@Inject extension XtraitjTypingUtil
 	@Inject XtraitjTypeParameterHelper typeParameterHelper
+
+	def getResolvedOperations(JvmGenericType type) {
+		overrideHelper.getResolvedOperations(type)
+	}
 	
 	/**
 	 * Excludes methods declared in java.lang.Object.

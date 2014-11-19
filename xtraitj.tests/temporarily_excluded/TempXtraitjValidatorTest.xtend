@@ -919,39 +919,7 @@ trait T2 uses T1[alias s as s2] {
 	}
 
 
-	@Test def void testDuplicateConstructors() {
-		'''
-		class C {
-			C() {}
-			C(int i) {}
-			C() {}
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage.eINSTANCE.TJConstructor,
-				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
-				"Duplicate constructor 'C()'"
-			)
-			2.assertEquals(validate.size)
-		]
-	}
 
-	@Test def void testDuplicateConstructors2() {
-		'''
-		class C {
-			C(int j, String s) {}
-			C(int i) {}
-			C(int k, String s2) {}
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage.eINSTANCE.TJConstructor,
-				XtraitjValidator.DUPLICATE_CONSTRUCTOR,
-				"Duplicate constructor 'C(int, String)'"
-			)
-			2.assertEquals(validate.size)
-		]
-	}
 
 	@Test def void testTypeMismatchForTraitTypeParameters() {
 		'''

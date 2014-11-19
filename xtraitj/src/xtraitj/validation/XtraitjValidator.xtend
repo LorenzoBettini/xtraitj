@@ -13,6 +13,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
@@ -82,6 +83,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjTypingUtil
+	@Inject extension XtraitjJvmModelHelper
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -549,21 +551,33 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			}			
 		}
 	}
-//
-//	@Check
-//	def void checkDuplicateConstructors(TJConstructor cons) {
-//		val consRepresentation = cons.constructorRepresentation
-//		if (cons.containingClass.constructors.exists[
-//			it != cons && 
-//			it.constructorRepresentation == consRepresentation
-//		]) {
-//			error(
-//				"Duplicate constructor '" + consRepresentation + "'",
-//				XtraitjPackage.eINSTANCE.TJConstructor_Name,
-//				DUPLICATE_CONSTRUCTOR
-//			)
-//		}
-//	}
+
+	@Check
+	def void checkDuplicateConstructors(TJClass cl) {
+		val type = cl.associatedJavaClass
+		
+		val resolvedOperations = type.resolvedOperations
+		val constructors = resolvedOperations.declaredConstructors
+		
+		val map = duplicatesMultimap
+		
+		for (cons : constructors) {
+			map.put(cons.resolvedErasureSignature, cons)
+		}
+		
+		for (entry : map.asMap.entrySet) {
+			val duplicates = entry.value
+			if (duplicates.size > 1) {
+				for (d : duplicates)
+					error(
+						"Duplicate constructor '" + d.simpleSignature + "'",
+						d.associatedSource,
+						XtraitjPackage.eINSTANCE.TJConstructor_Name,
+						DUPLICATE_CONSTRUCTOR
+					)
+			}
+		}
+	}
 //
 //	/**
 //	 * A similar check is performed in JvmTypeReferencesValidator.
