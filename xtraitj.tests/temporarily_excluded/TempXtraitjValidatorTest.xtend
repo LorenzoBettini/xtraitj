@@ -504,29 +504,7 @@ class C uses T<String> {
 		]
 	}
 
-	@Test def void testDuplicateTraitReference() {
-		'''
-		trait T {}
-		
-		class C uses T, T {}
-		'''.parse.assertError(
-			XtraitjPackage::eINSTANCE.TJTraitReference,
-			XtraitjValidator::DUPLICATE_TRAIT_REFERENCE,
-			"Duplicate trait reference 'T'"
-		)
-	}
 
-	@Test def void testDuplicateTraitReference_Issue_2() {
-		'''
-		trait T {}
-		
-		trait T1 uses T, T {}
-		'''.parse.assertError(
-			XtraitjPackage::eINSTANCE.TJTraitReference,
-			XtraitjValidator::DUPLICATE_TRAIT_REFERENCE,
-			"Duplicate trait reference 'T'"
-		)
-	}
 
 
 

@@ -159,6 +159,40 @@ class XtraitjValidatorTest {
 		]
 	}
 
+	@Test def void testDuplicateTraitReference() {
+		'''
+		trait T {}
+		
+		class C uses T, T {}
+		'''.parse.assertError(
+			XtraitjPackage::eINSTANCE.TJTraitReference,
+			XtraitjValidator::DUPLICATE_TRAIT_REFERENCE,
+			"Duplicate trait reference 'T'"
+		)
+	}
+
+	@Test def void testDuplicateTraitReference_Issue_2() {
+		'''
+		trait T {}
+		
+		trait T1 uses T, T {}
+		'''.parse.assertError(
+			XtraitjPackage::eINSTANCE.TJTraitReference,
+			XtraitjValidator::DUPLICATE_TRAIT_REFERENCE,
+			"Duplicate trait reference 'T'"
+		)
+	}
+
+	@Test def void testDuplicateTraitReferenceWithOperationsOK() {
+		'''
+		trait T {
+			String m();
+		}
+		
+		trait T1 uses T, T[rename m to n] {}
+		'''.parse.assertNoErrors
+	}
+
 	@Test def void testWrongReturnExpressionWithGenerics() {
 		'''
 package tests;

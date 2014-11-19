@@ -430,30 +430,31 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 //		}
 //	}
 //
-//	/**
-//	 * Check that there are no duplicate trait references (without
-//	 * operations) to the same trait (which would be useless and
-//	 * would cause Java compiler errors).
-//	 */
-//	@Check def void checkDuplicateTraitReference(TJDeclaration c) {
-//		val referencesWithNoOperations = 
-//			c.traitExpression.traitReferences.filter[
-//				operations.empty
-//			]
-//		for (ref : referencesWithNoOperations) {
-//			if (referencesWithNoOperations.findFirst[
-//				ref != it && ref.trait == it.trait
-//			] != null) {
-//				error(
-//					"Duplicate trait reference '" +
-//						ref.trait.name + "'",
-//					ref,
-//					null,
-//					DUPLICATE_TRAIT_REFERENCE
-//				)
-//			}
-//		}
-//	}
+
+	/**
+	 * Check that there are no duplicate trait references (without
+	 * operations) to the same trait (which would be useless and
+	 * would cause Java compiler errors).
+	 */
+	@Check def void checkDuplicateTraitReference(TJDeclaration c) {
+		val referencesWithNoOperations = 
+			c.traitReferences.filter[
+				operations.empty
+			]
+		for (ref : referencesWithNoOperations) {
+			if (referencesWithNoOperations.findFirst[
+				ref != it && ref.trait.simpleName == it.trait.simpleName
+			] != null) {
+				error(
+					"Duplicate trait reference '" +
+						ref.trait.simpleName + "'",
+					ref,
+					null,
+					DUPLICATE_TRAIT_REFERENCE
+				)
+			}
+		}
+	}
 //
 //	@Check def void checkTraitHideOperation(TJHideOperation op) {
 //		op.errorForRequiredMember("hide", HIDING_REQUIRED)
