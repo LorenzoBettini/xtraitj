@@ -3,7 +3,9 @@
 */
 package xtraitj;
 
-import xtraitj.XtraitjStandaloneSetupGenerated;
+import org.eclipse.emf.ecore.EPackage;
+
+import com.google.inject.Injector;
 
 /**
  * Initialization support for running Xtext languages 
@@ -13,6 +15,15 @@ public class XtraitjStandaloneSetup extends XtraitjStandaloneSetupGenerated{
 
 	public static void doSetup() {
 		new XtraitjStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
+
+	@Override
+	public void register(Injector injector) {
+		// needed after switching to a manually maintained Ecore
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.Xtraitj.xtraitj")) {
+			EPackage.Registry.INSTANCE.put("http://www.Xtraitj.xtraitj", xtraitj.xtraitj.XtraitjPackage.eINSTANCE);
+		}
+		super.register(injector);
 	}
 }
 

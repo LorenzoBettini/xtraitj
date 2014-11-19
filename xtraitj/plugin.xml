@@ -7,7 +7,7 @@
     <package 
        uri = "http://www.Xtraitj.xtraitj" 
        class = "xtraitj.xtraitj.XtraitjPackage"
-       genModel = "model/generated/Xtraitj.genmodel" /> 
+       genModel = "model/custom/Xtraitj.genmodel" /> 
 	
   </extension>
 

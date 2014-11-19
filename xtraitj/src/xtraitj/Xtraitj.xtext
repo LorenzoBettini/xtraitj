@@ -2,7 +2,10 @@ grammar xtraitj.Xtraitj with org.eclipse.xtext.xbase.annotations.XbaseWithAnnota
 
 import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
 
-generate xtraitj "http://www.Xtraitj.xtraitj"
+//generate xtraitj "http://www.Xtraitj.xtraitj"
+
+// we manually maintain the ecore
+import "http://www.Xtraitj.xtraitj"
 
 TJProgram:
 	('package' name=QualifiedName ';')?

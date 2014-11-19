@@ -8,6 +8,7 @@ logs.zip
 
 src-gen/
 xtend-gen/
+emf-gen/
 
 buildroot
 
