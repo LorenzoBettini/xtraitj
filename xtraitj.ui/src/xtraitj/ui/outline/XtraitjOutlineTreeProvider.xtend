@@ -5,13 +5,16 @@ package xtraitj.ui.outline
 
 import com.google.inject.Inject
 import org.eclipse.jface.viewers.StyledString
-import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.ui.IImageHelper
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -23,10 +26,6 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
-import xtraitj.jvmmodel.XtraitjJvmOperation
-import org.eclipse.xtext.common.types.JvmTypeReference
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 /**
  * Customization of the default outline structure.
@@ -71,8 +70,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def _createChildren(EObjectNode parentNode, TJClass c) {
+		val opsFromInterfaces = c.interfaces.getXtraitjJvmOperationsFromJavaInterfaces(c)
+		
 		nodesForTraitReferences(parentNode, c)
-		nodesForRequirements(parentNode, c)
+		nodesForRequirements(parentNode, c, opsFromInterfaces)
 		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {
@@ -129,10 +130,6 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForProvides(EObjectNode parentNode, TJDeclaration d) {
-		nodesForProvides(parentNode, d, emptyList)
-	}
-
-	def nodesForProvides(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
 		val associatedClass = d.associatedJavaClass
 		val ops = associatedClass.xtraitjResolvedOperationsNotDeclared
 		val provides = ops.definedMethods

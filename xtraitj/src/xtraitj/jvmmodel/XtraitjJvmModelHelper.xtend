@@ -14,6 +14,7 @@ import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 
 @Singleton
 class XtraitjJvmModelHelper {
@@ -115,5 +116,17 @@ class XtraitjJvmModelHelper {
 		}
 		
 		new XtraitjResolvedOperations(requiredFields, requiredMethods, definedMethods, typeParameterHelper)
+	}
+
+	/**
+	 * This does not filter requirements and declarations; it should be used to collect
+	 * and resolve operations from type references that refer to standard Java interfaces.
+	 */
+	def getXtraitjJvmOperationsFromJavaInterfaces(Iterable<JvmParameterizedTypeReference> typeReferences, EObject context) {
+		typeReferences.map[getOperations(context)].flatten.getXtraitjJvmOperations
+	}
+
+	def getXtraitjJvmOperations(Iterable<IResolvedOperation> resolvedOps) {
+		resolvedOps.map[new XtraitjJvmOperation(it)]
 	}
 }

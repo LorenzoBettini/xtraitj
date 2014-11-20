@@ -1,4 +1,4 @@
-package xtraitj.ui.temporary.tests
+package xtraitj.ui.tests
 
 import com.google.inject.Inject
 import org.eclipse.core.runtime.CoreException
