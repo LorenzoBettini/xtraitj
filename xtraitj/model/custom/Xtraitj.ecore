@@ -9,6 +9,13 @@
         eType="#//TJDeclaration" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJDeclaration" eSuperTypes="#//TJTypeParameterDeclarator">
+    <eOperations name="getMembers">
+      <eGenericType eClassifier="ecore:EDataType ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//Iterable">
+        <eTypeArguments>
+          <eUpperBound eClassifier="#//TJMember"/>
+        </eTypeArguments>
+      </eGenericType>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traitExpression" eType="#//TJTraitExpression"
         containment="true"/>
@@ -21,6 +28,16 @@
         eType="#//TJMember" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJClass" eSuperTypes="#//TJDeclaration">
+    <eOperations name="getMembers">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return getFields();"/>
+      </eAnnotations>
+      <eGenericType eClassifier="ecore:EDataType ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//Iterable">
+        <eTypeArguments>
+          <eUpperBound eClassifier="#//TJMember"/>
+        </eTypeArguments>
+      </eGenericType>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeParameters" upperBound="-1"
         eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
         containment="true"/>

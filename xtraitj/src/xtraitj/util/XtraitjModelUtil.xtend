@@ -46,17 +46,6 @@ class XtraitjModelUtil {
 		t.members.filter(typeof(TJMethod))
 	}
 
-//	def static methods(TJTraitReference e) {
-//		e.trait?.methods
-//	}
-	
-	def static members(TJDeclaration d) {
-		switch (d) {
-			TJTrait : d.members
-			TJClass : d.fields
-		}
-	}
-
 	def static requiredMethods(TJTrait t) {
 		t.members.filter(typeof(TJRequiredMethod))
 	}
