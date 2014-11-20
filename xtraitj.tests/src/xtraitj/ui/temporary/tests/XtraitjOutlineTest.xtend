@@ -193,8 +193,6 @@ class C uses T1 {
 '''
 my.traits
 T1
-  requirements
-    s : String
   s : String
 C
   T1

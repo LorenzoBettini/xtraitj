@@ -85,10 +85,9 @@ class XtraitjJvmModelHelper {
 	/**
 	 * Collects the ones from used traits and implemented interfaces
 	 */
-	def getXtraitjResolvedOperationsFromSuperTypes(JvmDeclaredType declaredType) {
+	def getXtraitjResolvedOperationsFromSuperTypes(JvmDeclaredType declaredType, EObject context) {
 		val resolvedOps = declaredType.superTypes.
-			map[type].filter(JvmDeclaredType).
-			map[getOperations].flatten
+			map[getOperations(context)].flatten
 		getXtraitjResolvedOperations(resolvedOps)
 	}
 
