@@ -2551,4 +2551,11 @@ public class C3<U extends Object> implements T3<U> {
 		executeGeneratedJavaClassMethodAndAssert("CInteger", "m", "10")
 		executeGeneratedJavaClassMethodAndAssert("CListOfStrings", "m", "[a, b, c]")
 	}
+
+	@Test def void testAccessToGeneratedJavaCodeWithoutOriginalSource() {
+		accessToGeneratedJavaCodeWithoutOriginalSource.compile[
+			executeGeneratedJavaClassMethodAndAssert("C", "useProvided", "test")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useProvided", "test")
+		]
+	}
 }
