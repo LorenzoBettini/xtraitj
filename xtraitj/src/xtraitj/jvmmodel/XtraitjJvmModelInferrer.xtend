@@ -1663,23 +1663,30 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    	}
 
 	def private void annotateAsTrait(JvmAnnotationTarget target) {
-		target.annotations += annotationRef(XtraitjTraitInterface)
+		target.annotateAsXtraitjElement(XtraitjTraitInterface)
 	}
 
 	def private void annotateAsTraitClass(JvmAnnotationTarget target) {
-		target.annotations += annotationRef(XtraitjTraitClass)
+		target.annotateAsXtraitjElement(XtraitjTraitClass)
 	}
 
 	def private void annotateAsRequiredField(JvmMember target) {
-		target.annotations += annotationRef(XtraitjRequiredField)
+		target.annotateAsXtraitjElement(XtraitjRequiredField)
 	}
 
 	def private void annotateAsRequiredMethod(JvmMember target) {
-		target.annotations += annotationRef(XtraitjRequiredMethod)
+		target.annotateAsXtraitjElement(XtraitjRequiredMethod)
 	}
 
 	def private void annotateAsDefinedMethod(JvmMember target) {
-		target.annotations += annotationRef(XtraitjDefinedMethod)
+		target.annotateAsXtraitjElement(XtraitjDefinedMethod)
+	}
+
+	def private void annotateAsXtraitjElement(JvmAnnotationTarget target, Class<?> annotationType) {
+		// the target can be null in an incomplete program
+		if (target != null) {
+			target.annotations += annotationRef(annotationType)
+		}
 	}
 
 	def private void annotateAsRenamedMethod(JvmMember target, String originalName) {

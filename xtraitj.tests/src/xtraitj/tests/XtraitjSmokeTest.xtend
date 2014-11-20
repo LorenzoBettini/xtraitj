@@ -56,6 +56,22 @@ class XtraitjSmokeTest {
 	def void removeAppender() {
 		LOG.removeAppender(logListener)
 	}
+
+	@Test def void testIncompleteMethod() {
+		'''
+		trait T {
+			String
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testIncompleteFieldInClass() {
+		'''
+		class C {
+			String
+		}
+		'''.parseAndValidate
+	}
 	
 	@Test def void testEmptyOperations() {
 		'''
