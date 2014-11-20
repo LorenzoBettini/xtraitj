@@ -178,6 +178,34 @@ C
 	}
 
 	@Test
+	def void testOutlineForFieldRequirementsInClass() {
+		'''
+package my.traits;
+
+trait T1 {
+	String s;
+}
+
+class C uses T1 {
+	String s;
+}
+		'''.assertAllLabels(
+'''
+my.traits
+T1
+  requirements
+    s : String
+  s : String
+C
+  T1
+  requirements
+    s : String
+  s : String
+'''
+		)
+	}
+
+	@Test
 	def void testOutlineForProvides() {
 		'''
 package my.traits;
@@ -273,7 +301,7 @@ T1
   m(T) : T
   n(T) : T
 T2
-  T1
+  T1<String>
   requirements
     s : String
     m(String) : String

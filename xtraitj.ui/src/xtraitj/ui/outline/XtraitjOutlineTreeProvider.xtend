@@ -26,6 +26,7 @@ import xtraitj.xtraitj.XtraitjPackage
 import xtraitj.jvmmodel.XtraitjJvmOperation
 import org.eclipse.xtext.common.types.JvmTypeReference
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 /**
  * Customization of the default outline structure.
@@ -39,6 +40,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject UIStrings uiStrings
 	
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
 	
 	def _createChildren(DocumentRootNode parentNode, TJProgram p) {
 		if (p.name != null) {
@@ -70,8 +72,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def _createChildren(EObjectNode parentNode, TJClass c) {
 		nodesForTraitReferences(parentNode, c)
-		// TODO reimplement c.xtraitjJvmAllInterfaceMethods
-		// nodesForRequirements(parentNode, c, c.xtraitjJvmAllInterfaceMethods)
+		nodesForRequirements(parentNode, c)
 		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {
@@ -114,8 +115,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<XtraitjJvmOperation> interfaceMethods) {
-		val fieldRequirements = d.xtraitjJvmAllRequiredFieldOperations
-		val methodRequirements = d.xtraitjJvmAllRequiredMethodOperationsFromReferences
+		val associatedClass = d.associatedJavaClass
+		val ops = associatedClass.xtraitjResolvedOperationsFromSuperTypes
+		val fieldRequirements = ops.requiredFields
+		val methodRequirements = ops.requiredMethods
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
 			val reqNode = new XtraitjRequirementsNode(parentNode, images.getImage("externalize.gif"))
@@ -130,7 +133,9 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForProvides(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
-		val provides = d.xtraitjJvmAllMethodOperations
+		val associatedClass = d.associatedJavaClass
+		val ops = associatedClass.xtraitjResolvedOperationsNotDeclared
+		val provides = ops.definedMethods
 		
 		if (!provides.empty) {
 			val reqNode = new XtraitjProvidesNode(parentNode, images.getImage("externalize.gif"))
