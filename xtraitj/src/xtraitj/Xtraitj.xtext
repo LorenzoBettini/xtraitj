@@ -19,7 +19,7 @@ TJDeclaration:
 
 TJTrait:
 	'trait' name=ID
-	('<' traitTypeParameters+=JvmTypeParameter (',' traitTypeParameters+=JvmTypeParameter)* '>')? 
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')? 
 	('uses' traitExpression=TJTraitExpression)? '{'
 		members+=TJMember*
 	'}'
@@ -27,7 +27,7 @@ TJTrait:
 
 TJClass:
 	'class' name=ID 
-		('<' classTypeParameters+=JvmTypeParameter (',' classTypeParameters+=JvmTypeParameter)* '>')? 
+		('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')? 
 			('implements'
 				interfaces += JvmParameterizedTypeReference
 				(',' interfaces += JvmParameterizedTypeReference)*

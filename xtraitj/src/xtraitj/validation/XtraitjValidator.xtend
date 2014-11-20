@@ -15,7 +15,6 @@ import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
@@ -82,7 +81,6 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	public static val ANNOTATION_ON_TRAIT_FIELD = PREFIX + "AnnotationOnTraitField"
 	
 	@Inject extension XtraitjJvmModelUtil
-	@Inject extension XtraitjTypingUtil
 	@Inject extension XtraitjJvmModelHelper
 	
 	@Inject
@@ -625,9 +623,9 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 //		}
 //	}
 
-	def private typeRefRepr(JvmTypeReference typeRef) {
-		typeRef.simpleName
-	}
+//	def private typeRefRepr(JvmTypeReference typeRef) {
+//		typeRef.simpleName
+//	}
 
 	def private <K, T> duplicatesMultimap() {
 		return Multimaps2.<K, T> newLinkedHashListMultimap();

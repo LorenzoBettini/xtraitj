@@ -57,14 +57,6 @@ class XtraitjModelUtil {
 		}
 	}
 
-	def static typeParameters(TJDeclaration d) {
-		if (d instanceof TJTrait) {
-			return d.traitTypeParameters
-		} else {
-			(d as TJClass).classTypeParameters
-		}
-	}
-	
 	def static requiredMethods(TJTrait t) {
 		t.members.filter(typeof(TJRequiredMethod))
 	}

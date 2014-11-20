@@ -274,7 +274,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				// presence of type parameters and type arguments
    				// (type arguments would be bound to the trait's type parameters, instead
    				// of the inferred Java interface's type parameters)
-   				traitInterface.copyTypeParameters(t.traitTypeParameters)
+   				traitInterface.copyTypeParameters(t.typeParameters)
    				
 //   				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
    			]
@@ -1023,7 +1023,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //	   	inferTypesForTraitReferencesWithOperations(t, traitClass, acceptor, typesMap, resolvedOperationsMap)
    		
 		acceptor.accept(traitClass) [
-			traitClass.copyTypeParameters(t.traitTypeParameters)
+			traitClass.copyTypeParameters(t.typeParameters)
 			
 			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
 		   	for (typePar : typeParameters) {
