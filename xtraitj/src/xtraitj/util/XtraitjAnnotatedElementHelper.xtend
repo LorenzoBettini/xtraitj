@@ -1,17 +1,19 @@
 package xtraitj.util
 
+import com.google.inject.Singleton
+import org.eclipse.xtext.common.types.JvmAnnotationReference
 import org.eclipse.xtext.common.types.JvmDeclaredType
-import org.eclipse.xtext.common.types.JvmTypeReference
-import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
-import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import org.eclipse.xtext.common.types.JvmMember
+import org.eclipse.xtext.common.types.JvmStringAnnotationValue
+import org.eclipse.xtext.common.types.JvmTypeReference
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
-import org.eclipse.xtext.common.types.JvmAnnotationReference
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
-import org.eclipse.xtext.common.types.JvmStringAnnotationValue
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 
+@Singleton
 class XtraitjAnnotatedElementHelper {
 	
 	def annotatedTraitInterface(JvmTypeReference typeRef) {
@@ -28,12 +30,16 @@ class XtraitjAnnotatedElementHelper {
 	def annotatedTraitClass(JvmTypeReference typeRef) {
 		val type = typeRef.type
 		if (type instanceof JvmDeclaredType)
-			type.annotations.
-				exists[
-					annotation.identifier == XtraitjTraitClass.name
-				]
+			annotatedTraitClass(type)
 		else
 			false
+	}
+	
+	def annotatedTraitClass(JvmDeclaredType type) {
+		type.annotations.
+			exists[
+				annotation.identifier == XtraitjTraitClass.name
+			]
 	}
 
 	def annotatedRequiredField(JvmMember member) {

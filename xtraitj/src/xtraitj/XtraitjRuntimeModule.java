@@ -11,6 +11,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
+import org.eclipse.xtext.xbase.typesystem.internal.DefaultReentrantTypeResolver;
 import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
@@ -18,6 +19,7 @@ import xtraitj.generator.XtraitjOutputConfigurationProvider;
 import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
 import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
+import xtraitj.typesystem.XtraitjLogicalContainerAwareReentrantTypeResolver;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 import xtraitj.typesystem.override.XtraitjOverrideHelper;
 
@@ -74,5 +76,10 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	
 	public Class<? extends OverrideHelper> bindOverrideHelper() {
 		return XtraitjOverrideHelper.class;
+	}
+
+	@Override
+	public Class<? extends DefaultReentrantTypeResolver> bindDefaultReentrantTypeResolver() {
+		return XtraitjLogicalContainerAwareReentrantTypeResolver.class;
 	}
 }
