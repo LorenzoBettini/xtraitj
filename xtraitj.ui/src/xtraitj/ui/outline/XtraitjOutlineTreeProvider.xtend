@@ -15,6 +15,7 @@ import org.eclipse.xtext.xtype.XtypePackage
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -26,6 +27,7 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
+import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 
 /**
  * Customization of the default outline structure.
@@ -40,6 +42,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjAnnotatedElementHelper
 	
 	def _createChildren(DocumentRootNode parentNode, TJProgram p) {
 		if (p.name != null) {
@@ -142,53 +145,39 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
 		for (req : requirements) {
-			val source = req.op.originalSource
-			if (source != null) {
-				// use the name from req so that
-				// possible renames are applied
-				// but use the original source as the element
-				// so that we can jump to it
-				if (source instanceof TJField)
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						req.op.simpleName.stripGetter +
-						" : " + req.returnType.simpleName,
-						true
-					)
-				else
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						new StyledString(
-							req.op.simpleName 
-							+ req.parametersTypes.parameterTypesToString
-						).append(
-							new StyledString(" : " + 
-								req.returnType.simpleName,
-								StyledString::DECORATIONS_STYLER
-							)
-						),
-						true
-					)
-			}
-			// interface methods
-			else
+			val jvmOp = req.op
+
+			if (jvmOp.annotatedRequiredField) {
 				reqNode.createEObjectNode(
-					req.op,
-					_image(req.op),
-					new StyledString(
-						req.op.simpleName 
-						+ req.parametersTypes.parameterTypesToString
-					).append(
-						new StyledString(" : " + 
-							req.returnType.simpleName,
-							StyledString::DECORATIONS_STYLER
-						)
-					),
+					jvmOp,
+					_image(jvmOp),
+					jvmOp.simpleName.stripGetter +
+					" : " + req.returnType.simpleName,
 					true
 				)
+			} else {
+				nodeForJvmOperation(reqNode, req)
+			}
 		}
+	}
+	
+	private def nodeForJvmOperation(AbstractOutlineNode node, XtraitjJvmOperation req) {
+		val jvmOp = req.op
+		
+		node.createEObjectNode(
+			jvmOp,
+			_image(jvmOp),
+			new StyledString(
+				jvmOp.simpleName 
+				+ req.parametersTypes.parameterTypesToString
+			).append(
+				new StyledString(" : " + 
+					req.returnType.simpleName,
+					StyledString::DECORATIONS_STYLER
+				)
+			),
+			true
+		)
 	}
 
 	def private parameterTypesToString(Iterable<JvmTypeReference> parameterTypes) {
@@ -197,23 +186,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<XtraitjJvmOperation> provides) {
 		for (req : provides) {
-			val source = req.op.originalSource
-			if (source != null) {
-				provNode.createEObjectNode(
-						source,
-						_image(source),
-						new StyledString(
-							req.op.simpleName 
-							+ req.parametersTypes.parameterTypesToString
-						).append(
-							new StyledString(" : " + 
-								req.returnType.simpleName,
-								StyledString::DECORATIONS_STYLER
-							)
-						),
-						true
-					)
-			}
+			nodeForJvmOperation(provNode, req)
 		}
 	}
 	
