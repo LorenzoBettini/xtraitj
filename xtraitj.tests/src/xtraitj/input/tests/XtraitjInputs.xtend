@@ -3088,4 +3088,43 @@ class C uses T1 {}
 class C2 uses T2<String>, T3 {}
 '''
 	}
+
+	def accessRenameGeneratedJavaCodeWithoutOriginalSource() {
+'''
+package tests;
+
+import xtraitj.input.tests.generated.T1Gen
+
+// T1Gen was generated started from xtraitj code,
+// but we remove the original source
+
+trait T1 uses T1Gen<String>[rename provided to renamedProvided] {
+	String required(String s) {
+		return s;
+	}
+
+	String useProvided() {
+		return renamedProvided("test");
+	}
+}
+
+trait T2<U> uses T1Gen<U>[rename required to req] {
+	U req(U s) {
+		return s;
+	}
+}
+
+trait T3 {
+	String provided(String s);
+	
+	String useProvided() {
+		return provided("test");
+	}
+}
+
+class C1 uses T1 {}
+
+class C2 uses T2<String>, T3 {}
+'''
+	}
 }

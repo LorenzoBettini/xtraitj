@@ -1774,4 +1774,11 @@ public class CWithOp_T1_0_AdapterImpl<Z extends Object> implements CWithOp_T1_0_
 		executeGeneratedJavaClassMethodAndAssert("C2", "useField", "foo")
 		executeGeneratedJavaClassMethodAndAssert("C2", "callReq", "foo")
 	}
+
+	@Test def void testAccessRenameGeneratedJavaCodeWithoutOriginalSource() {
+		accessRenameGeneratedJavaCodeWithoutOriginalSource.compile[
+			executeGeneratedJavaClassMethodAndAssert("C1", "useProvided", "test")
+			executeGeneratedJavaClassMethodAndAssert("C2", "useProvided", "test")
+		]
+	}
 }
