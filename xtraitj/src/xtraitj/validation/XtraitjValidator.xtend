@@ -24,6 +24,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import java.util.Set
 
 /**
  * Custom validation rules. 
@@ -147,15 +148,30 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		}
 	}
 
-//	@Check def void checkDependencyCycle(TJTrait t) {
-//		if (t.allTraitsDependency.exists[it == t]) {
-//			error(
-//				"Cycle in dependency of '" + t.name + "'",
-//				XtraitjPackage::eINSTANCE.TJDeclaration_Name,
-//				DEPENDENCY_CYCLE
-//			)
-//		}
-//	}
+	@Check def void checkDependencyCycle(TJTrait t) {
+		val inferredType = t.associatedInterfaceType
+		if (inferredType.hasCycleInHierarchy(newHashSet())) {
+			error(
+				"Cycle in dependency of '" + t.name + "'",
+				XtraitjPackage::eINSTANCE.TJDeclaration_Name,
+				DEPENDENCY_CYCLE
+			)
+		}
+	}
+
+	def private boolean hasCycleInHierarchy(JvmGenericType type, Set<JvmGenericType> processedSuperTypes) {
+		if (processedSuperTypes.contains(type))
+			return true;
+		processedSuperTypes.add(type);
+		for (JvmTypeReference superTypeRef : type.getSuperTypes()) {
+			if (superTypeRef.getType() instanceof JvmGenericType) {
+				if (hasCycleInHierarchy(superTypeRef.getType() as JvmGenericType, processedSuperTypes))
+					return true;
+			}
+		}
+		processedSuperTypes.remove(type);
+		return false;
+	}
 
 	@Check def void checkField(TJField f) {
 		if (f.eContainer instanceof TJTrait) {

@@ -25,32 +25,7 @@ class TempXtraitjValidatorTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
 
-	@Test def void testCycle() {
-		'''
-		trait T1 uses T2, T1 {}
-		
-		trait T2 {}
-		'''.parse.assertError(
-			XtraitjPackage::eINSTANCE.TJTrait,
-			XtraitjValidator::DEPENDENCY_CYCLE,
-			"Cycle in dependency of 'T1'"
-		)
-	}
 
-	@Test def void testCycle2() {
-		'''
-		trait T1 uses T2, T3 {}
-		
-		trait T2 {}
-		trait T3 uses T2, T1 {}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJTrait,
-				XtraitjValidator::DEPENDENCY_CYCLE,
-				"Cycle in dependency of 'T1'"
-			)
-		]
-	}
 
 	@Test def void testTraitInitializeField() {
 		'''

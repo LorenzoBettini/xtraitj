@@ -5,6 +5,7 @@ import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJProgram
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import java.util.Set
 
 /**
  * Dependencies among traits and classes during the inferrer when trait references (that is,
@@ -15,6 +16,8 @@ class XtraitjDependencies {
 	var TJProgram program
 
 	val LinkedList<TJDeclaration> dependencies = newLinkedList()
+	
+	val Set<TJDeclaration> processed = newHashSet()
 
 	new(TJProgram program) {
 		this.program = program
@@ -34,7 +37,8 @@ class XtraitjDependencies {
 			if (type.eIsProxy) {
 				val n = typeRef.jvmTypeReferenceString
 				val declaration = program.elements.findFirst[name == n]
-				if (declaration !== null) {
+				if (declaration !== null && !processed.contains(declaration)) {
+					processed.add(declaration)
 					declaration.addDependency
 				}
 			}
