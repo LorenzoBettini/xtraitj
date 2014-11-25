@@ -27,19 +27,7 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testTraitInitializeField() {
-		'''
-		trait T {
-			String s = "foo";
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJField,
-				XtraitjValidator::TRAIT_INITIALIZES_FIELD,
-				"Traits cannot initialize fields"
-			)
-		]
-	}
+
 
 	@Test def void testClassMissingFields() {
 		'''
@@ -972,20 +960,7 @@ trait T2 uses T1[alias s as s2] {
 		)
 	}
 
-	@Test def void testInvalidAnnotationOnTraitField() {
-		'''
-		package tests;
-				
-		trait T {
-			@SuppressWarnings("all")
-			String f;
-		}
-		'''.parse.assertError(
-				XtraitjPackage.eINSTANCE.TJField,
-				XtraitjValidator.ANNOTATION_ON_TRAIT_FIELD,
-				"Traits cannot annotate fields"
-			)
-	}
+
 
 	@Test def void testWrongTypeArgument() {
 		'''

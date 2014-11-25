@@ -378,6 +378,35 @@ The method b(boolean) is undefined'''
 		]
 	}
 
+	@Test def void testTraitInitializeField() {
+		'''
+		trait T {
+			String s = "foo";
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJField,
+				XtraitjValidator::TRAIT_INITIALIZES_FIELD,
+				"Traits cannot initialize fields"
+			)
+		]
+	}
+
+	@Test def void testInvalidAnnotationOnTraitField() {
+		'''
+		package tests;
+				
+		trait T {
+			@SuppressWarnings("all")
+			String f;
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJField,
+				XtraitjValidator.ANNOTATION_ON_TRAIT_FIELD,
+				"Traits cannot annotate fields"
+			)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

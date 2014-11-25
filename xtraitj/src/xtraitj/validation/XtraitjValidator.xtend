@@ -4,6 +4,7 @@
 package xtraitj.validation
 
 import com.google.inject.Inject
+import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmTypeParameter
@@ -17,14 +18,12 @@ import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
-import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJOperation
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import java.util.Set
 
 /**
  * Custom validation rules. 
@@ -173,11 +172,12 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 		return false;
 	}
 
-	@Check def void checkField(TJField f) {
-		if (f.eContainer instanceof TJTrait) {
+	@Check def void checkTraitFields(TJTrait t) {
+		for (f : t.fields) {
 			if (f.init != null) {
 				error(
 					"Traits cannot initialize fields",
+					f,
 					XtraitjPackage::eINSTANCE.TJField_Init,
 					TRAIT_INITIALIZES_FIELD
 				)
@@ -185,6 +185,7 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 			if (!f.annotations.empty) {
 				error(
 					"Traits cannot annotate fields",
+					f,
 					XtraitjPackage::eINSTANCE.TJField_Annotations,
 					ANNOTATION_ON_TRAIT_FIELD
 				)
