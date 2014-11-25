@@ -1287,11 +1287,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
 public interface T2_T1_0_Adapter {
-  @XtraitjRequiredField
-  public abstract List<String> getL();
-  
-  public abstract void setL(final List<String> l);
-  
   /**
    * original version of m
    */
@@ -1303,6 +1298,11 @@ public interface T2_T1_0_Adapter {
    */
   @XtraitjDefinedMethod
   public abstract String m();
+  
+  @XtraitjRequiredField
+  public abstract List<String> getL();
+  
+  public abstract void setL(final List<String> l);
   
   @XtraitjDefinedMethod
   public abstract String n();
@@ -1455,21 +1455,21 @@ public class TTransformerIteratorImpl<T extends Object, R extends Object> implem
   }
   
   @XtraitjDefinedMethod
-  public boolean hasNext() {
-    return _delegate.hasNext();
-  }
-  
-  public boolean _hasNext() {
-    return _TIterator_0._hasNext();
-  }
-  
-  @XtraitjDefinedMethod
   public T origNext() {
     return _delegate.origNext();
   }
   
   public T _origNext() {
     return _TIterator_0._origNext();
+  }
+  
+  @XtraitjDefinedMethod
+  public boolean hasNext() {
+    return _delegate.hasNext();
+  }
+  
+  public boolean _hasNext() {
+    return _TIterator_0._hasNext();
   }
   
   @XtraitjDefinedMethod

@@ -184,6 +184,50 @@ public class T3Impl implements T3 {
 		]
 	}
 
+	@Test def void testTraitRenameRequiredMethodToProvided() {
+		traitRenameProvidedMethodToRequired.compile[
+assertTraitAdapterJavaInterface("tests", "T3_T2_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public interface T3_T2_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("req")
+  public abstract String required(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String provided(final String t);
+}
+'''
+)
+
+assertTraitAdapterJavaInterface("tests", "C_T2_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public interface C_T2_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("req")
+  public abstract String required(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String provided(final String t);
+}
+'''
+)
+			assertGeneratedJavaCodeCompiles
+
+		]
+	}
+
 	@Test def void testTraitRenameOperationsNotUsed() {
 		traitRenameOperationsNotUsed.compile[
 assertTraitAdapterJavaInterface("T3_T2_0",
@@ -195,11 +239,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
-  @XtraitjRequiredField
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
-  
   @XtraitjRequiredMethod
   @XtraitjRenamedMethod("n")
   public abstract int n2();
@@ -207,6 +246,11 @@ public interface T3_T2_0_Adapter {
   @XtraitjDefinedMethod
   @XtraitjRenamedMethod("m")
   public abstract int m2();
+  
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
   
   @XtraitjDefinedMethod
   public abstract int t1();
@@ -357,11 +401,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
-  @XtraitjRequiredField
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
-  
   @XtraitjRequiredMethod
   @XtraitjRenamedMethod("n")
   public abstract int n2();
@@ -369,6 +408,11 @@ public interface T3_T2_0_Adapter {
   @XtraitjDefinedMethod
   @XtraitjRenamedMethod("m")
   public abstract int m2();
+  
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
   
   @XtraitjDefinedMethod
   public abstract int t1();
@@ -1377,11 +1421,11 @@ import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
   @XtraitjDefinedMethod
-  public abstract String callFirstRename();
-  
-  @XtraitjDefinedMethod
   @XtraitjRenamedMethod({ "m", "firstRename" })
   public abstract String secondRename();
+  
+  @XtraitjDefinedMethod
+  public abstract String callFirstRename();
 }
 '''
 )
@@ -1481,21 +1525,21 @@ public class T3Impl implements T3 {
   }
   
   @XtraitjDefinedMethod
-  public String callFirstRename() {
-    return _delegate.callFirstRename();
-  }
-  
-  public String _callFirstRename() {
-    return _T2_0._callFirstRename();
-  }
-  
-  @XtraitjDefinedMethod
   public String secondRename() {
     return _delegate.secondRename();
   }
   
   public String _secondRename() {
     return _T2_0._secondRename();
+  }
+  
+  @XtraitjDefinedMethod
+  public String callFirstRename() {
+    return _delegate.callFirstRename();
+  }
+  
+  public String _callFirstRename() {
+    return _T2_0._callFirstRename();
   }
 }
 '''
@@ -2049,14 +2093,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
-  @XtraitjRequiredField
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract String p();
-  
   /**
    * original version of m
    */
@@ -2068,6 +2104,14 @@ public interface T3_T2_0_Adapter {
    */
   @XtraitjDefinedMethod
   public abstract String m();
+  
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String p();
   
   @XtraitjDefinedMethod
   public abstract String n();
@@ -2221,15 +2265,6 @@ public class T3Impl implements T3 {
   }
   
   @XtraitjDefinedMethod
-  public String p() {
-    return _delegate.p();
-  }
-  
-  public String _p() {
-    return _T2_0._p();
-  }
-  
-  @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
@@ -2245,6 +2280,15 @@ public class T3Impl implements T3 {
   
   public String _m() {
     return _T2_0._m();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
   }
   
   @XtraitjDefinedMethod
@@ -2298,14 +2342,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
-  @XtraitjRequiredField
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract String p();
-  
   /**
    * original version of m
    */
@@ -2324,6 +2360,14 @@ public interface T3_T2_0_Adapter {
    */
   @XtraitjDefinedMethod
   public abstract String oldn();
+  
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String p();
 }
 '''
 )
@@ -2519,15 +2563,6 @@ public class T3Impl implements T3 {
   }
   
   @XtraitjDefinedMethod
-  public String p() {
-    return _delegate.p();
-  }
-  
-  public String _p() {
-    return _T2_0._p();
-  }
-  
-  @XtraitjDefinedMethod
   public String m1() {
     return _delegate.m1();
   }
@@ -2552,6 +2587,15 @@ public class T3Impl implements T3 {
   
   public String _oldn() {
     return _T2_0._oldn();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
   }
   
   @XtraitjRequiredField
@@ -2592,6 +2636,12 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
+  /**
+   * original version of m
+   */
+  @XtraitjRequiredMethod
+  public abstract String m();
+  
   @XtraitjRequiredField
   public abstract String getS();
   
@@ -2599,12 +2649,6 @@ public interface T3_T2_0_Adapter {
   
   @XtraitjDefinedMethod
   public abstract String p();
-  
-  /**
-   * original version of m
-   */
-  @XtraitjRequiredMethod
-  public abstract String m();
   
   @XtraitjDefinedMethod
   public abstract String n();
@@ -2803,14 +2847,6 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
-  @XtraitjRequiredField
-  public abstract String getS();
-  
-  public abstract void setS(final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract String p();
-  
   /**
    * original version of m
    */
@@ -2822,6 +2858,14 @@ public interface T3_T2_0_Adapter {
    */
   @XtraitjRequiredMethod
   public abstract String m();
+  
+  @XtraitjRequiredField
+  public abstract String getS();
+  
+  public abstract void setS(final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract String p();
   
   @XtraitjDefinedMethod
   public abstract String n();
@@ -2987,21 +3031,21 @@ public class T3Impl implements T3 {
   }
   
   @XtraitjDefinedMethod
-  public String p() {
-    return _delegate.p();
-  }
-  
-  public String _p() {
-    return _T2_0._p();
-  }
-  
-  @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
   
   public String _oldm() {
     return _T2_0._oldm();
+  }
+  
+  @XtraitjDefinedMethod
+  public String p() {
+    return _delegate.p();
+  }
+  
+  public String _p() {
+    return _T2_0._p();
   }
   
   @XtraitjDefinedMethod
