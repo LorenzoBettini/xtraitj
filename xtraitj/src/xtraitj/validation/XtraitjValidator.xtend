@@ -11,6 +11,7 @@ import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
@@ -24,13 +25,14 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import com.google.common.collect.Lists
 
 /**
  * Custom validation rules. 
  *
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
-class XtraitjValidator extends AbstractXtraitjValidator {
+class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 
 	public static val PREFIX = "xtraitj."
 
@@ -85,6 +87,12 @@ class XtraitjValidator extends AbstractXtraitjValidator {
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
+	
+	override protected getEPackages() {
+		val ePackages = Lists.newArrayList(super.getEPackages());
+		ePackages.add(XtraitjPackage.eINSTANCE);
+		return ePackages;
+	}
 	
 	/**
 	 * We must override this to avoid the Xbase validator to consider

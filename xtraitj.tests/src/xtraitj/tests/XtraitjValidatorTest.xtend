@@ -17,6 +17,7 @@ import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import static extension org.junit.Assert.*
+import org.eclipse.xtext.xbase.validation.IssueCodes
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -405,6 +406,38 @@ The method b(boolean) is undefined'''
 				XtraitjValidator.ANNOTATION_ON_TRAIT_FIELD,
 				"Traits cannot annotate fields"
 			)
+	}
+
+	@Test def void testWrongTypeArgument() {
+		'''
+trait T1<T> {
+	
+}
+
+trait T2 uses T1 {
+	
+}
+		'''.parse.assertWarning(
+			TypesPackage.Literals.JVM_TYPE_REFERENCE,
+			IssueCodes.RAW_TYPE,
+			"T1 is a raw type. References to generic type T1<T> should be parameterized"
+		)
+	}
+
+	@Test def void testWrongTypeArgument2() {
+		'''
+trait T1<T,V> {
+	
+}
+
+trait T2 uses T1<String> {
+	
+}
+		'''.parse.assertError(
+			TypesPackage.Literals.JVM_TYPE_REFERENCE,
+			IssueCodes.INVALID_NUMBER_OF_TYPE_ARGUMENTS,
+			"Incorrect number of arguments for type T1<T, V>; it cannot be parameterized with arguments <String>"
+		)
 	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {

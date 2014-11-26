@@ -962,33 +962,7 @@ trait T2 uses T1[alias s as s2] {
 
 
 
-	@Test def void testWrongTypeArgument() {
-		'''
-trait T1<T> {
-	
-}
 
-trait T2 uses T1 {
-	
-}
-		'''.parse.assertErrorsAsStrings(
-			'''Incorrect number of type arguments for trait T1; it cannot be parameterized with arguments <>'''
-		)
-	}
-
-	@Test def void testWrongTypeArgument2() {
-		'''
-trait T1<T,V> {
-	
-}
-
-trait T2 uses T1<String> {
-	
-}
-		'''.parse.assertErrorsAsStrings(
-			'''Incorrect number of type arguments for trait T1; it cannot be parameterized with arguments <String>'''
-		)
-	}
 
 	@Test def void testUnresolvedTraitReference() {
 		'''

@@ -22,6 +22,7 @@ import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.typesystem.XtraitjLogicalContainerAwareReentrantTypeResolver;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 import xtraitj.typesystem.override.XtraitjOverrideHelper;
+import xtraitj.validation.XtraitjJvmTypeReferencesValidator;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
@@ -81,5 +82,10 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	@Override
 	public Class<? extends DefaultReentrantTypeResolver> bindDefaultReentrantTypeResolver() {
 		return XtraitjLogicalContainerAwareReentrantTypeResolver.class;
+	}
+
+	@Override
+	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.eclipse.xtext.xbase.validation.JvmTypeReferencesValidator> bindJvmTypeReferencesValidator() {
+		return XtraitjJvmTypeReferencesValidator.class;
 	}
 }
