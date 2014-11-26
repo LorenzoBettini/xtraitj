@@ -4,20 +4,26 @@ import com.google.inject.Inject
 import java.util.HashMap
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.InternalEObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.common.types.JvmAnnotationReference
 import org.eclipse.xtext.common.types.JvmAnnotationTarget
+import org.eclipse.xtext.common.types.JvmAnnotationType
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmStringAnnotationValue
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotation
+import org.eclipse.xtext.xbase.annotations.xAnnotations.XAnnotationsPackage
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
@@ -41,13 +47,13 @@ import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
 import xtraitj.xtraitj.TJProgram
+import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJRedirectOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -1146,9 +1152,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					// m() { _delegate.m(); }
    					val delegateMethod = method.toMethodDelegate(traitClass, delegateFieldName) => [
 	   					annotateAsDefinedMethod
+   						translateAnnotations(method.annotations)
 	   				]
-   					
-   					delegateMethod.translateAnnotations(method.annotations)
    					
 	   				members += delegateMethod
 	   				members += actualMethod
@@ -1757,7 +1762,50 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	}
 
 	def private void translateAnnotations(JvmAnnotationTarget target, List<XAnnotation> annotations) {
-		target.addAnnotations(annotations.filterNull.filter[annotationType != null])
+		var annotationsToAdd = annotations.filterNull.filter[annotationType != null]
+		
+		for (a : annotationsToAdd) {
+			if (a.jvmElements.empty) {
+				target.addAnnotation(a)
+			} else {
+				val ref = a.getJvmAnnotationReferenceWithoutAssociation
+				target.annotations += ref
+			}
+		}
+	}
+
+	def private JvmAnnotationReference getJvmAnnotationReferenceWithoutAssociation(XAnnotation anno) {
+		if(anno == null)
+			return null;
+		val reference = typesFactory.createJvmAnnotationReference();
+		val annotation = anno.eGet(
+				XAnnotationsPackage.Literals.XANNOTATION__ANNOTATION_TYPE, false) as JvmType;
+		if (annotation.eIsProxy()) {
+			val copiedProxy = TypesFactory.eINSTANCE.createJvmAnnotationType();
+			(copiedProxy as InternalEObject).eSetProxyURI(EcoreUtil.getURI(annotation));
+			reference.setAnnotation(copiedProxy);
+		} else if (annotation instanceof JvmAnnotationType){
+			reference.setAnnotation(annotation);
+		}
+		for (value : anno.getElementValuePairs()) {
+			val valueExpression = value.getValue();
+			val annotationValue = toJvmAnnotationValue(valueExpression);
+			if (annotationValue != null) {
+				val op = value.eGet(
+						XAnnotationsPackage.Literals.XANNOTATION_ELEMENT_VALUE_PAIR__ELEMENT, false) as JvmOperation;
+				annotationValue.setOperation(op);
+				reference.getExplicitValues().add(annotationValue);
+			}
+		}
+		if (anno.getValue() != null) {
+			val value = toJvmAnnotationValue(anno.getValue());
+			if (value != null) {
+				reference.getExplicitValues().add(value);
+			}
+		}
+		// DON'T ASSOCIATE IT NOW, THE CALLER WILL DO THAT
+		//		associate(anno, reference);
+		return reference;
 	}
 
 //	that was WRONG: we must use as type arguments type references to the type parameters
