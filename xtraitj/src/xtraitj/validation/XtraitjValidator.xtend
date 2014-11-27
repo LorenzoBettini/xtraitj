@@ -3,12 +3,14 @@
  */
 package xtraitj.validation
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
@@ -25,7 +27,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import com.google.common.collect.Lists
+import xtraitj.typing.XtraitjTypingUtil
 
 /**
  * Custom validation rules. 
@@ -84,6 +86,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjTypingUtil
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -602,51 +605,41 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			}
 		}
 	}
-//
-//	/**
-//	 * A similar check is performed in JvmTypeReferencesValidator.
-//	 * 
-//	 * However, since we refer to traits without using a type reference,
-//	 * we need to implement this check ourselves.
-//	 */
-//	@Check def void checkTypeArgsAgainstTypeParameters(TJDeclaration d) {
-//		for (t1 : d.traitReferences) {
-//			val trait = t1.trait
-//			val typeParams = trait.typeParameters
-//			val typeArgs = t1.arguments
-//			
-//			val numTypeParameters = typeParams.size();
-//			val numTypeArguments = typeArgs.size();
-//			if(numTypeParameters != numTypeArguments) {
-//				error("Incorrect number of type arguments for trait " 
-//						+ trait.name
-//						+ "; it cannot be parameterized with arguments " 
-//						+ typeArgs.typeArgumentsRepresentation(),
-//					t1,
-//					XtraitjPackage.eINSTANCE.TJTraitReference_Arguments,
-//					IssueCodes.INVALID_NUMBER_OF_TYPE_ARGUMENTS);
-//			} else {
-//				for (i : 0..<numTypeArguments) {
-//					val arg = typeArgs.get(i)
-//					val param = typeParams.get(i)
-//					
-//					val upperBound = param.constraints.findFirst[it instanceof JvmUpperBound]
-//					
-//					if (upperBound !== null && !t1.isSubtype(arg, upperBound.typeReference)) {
-//						error("The type " 
-//							+ arg.simpleName
-//							+ " is not a valid substitute for the bounded parameter " 
-//							+ param.simpleName
-//							+ " "
-//							+ upperBound.simpleName,
-//							arg,
-//							TypesPackage.Literals.JVM_PARAMETERIZED_TYPE_REFERENCE__TYPE,
-//							IssueCodes.TYPE_BOUNDS_MISMATCH);
-//					}
-//				}
-//			}
-//		}
-//	}
+
+	@Check def void checkTypeArgsAgainstTypeParameters(TJDeclaration d) {
+		for (t1 : d.traitReferences) {
+			val ref = t1.trait
+			val type = ref.type
+			if (type instanceof JvmGenericType) {
+				val typeParams = type.typeParameters
+				val typeArgs = ref.arguments
+				
+				val numTypeParameters = typeParams.size();
+				val numTypeArguments = typeArgs.size();
+				if(numTypeParameters == numTypeArguments) {
+					// if not, the error is reported by JvmTypeReferencesValidator
+					for (i : 0..<numTypeArguments) {
+						val arg = typeArgs.get(i)
+						val param = typeParams.get(i)
+						
+						val upperBound = param.constraints.findFirst[it instanceof JvmUpperBound]
+						
+						if (upperBound !== null && !t1.isSubtype(arg, upperBound.typeReference)) {
+							error("The type " 
+								+ arg.simpleName
+								+ " is not a valid substitute for the bounded parameter " 
+								+ param.simpleName
+								+ " "
+								+ upperBound.simpleName,
+								arg,
+								TypesPackage.Literals.JVM_PARAMETERIZED_TYPE_REFERENCE__TYPE,
+								IssueCodes.TYPE_BOUNDS_MISMATCH);
+						}
+					}
+				}
+			}
+		}
+	}
 
 //	def private typeRefRepr(JvmTypeReference typeRef) {
 //		typeRef.simpleName

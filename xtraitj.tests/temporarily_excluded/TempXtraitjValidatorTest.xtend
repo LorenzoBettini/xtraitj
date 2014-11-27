@@ -980,19 +980,7 @@ Incorrect number of type arguments for trait null; it cannot be parameterized wi
 		)
 	}
 
-	@Test def void testTypeArgumentCannotBeSubstitutedForBoundedType() {
-		'''
-trait T1<T extends Integer> {
-	
-}
 
-trait T2 uses T1<String> {
-	
-}
-		'''.parse.assertErrorsAsStrings(
-			'''The type String is not a valid substitute for the bounded parameter T extends Integer'''
-		)
-	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
