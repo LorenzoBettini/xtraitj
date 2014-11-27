@@ -29,33 +29,9 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testClassMissingFields() {
-		'''
-		trait T {
-			String s;
-		}
-		
-		class C uses T {}
-		'''.parse => [
-			assertMissingRequiredField('String s')
-		]
-	}
 
-	@Test def void testClassMissingFieldWithCorrectTypeArgument() {
-		'''
-import java.util.List
 
-trait T {
-	List<Integer> integers;
-}
 
-class C uses T {
-	List <String > integers ;
-}
-		'''.parse => [
-			assertMissingRequiredField('List<Integer> integers')
-		]
-	}
 
 	@Test def void testClassMissingFieldWithCorrectTypeAfterRedirect() {
 		'''

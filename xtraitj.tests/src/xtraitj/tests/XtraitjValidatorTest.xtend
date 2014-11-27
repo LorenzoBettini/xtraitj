@@ -547,6 +547,34 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		)
 	}
 
+	@Test def void testClassMissingFields() {
+		'''
+		trait T {
+			String s;
+		}
+		
+		class C uses T {}
+		'''.parse => [
+			assertMissingRequiredField('String s')
+		]
+	}
+
+//	@Test def void testClassMissingFieldWithCorrectTypeArgument() {
+//		'''
+//import java.util.List
+//
+//trait T {
+//	List<Integer> integers;
+//}
+//
+//class C uses T {
+//	List <String > integers ;
+//}
+//		'''.parse => [
+//			assertMissingRequiredField('List<Integer> integers')
+//		]
+//	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
@@ -570,6 +598,14 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		o.assertError(
 			c, XtraitjValidator.DUPLICATE_PARAM,
 			"Duplicate parameter '" + name + "'"
+		)
+	}
+
+	def private assertMissingRequiredField(EObject o, String fieldRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjValidator.MISSING_REQUIRED_FIELD,
+			"Class must provide required field '" + fieldRepr + "'"
 		)
 	}
 }

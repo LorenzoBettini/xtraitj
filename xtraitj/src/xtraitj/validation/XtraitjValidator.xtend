@@ -28,6 +28,7 @@ import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 import xtraitj.typing.XtraitjTypingUtil
+import xtraitj.util.XtraitjAnnotatedElementHelper
 
 /**
  * Custom validation rules. 
@@ -87,6 +88,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjTypingUtil
+	@Inject extension XtraitjAnnotatedElementHelper
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -205,28 +207,47 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	}
 
 	@Check def void checkClassProvidesAllRequirements(TJClass c) {
-		for (requiredField : c.xtraitjJvmAllRequiredFieldOperations) {
-			if (c.fields.findMatchingField(requiredField) == null) {
-				error(
-					"Class must provide required field '" +
-						requiredField.fieldRepresentation + "'",
-					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
-					MISSING_REQUIRED_FIELD,
-					requiredField.op.simpleName,
-					requiredField.returnType.identifier
-				)
+		val type = c.associatedJavaClass
+		val operations = type.getOperations
+		
+		for (op : operations) {
+			val decl = op.declaration
+			if (decl.isAbstract && decl.declaringType != type) {
+				if (decl.annotatedRequiredField) {
+					error(
+						"Class must provide required field '" +
+							decl.fieldRepresentation + "'",
+						XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+						MISSING_REQUIRED_FIELD,
+						decl.simpleName,
+						op.resolvedReturnType.identifier
+					)	
+				}
 			}
 		}
-		for (requiredMethod : c.xtraitjJvmAllRequiredMethodOperations) {
-			if (c.xtraitjJvmAllMethodOperations.findMatchingMethod(requiredMethod) == null) {
-				error(
-					"Class must provide required method '" +
-						requiredMethod.methodRepresentation + "'",
-					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
-					MISSING_REQUIRED_METHOD
-				)
-			}
-		}
+		
+//		for (requiredField : c.xtraitjJvmAllRequiredFieldOperations) {
+//			if (c.fields.findMatchingField(requiredField) == null) {
+//				error(
+//					"Class must provide required field '" +
+//						requiredField.fieldRepresentation + "'",
+//					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
+//					MISSING_REQUIRED_FIELD,
+//					requiredField.op.simpleName,
+//					requiredField.returnType.identifier
+//				)
+//			}
+//		}
+//		for (requiredMethod : c.xtraitjJvmAllRequiredMethodOperations) {
+//			if (c.xtraitjJvmAllMethodOperations.findMatchingMethod(requiredMethod) == null) {
+//				error(
+//					"Class must provide required method '" +
+//						requiredMethod.methodRepresentation + "'",
+//					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
+//					MISSING_REQUIRED_METHOD
+//				)
+//			}
+//		}
 //		for (method : c.xtraitjJvmAllInterfaceMethods) {
 //			if (c.xtraitjJvmAllMethodOperations.findMatchingOperation(method) == null) {
 //				error(
