@@ -7,6 +7,7 @@ import com.google.inject.Inject
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.ui.IImageHelper
+import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
@@ -15,6 +16,7 @@ import org.eclipse.xtext.xtype.XtypePackage
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjJvmOperation
+import xtraitj.jvmmodel.XtraitjResolvedOperations
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
@@ -27,7 +29,6 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
-import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 
 /**
  * Customization of the default outline structure.
@@ -132,9 +133,21 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForProvides(EObjectNode parentNode, TJDeclaration d) {
+	def nodesForProvides(EObjectNode parentNode, TJClass d) {
+		val associatedClass = d.associatedJavaClass
+		// for a class methods are not annotated as defined, so we must
+		// inspect the supertypes
+		val ops = associatedClass.getXtraitjResolvedOperationsFromSuperTypes(d)
+		nodesForProvides(parentNode, ops)
+	}
+
+	def nodesForProvides(EObjectNode parentNode, TJTrait d) {
 		val associatedClass = d.associatedJavaClass
 		val ops = associatedClass.xtraitjResolvedOperationsNotDeclared
+		nodesForProvides(parentNode, ops)
+	}
+	
+	private def nodesForProvides(EObjectNode parentNode, XtraitjResolvedOperations ops) {
 		val provides = ops.definedMethods
 		
 		if (!provides.empty) {
