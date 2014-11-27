@@ -43,8 +43,8 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 //				if (!hasAlreadyBeenRenamed(result, simpleName)) {
 					if (processedOperations.containsKey(simpleName)) {
 						if (isOverridden(operation, processedOperations.get(simpleName))) {
+							
 							if (annotatedElementHelper.annotatedDefinedMethod(operation)) {
-								
 								if (removeRequiredOperations(result, simpleName)) {
 									processedOperations.removeAll(simpleName)
 									addAsResolved(operation, processedOperations, simpleName, result);
@@ -65,14 +65,23 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			}
 		}
 	}
-	
+
+	/**
+	 * Removes the operations that are NOT annotated as defined methods
+	 * (if they are declared in an interface inferred for a trait); it returns true
+	 * if something has been removed
+	 */
 	protected def removeRequiredOperations(List<IResolvedOperation> result, String simpleName) {
-		result.removeAll(result.filter[
-			o | 
-			o.declaration.simpleName == simpleName
-			&&
-			!annotatedElementHelper.annotatedDefinedMethod(o.declaration)
-		])
+		result.removeAll(
+			result.filter[
+				o |
+				o.declaration.simpleName == simpleName
+				&&
+				annotatedElementHelper.annotatedTraitInterface(o.declaration.declaringType)
+				&&
+				!annotatedElementHelper.annotatedDefinedMethod(o.declaration)
+			]
+		)
 	}
 
 //	protected def hasAlreadyBeenRenamed(List<IResolvedOperation> result, String simpleName) {

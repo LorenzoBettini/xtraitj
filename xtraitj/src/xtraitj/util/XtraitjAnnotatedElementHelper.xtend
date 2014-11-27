@@ -19,12 +19,16 @@ class XtraitjAnnotatedElementHelper {
 	def annotatedTraitInterface(JvmTypeReference typeRef) {
 		val type = typeRef.type
 		if (type instanceof JvmDeclaredType)
-			type.annotations.
-				exists[
-					annotation.identifier == XtraitjTraitInterface.name
-				]
+			annotatedTraitInterface(type)
 		else
 			false
+	}
+	
+	def annotatedTraitInterface(JvmDeclaredType type) {
+		type.annotations.
+			exists[
+				annotation.identifier == XtraitjTraitInterface.name
+			]
 	}
 
 	def annotatedTraitClass(JvmTypeReference typeRef) {

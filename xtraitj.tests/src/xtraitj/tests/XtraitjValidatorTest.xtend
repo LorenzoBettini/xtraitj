@@ -547,7 +547,7 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		)
 	}
 
-	@Test def void testClassMissingFields() {
+	@Test def void testClassMissingRequiredField() {
 		'''
 		trait T {
 			String s;
@@ -559,21 +559,181 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		]
 	}
 
-//	@Test def void testClassMissingFieldWithCorrectTypeArgument() {
-//		'''
-//import java.util.List
-//
-//trait T {
-//	List<Integer> integers;
-//}
-//
-//class C uses T {
-//	List <String > integers ;
-//}
-//		'''.parse => [
-//			assertMissingRequiredField('List<Integer> integers')
-//		]
-//	}
+	@Test def void testClassMissingRequiredFields() {
+		'''
+		trait T {
+			String s;
+			int i;
+		}
+		
+		class C uses T {}
+		'''.parse => [
+			assertMissingRequiredField('String s')
+			assertMissingRequiredField('int i')
+		]
+	}
+
+	@Test def void testClassMissingRequiredFieldsWithSeveralTraits() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			int i;
+		}
+		
+		class C uses T1, T2 {}
+		'''.parse => [
+			assertMissingRequiredField('String s')
+			assertMissingRequiredField('int i')
+		]
+	}
+
+	@Test def void testClassMissingRequiredFieldsWithSeveralTraits2() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			int i;
+		}
+		
+		trait T3 uses T1 {
+			boolean b;
+		}
+		
+		trait T4 uses T2 {
+			List<String> l;
+		}
+		
+		class C uses T3, T4 {}
+		'''.parse => [
+			assertMissingRequiredField('String s')
+			assertMissingRequiredField('int i')
+			assertMissingRequiredField('boolean b')
+			assertMissingRequiredField('List<String> l')
+		]
+	}
+
+	@Test def void testClassMissingFieldWithCorrectTypeArgument() {
+		'''
+import java.util.List
+
+trait T {
+	List<Integer> integers;
+}
+
+class C uses T {
+	List <String > integers ;
+}
+		'''.parse => [
+			assertMismatchRequiredField('List<Integer> integers', 'List<String> integers')
+		]
+	}
+
+	@Test def void testClassMissingFieldInThePresenceOfTypeArguments() {
+		'''
+trait T {
+	String s;
+	List<String> strings;
+}
+
+trait T1 {
+	int i;
+}
+
+class C uses T, T1 {
+	String s ;
+	List <String > strings ;
+}
+		'''.parse => [
+			assertMissingRequiredField('int i')
+		]
+	}
+
+	@Test def void testClassProvidesFieldAfterTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T<String> {
+	List<String> r ;
+}
+		'''.parse => [
+			assertNoErrors
+		]
+	}
+
+	@Test def void testClassMissingFieldAfterTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T<String> {
+}
+		'''.parse => [
+			assertMissingRequiredField('List<String> r')
+		]
+	}
+
+	@Test def void testClassMissingFieldWithoutTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T {
+}
+		'''.parse => [
+			assertMissingRequiredField('List r')
+		]
+	}
+
+	@Test def void testClassMismatchFieldAfterTypeArgumentInstantiation() {
+		'''
+import java.util.List
+
+trait T<U> {
+	List<U> r;
+}
+
+class C uses T<String> {
+	List<Integer> r ;
+}
+		'''.parse => [
+			assertMismatchRequiredField('List<String> r', 'List<Integer> r')
+		]
+	}
+
+
+	@Test def void testClassMissingRequiredMethod() {
+		'''
+		trait T1 {
+			int m() { return 0; }
+			String n(int i);
+		}
+		
+		trait T2 {
+			Integer m(); // this satisfy T1's requirement
+		}
+		
+		class C uses T1, T2 {}
+		'''.parse => [
+			assertMissingRequiredMethod("String n(int)")
+		]
+	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
@@ -606,6 +766,25 @@ Couldn't resolve reference to JvmType 'T1'.'''
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_FIELD,
 			"Class must provide required field '" + fieldRepr + "'"
+		)
+	}
+
+	def private assertMismatchRequiredField(EObject o, String requiredRepr, String actualRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjValidator.INCOMPATIBLE_REQUIRED_FIELD,
+			"Incompatible field '" +
+				actualRepr +
+				"' for required field '" +
+				requiredRepr + "'"
+		)
+	}
+
+	def private assertMissingRequiredMethod(EObject o, String methodRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjValidator.MISSING_REQUIRED_METHOD,
+			"Class must provide required method '" + methodRepr + "'"
 		)
 	}
 }

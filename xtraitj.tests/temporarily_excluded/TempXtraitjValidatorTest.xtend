@@ -57,78 +57,12 @@ class C uses T3 {
 		]
 	}
 
-	@Test def void testClassMissingFieldInThePresenceOfTypeArguments() {
-		'''
-trait T {
-	String s;
-	List<String> strings;
-}
 
-trait T1 {
-	int i;
-}
 
-class C uses T, T1 {
-	String s ;
-	List <String > strings ;
-}
-		'''.parse => [
-			assertMissingRequiredField('int i')
-		]
-	}
 
-	@Test def void testClassMissingFieldAfterTypeArgumentInstantiation() {
-		'''
-import java.util.List
 
-trait T<U> {
-	List<U> r;
-}
 
-class C uses T<String> {
-	List<Integer> r ;
-}
-		'''.parse => [
-			assertMissingRequiredField('List<String> r')
-		]
-	}
 
-	@Test def void testClassProvidesFieldAfterTypeArgumentInstantiation() {
-		'''
-import java.util.List
-
-trait T<U> {
-	List<U> r;
-}
-
-class C uses T<String> {
-	List<String> r ;
-}
-		'''.parse => [
-			assertNoErrors
-		]
-	}
-
-	@Test def void testClassMissingRequiredMethod() {
-		'''
-		trait T1 {
-			int m() { return 0; }
-			String n(int i);
-		}
-		
-		trait T2 {
-			Integer m(); // this satisfy T1's requirement
-		}
-		
-		class C uses T1, T2 {}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
-				XtraitjValidator::MISSING_REQUIRED_METHOD,
-				"Class must provide required method 'String n(int)'"
-			)
-		]
-	}
 
 	@Test def void testClassMissingRenamedRequiredMethod() {
 		'''

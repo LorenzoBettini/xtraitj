@@ -38,6 +38,7 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -197,6 +198,11 @@ class XtraitjJvmModelUtil {
 	def fieldRepresentation(JvmOperation f) {
 		f.returnType?.simpleName + " " + 
 			f.fieldName
+	}
+
+	def fieldRepresentation(IResolvedOperation f) {
+		f.resolvedReturnType?.simpleName + " " + 
+			f.declaration.fieldName
 	}
 
 	def methodRepresentation(XtraitjJvmOperation m) {

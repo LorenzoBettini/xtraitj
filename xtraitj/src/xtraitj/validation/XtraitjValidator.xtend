@@ -8,6 +8,7 @@ import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
@@ -15,10 +16,13 @@ import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.typing.XtraitjTypingUtil
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJOperation
@@ -27,8 +31,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.typing.XtraitjTypingUtil
-import xtraitj.util.XtraitjAnnotatedElementHelper
+import org.eclipse.xtext.xbase.typesystem.^override.IOverrideCheckResult.OverrideCheckDetails
 
 /**
  * Custom validation rules. 
@@ -44,6 +47,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	public static val TRAIT_INITIALIZES_FIELD = PREFIX + "TraitInitializesField"
 	
 	public static val MISSING_REQUIRED_FIELD = "xtraitj.MissingRequiredField"
+
+	public static val INCOMPATIBLE_REQUIRED_FIELD = "xtraitj.IncompatibleRequiredField"
 
 	public static val MISSING_REQUIRED_METHOD = PREFIX + "MissingRequiredMethod"
 
@@ -208,20 +213,29 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 
 	@Check def void checkClassProvidesAllRequirements(TJClass c) {
 		val type = c.associatedJavaClass
-		val operations = type.getOperations
+		val operations = type.getResolvedOperations
 		
-		for (op : operations) {
+		for (op : operations.allOperations) {
 			val decl = op.declaration
 			if (decl.isAbstract && decl.declaringType != type) {
 				if (decl.annotatedRequiredField) {
-					error(
-						"Class must provide required field '" +
-							decl.fieldRepresentation + "'",
-						XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-						MISSING_REQUIRED_FIELD,
-						decl.simpleName,
-						op.resolvedReturnType.identifier
-					)	
+					errorMissingRequiredField(op)
+				} else {
+					errorMissingRequiredMethod(decl, op)
+				}
+			}
+		}
+		
+		for (op : operations.declaredOperations) {
+			val allInherited = op.getOverriddenAndImplementedMethods()
+			for(inherited: allInherited) {
+				if (inherited.getOverrideCheckResult().hasProblems()) {
+					val details = inherited.getOverrideCheckResult().getDetails();
+					if (details.contains(OverrideCheckDetails.RETURN_MISMATCH)) {
+						if (inherited.declaration.annotatedRequiredField) {
+							errorMismatchRequiredField(op, inherited)
+						}		
+					}
 				}
 			}
 		}
@@ -258,6 +272,46 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 //				)
 //			}
 //		}
+	}
+	
+	private def errorMissingRequiredField(IResolvedOperation op) {
+		error(
+			"Class must provide required field '" +
+				op.fieldRepresentation + "'",
+			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+			MISSING_REQUIRED_FIELD,
+			op.declaration.simpleName, // this will be used by the Quickfix
+			op.resolvedReturnType.identifier // this will be used by the Quickfix
+		)
+	}
+
+	private def errorMismatchRequiredField(IResolvedOperation resolved, IResolvedOperation inherited) {
+		error(
+			"Incompatible field '" +
+				resolved.fieldRepresentation +
+				"' for required field '" +
+				inherited.fieldRepresentation + "'",
+			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+			INCOMPATIBLE_REQUIRED_FIELD
+		)
+	}
+
+	private def errorMissingRequiredMethod(JvmOperation decl, IResolvedOperation op) {
+		error(
+			"Class must provide required method '" +
+				decl.methodRepresentation + "'",
+			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+			MISSING_REQUIRED_METHOD
+		)
+	}
+
+	private def errorMismatchRequiredMethod(JvmOperation decl, IResolvedOperation op) {
+		error(
+			"Class must provide required method '" +
+				decl.methodRepresentation + "'",
+			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+			MISSING_REQUIRED_METHOD
+		)
 	}
 
 	@Check def void checkImplementsInterfaces(TJClass c) {
