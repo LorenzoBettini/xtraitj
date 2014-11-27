@@ -454,6 +454,21 @@ trait T2 uses T1<String> {
 		)
 	}
 
+	@Test def void testUnresolvedTraitReference() {
+		'''
+trait T3<T,V> {
+	
+}
+
+trait T2 uses T1<String> {
+	
+}
+		'''.parse.assertErrorsAsStrings(
+'''
+Couldn't resolve reference to JvmType 'T1'.'''
+		)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

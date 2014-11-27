@@ -964,21 +964,7 @@ trait T2 uses T1[alias s as s2] {
 
 
 
-	@Test def void testUnresolvedTraitReference() {
-		'''
-trait T3<T,V> {
-	
-}
 
-trait T2 uses T1<String> {
-	
-}
-		'''.parse.assertErrorsAsStrings(
-'''
-Couldn't resolve reference to TJTrait 'T1'.
-Incorrect number of type arguments for trait null; it cannot be parameterized with arguments <String>'''
-		)
-	}
 
 
 
