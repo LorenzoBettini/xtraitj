@@ -862,23 +862,7 @@ trait T2 uses T1[alias s as s2] {
 
 
 
-	@Test def void testTypeMismatchForTraitTypeParameters() {
-		'''
-		package tests;
-		
-		trait T1 <T, U> {
-			T t;
-			U u;
-			
-			void m() {
-				val t1 = u // type mismatch
-				t = t1
-			}
-		}
-		'''.parse.assertErrorsAsStrings(
-			'''Type mismatch: cannot convert from U to T'''
-		)
-	}
+
 
 	@Test def void testClassMissingRequiredMethodWithGeneric() {
 		'''
@@ -900,65 +884,7 @@ trait T2 uses T1[alias s as s2] {
 		]
 	}
 
-	@Test def void testWrongReferenceToTypeParameter() {
-		'''
-		package tests;
-				
-		trait TFirst<T> {
-			
-		}
-		
-		trait T2 {
-			T m() { return null; }
-		}
-		'''.parse.assertErrorsAsStrings(
-			'''Cannot make a static reference to the non-static type T'''
-		)
-	}
 
-	@Test def void testWrongReferenceToTypeParameter2() {
-		'''
-		package tests;
-				
-		trait T2 {
-			T m() { return null; }
-		}
-
-		class TFirst<T> {
-			
-		}
-		'''.parse.assertErrorsAsStrings(
-			'''Cannot make a static reference to the non-static type T'''
-		)
-	}
-
-	@Test def void testWrongReferenceToTypeParameter3() {
-		'''
-		package tests;
-				
-		trait T2<T> {
-			T m() { return null; }
-		}
-
-		class TFirst {
-			T f;
-		}
-		'''.parse.assertErrorsAsStrings(
-			'''Cannot make a static reference to the non-static type T'''
-		)
-	}
-
-	@Test def void testWrongInstantiationOfTypeParameter() {
-		'''
-		package tests;
-				
-		trait TFirst<T> {
-			T m() { return new T; }
-		}
-		'''.parse.assertErrorsAsStrings(
-			'''Cannot instantiate the type parameter T'''
-		)
-	}
 
 
 
