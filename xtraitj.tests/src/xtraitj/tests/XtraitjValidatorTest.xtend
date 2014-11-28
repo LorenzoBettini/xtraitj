@@ -184,16 +184,6 @@ class XtraitjValidatorTest {
 		)
 	}
 
-	@Test def void testDuplicateTraitReferenceWithOperationsOK() {
-		'''
-		trait T {
-			String m();
-		}
-		
-		trait T1 uses T, T[rename m to n] {}
-		'''.parse.assertNoErrors
-	}
-
 	@Test def void testWrongReturnExpressionWithGenerics() {
 		'''
 package tests;
