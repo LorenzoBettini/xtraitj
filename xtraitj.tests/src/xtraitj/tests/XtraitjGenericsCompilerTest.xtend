@@ -441,10 +441,6 @@ public class T1Impl<T extends Object> implements T1<T> {
 		]
 	}
 
-
-
-
-
 	@Test def void testClassImplementsAllGenericInterfaceMethods() {
 		classImplementsAllGenericInterfaceMethods.compile[
 
