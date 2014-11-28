@@ -39,6 +39,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<failOnValidationError>true</failOnValidationError>
 					<languages>
 						<language>
 							<setup>xtraitj.XtraitjStandaloneSetup</setup>
