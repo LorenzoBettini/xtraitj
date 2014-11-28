@@ -573,6 +573,36 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		]
 	}
 
+	@Test def void testClassMissingRequiredFieldsDoesNotShowSetters() {
+		'''
+		trait T {
+			String s;
+		}
+		
+		class C uses T {}
+		'''.parse => [
+			assertErrorsAsStrings(
+"Class must provide required field 'String s'"
+			)
+		]
+	}
+
+	@Test def void testClassMismatchRequiredFieldsDoesNotShowSetters() {
+		'''
+		trait T {
+			String s;
+		}
+		
+		class C uses T {
+			int s;
+		}
+		'''.parse => [
+			assertErrorsAsStrings(
+"Incompatible field 'int s' for required field 'String s'"
+			)
+		]
+	}
+
 	@Test def void testClassMissingRequiredFieldsWithSeveralTraits() {
 		'''
 		trait T1 {
@@ -632,6 +662,27 @@ class C uses T {
 }
 		'''.parse => [
 			assertMismatchRequiredField('List<Integer> integers', 'List<String> integers')
+		]
+	}
+
+	@Test def void testClassMismatchRequiredFieldsWithSubtyping() {
+		'''
+		import xtraitj.input.tests.MyBaseClass
+		import xtraitj.input.tests.MyDerivedClass
+		
+		trait T {
+			MyBaseClass f;
+		}
+		
+		class C uses T {
+			// although the getter would be fine,
+			// the setter would be wrong
+			MyDerivedClass f;
+		}
+		'''.parse => [
+			assertErrorsAsStrings(
+"Class must provide required field 'MyBaseClass f'"
+			)
 		]
 	}
 
@@ -717,6 +768,31 @@ class C uses T<String> {
 		]
 	}
 
+	@Test def void testClassMismatchFieldWithCorrectTypeAfterRedirect() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	List<T> s1;
+	List<T> s2;
+}
+
+trait T2 uses T1<String> {
+	String useField() { return s1.get(0); }
+}
+
+trait T3 uses T2[ redirect s1 to s2 ] {
+}
+
+class C uses T3 {
+	String s2 = "s2";
+}
+		'''.parse => [
+			assertErrorsAsStrings(
+"Incompatible field 'String s2' for required field 'List<String> s2'"
+			)
+		]
+	}
 
 	@Test def void testClassMissingRequiredMethod() {
 		'''

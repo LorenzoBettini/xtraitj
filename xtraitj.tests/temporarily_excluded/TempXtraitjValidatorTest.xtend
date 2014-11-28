@@ -33,29 +33,7 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testClassMissingFieldWithCorrectTypeAfterRedirect() {
-		'''
-import java.util.List
 
-trait T1<T> {
-	List<T> s1;
-	List<T> s2;
-}
-
-trait T2 uses T1<String> {
-	String useField() { return s1.get(0); }
-}
-
-trait T3 uses T2[ redirect s1 to s2 ] {
-}
-
-class C uses T3 {
-	String s2 = "s2";
-}
-		'''.parse => [
-			assertMissingRequiredField('List<String> s2')
-		]
-	}
 
 
 

@@ -201,8 +201,12 @@ class XtraitjJvmModelUtil {
 	}
 
 	def fieldRepresentation(IResolvedOperation f) {
-		f.resolvedReturnType?.simpleName + " " + 
-			f.declaration.fieldName
+		val typeRepr = if (f.declaration.simpleName.startsWith("set")) {
+			f.resolvedParameterTypes.head.simpleName
+		} else {
+			f.resolvedReturnType?.simpleName 
+		}
+		typeRepr + " " + f.fieldName
 	}
 
 	def methodRepresentation(XtraitjJvmOperation m) {
@@ -219,22 +223,34 @@ class XtraitjJvmModelUtil {
 			+ ")"
 	}
 
-	/**
-	 * To each field a JvmOperation will correspond in the Java model
-	 * which is the getter method, thus, we need to recover the
-	 * original field name.
-	 */
-	def fieldName(JvmOperation f) {
-		f.simpleName.replaceFirst("get", "").
-			replaceFirst("is", "").toFirstLower
+	def fieldName(IResolvedOperation o) {
+		o.declaration.fieldName
 	}
 
-	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			name == member.op.fieldName &&
-			it.sameType(type, member.returnType)
-		]
+	/**
+	 * To each field a JvmOperation will correspond in the Java model
+	 * a getter method and a setter method, thus, we need to recover the
+	 * original field name.
+	 * 
+	 * IMPORTANT: we assume that the JvmOperation is actually a getter or a setter.
+	 */
+	def fieldName(JvmOperation f) {
+		val simpleName = f.simpleName
+		
+		if (simpleName.startsWith("set")) {
+			simpleName.replaceFirst("set", "").toFirstLower
+		} else {
+			simpleName.replaceFirst("get", "").
+				replaceFirst("is", "").toFirstLower			
+		}
 	}
+
+//	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
+//		candidates.findFirst[
+//			name == member.op.fieldName &&
+//			it.sameType(type, member.returnType)
+//		]
+//	}
 
 	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
 		candidates.findFirst[

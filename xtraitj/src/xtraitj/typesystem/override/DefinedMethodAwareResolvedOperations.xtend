@@ -50,6 +50,8 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 									addAsResolved(operation, processedOperations, simpleName, result);
 								}
 							}
+						} else {
+							addAsResolved(operation, processedOperations, simpleName, result);
 						}
 					} else {
 						addAsResolved(operation, processedOperations, simpleName, result);
