@@ -5,6 +5,7 @@ import com.google.inject.name.Named;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
@@ -13,6 +14,9 @@ public interface MyAnnotatedJavaInterface {
 
 	@XtraitjRequiredField
 	String getField();
+
+	@XtraitjRequiredFieldSetter
+	void setField(String s);
 
 	@XtraitjRequiredMethod
 	String getRequired();

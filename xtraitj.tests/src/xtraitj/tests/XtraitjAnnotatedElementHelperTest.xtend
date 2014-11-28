@@ -41,6 +41,7 @@ class XtraitjAnnotatedElementHelperTest extends XtraitjAbstractTest {
 		Object.getJavaMethod("toString").annotatedRequiredField.assertFalse
 		MyAnnotatedJavaClass.getJavaMethod("getField").annotatedRequiredField.assertTrue
 		MyAnnotatedJavaInterface.getJavaMethod("getField").annotatedRequiredField.assertTrue
+		MyAnnotatedJavaInterface.getJavaMethod("setField").annotatedRequiredFieldSetter.assertTrue
 		MyAnnotatedJavaClass.getJavaMethod("notAnnotatedMethod").annotatedRequiredField.assertFalse
 		MyAnnotatedJavaInterface.getJavaMethod("notAnnotatedMethod").annotatedRequiredField.assertFalse
 	}

@@ -48,6 +48,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -302,6 +303,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					returnType = field.type.rebindTypeParameters(traitInterface, null)
 				]
 				members += field.toSetter(field.name, field.type) => [
+					annotateAsRequiredFieldSetter
 		   			abstract = true
 		   			// we can use the type references of the inferred operation
 		   			// since they're already resolved.
@@ -427,6 +429,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						if (op.annotatedRequiredField()) {
 							members += t.toAbstractSetterDelegateFromGetter
 								(jvmOp, newname) => [
+									annotateAsRequiredFieldSetter
 									rebindTypeParameters(traitExpressionInterface)
 								]
 						}
@@ -478,6 +481,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					]
 					if (op.annotatedRequiredField()) {
 						members += t.toAbstractSetterDelegateFromGetter(jvmOp) => [
+							annotateAsRequiredFieldSetter
 							rebindTypeParameters(traitExpressionInterface)
 						]
 					}
@@ -1691,6 +1695,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def private void annotateAsRequiredField(JvmMember target) {
 		target.annotateAsXtraitjElement(XtraitjRequiredField)
+	}
+
+	def private void annotateAsRequiredFieldSetter(JvmMember target) {
+		target.annotateAsXtraitjElement(XtraitjRequiredFieldSetter)
 	}
 
 	def private void annotateAsRequiredMethod(JvmMember target) {

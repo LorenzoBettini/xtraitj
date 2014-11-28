@@ -69,6 +69,7 @@ package tests;
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -77,6 +78,7 @@ public interface T1<T extends List<String>, U extends Object> {
   @XtraitjRequiredField
   public abstract T getT();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setT(final T t);
   
   @XtraitjDefinedMethod
@@ -245,6 +247,7 @@ package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -253,6 +256,7 @@ public interface T1<T extends Comparable<T>> {
   @XtraitjRequiredField
   public abstract T getT();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setT(final T t);
   
   @XtraitjDefinedMethod
@@ -315,6 +319,7 @@ package tests;
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -323,6 +328,7 @@ public interface T1<T extends Comparable<T>, U extends List<? extends T>> {
   @XtraitjRequiredField
   public abstract T getT();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setT(final T t);
   
   @XtraitjDefinedMethod
@@ -915,6 +921,7 @@ package tests;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -923,11 +930,13 @@ public interface T1<T extends Object> {
   @XtraitjRequiredField
   public abstract int getI();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setI(final int i);
   
   @XtraitjRequiredField
   public abstract List<T> getLl();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setLl(final List<T> ll);
 }
 '''
@@ -1008,6 +1017,7 @@ package tests;
 
 import java.util.Collection;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -1016,16 +1026,19 @@ public interface TGeneric<T extends Collection<String>, U extends Collection<Int
   @XtraitjRequiredField
   public abstract T getT();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setT(final T t);
   
   @XtraitjRequiredField
   public abstract Iterable<T> getIterableOfStrings();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setIterableOfStrings(final Iterable<T> iterableOfStrings);
   
   @XtraitjRequiredField
   public abstract Iterable<U> getIterableOfIntegers();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setIterableOfIntegers(final Iterable<U> iterableOfIntegers);
 }
 '''
@@ -1212,6 +1225,7 @@ package tests;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -1220,11 +1234,13 @@ public interface T1<T extends Object> {
   @XtraitjRequiredField
   public abstract int getI();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setI(final int i);
   
   @XtraitjRequiredField
   public abstract List<String> getLl();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setLl(final List<String> ll);
 }
 '''
@@ -1307,6 +1323,7 @@ import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -1315,6 +1332,7 @@ public interface TGenericExtensions<T extends Object> {
   @XtraitjRequiredField
   public abstract Iterable<T> getIterable();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setIterable(final Iterable<T> iterable);
   
   @XtraitjDefinedMethod
@@ -1553,6 +1571,7 @@ package tests;
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -1561,6 +1580,7 @@ public interface TGeneric<T extends Object> {
   @XtraitjRequiredField
   public abstract List<T> getMyL();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setMyL(final List<T> myL);
   
   @XtraitjDefinedMethod

@@ -12,6 +12,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter
 
 @Singleton
 class XtraitjAnnotatedElementHelper {
@@ -50,6 +51,13 @@ class XtraitjAnnotatedElementHelper {
 		member.annotations.
 			exists[
 				annotation.identifier == XtraitjRequiredField.name
+			]
+	}
+
+	def annotatedRequiredFieldSetter(JvmMember member) {
+		member.annotations.
+			exists[
+				annotation.identifier == XtraitjRequiredFieldSetter.name
 			]
 	}
 

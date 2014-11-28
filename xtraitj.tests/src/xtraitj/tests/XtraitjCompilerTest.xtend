@@ -30,6 +30,7 @@ assertTraitJavaInterface("T",
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
@@ -39,11 +40,13 @@ public interface T {
   @XtraitjRequiredField
   public abstract List<Integer> getF();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setF(final List<Integer> f);
   
   @XtraitjRequiredField
   public abstract boolean isB();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setB(final boolean b);
   
   @XtraitjDefinedMethod
@@ -225,30 +228,33 @@ public class T3Impl implements T3 {
 	private def expectationsForTraitAndClass(Result it) {
 		assertTraitJavaInterface("T",
 		'''
-		import java.util.List;
-		import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-		import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
-		import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
-		
-		@XtraitjTraitInterface
-		@SuppressWarnings("all")
-		public interface T {
-		  @XtraitjRequiredField
-		  public abstract List<Integer> getF();
-		  
-		  public abstract void setF(final List<Integer> f);
-		  
-		  @XtraitjRequiredField
-		  public abstract boolean isB();
-		  
-		  public abstract void setB(final boolean b);
-		  
-		  @XtraitjDefinedMethod
-		  public abstract Object m(final List<String> l, final String s);
-		  
-		  @XtraitjDefinedMethod
-		  public abstract Object n();
-		}
+import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T {
+  @XtraitjRequiredField
+  public abstract List<Integer> getF();
+  
+  @XtraitjRequiredFieldSetter
+  public abstract void setF(final List<Integer> f);
+  
+  @XtraitjRequiredField
+  public abstract boolean isB();
+  
+  @XtraitjRequiredFieldSetter
+  public abstract void setB(final boolean b);
+  
+  @XtraitjDefinedMethod
+  public abstract Object m(final List<String> l, final String s);
+  
+  @XtraitjDefinedMethod
+  public abstract Object n();
+}
 		''')
 		assertTraitJavaClass("T",
 		'''
@@ -421,6 +427,7 @@ package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
@@ -430,6 +437,7 @@ public interface T1 {
   @XtraitjRequiredField
   public abstract int getI();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setI(final int i);
   
   @XtraitjDefinedMethod

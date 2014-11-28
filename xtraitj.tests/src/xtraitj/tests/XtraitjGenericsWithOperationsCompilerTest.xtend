@@ -452,6 +452,7 @@ package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter {
@@ -459,12 +460,14 @@ public interface T3_T2_0_Adapter {
   @XtraitjRenamedMethod("getFieldB")
   public abstract Boolean getB();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setB(final Boolean b);
   
   @XtraitjRequiredField
   @XtraitjRenamedMethod("getFieldS")
   public abstract String getS();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setS(final String s);
 }
 '''
@@ -627,6 +630,7 @@ package tests;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
 public interface T3_T2_0_Adapter<U extends String, V extends Object> {
@@ -634,12 +638,14 @@ public interface T3_T2_0_Adapter<U extends String, V extends Object> {
   @XtraitjRenamedMethod("getFieldB")
   public abstract V getB();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setB(final V b);
   
   @XtraitjRequiredField
   @XtraitjRenamedMethod("getFieldS")
   public abstract U getS();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setS(final U s);
   
   @XtraitjDefinedMethod
@@ -1284,6 +1290,7 @@ package tests;
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
 public interface T2_T1_0_Adapter {
@@ -1302,6 +1309,7 @@ public interface T2_T1_0_Adapter {
   @XtraitjRequiredField
   public abstract List<String> getL();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setL(final List<String> l);
   
   @XtraitjDefinedMethod
@@ -1394,6 +1402,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import tests.TTransformerIterator_TIterator_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -1402,6 +1411,7 @@ public interface TTransformerIterator<T extends Object, R extends Object> extend
   @XtraitjRequiredField
   public abstract Function1<? super T, ? extends R> getFunction();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setFunction(final Function1<? super T, ? extends R> function);
   
   @XtraitjDefinedMethod
@@ -1529,12 +1539,14 @@ assertTraitAdapterJavaInterface("tests", "TWithOp_T1_0",
 package tests;
 
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
 public interface TWithOp_T1_0_Adapter<Z extends Object> {
   @XtraitjRequiredField
   public abstract Z getS();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setS(final Z s);
 }
 '''
