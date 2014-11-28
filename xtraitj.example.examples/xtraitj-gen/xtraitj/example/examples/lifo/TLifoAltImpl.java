@@ -43,6 +43,15 @@ public class TLifoAltImpl<T extends Object> implements TLifoAlt<T> {
   }
   
   @XtraitjDefinedMethod
+  public T old_pop() {
+    return _delegate.old_pop();
+  }
+  
+  public T _old_pop() {
+    return _TStack_0._old_pop();
+  }
+  
+  @XtraitjDefinedMethod
   public boolean isEmpty() {
     return _delegate.isEmpty();
   }
@@ -58,15 +67,6 @@ public class TLifoAltImpl<T extends Object> implements TLifoAlt<T> {
   
   public void _push(final T o) {
     _TStack_0._push(o);
-  }
-  
-  @XtraitjDefinedMethod
-  public T old_pop() {
-    return _delegate.old_pop();
-  }
-  
-  public T _old_pop() {
-    return _TStack_0._old_pop();
   }
   
   @XtraitjRequiredField

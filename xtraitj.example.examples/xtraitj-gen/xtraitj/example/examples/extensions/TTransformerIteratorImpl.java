@@ -41,21 +41,21 @@ public class TTransformerIteratorImpl<T extends Object, R extends Object> implem
   }
   
   @XtraitjDefinedMethod
-  public boolean hasNext() {
-    return _delegate.hasNext();
-  }
-  
-  public boolean _hasNext() {
-    return _TIterator_0._hasNext();
-  }
-  
-  @XtraitjDefinedMethod
   public T origNext() {
     return _delegate.origNext();
   }
   
   public T _origNext() {
     return _TIterator_0._origNext();
+  }
+  
+  @XtraitjDefinedMethod
+  public boolean hasNext() {
+    return _delegate.hasNext();
+  }
+  
+  public boolean _hasNext() {
+    return _TIterator_0._hasNext();
   }
   
   @XtraitjDefinedMethod

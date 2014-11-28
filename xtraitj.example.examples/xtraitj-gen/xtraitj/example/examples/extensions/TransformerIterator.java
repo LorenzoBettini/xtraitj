@@ -38,12 +38,12 @@ public class TransformerIterator<T extends Object, R extends Object> implements 
     return _TTransformerIterator._next();
   }
   
-  public boolean hasNext() {
-    return _TTransformerIterator._hasNext();
-  }
-  
   public T origNext() {
     return _TTransformerIterator._origNext();
+  }
+  
+  public boolean hasNext() {
+    return _TTransformerIterator._hasNext();
   }
   
   public void remove() {

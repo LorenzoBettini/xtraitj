@@ -7,6 +7,10 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
 public interface TStack_0_Adapter<T extends Object> {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("pop")
+  public abstract T old_pop();
+  
   @XtraitjRequiredField
   public abstract List<T> getCollection();
   
@@ -17,8 +21,4 @@ public interface TStack_0_Adapter<T extends Object> {
   
   @XtraitjDefinedMethod
   public abstract void push(final T o);
-  
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("pop")
-  public abstract T old_pop();
 }
