@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IMarker
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
-class XtraitjWorkbencTest extends AbstractWorkbenchTest {
+class XtraitjWorkbenchTest extends AbstractWorkbenchTest {
 
 	@Inject PluginProjectHelper pluginProjectHelper;
 
