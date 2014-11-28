@@ -2881,7 +2881,7 @@ trait TStringExtensions uses TGenericExtensions<String> {
 «traitWithGenericFunctionType»
 
 class StringExtensions<U> uses TGenericExtensions<U> {
-	Iterable<U> iterable
+	Iterable<U> iterable;
 }
 		'''
 	}
@@ -2891,7 +2891,7 @@ class StringExtensions<U> uses TGenericExtensions<U> {
 «traitWithGenericFunctionType»
 
 class StringExtensions uses TGenericExtensions<String> {
-	Iterable<String> iterable
+	Iterable<String> iterable;
 }
 		'''
 	}
