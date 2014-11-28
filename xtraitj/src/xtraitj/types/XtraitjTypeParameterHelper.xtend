@@ -81,9 +81,10 @@ class XtraitjTypeParameterHelper {
 			}
 			
 			// rebind type arguments as well
-			val arguments = reboundTypeRef.arguments
-			for (i : 0..<arguments.size()) {
-				arguments.set(i, arguments.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
+			val reboundArgs = reboundTypeRef.arguments
+			val originalArgs = (typeRef as JvmParameterizedTypeReference).arguments
+			for (i : 0..<reboundArgs.size()) {
+				reboundArgs.set(i, originalArgs.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
 			}
 			
 			return reboundTypeRef

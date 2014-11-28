@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.junit4.InjectWith
@@ -15,13 +16,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.xtraitj.TJClass
+import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJTrait
 
 import static org.junit.Assert.*
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJDeclaration
+import org.eclipse.xtext.common.types.JvmTypeParameter
 
 /**
  * Tests that type parameter references in the inferred Java interfaces and
@@ -77,10 +79,34 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> m(List<T> t) { return null; }
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
 	@Test def void testTraitRequiredMethodTypeParameterReference() {
 		'''
 		trait T1<T> {
 			T m(T t);
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+		]
+	}
+
+	@Test def void testTraitRequiredMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> m(List<T> t);
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
@@ -97,10 +123,34 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitRequiredFieldTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
+
 	@Test def void testTraitGenericDefinedMethodTypeParameterReference() {
 		'''
 		trait T1 {
 			<T> T m(T t) { return null; }
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List		
+		
+		trait T1 {
+			<T> List<T> m(List<T> t) { return null; }
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
@@ -141,6 +191,22 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitUsedDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T> {
+			
+		}
+		
+		trait T2<U> {
+			List<U> m(List<U> u) { return null; }
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_DEFINED_METHOD)
+		]
+	}
+
 	@Test def void testTraitUsedRequiredMethodTypeParameterReference() {
 		'''
 		trait T1<T> uses T2<T> {
@@ -149,6 +215,22 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T2<U> {
 			U m(U u);
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
+		]
+	}
+
+	@Test def void testTraitUsedRequiredMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T> {
+			
+		}
+		
+		trait T2<U> {
+			List<U> m(List<U> u);
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
@@ -169,6 +251,22 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitUsedRequiredFieldTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T> {
+			
+		}
+		
+		trait T2<U> {
+			List<U> f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_FIELD)
+		]
+	}
+
 	@Test def void testTraitRenamesRequiredFieldTypeParameterReference() {
 		'''
 		trait T1<T> uses T2<T>[rename field f to g] {
@@ -177,6 +275,22 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T2<U> {
 			U f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
+		]
+	}
+
+	@Test def void testTraitRenamesRequiredFieldTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T>[rename field f to g] {
+			
+		}
+		
+		trait T2<U> {
+			List<U> f;
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
@@ -197,6 +311,22 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testTraitRenamesRequiredMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T>[rename m to n] {
+			
+		}
+		
+		trait T2<U> {
+			List<U> m(List<U> u);
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_METHOD)
+		]
+	}
+
 	@Test def void testTraitRenamesDefinedMethodTypeParameterReference() {
 		'''
 		trait T1<T> uses T2<T>[rename m to n] {
@@ -205,6 +335,22 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T2<U> {
 			U m(U u) { return null; }
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testTraitRenamesDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> uses T2<T>[rename m to n] {
+			
+		}
+		
+		trait T2<U> {
+			List<U> m(List<U> u) { return null; }
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
@@ -225,6 +371,22 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testClassDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> m(List<T> t) { return null; }
+		}
+		
+		class C<U> uses T1<U> {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
 	@Test def void testClassRequiredMethodTypeParameterReference() {
 		'''
 		trait T1<T> {
@@ -233,6 +395,26 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T2<V> {
 			V m(V t) { return null; }
+		}
+		
+		class C<U> uses T1<U>, T2<U> {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassRequiredMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> m(List<T> t);
+		}
+		
+		trait T2<V> {
+			List<V> m(List<V> t) { return null; }
 		}
 		
 		class C<U> uses T1<U>, T2<U> {
@@ -308,12 +490,24 @@ class XtraitjTypeParametersBindingTest {
 		// a method with a generic type
 		val typeParDeclarator = expectedTypeParameterDeclarator.apply(op)
 		val expectedTypePar = typeParDeclarator.typeParameters.head
+		
+		var JvmType typeToCompare = null
+		val type = jvmTypeRef.type
+		
+		if (type instanceof JvmTypeParameter) {
+			typeToCompare = type
+		} else if (type instanceof JvmGenericType) {
+			// assume it is a parameterized type and we take the first type argument
+			// e.g., List<T> 
+			typeToCompare = jvmTypeRef.arguments.head.type
+		}
+		
 		assertSame(
 			"\nop: " + op.identifier + ",\n"
 			+ jvmTypeRef.type + "\nbound to\n" +
 			expectedTypePar + "\n",
 			expectedTypePar,
-			jvmTypeRef.type
+			typeToCompare
 		)
 	}
 

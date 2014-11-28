@@ -295,12 +295,16 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				members += field.toGetter(field.name, field.type) => [
 					annotateAsRequiredField
 					abstract = true
-					// this must not be rebound or the return type won't be resolved
-					// after Xtext 2.7.3
-					// rebindTypeParameters(traitInterface)
+					// this must not be rebound using the return type of the operation:
+					// it won't be resolved after Xtext 2.7.3
+					// since it's not contained in any resource yet
+					// we must use the field.type that can be resolved
+					returnType = field.type.rebindTypeParameters(traitInterface, null)
 				]
 				members += field.toSetter(field.name, field.type) => [
 		   			abstract = true
+		   			// we can use the type references of the inferred operation
+		   			// since they're already resolved.
 		   			rebindTypeParameters(traitInterface)
 		   		]
 			}
