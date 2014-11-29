@@ -226,10 +226,18 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val allDefinedOperations = traitRef.
 					getXtraitjResolvedOperationsFromMap(maps.traitInterfaceResolvedOperationsMap).
 						definedMethods
-				for (traitMethod : allDefinedOperations)
-					members += traitRef.toMethodDelegateNoRebinding(traitMethod, traitRef.traitFieldName) => [
+				for (traitMethod : allDefinedOperations) {
+					val name = traitMethod.op.simpleName
+					members += traitRef.toMethodDelegate(traitMethod, 
+						inferredClass, traitRef.traitFieldName, name, "_"+name
+					) => [
 						copyAnnotationsFrom(traitMethod)
 					]
+				}
+					
+//					toMethodDelegate(traitMethod, it,
+//	   						delegateFieldName, methodName, methodName
+//	   					)
 			}
    			
 //   			for (traitRef : c.traitReferences) {
@@ -1519,11 +1527,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			val resolvedOps = tRef.getXtraitjResolvedOperationsFromMap(map)
 			
 			for (op : resolvedOps.requiredFields) {
-				if (!members.alreadyDefined(op.op)) {
+				val jvmOp = op.op
+				if (!members.alreadyDefined(jvmOp)) {
    					// this is the getter
+   					val name = jvmOp.simpleName
    					members += tRef.toMethodDelegate(op, it,
-						delegateFieldName,
-						op.op.simpleName, op.op.simpleName) => [
+						delegateFieldName, name, name) => [
 		   					annotateAsRequiredField
 		   				]
 	   				members += tRef.toSetterDelegateFromGetter(op, it)
@@ -1532,10 +1541,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			// then delegates for required methods
 			for (op : resolvedOps.requiredMethods) {
-				if (!members.alreadyDefined(op.op) && !members.alreadyDefined(op.op)) {
-					members += tRef.toMethodDelegate(op, it,
-						delegateFieldName,
-						op.op.simpleName, op.op.simpleName) => [
+				val jvmOp = op.op
+				if (!members.alreadyDefined(jvmOp) && !members.alreadyDefined(jvmOp)) {
+					val name = jvmOp.simpleName
+   					members += tRef.toMethodDelegate(op, it,
+						delegateFieldName, name, name) => [
 		   					annotateAsRequiredMethod
 		   				]
 				}
@@ -1586,35 +1596,35 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		return result
 	}
 
-	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName) {
-		source.toMethodDelegateNoRebinding(op, delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
-	}
+//	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName) {
+//		source.toMethodDelegateNoRebinding(op, delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
+//	}
 
-	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-		val o = op.op
-		val m = o.originalSource ?: source
-//		if (!o.typeParameters.empty)
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-//				if (m instanceof TJMethodDeclaration) {
-					copyTypeParameters(o.typeParameters)
+//	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
+//		val o = op.op
+//		val m = o.originalSource ?: source
+////		if (!o.typeParameters.empty)
+//			m.toMethod(methodName, op.returnType) [
+//				documentation = m.documentation
+//				
+////				if (m instanceof TJMethodDeclaration) {
+//					copyTypeParameters(o.typeParameters)
+////				}
+//	
+//				val paramTypeIt = op.parametersTypes.iterator
+//				for (p : o.parameters) {
+//					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
+//					// don't associate the parameter to p, since p is not part of the source tree
+//					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
+//					parameters += m.toParameter(p.name, paramTypeIt.next)
 //				}
-	
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-					// don't associate the parameter to p, since p is not part of the source tree
-					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
-					parameters += m.toParameter(p.name, paramTypeIt.next)
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			]
-	}
+//				val args = o.parameters.map[name].join(", ")
+//				if (op.returnType?.simpleName != "void")
+//					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+//				else
+//					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+//			]
+//	}
 
 	/**
 	 * This also rebinds type parameters since the inferred methods are based on signatures of

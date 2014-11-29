@@ -157,6 +157,36 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testClassGenericDefinedMethodTypeParameterReference() {
+		'''
+		trait T1 {
+			<T> T m(T t) { return null; }
+		}
+		
+		class C uses T1 {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassGenericDefinedMethodTypeParameterReference2() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			<T> List<T> m(List<T> t) { return null; }
+		}
+		
+		class C uses T1 {
+			
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
 	@Test def void testTraitShadowedGenericDefinedMethodTypeParameterReference() {
 		'''
 		trait T1<T> {
