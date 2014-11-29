@@ -219,9 +219,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			val decl = op.declaration
 			if (decl.isAbstract && decl.declaringType != type) {
 				if (decl.annotatedRequiredField) {
-					errorMissingRequiredField(op)
+					errorMissingRequiredField(c, op)
 				} else {
-					errorMissingRequiredMethod(decl, op)
+					errorMissingRequiredMethod(c, decl, op)
 				}
 			}
 		}
@@ -233,7 +233,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					val details = inherited.getOverrideCheckResult().getDetails();
 					if (details.contains(OverrideCheckDetails.RETURN_MISMATCH)) {
 						if (inherited.declaration.annotatedRequiredField) {
-							errorMismatchRequiredField(op, inherited)
+							errorMismatchRequiredField(c, op, inherited)
 						}		
 					}
 				}
@@ -274,9 +274,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 //		}
 	}
 	
-	private def errorMissingRequiredField(IResolvedOperation op) {
+	private def errorMissingRequiredField(TJClass c, IResolvedOperation op) {
 		error(
-			"Class must provide required field '" +
+			"Class " + c.name + " must provide required field '" +
 				op.fieldRepresentation + "'",
 			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
 			MISSING_REQUIRED_FIELD,
@@ -285,9 +285,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		)
 	}
 
-	private def errorMismatchRequiredField(IResolvedOperation resolved, IResolvedOperation inherited) {
+	private def errorMismatchRequiredField(TJClass c, IResolvedOperation resolved, IResolvedOperation inherited) {
 		error(
-			"Incompatible field '" +
+			"Class " + c.name + ": Incompatible field '" +
 				resolved.fieldRepresentation +
 				"' for required field '" +
 				inherited.fieldRepresentation + "'",
@@ -296,9 +296,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		)
 	}
 
-	private def errorMissingRequiredMethod(JvmOperation decl, IResolvedOperation op) {
+	private def errorMissingRequiredMethod(TJClass c, JvmOperation decl, IResolvedOperation op) {
 		error(
-			"Class must provide required method '" +
+			"Class " + c.name + " must provide required method '" +
 				decl.methodRepresentation + "'",
 			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
 			MISSING_REQUIRED_METHOD

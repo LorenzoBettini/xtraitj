@@ -755,7 +755,7 @@ class C uses T<String> {
 		o.assertError(
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_FIELD,
-			"Class must provide required field '" + fieldRepr + "'"
+			"Class C must provide required field '" + fieldRepr + "'"
 		)
 	}
 
@@ -774,7 +774,7 @@ class C uses T<String> {
 		o.assertError(
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
-			"Class must provide required method '" + methodRepr + "'"
+			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}
 }
