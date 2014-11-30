@@ -5,6 +5,7 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmType
+import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.junit4.InjectWith
@@ -23,7 +24,7 @@ import xtraitj.xtraitj.TJTrait
 import static org.junit.Assert.*
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.common.types.JvmTypeParameter
+import org.eclipse.xtext.xtype.XFunctionTypeRef
 
 /**
  * Tests that type parameter references in the inferred Java interfaces and
@@ -129,6 +130,28 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T1<T> {
 			List<T> f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
+
+	@Test def void testTraitRequiredFieldTypeParameterFunctionalType() {
+		'''
+		trait T1<T> {
+			(T)=>T f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
+
+	@Test def void testTraitRequiredFieldTypeParameterFunctionalType2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			(List<T>)=>List<T> f;
 		}
 		'''.parse => [
 			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
@@ -515,29 +538,57 @@ class XtraitjTypeParametersBindingTest {
 	}
 
 	def private assertJvmOperationTypeParameterBinding(JvmOperation op, JvmTypeReference typeRef, (JvmOperation)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
-		val jvmTypeRef = typeRef as JvmParameterizedTypeReference
 		// can be either a JvmGenericType or a JvmOperation in case of
 		// a method with a generic type
 		val typeParDeclarator = expectedTypeParameterDeclarator.apply(op)
+		
+		if (typeRef instanceof JvmParameterizedTypeReference) {
+			assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+				op, typeRef, typeParDeclarator, "JvmParameterizedTypeReference"
+			)
+		} else if (typeRef instanceof XFunctionTypeRef) {
+			assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+				op, typeRef.returnType, typeParDeclarator,
+				"XFunctionTypeRef.returnType"
+			)
+			for (p : typeRef.paramTypes) {
+				assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+					op, p, typeParDeclarator,
+					"XFunctionTypeRef.paramType"
+				)
+			}
+		} else {
+			fail("Unknown JvmTypeReference: " + typeRef)
+		}
+	}
+	
+	private def assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(JvmOperation op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
 		val expectedTypePar = typeParDeclarator.typeParameters.head
 		
-		var JvmType typeToCompare = null
 		val type = jvmTypeRef.type
 		
 		if (type instanceof JvmTypeParameter) {
-			typeToCompare = type
+			assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, type, desc)
 		} else if (type instanceof JvmGenericType) {
 			// assume it is a parameterized type and we take the first type argument
 			// e.g., List<T> 
-			typeToCompare = jvmTypeRef.arguments.head.type
+			assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, 
+				(jvmTypeRef as JvmParameterizedTypeReference).arguments.head.type,
+				desc
+			)
+		} else {
+			fail("Unknown JvmType: " + type)
 		}
-		
+	}
+	
+	private def assertTypeParameterBinding(JvmOperation op, JvmTypeReference jvmTypeRef, JvmTypeParameter expectedTypePar, JvmType actualType, String desc) {
 		assertSame(
+			desc +
 			"\nop: " + op.identifier + ",\n"
 			+ jvmTypeRef.type + "\nbound to\n" +
 			expectedTypePar + "\n",
 			expectedTypePar,
-			typeToCompare
+			actualType
 		)
 	}
 

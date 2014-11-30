@@ -96,12 +96,18 @@ class XtraitjTypeParameterHelper {
 		}
 		
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
-			val reboundReturnTypeRef = reboundTypeRef.returnType.rebindTypeParameters(containerTypeDecl, containerOperation, visited)
+			// IMPORTANT: always start from the original type reference
+			// its internal type references might have to be resolved
+			// and resolution works only if they're contained in a resource
+			// which is not the case for the cloned type reference reboundTypeRef
+			val origTypeRef = typeRef as XFunctionTypeRef
+			val reboundReturnTypeRef = origTypeRef.returnType.rebindTypeParameters(containerTypeDecl, containerOperation, visited)
 			reboundTypeRef.returnType = reboundReturnTypeRef
 			
 			val paramTypes = reboundTypeRef.paramTypes
+			val origParamTypes = origTypeRef.paramTypes
 			for (i : 0..<paramTypes.size) {
-				paramTypes.set(i, paramTypes.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
+				paramTypes.set(i, origParamTypes.get(i).rebindTypeParameters(containerTypeDecl, containerOperation, visited))
 			}
 			
 			return reboundTypeRef
