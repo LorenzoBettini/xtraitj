@@ -158,6 +158,36 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
+	@Test def void testClassRequiredFieldTypeParameterFunctionalType() {
+		'''
+		trait T1<T> {
+			(T)=>T f;
+		}
+		
+		class C<U> uses T1<U> {
+			(U)=>U f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
+
+	@Test def void testClassRequiredFieldTypeParameterFunctionalType2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			(List<T>)=>List<T> f;
+		}
+		
+		class C<U> uses T1<U> {
+			(List<U>)=>List<U> f;
+		}
+		'''.parse => [
+			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+		]
+	}
+
 	@Test def void testTraitGenericDefinedMethodTypeParameterReference() {
 		'''
 		trait T1 {
