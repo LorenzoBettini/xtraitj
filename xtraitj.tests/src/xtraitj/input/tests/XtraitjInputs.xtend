@@ -2924,6 +2924,31 @@ trait TTransformerIterator<T,R> uses TIterator<T>[rename next to origNext] {
 		'''
 	}
 
+	def classGenericFunctionAsField() {
+		'''
+package tests;
+
+trait T1<T> {
+	(T) => T function;
+	T f;
+	
+	T m() {
+		function.apply(f)
+	}
+}
+
+class C1<U> uses T1<U> {
+	(U) => U function;
+	U f;
+}
+
+class C2 uses T1<String> {
+	String f = "test";
+	(String) => String function = [p | p.toFirstUpper];
+}
+		'''
+	}
+
 	def passTypeParameterAsTypeArgument() {
 '''
 package tests;

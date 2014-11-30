@@ -278,6 +278,10 @@ class C uses TWithGenericMethod {
 		classUsesTraitWithGenericFunctionTypeInstantiated.parseAndAssertNoErrors
 	}
 
+	@Test def void testClassGenericFunctionAsField() {
+		classGenericFunctionAsField.parseAndAssertNoErrors
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.parseAndAssertNoErrors
 	}

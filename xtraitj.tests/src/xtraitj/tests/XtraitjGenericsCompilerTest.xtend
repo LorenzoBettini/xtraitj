@@ -1557,6 +1557,12 @@ public class StringExtensions implements TGenericExtensions<String> {
 		]
 	}
 
+	@Test def void testClassGenericFunctionAsField() {
+		classGenericFunctionAsField.compile[
+			executeGeneratedJavaClassMethodAndAssert("C2", "m", "Test")
+		]
+	}
+
 	@Test def void testTraitUsesGenericTraitWithWildCard() {
 		traitUsesGenericTraitWithWildCard.compile[
 
