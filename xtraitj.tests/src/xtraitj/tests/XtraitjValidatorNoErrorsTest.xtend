@@ -10,9 +10,6 @@ import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.XtraitjInputs
 import xtraitj.xtraitj.TJProgram
-import com.google.inject.Provider
-import org.eclipse.xtext.resource.XtextResourceSet
-import java.util.List
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -21,7 +18,7 @@ class XtraitjValidatorNoErrorsTest {
 	@Inject extension ValidationTestHelper
 	@Inject extension XtraitjInputs
 	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
+//	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Test def void testDuplicateTraitReferenceWithOperationsOK() {
 		'''
@@ -31,6 +28,150 @@ class XtraitjValidatorNoErrorsTest {
 		
 		trait T1 uses T, T[rename m to n] {}
 		'''.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitMethods() {
+		'''
+		import java.util.List
+		
+		trait T {
+			List<Integer> f;
+			boolean b;
+			boolean abM(String s);
+			void abV();
+			Object m(List<String> l, String s) {
+				f = newArrayList(1)
+				return l.size + s + f + abM("foo") + b;
+			}
+		}
+		'''.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitFieldName() {
+		'''
+		package tests;
+		
+		trait T1 {
+			
+		}
+		
+		trait T2 {
+			
+		}
+		
+		trait T3 uses T1, tests.T2 {
+			
+		}
+		'''.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitAndClass() {
+		'''
+		import java.util.List
+		
+		trait T {
+			List<Integer> f;
+			boolean b;
+			Object m(List<String> l, String s) {
+				f = newArrayList(1)
+				return l.size + s + f + b;
+			}
+			Object n() { m(newLinkedList("bar"), "foo"); }
+		}
+		
+		class C uses T {
+			List<Integer> f;
+			boolean b=false;
+		}
+		'''.parseAndAssertNoErrors
+	}
+
+//	@Test def void testTraitAndClassSeparateFiles() {
+//		#[
+//		'''
+//		import java.util.List
+//		
+//		class C uses T {
+//			List<Integer> f;
+//			boolean b=false;
+//		}
+//		''',
+//		'''
+//		import java.util.List
+//		
+//		trait T {
+//			List<Integer> f;
+//			boolean b;
+//			Object m(List<String> l, String s) {
+//				f = newArrayList(1)
+//				return l.size + s + f + b;
+//			}
+//			Object n() { m(newLinkedList("bar"), "foo"); }
+//		}
+//		'''
+//		].createResourceSet.compile [
+//			expectationsForTraitAndClass(it)
+//		]
+//	}
+
+	@Test def void testTraitPrivateMethod() {
+		traitPrivateMethod.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassWithTraitSum() {
+		classWithTraitSum.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitSum() {
+		traitSum.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitUsesTraitWithTraitSum() {
+		traitUsesTraitWithTraitSum.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitUsesTraitWithFields() {
+		traitUsesTraitWithFields.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitWithDoubleApply() {
+		traitWithDoubleApply.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitRequiredMethodProvidedWithCovariantReturnType() {
+		traitRequiredMethodProvidedWithCovariantReturnType.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassWithDefaultEmptyConstructor() {
+		classWithDefaultEmptyConstructor.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassWithDefaultConstructor() {
+		classWithDefaultConstructor.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassConstructors() {
+		classWithConstructors.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassImplementsAllInterfaceMethodsWithSum() {
+		classImplementsAllInterfaceMethodsWithSum.parseAndAssertNoErrors
+	}
+
+	@Test def void testGeneratedJavaDocForTraitsAndClasses() {
+		elementsWithDocumentation.parseAndAssertNoErrors
+	}
+
+	@Test def void testTraitProvidesMethodToUsedTrait() {
+		traitProvidesMethodToUsedTrait.parseAndAssertNoErrors
+	}
+
+	@Test def void testCompliantRequiredFields() {
+		compliantRequiredFields.parseAndAssertNoErrors
+	}
+
+	@Test def void testCompliantRequiredMethods() {
+		compliantRequiredMethods.parseAndAssertNoErrors
 	}
 
 	@Test def void testGenericTrait() {
@@ -111,6 +252,22 @@ class XtraitjValidatorNoErrorsTest {
 
 	@Test def void testGenericFunctionType() {
 		genericFunctionType.parseAndAssertNoErrors
+	}
+
+	@Test def void testClassUsesTraitWithGenericFunctionTypeSimple() {
+		'''
+package tests;
+
+import java.util.List
+
+trait TWithGenericMethod {
+	<T> T m(T t) { return t; }
+}
+
+class C uses TWithGenericMethod {
+	
+}
+		'''.parseAndAssertNoErrors
 	}
 
 	@Test def void testClassUsesTraitWithGenericFunctionType() {

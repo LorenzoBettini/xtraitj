@@ -572,7 +572,7 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		class C uses T {}
 		'''.parse => [
 			assertErrorsAsStrings(
-"Class must provide required field 'String s'"
+"Class C must provide required field 'String s'"
 			)
 		]
 	}
@@ -588,7 +588,7 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		}
 		'''.parse => [
 			assertErrorsAsStrings(
-"Incompatible field 'int s' for required field 'String s'"
+"Class C: Incompatible field 'int s' for required field 'String s'"
 			)
 		]
 	}
@@ -671,7 +671,7 @@ class C uses T {
 		}
 		'''.parse => [
 			assertErrorsAsStrings(
-"Class must provide required field 'MyBaseClass f'"
+"Class C must provide required field 'MyBaseClass f'"
 			)
 		]
 	}
@@ -779,7 +779,7 @@ class C uses T3 {
 }
 		'''.parse => [
 			assertErrorsAsStrings(
-"Incompatible field 'String s2' for required field 'List<String> s2'"
+"Class C: Incompatible field 'String s2' for required field 'List<String> s2'"
 			)
 		]
 	}
@@ -831,7 +831,7 @@ class C uses T3 {
 		o.assertError(
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_FIELD,
-			"Class must provide required field '" + fieldRepr + "'"
+			"Class C must provide required field '" + fieldRepr + "'"
 		)
 	}
 
@@ -850,7 +850,7 @@ class C uses T3 {
 		o.assertError(
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
-			"Class must provide required method '" + methodRepr + "'"
+			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}
 }
