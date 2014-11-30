@@ -215,17 +215,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		val type = c.associatedJavaClass
 		val operations = type.getResolvedOperations
 		
-		for (op : operations.allOperations) {
-			val decl = op.declaration
-			if (decl.isAbstract && decl.declaringType != type) {
-				if (decl.annotatedRequiredField) {
-					errorMissingRequiredField(c, op)
-				} else {
-					errorMissingRequiredMethod(c, decl, op)
-				}
-			}
-		}
-		
+		val missingOrMismatchFields = <String>newHashSet()
+
 		for (op : operations.declaredOperations) {
 			val allInherited = op.getOverriddenAndImplementedMethods()
 			for(inherited: allInherited) {
@@ -234,8 +225,27 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					if (details.contains(OverrideCheckDetails.RETURN_MISMATCH)) {
 						if (inherited.declaration.annotatedRequiredField) {
 							errorMismatchRequiredField(c, op, inherited)
+							missingOrMismatchFields.add(op.fieldName)
 						}		
 					}
+				}
+			}
+		}
+		
+		for (op : operations.allOperations) {
+			val decl = op.declaration
+			if (decl.isAbstract && decl.declaringType != type) {
+				if (decl.annotatedRequiredField) {
+					errorMissingRequiredField(c, op)
+					missingOrMismatchFields.add(op.fieldName)
+				} else if (decl.annotatedRequiredFieldSetter) {
+					if (!missingOrMismatchFields.contains(decl.fieldName)) {
+						// check that an error has not already been reported
+						// when examining the getter
+						errorMissingRequiredField(c, op)
+					}
+				} else {
+					errorMissingRequiredMethod(c, decl, op)
 				}
 			}
 		}
@@ -305,14 +315,14 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		)
 	}
 
-	private def errorMismatchRequiredMethod(JvmOperation decl, IResolvedOperation op) {
-		error(
-			"Class must provide required method '" +
-				decl.methodRepresentation + "'",
-			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-			MISSING_REQUIRED_METHOD
-		)
-	}
+//	private def errorMismatchRequiredMethod(JvmOperation decl, IResolvedOperation op) {
+//		error(
+//			"Class must provide required method '" +
+//				decl.methodRepresentation + "'",
+//			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+//			MISSING_REQUIRED_METHOD
+//		)
+//	}
 
 	@Check def void checkImplementsInterfaces(TJClass c) {
 		for (i : c.interfaces) {

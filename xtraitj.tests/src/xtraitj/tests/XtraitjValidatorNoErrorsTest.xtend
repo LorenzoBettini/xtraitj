@@ -254,6 +254,22 @@ class XtraitjValidatorNoErrorsTest {
 		genericFunctionType.parseAndAssertNoErrors
 	}
 
+	@Test def void testClassUsesTraitWithGenericFunctionTypeSimple() {
+		'''
+package tests;
+
+import java.util.List
+
+trait TWithGenericMethod {
+	<T> T m(T t) { return t; }
+}
+
+class C uses TWithGenericMethod {
+	
+}
+		'''.parseAndAssertNoErrors
+	}
+
 	@Test def void testClassUsesTraitWithGenericFunctionType() {
 		classUsesTraitWithGenericFunctionType.parseAndAssertNoErrors
 	}
