@@ -2,7 +2,7 @@ package xtraitj.example.examples.lifo;
 
 import java.util.List;
 import xtraitj.example.examples.lifo.TLifoAlt;
-import xtraitj.example.examples.lifo.TLifoAlt_xtraitj.example.examples.stack.TStack_0_AdapterImpl;
+import xtraitj.example.examples.lifo.TLifoAlt_TStack_0_AdapterImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
@@ -12,11 +12,11 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 public class TLifoAltImpl<T extends Object> implements TLifoAlt<T> {
   private TLifoAlt<T> _delegate;
   
-  private TStack_0_AdapterImpl<T> _TStack_0;
+  private TLifoAlt_TStack_0_AdapterImpl<T> _TStack_0;
   
   public TLifoAltImpl(final TLifoAlt<T> delegate) {
     this._delegate = delegate;
-    _TStack_0 = new TStack_0_AdapterImpl(delegate);
+    _TStack_0 = new TLifoAlt_TStack_0_AdapterImpl(delegate);
   }
   
   @XtraitjDefinedMethod

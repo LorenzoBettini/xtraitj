@@ -4,6 +4,7 @@ import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -12,6 +13,7 @@ public interface TIterableExtensions<T extends Object> {
   @XtraitjRequiredField
   public abstract Iterable<T> getIterable();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setIterable(final Iterable<T> iterable);
   
   @XtraitjDefinedMethod

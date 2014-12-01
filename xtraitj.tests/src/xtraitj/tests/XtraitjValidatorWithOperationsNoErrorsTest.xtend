@@ -44,6 +44,10 @@ class XtraitjValidatorWithOperationsNoErrorsTest {
 		traitRenameOperations.parseAndAssertNoErrors
 	}
 
+	@Test def void testTraitRenameOperationsWithTraitReferenceFullyQualified() {
+		traitRenameOperationsWithTraitReferenceFullyQualified.parseAndAssertNoErrors
+	}
+
 	@Test def void testTraitRenameProvidedMethods() {
 		traitRenameProvidedMethods.parseAndAssertNoErrors
 	}
