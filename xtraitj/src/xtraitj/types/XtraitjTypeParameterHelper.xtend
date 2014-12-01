@@ -130,7 +130,7 @@ class XtraitjTypeParameterHelper {
 		rebindConstraintsTypeParameters(constraintOwner, constraintOwner, containerDecl, containerOperation, visited)
 	}
 	
-	def private rebindConstraintsTypeParameters(JvmConstraintOwner newConstraintOwner, JvmConstraintOwner originalConstraintOwner, JvmTypeParameterDeclarator containerDecl, JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited) {
+	def rebindConstraintsTypeParameters(JvmConstraintOwner newConstraintOwner, JvmConstraintOwner originalConstraintOwner, JvmTypeParameterDeclarator containerDecl, JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited) {
 		val constraints = newConstraintOwner.constraints
 		val originalConstraints = originalConstraintOwner.constraints
 		
@@ -149,10 +149,15 @@ class XtraitjTypeParameterHelper {
 			 * This means that the original wildcard reference with only a lower bound
 			 * will not have the corresponding upper bound; in such case we simply
 			 * skip the upper bound.
+			 * 
+			 * Moreover, in our copyTypeParameters
+			 * xtraitj.jvmmodel.XtraitjJvmModelInferrer.copyTypeParameters(JvmTypeParameterDeclarator, List<JvmTypeParameter>)
+			 * we manually insert an upper bound if it's not explicitly specified,
+			 * so the original type parameter might have no constraints at all
 			 */
 			
 			if (constraint instanceof JvmUpperBound) {
-				if (originalConstraints.get(i) instanceof JvmUpperBound) {
+				if (!originalConstraints.empty && originalConstraints.get(i) instanceof JvmUpperBound) {
 					constraint.typeReference = 
 						originalConstraints.get(i).
 							typeReference.

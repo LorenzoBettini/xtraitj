@@ -294,15 +294,65 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
-//	@Test def void testTraitGenericDefinedMethodTypeParameterWithUpperBound() {
-//		'''
-//		trait T1 {
-//			<T extends Comparable<T>> T m(T t) { return null; }
-//		}
-//		'''.parse => [
-//			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
-//		]
-//	}
+	@Test def void testTraitGenericDefinedMethodTypeParameterWithUpperBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<T>> T m(T t) { return null; }
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericDefinedMethodTypeParameterWithWildcardUpperBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<? extends T>> T m(T t) { return null; }
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericDefinedMethodTypeParameterWithWildcardLowerBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<? super T>> T m(T t) { return null; }
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericRequiredMethodTypeParameterWithUpperBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<T>> T m(T t);
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericRequiredMethodTypeParameterWithWildcardUpperBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<? extends T>> T m(T t);
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+		]
+	}
+
+	@Test def void testTraitGenericRequiredMethodTypeParameterWithWildcardLowerBound() {
+		'''
+		trait T1 {
+			<T extends Comparable<? super T>> T m(T t);
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+		]
+	}
 
 	@Test def void testClassGenericDefinedMethodTypeParameterReference() {
 		'''
@@ -324,6 +374,54 @@ class XtraitjTypeParametersBindingTest {
 		
 		trait T1 {
 			<T> List<T> m(List<T> t) { return null; }
+		}
+		
+		class C uses T1 {
+			
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassGenericDefinedMethodTypeParameterWithUpperBound() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			<T extends Comparable<T>> List<T> m(List<T> t) { return null; }
+		}
+		
+		class C uses T1 {
+			
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassGenericDefinedMethodTypeParameterWithWildcardUpperBound() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			<T extends Comparable<? extends T>> List<T> m(List<T> t) { return null; }
+		}
+		
+		class C uses T1 {
+			
+		}
+		'''.parse => [
+			assertJvmOperationTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+		]
+	}
+
+	@Test def void testClassGenericDefinedMethodTypeParameterWithWildcardLowerBound() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			<T extends Comparable<? extends T>> List<T> m(List<T> t) { return null; }
 		}
 		
 		class C uses T1 {
