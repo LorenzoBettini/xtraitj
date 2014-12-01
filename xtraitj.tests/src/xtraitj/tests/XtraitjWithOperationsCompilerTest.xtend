@@ -570,6 +570,66 @@ public class T3Impl implements T3 {
 		]
 	}
 
+	@Test def void testTraitRenameOperationsWithTraitReferenceFullyQualified() {
+		traitRenameOperationsWithTraitReferenceFullyQualified.compile[
+assertTraitAdapterJavaInterface("tests", "T2_T1_0",
+'''
+package tests;
+
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public interface T2_T1_0_Adapter {
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public abstract int m2();
+}
+'''
+)
+
+assertTraitAdapterJavaClass("tests", "T2_T1_0",
+'''
+package tests;
+
+import tests.T1;
+import tests.T1Impl;
+import tests.T2_T1_0_Adapter;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
+
+@SuppressWarnings("all")
+public class T2_T1_0_AdapterImpl implements T2_T1_0_Adapter, T1 {
+  private T2_T1_0_Adapter _delegate;
+  
+  private T1Impl _T1_0;
+  
+  public T2_T1_0_AdapterImpl(final T2_T1_0_Adapter delegate) {
+    this._delegate = delegate;
+    _T1_0 = new T1Impl(this);
+  }
+  
+  public int m() {
+    return this.m2();
+  }
+  
+  @XtraitjDefinedMethod
+  @XtraitjRenamedMethod("m")
+  public int m2() {
+    return _delegate.m2();
+  }
+  
+  public int _m2() {
+    return _T1_0._m();
+  }
+}
+'''
+)
+
+			assertGeneratedJavaCodeCompiles
+		]
+	}
+
 	@Test def void testTraitRenameProvidedMethods() {
 		traitRenameProvidedMethods.compile[
 assertTraitAdapterJavaInterface("tests", "T3_T2_0",
