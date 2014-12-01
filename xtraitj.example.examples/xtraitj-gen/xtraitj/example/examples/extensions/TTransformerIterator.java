@@ -4,6 +4,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import xtraitj.example.examples.extensions.TTransformerIterator_TIterator_0_Adapter;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 @XtraitjTraitInterface
@@ -12,6 +13,7 @@ public interface TTransformerIterator<T extends Object, R extends Object> extend
   @XtraitjRequiredField
   public abstract Function1<? super T, ? extends R> getFunction();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setFunction(final Function1<? super T, ? extends R> function);
   
   @XtraitjDefinedMethod

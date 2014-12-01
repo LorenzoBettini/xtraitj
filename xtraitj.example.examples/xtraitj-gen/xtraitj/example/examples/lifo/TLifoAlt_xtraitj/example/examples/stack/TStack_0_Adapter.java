@@ -4,6 +4,7 @@ import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
 public interface TStack_0_Adapter<T extends Object> {
@@ -14,6 +15,7 @@ public interface TStack_0_Adapter<T extends Object> {
   @XtraitjRequiredField
   public abstract List<T> getCollection();
   
+  @XtraitjRequiredFieldSetter
   public abstract void setCollection(final List<T> collection);
   
   @XtraitjDefinedMethod

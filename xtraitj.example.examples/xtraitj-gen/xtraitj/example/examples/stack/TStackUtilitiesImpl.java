@@ -23,7 +23,7 @@ public class TStackUtilitiesImpl implements TStackUtilities {
     final StringBuffer buffer = new StringBuffer();
     while ((!stack.isEmpty())) {
       {
-        Object _pop = stack.pop();
+        U _pop = stack.pop();
         String _string = _pop.toString();
         buffer.append(_string);
         buffer.append("\n");
