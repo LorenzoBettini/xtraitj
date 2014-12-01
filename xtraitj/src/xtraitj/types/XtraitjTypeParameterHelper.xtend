@@ -12,6 +12,7 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xtype.XFunctionTypeRef
+import org.eclipse.xtext.common.types.JvmUpperBound
 
 @Singleton
 class XtraitjTypeParameterHelper {
@@ -90,16 +91,19 @@ class XtraitjTypeParameterHelper {
 			return reboundTypeRef
 		}
 
+		// IMPORTANT: always start from the original type reference
+		// its internal type references might have to be resolved
+		// and resolution works only if they're contained in a resource
+		// which is not the case for the cloned type reference reboundTypeRef
+
 		if (reboundTypeRef instanceof JvmWildcardTypeReference) {
-			reboundTypeRef.rebindConstraintsTypeParameters(containerTypeDecl, containerOperation, visited)
+			reboundTypeRef.rebindConstraintsTypeParameters(typeRef as JvmWildcardTypeReference,
+				containerTypeDecl, containerOperation, visited
+			)
 			return reboundTypeRef
 		}
 		
 		if (reboundTypeRef instanceof XFunctionTypeRef) {
-			// IMPORTANT: always start from the original type reference
-			// its internal type references might have to be resolved
-			// and resolution works only if they're contained in a resource
-			// which is not the case for the cloned type reference reboundTypeRef
 			val origTypeRef = typeRef as XFunctionTypeRef
 			val reboundReturnTypeRef = origTypeRef.returnType.rebindTypeParameters(containerTypeDecl, containerOperation, visited)
 			reboundTypeRef.returnType = reboundReturnTypeRef
@@ -123,10 +127,45 @@ class XtraitjTypeParameterHelper {
 	}
 	
 	def rebindConstraintsTypeParameters(JvmConstraintOwner constraintOwner, JvmTypeParameterDeclarator containerDecl, JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited) {
-		val constraints = constraintOwner.constraints
-		for (i : 0..<constraints.size) {
-			val constraint = constraints.get(i)
-			constraint.typeReference = constraint.typeReference.rebindTypeParameters(containerDecl, containerOperation, visited)
+		rebindConstraintsTypeParameters(constraintOwner, constraintOwner, containerDecl, containerOperation, visited)
+	}
+	
+	def private rebindConstraintsTypeParameters(JvmConstraintOwner newConstraintOwner, JvmConstraintOwner originalConstraintOwner, JvmTypeParameterDeclarator containerDecl, JvmTypeParameterDeclarator containerOperation, Map<JvmTypeParameter, JvmTypeParameter> visited) {
+		val constraints = newConstraintOwner.constraints
+		val originalConstraints = originalConstraintOwner.constraints
+		
+		var i = 0
+		for (constraint : constraints) {
+			
+			/*
+			 * Due to the way cloneWithProxies is implemented by JvmTypesBuilder
+			 * (see
+			 * org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder.cloneAndAssociate(T)
+			 * org.eclipse.xtext.xbase.jvmmodel.new Copier() {...}.copy(EObject)
+			 * )
+			 * a wildcard type reference without an upper bound is cloned
+			 * by adding java.lang.Object as upper bound.
+			 * 
+			 * This means that the original wildcard reference with only a lower bound
+			 * will not have the corresponding upper bound; in such case we simply
+			 * skip the upper bound.
+			 */
+			
+			if (constraint instanceof JvmUpperBound) {
+				if (originalConstraints.get(i) instanceof JvmUpperBound) {
+					constraint.typeReference = 
+						originalConstraints.get(i).
+							typeReference.
+								rebindTypeParameters(containerDecl, containerOperation, visited)
+					i = i + 1
+				}
+			} else {
+				constraint.typeReference = 
+					originalConstraints.get(i).
+						typeReference.
+							rebindTypeParameters(containerDecl, containerOperation, visited)
+				i = i + 1
+			}
 		}
 	}
 
