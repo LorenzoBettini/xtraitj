@@ -1,7 +1,7 @@
-package xtraitj.example.examples.lifo.TLifoAlt_xtraitj.example.examples.stack;
+package xtraitj.example.examples.lifo;
 
 import java.util.List;
-import xtraitj.example.examples.lifo.TLifoAlt_xtraitj.example.examples.stack.TStack_0_Adapter;
+import xtraitj.example.examples.lifo.TLifoAlt_TStack_0_Adapter;
 import xtraitj.example.examples.stack.TStack;
 import xtraitj.example.examples.stack.TStackImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -9,12 +9,12 @@ import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 
 @SuppressWarnings("all")
-public class TStack_0_AdapterImpl<T extends Object> implements TStack_0_Adapter<T>, TStack<T> {
-  private TStack_0_Adapter<T> _delegate;
+public class TLifoAlt_TStack_0_AdapterImpl<T extends Object> implements TLifoAlt_TStack_0_Adapter<T>, TStack<T> {
+  private TLifoAlt_TStack_0_Adapter<T> _delegate;
   
   private TStackImpl<T> _TStack_0;
   
-  public TStack_0_AdapterImpl(final TStack_0_Adapter<T> delegate) {
+  public TLifoAlt_TStack_0_AdapterImpl(final TLifoAlt_TStack_0_Adapter<T> delegate) {
     this._delegate = delegate;
     _TStack_0 = new TStackImpl(this);
   }

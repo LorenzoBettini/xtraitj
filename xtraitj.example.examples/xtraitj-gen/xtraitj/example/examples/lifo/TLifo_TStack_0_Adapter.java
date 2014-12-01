@@ -1,4 +1,4 @@
-package xtraitj.example.examples.lifo.TLifo_xtraitj.example.examples.stack;
+package xtraitj.example.examples.lifo;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -6,7 +6,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
-public interface TStack_0_Adapter<V extends Object> {
+public interface TLifo_TStack_0_Adapter<V extends Object> {
   @XtraitjRequiredField
   public abstract List<V> getCollection();
   

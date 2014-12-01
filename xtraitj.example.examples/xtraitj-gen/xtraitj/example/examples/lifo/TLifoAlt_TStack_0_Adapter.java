@@ -1,4 +1,4 @@
-package xtraitj.example.examples.lifo.TLifoAlt_xtraitj.example.examples.stack;
+package xtraitj.example.examples.lifo;
 
 import java.util.List;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
@@ -7,7 +7,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
 
 @SuppressWarnings("all")
-public interface TStack_0_Adapter<T extends Object> {
+public interface TLifoAlt_TStack_0_Adapter<T extends Object> {
   @XtraitjDefinedMethod
   @XtraitjRenamedMethod("pop")
   public abstract T old_pop();
