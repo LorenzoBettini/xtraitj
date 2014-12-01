@@ -226,6 +226,27 @@ class C uses T {
 		'''
 	}
 
+	def traitRenameOperationsWithTraitReferenceFullyQualifiedDifferentFiles() {
+		#[
+		'''
+		package tests;
+		
+		trait T2 uses tests.T1[ rename m to m2 ] {
+			int foo() { 
+				return m2();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			int m() { return 0; }
+		}
+		'''
+		]
+	}
+
 	def traitRenameProvidedMethods() {
 		'''
 		package tests;
