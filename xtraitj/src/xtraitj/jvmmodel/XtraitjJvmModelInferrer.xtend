@@ -28,6 +28,7 @@ import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod
 import xtraitj.runtime.lib.annotation.XtraitjRequiredField
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
@@ -48,7 +49,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -283,7 +283,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				// presence of type parameters and type arguments
    				// (type arguments would be bound to the trait's type parameters, instead
    				// of the inferred Java interface's type parameters)
-   				traitInterface.copyTypeParameters(t.typeParameters)
+//   				traitInterface.copyTypeParameters(t.typeParameters)
+   				copyTypeParametersAndRebind(traitInterface, t)
    				
 //   				t.traitReferences.collectInterfaceResolvedOperations(declaredType as JvmGenericType, maps)
    			]
@@ -1055,12 +1056,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //	   	inferTypesForTraitReferencesWithOperations(t, traitClass, acceptor, typesMap, resolvedOperationsMap)
    		
 		acceptor.accept(traitClass) [
-			traitClass.copyTypeParameters(t.typeParameters)
-			
-			val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
-		   	for (typePar : typeParameters) {
-		   		typePar.rebindConstraintsTypeParameters(it, null, map)
-		   	}
+			copyTypeParametersAndRebind(traitClass, t)
 		
 			// the interface is surely associated in the model inferrer
 			// since the trait element is in the input file we're processing
@@ -1226,6 +1222,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //   			}
    		]
    	}
+				
+	private def copyTypeParametersAndRebind(JvmGenericType target, TJTrait t) {
+		target.copyTypeParameters(t.typeParameters)
+		
+		val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
+	   	for (typePar : target.typeParameters) {
+	   		typePar.rebindConstraintsTypeParameters(target, null, map)
+	   	}
+	}
 				
 	def inferInterfaceForTraitReferencesWithOperations(TJDeclaration d, JvmGenericType inferredType, JvmDeclaredTypeAcceptor acceptor,
 		XtraitjMaps maps
