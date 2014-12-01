@@ -47,6 +47,7 @@ import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
+import xtraitj.xtraitj.TJTypeParameterDeclarator
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 
@@ -1223,15 +1224,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 				
-	private def copyTypeParametersAndRebind(JvmGenericType target, TJTrait t) {
-		target.copyTypeParameters(t.typeParameters)
-		
-		val map = new HashMap<JvmTypeParameter, JvmTypeParameter>		   	
-	   	for (typePar : target.typeParameters) {
-	   		typePar.rebindConstraintsTypeParameters(target, null, map)
-	   	}
-	}
-				
 	def inferInterfaceForTraitReferencesWithOperations(TJDeclaration d, JvmGenericType inferredType, JvmDeclaredTypeAcceptor acceptor,
 		XtraitjMaps maps
 	) {
@@ -1478,7 +1470,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
 
-			copyTypeParameters(m.typeParameters)
+			copyTypeParametersAndRebind(m)
 			
 			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
@@ -1743,6 +1735,19 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			annot.getExplicitValues().filter(JvmStringAnnotationValue).head.
 				values += originalName
 		}
+	}
+
+	private def copyTypeParametersAndRebind(JvmTypeParameterDeclarator target, TJTypeParameterDeclarator t) {
+		val originalTypeParameters = t.typeParameters
+		target.copyTypeParameters(originalTypeParameters)
+		
+		val map = new HashMap<JvmTypeParameter, JvmTypeParameter>  
+		var i = 0	
+	   	for (typePar : target.typeParameters) {
+	   		typePar.rebindConstraintsTypeParameters(originalTypeParameters.get(i), target, null, map)
+//	   		typePar.rebindConstraintsTypeParameters(target, null, map)
+	   		i = i + 1
+	   	}
 	}
 
 	def private void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {
