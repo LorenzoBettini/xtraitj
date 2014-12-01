@@ -36,6 +36,12 @@ class XtraitjTypeParametersBindingTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
 	@Inject extension IJvmModelAssociations
+
+	/** 1 interface, 1 class */
+	val static EXPECTED_JVM_TYPES_FOR_TRAIT = 2
+
+	/** 1 class */
+	val static EXPECTED_JVM_TYPES_FOR_CLASS = 1
 	
 	/** 1 in the interface, 2 in the class */
 	val static EXPECTED_OPS_FOR_DEFINED_METHOD = 3
@@ -70,13 +76,40 @@ class XtraitjTypeParametersBindingTest {
 	/** 2 in the interface, 2 in the class, the same for adapters */
 	val static EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD = 8
 
+	@Test def void testTraitBoundsTypeParameterReference() {
+		'''
+		trait T1<T extends Comparable<T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_TRAIT)
+		]
+	}
+
+//	@Test def void testTraitWildcardTypeParameterReference() {
+//		'''
+//		trait T1<T extends Comparable<? extends T>> {
+//		}
+//		'''.parse => [
+//			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_TRAIT)
+//		]
+//	}
+
+	@Test def void testClassBoundsTypeParameterReference() {
+		'''
+		class C<T extends Comparable<T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_CLASS)
+		]
+	}
+
 	@Test def void testTraitDefinedMethodTypeParameterReference() {
 		'''
 		trait T1<T> {
 			T m(T t) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -88,7 +121,7 @@ class XtraitjTypeParametersBindingTest {
 			List<T> m(List<T> t) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -98,7 +131,7 @@ class XtraitjTypeParametersBindingTest {
 			T m(T t);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
 		]
 	}
 
@@ -110,7 +143,7 @@ class XtraitjTypeParametersBindingTest {
 			List<T> m(List<T> t);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_METHOD)
 		]
 	}
 
@@ -120,7 +153,7 @@ class XtraitjTypeParametersBindingTest {
 			T f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -132,7 +165,7 @@ class XtraitjTypeParametersBindingTest {
 			List<T> f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -142,7 +175,7 @@ class XtraitjTypeParametersBindingTest {
 			(T)=>T f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -154,7 +187,7 @@ class XtraitjTypeParametersBindingTest {
 			(List<T>)=>List<T> f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -168,7 +201,7 @@ class XtraitjTypeParametersBindingTest {
 			(U)=>U f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -184,7 +217,7 @@ class XtraitjTypeParametersBindingTest {
 			(List<U>)=>List<U> f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 
@@ -194,7 +227,7 @@ class XtraitjTypeParametersBindingTest {
 			<T> T m(T t) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -206,7 +239,7 @@ class XtraitjTypeParametersBindingTest {
 			<T> List<T> m(List<T> t) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -220,7 +253,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -236,7 +269,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -246,7 +279,7 @@ class XtraitjTypeParametersBindingTest {
 			<T> T m(T t) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -256,7 +289,7 @@ class XtraitjTypeParametersBindingTest {
 			<T> T m(T t);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_REQUIRED_METHOD)
 		]
 	}
 
@@ -270,7 +303,7 @@ class XtraitjTypeParametersBindingTest {
 			U m(U u) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_DEFINED_METHOD)
 		]
 	}
 
@@ -286,7 +319,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> m(List<U> u) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_DEFINED_METHOD)
 		]
 	}
 
@@ -300,7 +333,7 @@ class XtraitjTypeParametersBindingTest {
 			U m(U u);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
 		]
 	}
 
@@ -316,7 +349,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> m(List<U> u);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_METHOD)
 		]
 	}
 
@@ -330,7 +363,7 @@ class XtraitjTypeParametersBindingTest {
 			U f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_FIELD)
 		]
 	}
 
@@ -346,7 +379,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_USED_REQUIRED_FIELD)
 		]
 	}
 
@@ -360,7 +393,7 @@ class XtraitjTypeParametersBindingTest {
 			U f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
 		]
 	}
 
@@ -376,7 +409,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD)
 		]
 	}
 
@@ -390,7 +423,7 @@ class XtraitjTypeParametersBindingTest {
 			U m(U u);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_METHOD)
 		]
 	}
 
@@ -406,7 +439,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> m(List<U> u);
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_REQUIRED_METHOD)
 		]
 	}
 
@@ -420,7 +453,7 @@ class XtraitjTypeParametersBindingTest {
 			U m(U u) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
 		]
 	}
 
@@ -436,7 +469,7 @@ class XtraitjTypeParametersBindingTest {
 			List<U> m(List<U> u) { return null; }
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(EXPECTED_OPS_FOR_RENAME_DEFINED_METHOD)
 		]
 	}
 
@@ -450,7 +483,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -466,7 +499,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -484,7 +517,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -504,7 +537,7 @@ class XtraitjTypeParametersBindingTest {
 			
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
 
@@ -514,23 +547,24 @@ class XtraitjTypeParametersBindingTest {
 			U f;
 		}
 		'''.parse => [
-			assertTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
+			assertJvmOperationTypeParameterBoundToContainingType(CLASS_EXPECTED_OPS_FOR_REQUIRED_FIELD)
 		]
 	}
 	
-	private def assertTypeParameterBoundToContainingType(TJProgram it,
+	private def assertJvmOperationTypeParameterBoundToContainingType(TJProgram it,
 			int expectedAssociatedElements) {
-		it.assertJvmOperationTypeParameterBindings(expectedAssociatedElements)[declaringType as JvmGenericType]
+		it.assertJvmOperationTypeParameterBindings(expectedAssociatedElements)
+			[(it as JvmOperation).declaringType as JvmGenericType]
 	}
 
-	private def assertTypeParameterBoundToContainingMethod(TJProgram it,
+	private def assertJvmOperationTypeParameterBoundToContainingMethod(TJProgram it,
 			int expectedAssociatedElements) {
 		it.assertJvmOperationTypeParameterBindings(expectedAssociatedElements)[it]
 	}
 
 	private def assertJvmOperationTypeParameterBindings(TJProgram it,
 		int expectedAssociatedElements,
-		(JvmOperation)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator
+		(JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator
 	) {
 		assertNoErrors
 		val associatedElements = associatedJvmOperations(it)
@@ -557,32 +591,66 @@ class XtraitjTypeParametersBindingTest {
 				map[declaredOperations].flatten].flatten
 	}
 
-	def private assertJvmOperationTypeParameterBindings(JvmOperation op, (JvmOperation)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
-		if (!op.simpleName.startsWith("set")) {
-			// the setter method is void
-			op.assertJvmOperationTypeParameterBinding(op.returnType, expectedTypeParameterDeclarator)
-		}
-		for (p : op.parameters) {
-			op.assertJvmOperationTypeParameterBinding(p.parameterType, expectedTypeParameterDeclarator)
+	private def assertJvmGenericTypeTypeParameterBindings(TJProgram it,
+		int expectedAssociatedElements
+	) {
+		assertNoErrors
+		val associatedElements = associatedJvmGenericTypes(it)
+		// println(associatedElements)
+		assertFalse("No associated elements", associatedElements.empty)
+		assertEquals(expectedAssociatedElements, associatedElements.size)
+		for (t : associatedElements) {
+			t.assertJvmGenericTypeTypeParameterBindings[it]
 		}
 	}
 
-	def private assertJvmOperationTypeParameterBinding(JvmOperation op, JvmTypeReference typeRef, (JvmOperation)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
+	/**
+	 * Retrieves all the JvmGenericTypes associated to the first class or 
+	 * trait in the program, (if there's a class, then uses that class, otherwise,
+	 * it uses the first trait)
+	 * including the ones generated for used traits with alteration operations
+	 */
+	private def Iterable<JvmGenericType> associatedJvmGenericTypes(TJProgram it) {
+		val TJDeclaration programElement = 
+			elements.filter(TJClass).head ?: elements.filter(TJTrait).head
+		programElement.jvmElements.filter(JvmGenericType) +
+		programElement.traitReferences.map[jvmElements.filter(JvmGenericType)].flatten
+	}
+
+	def private assertJvmOperationTypeParameterBindings(JvmOperation op, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
+		if (!op.simpleName.startsWith("set")) {
+			// the setter method is void
+			op.assertJvmTypeParameterBinding(op.returnType, expectedTypeParameterDeclarator)
+		}
+		for (p : op.parameters) {
+			op.assertJvmTypeParameterBinding(p.parameterType, expectedTypeParameterDeclarator)
+		}
+	}
+
+	def private assertJvmGenericTypeTypeParameterBindings(JvmGenericType t, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
+		for (typePar : t.typeParameters) {
+			for (c : typePar.constraints) {
+				t.assertJvmTypeParameterBinding(c.typeReference, expectedTypeParameterDeclarator)
+			}
+		}
+	}
+
+	def private assertJvmTypeParameterBinding(JvmTypeParameterDeclarator op, JvmTypeReference typeRef, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
 		// can be either a JvmGenericType or a JvmOperation in case of
 		// a method with a generic type
 		val typeParDeclarator = expectedTypeParameterDeclarator.apply(op)
 		
 		if (typeRef instanceof JvmParameterizedTypeReference) {
-			assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+			assertJvmTypeParameterBindingAgainstTypeParDeclarator(
 				op, typeRef, typeParDeclarator, "JvmParameterizedTypeReference"
 			)
 		} else if (typeRef instanceof XFunctionTypeRef) {
-			assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+			assertJvmTypeParameterBindingAgainstTypeParDeclarator(
 				op, typeRef.returnType, typeParDeclarator,
 				"XFunctionTypeRef.returnType"
 			)
 			for (p : typeRef.paramTypes) {
-				assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(
+				assertJvmTypeParameterBindingAgainstTypeParDeclarator(
 					op, p, typeParDeclarator,
 					"XFunctionTypeRef.paramType"
 				)
@@ -592,7 +660,7 @@ class XtraitjTypeParametersBindingTest {
 		}
 	}
 	
-	private def assertJvmOperationTypeParameterBindingAgainstTypeParDeclarator(JvmOperation op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
+	private def assertJvmTypeParameterBindingAgainstTypeParDeclarator(JvmTypeParameterDeclarator op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
 		val expectedTypePar = typeParDeclarator.typeParameters.head
 		
 		val type = jvmTypeRef.type
@@ -611,10 +679,15 @@ class XtraitjTypeParametersBindingTest {
 		}
 	}
 	
-	private def assertTypeParameterBinding(JvmOperation op, JvmTypeReference jvmTypeRef, JvmTypeParameter expectedTypePar, JvmType actualType, String desc) {
+	private def assertTypeParameterBinding(JvmTypeParameterDeclarator e, JvmTypeReference jvmTypeRef, JvmTypeParameter expectedTypePar, JvmType actualType, String desc) {
+		val id = switch (e) {
+			JvmOperation: "\nop: " + e.identifier
+			JvmGenericType: "\njava type: " + e.identifier
+		}
+		
 		assertSame(
 			desc +
-			"\nop: " + op.identifier + ",\n"
+			id + ",\n"
 			+ jvmTypeRef.type + "\nbound to\n" +
 			expectedTypePar + "\n",
 			expectedTypePar,
