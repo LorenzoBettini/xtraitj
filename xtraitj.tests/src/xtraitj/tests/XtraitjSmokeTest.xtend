@@ -1,10 +1,7 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
-import org.apache.log4j.ConsoleAppender
-import org.apache.log4j.Level
 import org.apache.log4j.Logger
-import org.apache.log4j.spi.LoggingEvent
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
@@ -15,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.tests.utils.XtraitjLogListener
 import xtraitj.xtraitj.TJProgram
 
 import static org.junit.Assert.*
@@ -27,27 +25,11 @@ class XtraitjSmokeTest {
 	
 	private final static Logger LOG = Logger.getLogger(JvmModelAssociator);
 
-	/**
-	 * JvmModelAssociator does not throw exceptions but logs possible
-	 * errors; we use this class to record possible error events
-	 */
-	static class LogListener extends ConsoleAppender {
-		
-		val public events = newArrayList()
-		
-		override doAppend(LoggingEvent event) {
-			if (event.getLevel == Level.ERROR) {
-				events += event
-			}
-		}
-		
-	}
-	
-	var LogListener logListener
+	var XtraitjLogListener logListener
 
 	@Before
 	def void createAppender() {
-		logListener = new LogListener => [
+		logListener = new XtraitjLogListener => [
 			LOG.addAppender(it)
 		]
 	}

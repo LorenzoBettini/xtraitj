@@ -1,6 +1,8 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import org.apache.log4j.Logger
+import org.eclipse.xtext.common.types.JvmConstraintOwner
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
@@ -8,14 +10,20 @@ import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator
+import org.eclipse.xtext.xtype.XFunctionTypeRef
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
+import xtraitj.tests.utils.XtraitjLogListener
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJProgram
@@ -24,7 +32,6 @@ import xtraitj.xtraitj.TJTrait
 import static org.junit.Assert.*
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.xtype.XFunctionTypeRef
 
 /**
  * Tests that type parameter references in the inferred Java interfaces and
@@ -75,6 +82,23 @@ class XtraitjTypeParametersBindingTest {
 
 	/** 2 in the interface, 2 in the class, the same for adapters */
 	val static EXPECTED_OPS_FOR_RENAME_REQUIRED_FIELD = 8
+	
+	private final static Logger LOG = Logger.getLogger(JvmModelAssociator);
+
+	var XtraitjLogListener logListener
+
+	@Before
+	def void createAppender() {
+		logListener = new XtraitjLogListener => [
+			LOG.addAppender(it)
+		]
+	}
+
+	@After
+	def void removeAppender() {
+		LOG.removeAppender(logListener)
+	}
+	
 
 	@Test def void testTraitBoundsTypeParameterReference() {
 		'''
@@ -85,18 +109,45 @@ class XtraitjTypeParametersBindingTest {
 		]
 	}
 
-//	@Test def void testTraitWildcardTypeParameterReference() {
-//		'''
-//		trait T1<T extends Comparable<? extends T>> {
-//		}
-//		'''.parse => [
-//			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_TRAIT)
-//		]
-//	}
+	@Test def void testTraitWildcardUpperBoundTypeParameterReference() {
+		'''
+		trait T1<T extends Comparable<? extends T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_TRAIT)
+		]
+	}
+
+	@Test def void testTraitWildcardLowerBoundTypeParameterReference() {
+		'''
+		trait T1<T extends Comparable<? super T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_TRAIT)
+		]
+	}
 
 	@Test def void testClassBoundsTypeParameterReference() {
 		'''
 		class C<T extends Comparable<T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_CLASS)
+		]
+	}
+
+	@Test def void testClassWildcardUpperBoundTypeParameterReference() {
+		'''
+		class C<T extends Comparable<? extends T>> {
+		}
+		'''.parse => [
+			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_CLASS)
+		]
+	}
+
+	@Test def void testClassWildcardLowerBoundTypeParameterReference() {
+		'''
+		class C<T extends Comparable<? super T>> {
 		}
 		'''.parse => [
 			assertJvmGenericTypeTypeParameterBindings(EXPECTED_JVM_TYPES_FOR_CLASS)
@@ -242,6 +293,16 @@ class XtraitjTypeParametersBindingTest {
 			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
 		]
 	}
+
+//	@Test def void testTraitGenericDefinedMethodTypeParameterWithUpperBound() {
+//		'''
+//		trait T1 {
+//			<T extends Comparable<T>> T m(T t) { return null; }
+//		}
+//		'''.parse => [
+//			assertJvmOperationTypeParameterBoundToContainingMethod(EXPECTED_OPS_FOR_DEFINED_METHOD)
+//		]
+//	}
 
 	@Test def void testClassGenericDefinedMethodTypeParameterReference() {
 		'''
@@ -567,6 +628,9 @@ class XtraitjTypeParametersBindingTest {
 		(JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator
 	) {
 		assertNoErrors
+		// there must be no error in the log either
+		assertTrue("Some error was reported in the LOG", logListener.events.empty)
+		
 		val associatedElements = associatedJvmOperations(it)
 		// println(associatedElements)
 		assertFalse("No associated elements", associatedElements.empty)
@@ -595,6 +659,9 @@ class XtraitjTypeParametersBindingTest {
 		int expectedAssociatedElements
 	) {
 		assertNoErrors
+		// there must be no error in the log either
+		assertTrue("Some error was reported in the LOG", logListener.events.empty)
+		
 		val associatedElements = associatedJvmGenericTypes(it)
 		// println(associatedElements)
 		assertFalse("No associated elements", associatedElements.empty)
@@ -625,13 +692,22 @@ class XtraitjTypeParametersBindingTest {
 		for (p : op.parameters) {
 			op.assertJvmTypeParameterBinding(p.parameterType, expectedTypeParameterDeclarator)
 		}
+		assertJvmTypeParameterDeclaratorTypeParameterBindings(op, expectedTypeParameterDeclarator)
 	}
 
 	def private assertJvmGenericTypeTypeParameterBindings(JvmGenericType t, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
+		assertJvmTypeParameterDeclaratorTypeParameterBindings(t, expectedTypeParameterDeclarator)
+	}
+	
+	private def assertJvmTypeParameterDeclaratorTypeParameterBindings(JvmTypeParameterDeclarator t, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
 		for (typePar : t.typeParameters) {
-			for (c : typePar.constraints) {
-				t.assertJvmTypeParameterBinding(c.typeReference, expectedTypeParameterDeclarator)
-			}
+			assertJvmConstraintsTypeParameterBindings(t, typePar, expectedTypeParameterDeclarator)
+		}
+	}
+	
+	private def assertJvmConstraintsTypeParameterBindings(JvmTypeParameterDeclarator t, JvmConstraintOwner constraintOwner, (JvmTypeParameterDeclarator)=>JvmTypeParameterDeclarator expectedTypeParameterDeclarator) {
+		for (c : constraintOwner.constraints) {
+			t.assertJvmTypeParameterBinding(c.typeReference, expectedTypeParameterDeclarator)
 		}
 	}
 
@@ -660,7 +736,7 @@ class XtraitjTypeParametersBindingTest {
 		}
 	}
 	
-	private def assertJvmTypeParameterBindingAgainstTypeParDeclarator(JvmTypeParameterDeclarator op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
+	private def void assertJvmTypeParameterBindingAgainstTypeParDeclarator(JvmTypeParameterDeclarator op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
 		val expectedTypePar = typeParDeclarator.typeParameters.head
 		
 		val type = jvmTypeRef.type
@@ -668,12 +744,23 @@ class XtraitjTypeParametersBindingTest {
 		if (type instanceof JvmTypeParameter) {
 			assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, type, desc)
 		} else if (type instanceof JvmGenericType) {
-			// assume it is a parameterized type and we take the first type argument
-			// e.g., List<T> 
-			assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, 
-				(jvmTypeRef as JvmParameterizedTypeReference).arguments.head.type,
-				desc
-			)
+			val firstTypeArg = (jvmTypeRef as JvmParameterizedTypeReference).arguments.head
+			
+			if (firstTypeArg instanceof JvmWildcardTypeReference) {
+				for (c : firstTypeArg.constraints) {
+					op.assertJvmTypeParameterBindingAgainstTypeParDeclarator(
+						c.typeReference, typeParDeclarator, "Wildcard." + desc
+					)
+				}
+			} else {
+				if (firstTypeArg != null) {
+					// assume it is a parameterized type and we take the first type argument
+					// e.g., List<T> 
+					assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, 
+						firstTypeArg.type, desc
+					)
+				}
+			}
 		} else {
 			fail("Unknown JvmType: " + type)
 		}
