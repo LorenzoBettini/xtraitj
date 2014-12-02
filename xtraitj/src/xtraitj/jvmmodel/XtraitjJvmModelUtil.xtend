@@ -152,21 +152,6 @@ class XtraitjJvmModelUtil {
 		members.exists[simpleName == m.simpleName]
 	}
 
-	def isRequired(JvmMember m) {
-		m.sourceElements.exists[
-			(it instanceof TJRequiredMethod) ||
-			(it instanceof TJField) ||
-			(it instanceof TJRestrictOperation)
-		]
-	}
-
-	def isRequiredMethod(JvmMember m) {
-		m.sourceElements.exists[
-			(it instanceof TJRequiredMethod) ||
-			(it instanceof TJRestrictOperation)
-		]
-	}
-
 	def associatedTrait(JvmTypeParameterDeclarator type) {
 		type.sourceElements.filter(TJTrait).head
 	}
@@ -179,27 +164,6 @@ class XtraitjJvmModelUtil {
 		type.sourceElements.filter(TJClass).head
 	}
 
-//	def memberRepresentation(JvmMember m) {
-//		if (m instanceof JvmOperation) {
-//			if (m.sourceField != null)
-//				return m.fieldRepresentation
-//			else
-//				return m.methodRepresentation
-//		} else {
-//			return m.simpleName
-//		}
-//	}
-
-	def fieldRepresentation(XtraitjJvmOperation f) {
-		f.returnType?.simpleName + " " + 
-			f.op.fieldName
-	}
-
-	def fieldRepresentation(JvmOperation f) {
-		f.returnType?.simpleName + " " + 
-			f.fieldName
-	}
-
 	def fieldRepresentation(IResolvedOperation f) {
 		val typeRepr = if (f.declaration.simpleName.startsWith("set")) {
 			f.resolvedParameterTypes.head.simpleName
@@ -208,20 +172,6 @@ class XtraitjJvmModelUtil {
 		}
 		typeRepr + " " + f.fieldName
 	}
-
-//	def methodRepresentation(XtraitjJvmOperation m) {
-//		m.returnType?.simpleName + " " + m.op.simpleName +
-//			"(" +
-//			m.parametersTypes.map[simpleName].join(", ")
-//			+ ")"
-//	}
-
-//	def methodRepresentation(JvmOperation m) {
-//		m.returnType?.simpleName + " " + m.simpleName +
-//			"(" +
-//			m.parameters.map[parameterType?.simpleName].join(", ")
-//			+ ")"
-//	}
 
 	def methodRepresentation(IResolvedOperation m) {
 		m.resolvedReturnType.simpleName + " " + m.simpleSignature
