@@ -347,6 +347,7 @@
 			</snapshots>
 		</pluginRepository>
 
+		<!--
 		<pluginRepository>
 			<id>sonatype_snapshots</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -357,6 +358,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
+		 -->
 		
 		<!-- Repository to resolve fornax-oaw-m2-plugin -->
 		<!-- in case of SSL certificates errors, use
