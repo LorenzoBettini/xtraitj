@@ -251,6 +251,14 @@ class XtraitjSmokeTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testReferenceToNonExistentInterface() {
+		'''
+		class C implements T {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 		//	.map[message].forEach[println(it)] // useful for debugging

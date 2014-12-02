@@ -801,6 +801,17 @@ class C uses T3 {
 		]
 	}
 
+	@Test
+	def void testClassImplementsClass() {
+		'''
+		class C implements java.util.LinkedList {}
+		'''.parse.assertError(
+				TypesPackage.eINSTANCE.jvmParameterizedTypeReference,
+				XtraitjValidator.NOT_AN_INTERFACE,
+				"Not a valid interface 'LinkedList'"
+			)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

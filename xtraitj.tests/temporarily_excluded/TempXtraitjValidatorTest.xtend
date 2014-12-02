@@ -238,16 +238,7 @@ class TempXtraitjValidatorTest {
 		]
 	}
 
-	@Test
-	def void testClassImplementsClass() {
-		'''
-		class C implements java.util.LinkedList {}
-		'''.parse.assertError(
-				TypesPackage::eINSTANCE.jvmParameterizedTypeReference,
-				XtraitjValidator::NOT_AN_INTERFACE,
-				"Not a valid interface 'LinkedList'"
-			)
-	}
+
 
 	@Test
 	def void testClassDoesNotImplementAllInterfaceMethods() {
