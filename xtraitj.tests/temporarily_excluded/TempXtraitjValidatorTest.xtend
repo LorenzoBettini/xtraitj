@@ -34,37 +34,9 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testFieldRedirectedToMethod() {
-		'''
-		trait T1 {
-			String f;
-			String m() { null }
-		}
-		
-		trait T2 uses T1[redirect f to m] {
-		}
-		'''.parse.assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::FIELD_REDIRECTED_TO_METHOD,
-				"Cannot redirect field 'f' to method 'm'"
-			)
-	}
 
-	@Test def void testMethodRedirectedToField() {
-		'''
-		trait T1 {
-			String f;
-			String m() { null }
-		}
-		
-		trait T2 uses T1[redirect m to f] {
-		}
-		'''.parse.assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::METHOD_REDIRECTED_TO_FIELD,
-				"Cannot redirect method 'm' to field 'f'"
-			)
-	}
+
+
 	
 	@Test 
 	def void testRedirectNotCompliant() {

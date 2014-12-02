@@ -188,7 +188,7 @@ class XtraitjJvmModelUtil {
 	 * 
 	 * IMPORTANT: we assume that the JvmOperation is actually a getter or a setter.
 	 */
-	def fieldName(JvmOperation f) {
+	def fieldName(JvmMember f) {
 		val simpleName = f.simpleName
 		
 		if (simpleName.startsWith("set")) {

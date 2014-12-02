@@ -36,6 +36,7 @@ import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJRedirectOperation
 
 /**
  * Custom validation rules. 
@@ -68,7 +69,11 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	
 	public static val FIELD_REDIRECTED_TO_METHOD = PREFIX + "FieldRedirectedToMethod"
 	
+	public static val FIELD_REDIRECTED_NOT_FIELD = PREFIX + "FieldRedirectedNotField"
+	
 	public static val METHOD_REDIRECTED_TO_FIELD = PREFIX + "MethodRedirectedToField"
+	
+	public static val METHOD_REDIRECTED_NOT_METHOD = PREFIX + "MethodRedirectedNotMethod"
 	
 	public static val REDIRECT_NOT_COMPLIANT = PREFIX + "RedirectNotCompliant"
 	
@@ -699,6 +704,49 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 //		}
 //	}
 //
+
+	@Check def void checkRedirect(TJRedirectOperation op) {
+		val member1 = op.member
+		val member2 = op.member2
+		if (member1 != null && member2 != null) {
+			if (op.field) {
+				if (!member1.annotatedRequiredField) {
+					error(
+						"Redirect field using a method: '" +
+							member1.simpleName + "'",
+						XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
+						FIELD_REDIRECTED_NOT_FIELD
+					)
+				} else if (!member2.annotatedRequiredField) {
+					error(
+						"Cannot redirect field '" +
+							member1.fieldName + "'" + " to method '" +
+							member2.simpleName +"'",
+						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+						FIELD_REDIRECTED_TO_METHOD
+					)
+				}
+			} else {
+				if (member1.annotatedRequiredField) {
+					error(
+						"Redirect method using a field: '" +
+							member1.fieldName + "'",
+						XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
+						METHOD_REDIRECTED_NOT_METHOD
+					)
+				} else if (member2.annotatedRequiredField) {
+					error(
+						"Cannot redirect method '" +
+							member1.simpleName + "'" + " to field '" +
+							member2.fieldName +"'",
+						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+						METHOD_REDIRECTED_TO_FIELD
+					)
+				}
+			}
+		}
+	}
+
 	@Check
 	def void checkConstructorName(TJClass cl) {
 		for (cons : cl.constructors) {

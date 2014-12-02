@@ -772,7 +772,7 @@ trait T2 uses T1<String> {
 	String useField() { return s1.get(0); }
 }
 
-trait T3 uses T2[ redirect s1 to s2 ] {
+trait T3 uses T2[ redirect field s1 to s2 ] {
 }
 
 class C uses T3 {
@@ -1047,6 +1047,70 @@ class C uses T3 {
 				"Couldn't resolve reference to JvmMember 'n'."
 			)
 		]
+	}
+
+	@Test def void testFieldRedirectedToMethod() {
+		'''
+		trait T1 {
+			String f;
+			String m() { null }
+		}
+		
+		trait T2 uses T1[redirect field f to m] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.FIELD_REDIRECTED_TO_METHOD,
+				"Cannot redirect field 'f' to method 'm'"
+			)
+	}
+
+	@Test def void testFieldRedirectedNotAField() {
+		'''
+		trait T1 {
+			String m() { null }
+			String n() { null }
+		}
+		
+		trait T2 uses T1[redirect field m to n] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.FIELD_REDIRECTED_NOT_FIELD,
+				"Redirect field using a method: 'm'"
+			)
+	}
+
+	@Test def void testMethodRedirectedToField() {
+		'''
+		trait T1 {
+			String f;
+			String m() { null }
+		}
+		
+		trait T2 uses T1[redirect m to f] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.METHOD_REDIRECTED_TO_FIELD,
+				"Cannot redirect method 'm' to field 'f'"
+			)
+	}
+
+	@Test def void testMethodRedirectedNotAMethod() {
+		'''
+		trait T1 {
+			String f;
+			String m() { null }
+		}
+		
+		trait T2 uses T1[redirect f to m] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.METHOD_REDIRECTED_NOT_METHOD,
+				"Redirect method using a field: 'f'"
+			)
 	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
