@@ -28,7 +28,7 @@
 		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<junit-version>4.11</junit-version>
-		<jacoco-version>0.5.8.201207111220</jacoco-version>
+		<jacoco-version>0.7.2.201409121644</jacoco-version>
 		<findbugs-version>2.5.5</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
@@ -337,11 +337,6 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>tycho-staged</id>
-			<url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1020/</url>
-		</pluginRepository>
-	
-		<pluginRepository>
 			<id>sonatype_releases</id>
 			<url>https://oss.sonatype.org/content/repositories/releases/</url>
 			<releases>
@@ -352,6 +347,7 @@
 			</snapshots>
 		</pluginRepository>
 
+		<!--
 		<pluginRepository>
 			<id>sonatype_snapshots</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -362,6 +358,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
+		 -->
 		
 		<!-- Repository to resolve fornax-oaw-m2-plugin -->
 		<!-- in case of SSL certificates errors, use
