@@ -28,56 +28,9 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testHideRequiredMethod() {
-		'''
-		trait T1 {
-			String n(int i);
-		}
-		
-		trait T2 uses T1[hide n] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJHideOperation,
-				XtraitjValidator::HIDING_REQUIRED,
-				"Cannot hide required method 'n'"
-			)
-		]
-	}
 
-	@Test def void testAliasRequiredMethod() {
-		'''
-		trait T1 {
-			String n(int i);
-		}
-		
-		trait T2 uses T1[alias n] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJAliasOperation,
-				XtraitjValidator::ALIASING_REQUIRED,
-				"Cannot alias required method 'n'"
-			)
-		]
-	}
 
-	@Test def void testRestrictRequiredMethod() {
-		'''
-		trait T1 {
-			String n(int i);
-		}
-		
-		trait T2 uses T1[restrict n] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRestrictOperation,
-				XtraitjValidator::RESTRICTING_REQUIRED,
-				"Cannot restrict required method 'n'"
-			)
-		]
-	}
+
 
 	@Test def void testOperationOnPrivateMethod() {
 		'''

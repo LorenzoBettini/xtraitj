@@ -24,11 +24,15 @@ import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
+import xtraitj.xtraitj.TJAliasOperation
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
+import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJOperation
 import xtraitj.xtraitj.TJProgram
+import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
@@ -611,36 +615,36 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			}
 		}
 	}
-//
-//	@Check def void checkTraitHideOperation(TJHideOperation op) {
-//		op.errorForRequiredMember("hide", HIDING_REQUIRED)
-//	}
-//
-//	@Check def void checkTraitAliasOperation(TJAliasOperation op) {
-//		op.errorForRequiredMember("alias", ALIASING_REQUIRED)
+
+	@Check def void checkTraitHideOperation(TJHideOperation op) {
+		op.errorForRequiredMember("hide", HIDING_REQUIRED)
+	}
+
+	@Check def void checkTraitAliasOperation(TJAliasOperation op) {
+		op.errorForRequiredMember("alias", ALIASING_REQUIRED)
 //		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJAliasOperation_Newname)
-//	}
+	}
 //
 //	@Check def void checkTraitRenameOperation(TJRenameOperation op) {
 //		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJRenameOperation_Newname)
 //	}
 //
-//	@Check def void checkTraitRestrictOperation(TJRestrictOperation op) {
-//		op.errorForRequiredMember("restrict", RESTRICTING_REQUIRED)
-//	}
-//
-//	def private errorForRequiredMember(TjTraitOperationForProvided op, 
-//				String opName, String issue) {
-//		val member = op.member
-//		if (member != null && member.required) {
-//			error(
-//				"Cannot " + opName + " required method '" +
-//					member.simpleName + "'",
-//				XtraitjPackage::eINSTANCE.TJTraitOperation_Member,
-//				issue
-//			)
-//		}
-//	}
+	@Check def void checkTraitRestrictOperation(TJRestrictOperation op) {
+		op.errorForRequiredMember("restrict", RESTRICTING_REQUIRED)
+	}
+
+	def private errorForRequiredMember(TjTraitOperationForProvided op, 
+				String opName, String issue) {
+		val member = op.member
+		if (member != null && member.annotatedRequiredMethod) {
+			error(
+				"Cannot " + opName + " required method '" +
+					member.simpleName + "'",
+				XtraitjPackage::eINSTANCE.TJTraitOperation_Member,
+				issue
+			)
+		}
+	}
 //
 //	def private errorForAlterationToExistingMember(TJTraitOperation op, 
 //				String newname, EStructuralFeature feature) {
