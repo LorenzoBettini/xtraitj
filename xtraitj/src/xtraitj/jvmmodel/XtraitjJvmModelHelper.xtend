@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
@@ -14,7 +15,9 @@ import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
-import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import xtraitj.xtraitj.TJTraitOperation
+
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 @Singleton
 class XtraitjJvmModelHelper {
@@ -72,6 +75,10 @@ class XtraitjJvmModelHelper {
 	 */
 	def getResolvedOperation(JvmTypeReference typeRef, EObject context, JvmOperation op) {
 		typeRef.toLightweightTypeReference(context).resolvedOperations.getResolvedOperation(op)
+	}
+
+	def getXtraitjResolvedOperations(TJTraitOperation op) {
+		op.containingTraitOperationExpression.trait.xtraitjResolvedOperations
 	}
 
 	def getXtraitjResolvedOperations(JvmTypeReference typeRef) {

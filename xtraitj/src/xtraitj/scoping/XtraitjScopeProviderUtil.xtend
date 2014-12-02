@@ -9,14 +9,13 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.jvmmodel.XtraitjJvmModelHelper
 
 /**
  * For the moment Xbase uses two different scope providers, one for
@@ -45,7 +44,7 @@ class XtraitjScopeProviderUtil {
 	}
 
 	def dispatch customScope(TJTraitOperation op) {
-		val ops = op.containingTraitOperationExpression.trait.xtraitjResolvedOperations
+		val ops = getXtraitjResolvedOperations(op)
 		
 		// a JvmMember does not have 'name', but 'simpleName'
 		// thus we must also provide a function for computing the
@@ -59,14 +58,14 @@ class XtraitjScopeProviderUtil {
 			]
 		)
 	}
-
+	
 	def dispatch customScope(TjTraitOperationForProvided op) {
 		return scopeForDefinedMethods(op)
 	}
 
 	def scopeForDefinedMethods(TJTraitOperation op) {
 		new SimpleScope(
-			op.containingTraitOperationExpression.trait.xtraitjResolvedOperations.
+			getXtraitjResolvedOperations(op).
 				declaredMethods.
 				map[getOp].
 				scopedElementsFor [
