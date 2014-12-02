@@ -179,16 +179,16 @@ class XtraitjJvmModelUtil {
 		type.sourceElements.filter(TJClass).head
 	}
 
-	def memberRepresentation(JvmMember m) {
-		if (m instanceof JvmOperation) {
-			if (m.sourceField != null)
-				return m.fieldRepresentation
-			else
-				return m.methodRepresentation
-		} else {
-			return m.simpleName
-		}
-	}
+//	def memberRepresentation(JvmMember m) {
+//		if (m instanceof JvmOperation) {
+//			if (m.sourceField != null)
+//				return m.fieldRepresentation
+//			else
+//				return m.methodRepresentation
+//		} else {
+//			return m.simpleName
+//		}
+//	}
 
 	def fieldRepresentation(XtraitjJvmOperation f) {
 		f.returnType?.simpleName + " " + 
@@ -209,18 +209,22 @@ class XtraitjJvmModelUtil {
 		typeRepr + " " + f.fieldName
 	}
 
-	def methodRepresentation(XtraitjJvmOperation m) {
-		m.returnType?.simpleName + " " + m.op.simpleName +
-			"(" +
-			m.parametersTypes.map[simpleName].join(", ")
-			+ ")"
-	}
+//	def methodRepresentation(XtraitjJvmOperation m) {
+//		m.returnType?.simpleName + " " + m.op.simpleName +
+//			"(" +
+//			m.parametersTypes.map[simpleName].join(", ")
+//			+ ")"
+//	}
 
-	def methodRepresentation(JvmOperation m) {
-		m.returnType?.simpleName + " " + m.simpleName +
-			"(" +
-			m.parameters.map[parameterType?.simpleName].join(", ")
-			+ ")"
+//	def methodRepresentation(JvmOperation m) {
+//		m.returnType?.simpleName + " " + m.simpleName +
+//			"(" +
+//			m.parameters.map[parameterType?.simpleName].join(", ")
+//			+ ")"
+//	}
+
+	def methodRepresentation(IResolvedOperation m) {
+		m.resolvedReturnType.simpleName + " " + m.simpleSignature
 	}
 
 	def fieldName(IResolvedOperation o) {

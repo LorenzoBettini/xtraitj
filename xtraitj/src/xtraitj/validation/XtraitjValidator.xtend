@@ -8,14 +8,15 @@ import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesPackage
+import org.eclipse.xtext.common.types.impl.JvmVoidImpl
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
+import org.eclipse.xtext.xbase.typesystem.^override.IOverrideCheckResult.OverrideCheckDetails
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
@@ -31,8 +32,6 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.xbase.typesystem.^override.IOverrideCheckResult.OverrideCheckDetails
-import org.eclipse.xtext.common.types.impl.JvmVoidImpl
 
 /**
  * Custom validation rules. 
@@ -248,7 +247,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 						errorMissingRequiredField(c, op)
 					}
 				} else {
-					errorMissingRequiredMethod(c, decl, op)
+					errorMissingRequiredMethod(c, op)
 				}
 			}
 		}
@@ -309,11 +308,22 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		)
 	}
 
-	private def errorMissingRequiredMethod(TJClass c, JvmOperation decl, IResolvedOperation op) {
+	private def errorMissingRequiredMethod(TJClass c, IResolvedOperation op) {
+		// we must retrieve the type reference for the missing method
+		// it can be either an interface or a used trait
+		
+		var feature = XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression
+		val declaringTypeId = op.declaration.declaringType.identifier
+		
+		val interface = c.interfaces.findFirst[type.identifier == declaringTypeId]
+		if (interface != null) {
+			feature = XtraitjPackage.eINSTANCE.TJClass_Interfaces
+		}
+		
 		error(
 			"Class " + c.name + " must provide required method '" +
-				decl.methodRepresentation + "'",
-			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+				op.methodRepresentation + "'",
+			feature,
 			MISSING_REQUIRED_METHOD
 		)
 	}

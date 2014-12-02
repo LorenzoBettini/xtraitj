@@ -797,9 +797,30 @@ class C uses T3 {
 		
 		class C uses T1, T2 {}
 		'''.parse => [
-			assertMissingRequiredMethod("String n(int)")
+			// the error is placed on both references
+			assertMissingRequiredMethod("String n(int)", 129, 6)
 		]
 	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethods() {
+		'''
+		class C implements java.util.List {}
+		'''.parse => [
+			assertMissingRequiredMethod("int indexOf(Object)", 19, 14)
+			assertMissingRequiredMethod("void add(int, Object)", 19, 14)
+		]
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceWithTypeArgMethods() {
+		'''
+		class C implements java.util.List<String> {}
+		'''.parse => [
+			assertMissingRequiredMethod("void add(int, String)", 19, 22)
+		]
+	}
+
 
 	@Test
 	def void testClassImplementsClass() {
@@ -871,10 +892,11 @@ class C uses T3 {
 		)
 	}
 
-	def private assertMissingRequiredMethod(EObject o, String methodRepr) {
+	def private assertMissingRequiredMethod(EObject o, String methodRepr, int offset, int length) {
 		o.assertError(
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
+			offset, length,
 			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}
