@@ -18,6 +18,7 @@ import xtraitj.xtraitj.XtraitjPackage
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import static extension org.junit.Assert.*
 import org.eclipse.xtext.xbase.validation.IssueCodes
+import org.eclipse.xtext.diagnostics.Diagnostic
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -1027,6 +1028,23 @@ class C uses T3 {
 				XtraitjPackage.eINSTANCE.TJRestrictOperation,
 				XtraitjValidator.RESTRICTING_REQUIRED,
 				"Cannot restrict required method 'n'"
+			)
+		]
+	}
+
+	@Test def void testOperationOnPrivateMethod() {
+		'''
+		trait T1 {
+			private String n(int i) { null }
+		}
+		
+		trait T2 uses T1[restrict n] {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJRestrictOperation,
+				Diagnostic.LINKING_DIAGNOSTIC,
+				"Couldn't resolve reference to JvmMember 'n'."
 			)
 		]
 	}

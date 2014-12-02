@@ -32,22 +32,7 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testOperationOnPrivateMethod() {
-		'''
-		trait T1 {
-			private String n(int i) { null }
-		}
-		
-		trait T2 uses T1[restrict n] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRestrictOperation,
-				Diagnostic::LINKING_DIAGNOSTIC,
-				"Couldn't resolve reference to JvmMember 'n'."
-			)
-		]
-	}
+
 
 	@Test def void testFieldRedirectedToMethod() {
 		'''
