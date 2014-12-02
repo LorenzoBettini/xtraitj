@@ -34,7 +34,7 @@ import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
-import xtraitj.xtraitj.TjTraitOperationForProvided
+import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
@@ -80,6 +80,10 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	
 	public static val REDIRECT_TO_SAME_MEMBER = PREFIX + "RedirectToSameMember"
 	
+	public static val FIELD_RENAME_NOT_FIELD = PREFIX + "FieldRenameNotField"
+	
+	public static val METHOD_RENAME_NOT_METHOD = PREFIX + "MethodRenameNotMethod"
+
 	public static val NOT_AN_INTERFACE = PREFIX + "NotAnInterface"
 
 	public static val NOT_A_TRAIT = PREFIX + "NotATrait"
@@ -639,7 +643,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		op.errorForRequiredMember("restrict", RESTRICTING_REQUIRED)
 	}
 
-	def private errorForRequiredMember(TjTraitOperationForProvided op, 
+	def private errorForRequiredMember(TJTraitOperationForProvided op, 
 				String opName, String issue) {
 		val member = op.member
 		if (member != null && member.annotatedRequiredMethod) {

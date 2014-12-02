@@ -54,12 +54,12 @@ TJTraitReference:
 ;
 
 TJTraitOperation:
-	TjTraitOperationForProvided |
+	TJTraitOperationForProvided |
 	TJRenameOperation |
 	TJRedirectOperation
 ;
 
-TjTraitOperationForProvided:
+TJTraitOperationForProvided:
 	TJHideOperation | TJRestrictOperation | TJAliasOperation
 ;
 

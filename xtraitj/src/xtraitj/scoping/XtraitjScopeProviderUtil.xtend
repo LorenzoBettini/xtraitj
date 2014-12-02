@@ -12,7 +12,7 @@ import org.eclipse.xtext.scoping.impl.SimpleScope
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJTraitOperation
-import xtraitj.xtraitj.TjTraitOperationForProvided
+import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
@@ -59,7 +59,7 @@ class XtraitjScopeProviderUtil {
 		)
 	}
 	
-	def dispatch customScope(TjTraitOperationForProvided op) {
+	def dispatch customScope(TJTraitOperationForProvided op) {
 		return scopeForDefinedMethods(op)
 	}
 

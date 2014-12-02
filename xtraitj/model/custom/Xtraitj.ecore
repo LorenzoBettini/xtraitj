@@ -62,10 +62,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="TJTraitOperation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass ../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmMember"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TjTraitOperationForProvided" eSuperTypes="#//TJTraitOperation"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TJHideOperation" eSuperTypes="#//TjTraitOperationForProvided"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TJRestrictOperation" eSuperTypes="#//TjTraitOperationForProvided"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TJAliasOperation" eSuperTypes="#//TjTraitOperationForProvided">
+  <eClassifiers xsi:type="ecore:EClass" name="TJTraitOperationForProvided" eSuperTypes="#//TJTraitOperation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TJHideOperation" eSuperTypes="#//TJTraitOperationForProvided"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TJRestrictOperation" eSuperTypes="#//TJTraitOperationForProvided"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TJAliasOperation" eSuperTypes="#//TJTraitOperationForProvided">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TJRenameOperation" eSuperTypes="#//TJTraitOperation">
