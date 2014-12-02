@@ -186,56 +186,9 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics3() {
-		'''
-		import xtraitj.input.tests.MyGenericTestInterface
-		import java.util.ArrayList
-		
-		trait T1<T> {
-			int m(ArrayList<T> l) { return 0; }
-		}
-		
-		// required m(List<T>) provided m(ArrayList<T>)
-		class C implements MyGenericTestInterface<String> uses T1<String> {}
-		'''.parse => [
-			assertMissingInterfaceMethod("int m(List<String>)")
-		]
-	}
 
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics4() {
-		'''
-		import xtraitj.input.tests.MyGenericTestInterface2
-		
-		trait T1<T> {
-			T n(int i) { return null; }
-		}
-		
-		// required List<T> n(int i) provided T n(int i)
-		class C implements MyGenericTestInterface2<String> uses T1<String> {}
-		'''.parse => [
-			assertMissingInterfaceMethod("List<String> n(int)")
-		]
-	}
 
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethodsWithGenericsWithCovariantReturnType() {
-		'''
-		import xtraitj.input.tests.MyGenericTestInterface2
-		import java.util.ArrayList
-		
-		trait T1<T> {
-			ArrayList<T> n(int i) { return null; }
-		}
-		
-		// required List<T> n(int i) provided ArrayList<T> n(int i)
-		// OK: covariant return type
-		class C implements MyGenericTestInterface2<String> uses T1<String> {}
-		'''.parse => [
-			assertNoErrors
-		]
-	}
+
 
 
 
@@ -634,25 +587,7 @@ trait T2 uses T1[alias s as s2] {
 
 
 
-	@Test def void testClassMissingRequiredMethodWithGeneric() {
-		'''
-		trait TGeneric<T> {
-			T required(T t);
-		} 
-		
-		trait TUsesGeneric uses TGeneric<String> {
-		}
-		
-		class CUsesGeneric uses TUsesGeneric {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
-				XtraitjValidator::MISSING_REQUIRED_METHOD,
-				"Class must provide required method 'String required(String)'"
-			)
-		]
-	}
+
 
 
 

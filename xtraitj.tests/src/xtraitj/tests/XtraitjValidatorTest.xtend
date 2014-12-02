@@ -861,6 +861,71 @@ class C uses T3 {
 		'''.parse.assertMissingRequiredMethod("int m(List<U>)")
 	}
 
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics3() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface
+		import java.util.ArrayList
+		
+		trait T1<T> {
+			int m(ArrayList<T> l) { return 0; }
+		}
+		
+		// required m(List<T>) provided m(ArrayList<T>)
+		class C implements MyGenericTestInterface<String> uses T1<String> {}
+		'''.parse.assertMissingRequiredMethod("int m(List<String>)")
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenericsMismatchMethod() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface2
+		
+		trait T1<T> {
+			T n(int i) { return null; }
+		}
+		
+		// required List<String> n(int i) provided String n(int i)
+		class C implements MyGenericTestInterface2<String> uses T1<String> {}
+		'''.parse.assertMismatchRequiredMethod("List<String> n(int)", "String n(int)")
+	}
+
+	@Test
+	def void testClassImplementsAllInterfaceMethodsWithGenericsWithCovariantReturnType() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface2
+		import java.util.ArrayList
+		
+		trait T1<T> {
+			ArrayList<T> n(int i) { return null; }
+		}
+		
+		// required List<String> n(int i) provided ArrayList<String> n(int i)
+		// OK: covariant return type
+		class C implements MyGenericTestInterface2<String> uses T1<String> {}
+		'''.parse.assertNoErrors
+	}
+
+	@Test def void testClassMissingRequiredMethodWithGeneric() {
+		'''
+		trait TGeneric<T> {
+			T required(T t);
+		} 
+		
+		trait TUsesGeneric uses TGeneric<String> {
+		}
+		
+		class CUsesGeneric uses TUsesGeneric {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJClass,
+				XtraitjValidator::MISSING_REQUIRED_METHOD,
+				"Class CUsesGeneric must provide required method 'String required(String)'"
+			)
+		]
+	}
+
 	@Test def void testClassMissingRenamedRequiredMethod() {
 		'''
 		trait T1 {
@@ -956,6 +1021,17 @@ class C uses T3 {
 			"Incompatible field '" +
 				actualRepr +
 				"' for required field '" +
+				requiredRepr + "'"
+		)
+	}
+
+	def private assertMismatchRequiredMethod(EObject o, String requiredRepr, String actualRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjValidator.INCOMPATIBLE_REQUIRED_METHOD,
+			"Incompatible method '" +
+				actualRepr +
+				"' for required method '" +
 				requiredRepr + "'"
 		)
 	}

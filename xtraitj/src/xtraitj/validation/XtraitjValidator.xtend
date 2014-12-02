@@ -52,6 +52,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 
 	public static val MISSING_REQUIRED_METHOD = PREFIX + "MissingRequiredMethod"
 
+	public static val INCOMPATIBLE_REQUIRED_METHOD = "xtraitj.IncompatibleRequiredMethod"
+
 	public static val MISSING_INTERFACE_METHOD = PREFIX + "MissingInterfaceMethod"
 	
 	public static val HIDING_REQUIRED = PREFIX + "HidingRequired"
@@ -228,7 +230,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 						if (inherited.declaration.annotatedRequiredField) {
 							errorMismatchRequiredField(c, op, inherited)
 							missingOrMismatchFields.add(op.fieldName)
-						}		
+						} else {
+							errorMismatchRequiredMethod(c, op, inherited)
+						}
 					}
 				}
 			}
@@ -305,6 +309,17 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 				inherited.fieldRepresentation + "'",
 			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
 			INCOMPATIBLE_REQUIRED_FIELD
+		)
+	}
+
+	private def errorMismatchRequiredMethod(TJClass c, IResolvedOperation resolved, IResolvedOperation inherited) {
+		error(
+			"Class " + c.name + ": Incompatible method '" +
+				resolved.methodRepresentation +
+				"' for required method '" +
+				inherited.methodRepresentation + "'",
+			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
+			INCOMPATIBLE_REQUIRED_METHOD
 		)
 	}
 
