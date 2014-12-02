@@ -821,6 +821,74 @@ class C uses T3 {
 		]
 	}
 
+	@Test def void testClassImplementsAllInterfaceMethods() {
+		'''
+		import xtraitj.input.tests.MyTestInterface
+		
+		trait T {
+			int m(java.util.List<String> l) { return l.size }
+		}
+		
+		class C implements MyTestInterface uses T {}
+		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface
+		
+		trait T1<T> {
+			T m(T l) { return null; }
+		}
+		
+		// required m(List<String>) provided m(String)
+		class C implements MyGenericTestInterface<String> uses T1<String> {}
+		'''.parse.assertMissingRequiredMethod("int m(List<String>)")
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics2() {
+		'''
+		import xtraitj.input.tests.MyGenericTestInterface
+		
+		trait T1<T> {
+			T m(T l) { return null; }
+		}
+		
+		// required m(List<U>) provided m(U)
+		class C<U> implements MyGenericTestInterface<U> uses T1<U> {}
+		'''.parse.assertMissingRequiredMethod("int m(List<U>)")
+	}
+
+	@Test def void testClassMissingRenamedRequiredMethod() {
+		'''
+		trait T1 {
+			int m() { return 0; }
+			String n(int i);
+		}
+		
+		trait T2 {
+			String n(int i) { "n" } // this satisfy T1's requirement
+		}
+		
+		trait T3 uses T2[rename n to n1] {}
+		
+		class C uses T1, T3 {}
+		'''.parse.assertErrorsAsStrings("Class C must provide required method 'String n(int)'")
+	}
+
+	@Test def void testClassMissingRestrictedMethod() {
+		'''
+		trait T1 {
+			String m() { return ""; }
+		}
+		
+		trait T2 uses T1[restrict m] {}
+		
+		class C uses T2 {}
+		'''.parse.assertErrorsAsStrings("Class C must provide required method 'String m()'")
+	}
 
 	@Test
 	def void testClassImplementsClass() {
@@ -897,6 +965,14 @@ class C uses T3 {
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
 			offset, length,
+			"Class C must provide required method '" + methodRepr + "'"
+		)
+	}
+
+	def private assertMissingRequiredMethod(EObject o, String methodRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjValidator.MISSING_REQUIRED_METHOD,
 			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}

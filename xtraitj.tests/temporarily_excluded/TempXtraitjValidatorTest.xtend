@@ -28,61 +28,6 @@ class TempXtraitjValidatorTest {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	@Test def void testClassMissingRenamedRequiredMethod() {
-		'''
-		trait T1 {
-			int m() { return 0; }
-			String n(int i);
-		}
-		
-		trait T2 {
-			String n(int i) { "n" }; // this satisfy T1's requirement
-		}
-		
-		trait T3 uses T2[rename n to n1] {}
-		
-		class C uses T1, T3 {}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
-				XtraitjValidator::MISSING_REQUIRED_METHOD,
-				"Class must provide required method 'String n(int)'"
-			)
-		]
-	}
-
-	@Test def void testClassMissingRestrictedMethod() {
-		'''
-		trait T1 {
-			String m() { return 0; }
-		}
-		
-		trait T2 uses T1[restrict m] {}
-		
-		class C uses T2 {}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
-				XtraitjValidator::MISSING_REQUIRED_METHOD,
-				"Class must provide required method 'String m()'"
-			)
-		]
-	}
-
 	@Test def void testHideRequiredMethod() {
 		'''
 		trait T1 {
@@ -240,60 +185,6 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethods() {
-		'''
-		class C implements java.util.List {}
-		'''.parse => [
-			assertMissingInterfaceMethod("void add(int, E)")
-			assertMissingInterfaceMethod("int indexOf(Object)")
-		]
-	}
-
-	@Test def void testClassImplementsAllInterfaceMethods() {
-		'''
-		import xtraitj.input.tests.MyTestInterface
-		
-		trait T {
-			int m(java.util.List<String> l) { return l.size }
-		}
-		
-		class C implements MyTestInterface uses T {}
-		'''.parse.assertNoErrors
-	}
-
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics() {
-		'''
-		import xtraitj.input.tests.MyGenericTestInterface
-		import java.util.ArrayList
-		
-		trait T1<T> {
-			T m(T l) { return null; }
-		}
-		
-		// required m(List<T>) provided m(ArrayList<T>)
-		class C implements MyGenericTestInterface<String> uses T1<String> {}
-		'''.parse => [
-			assertMissingInterfaceMethod("int m(List<String>)")
-		]
-	}
-
-	@Test
-	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics2() {
-		'''
-		import xtraitj.input.tests.MyGenericTestInterface
-		
-		trait T1<T> {
-			int m(T l) { return 0; }
-		}
-		
-		// required m(List<T>) provided m(T)
-		class C implements MyGenericTestInterface<String> uses T1<String> {}
-		'''.parse => [
-			assertMissingInterfaceMethod("int m(List<String>)")
-		]
-	}
 
 	@Test
 	def void testClassDoesNotImplementAllInterfaceMethodsWithGenerics3() {
