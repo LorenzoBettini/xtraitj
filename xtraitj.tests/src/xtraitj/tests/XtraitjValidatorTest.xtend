@@ -812,6 +812,20 @@ class C uses T3 {
 			)
 	}
 
+	@Test
+	def void testClassUsesNotATrait() {
+		'''
+		class C uses java.util.LinkedList {}
+		'''.parse.assertNotATraitReference("LinkedList")
+	}
+
+	@Test
+	def void testTraitUsesNotATrait() {
+		'''
+		trait T uses java.util.LinkedList<String> {}
+		'''.parse.assertNotATraitReference("LinkedList<String>")
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
@@ -862,6 +876,14 @@ class C uses T3 {
 			XtraitjPackage.eINSTANCE.TJClass,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
 			"Class C must provide required method '" + methodRepr + "'"
+		)
+	}
+
+	def private assertNotATraitReference(EObject o, String typeRefRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJTraitReference,
+			XtraitjValidator.NOT_A_TRAIT,
+			"Not a trait reference '" + typeRefRepr + "'"
 		)
 	}
 }

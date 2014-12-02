@@ -32,6 +32,7 @@ import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 import org.eclipse.xtext.xbase.typesystem.^override.IOverrideCheckResult.OverrideCheckDetails
+import org.eclipse.xtext.common.types.impl.JvmVoidImpl
 
 /**
  * Custom validation rules. 
@@ -69,6 +70,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	public static val REDIRECT_TO_SAME_MEMBER = PREFIX + "RedirectToSameMember"
 	
 	public static val NOT_AN_INTERFACE = PREFIX + "NotAnInterface"
+
+	public static val NOT_A_TRAIT = PREFIX + "NotATrait"
 	
 	public static val DUPLICATE_TRAIT_REFERENCE = PREFIX + "DuplicateTraitReference"
 	
@@ -333,6 +336,23 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					i,
 					null,
 					NOT_AN_INTERFACE
+				)
+			}
+		}
+	}
+
+	@Check def void checkUsesRefersToATraitInterface(TJDeclaration d) {
+		for (t : d.traitReferences) {
+			val typeRef = t.trait
+			// a JvmVoidImpl means a non resolved type, and that problem
+			// has already been reported
+			if (!(typeRef.type instanceof JvmVoidImpl) && !typeRef.annotatedTraitInterface) {
+				error(
+					"Not a trait reference '" +
+						typeRef.simpleName + "'",
+					t,
+					null,
+					NOT_A_TRAIT
 				)
 			}
 		}
