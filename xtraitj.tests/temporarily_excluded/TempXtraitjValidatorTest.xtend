@@ -68,37 +68,6 @@ class TempXtraitjValidatorTest {
 		]
 	}
 
-	@Test 
-	def void testRedirectToTheSameMember() {
-		'''
-		trait T1 {
-			String f;
-			
-			int n();
-		}
-		
-		trait T2 uses T1[redirect f to f, redirect n to n] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::REDIRECT_TO_SAME_MEMBER,
-				"Redirect to the same member 'f'"
-			)
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::REDIRECT_TO_SAME_MEMBER,
-				"Redirect to the same member 'n'"
-			)
-		]
-	}
-
-
-
-
-
-
-
 
 
 

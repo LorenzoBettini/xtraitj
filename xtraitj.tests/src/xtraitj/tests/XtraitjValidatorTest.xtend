@@ -1113,6 +1113,31 @@ class C uses T3 {
 			)
 	}
 
+	@Test 
+	def void testRedirectToTheSameMember() {
+		'''
+		trait T1 {
+			String f;
+			
+			int n();
+		}
+		
+		trait T2 uses T1[redirect field f to f, redirect n to n] {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.REDIRECT_TO_SAME_MEMBER,
+				"Redirect to the same member 'f'"
+			)
+			assertError(
+				XtraitjPackage.eINSTANCE.TJRedirectOperation,
+				XtraitjValidator.REDIRECT_TO_SAME_MEMBER,
+				"Redirect to the same member 'n'"
+			)
+		]
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

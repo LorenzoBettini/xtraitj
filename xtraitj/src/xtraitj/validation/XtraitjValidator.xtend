@@ -8,6 +8,7 @@ import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
@@ -30,13 +31,13 @@ import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJOperation
 import xtraitj.xtraitj.TJProgram
+import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TjTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJRedirectOperation
 
 /**
  * Custom validation rules. 
@@ -709,40 +710,53 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		val member1 = op.member
 		val member2 = op.member2
 		if (member1 != null && member2 != null) {
-			if (op.field) {
-				if (!member1.annotatedRequiredField) {
-					error(
-						"Redirect field using a method: '" +
-							member1.simpleName + "'",
-						XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
-						FIELD_REDIRECTED_NOT_FIELD
-					)
-				} else if (!member2.annotatedRequiredField) {
-					error(
-						"Cannot redirect field '" +
-							member1.fieldName + "'" + " to method '" +
-							member2.simpleName +"'",
-						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
-						FIELD_REDIRECTED_TO_METHOD
-					)
-				}
+			if (op.member == op.member2) {
+				val memberName = if (member1.annotatedRequiredField) member1.fieldName else member1.simpleName;
+				error(
+					"Redirect to the same member '" + memberName + "'",
+					XtraitjPackage::eINSTANCE.TJRedirectOperation_Member2,
+					REDIRECT_TO_SAME_MEMBER
+				)
 			} else {
-				if (member1.annotatedRequiredField) {
-					error(
-						"Redirect method using a field: '" +
-							member1.fieldName + "'",
-						XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
-						METHOD_REDIRECTED_NOT_METHOD
-					)
-				} else if (member2.annotatedRequiredField) {
-					error(
-						"Cannot redirect method '" +
-							member1.simpleName + "'" + " to field '" +
-							member2.fieldName +"'",
-						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
-						METHOD_REDIRECTED_TO_FIELD
-					)
-				}
+				checkCorrectRedirectionForFieldAndMethod(op, member1, member2)
+			}
+		}
+	}
+	
+	private def checkCorrectRedirectionForFieldAndMethod(TJRedirectOperation op, JvmMember member1, JvmMember member2) {
+		if (op.field) {
+			if (!member1.annotatedRequiredField) {
+				error(
+					"Redirect field using a method: '" +
+						member1.simpleName + "'",
+					XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
+					FIELD_REDIRECTED_NOT_FIELD
+				)
+			} else if (!member2.annotatedRequiredField) {
+				error(
+					"Cannot redirect field '" +
+						member1.fieldName + "'" + " to method '" +
+						member2.simpleName +"'",
+					XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+					FIELD_REDIRECTED_TO_METHOD
+				)
+			}
+		} else {
+			if (member1.annotatedRequiredField) {
+				error(
+					"Redirect method using a field: '" +
+						member1.fieldName + "'",
+					XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
+					METHOD_REDIRECTED_NOT_METHOD
+				)
+			} else if (member2.annotatedRequiredField) {
+				error(
+					"Cannot redirect method '" +
+						member1.simpleName + "'" + " to field '" +
+						member2.fieldName +"'",
+					XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+					METHOD_REDIRECTED_TO_FIELD
+				)
 			}
 		}
 	}
