@@ -177,6 +177,11 @@ class XtraitjJvmModelUtil {
 		m.resolvedReturnType.simpleName + " " + m.simpleSignature
 	}
 
+	def headerRepresentation(IResolvedOperation m) {
+		m.resolvedReturnType.simpleName + " " + 
+			m.resolvedParameterTypes.map[simpleName].join(", ")
+	}
+
 	def fieldName(IResolvedOperation o) {
 		o.declaration.fieldName
 	}

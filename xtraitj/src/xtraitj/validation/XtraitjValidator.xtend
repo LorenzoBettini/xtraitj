@@ -725,13 +725,32 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					REDIRECT_TO_SAME_MEMBER
 				)
 			} else {
-				checkCorrectRedirectionForFieldAndMethod(op, member1, member2)
+				if (checkCorrectRedirectionForFieldAndMethod(op, member1, member2)) {
+					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations.toList
+					val resolved1 = resolvedOps.findFirst[it.op == member1].resolvedOperation
+					val resolved2 = resolvedOps.findFirst[it.op == member2].resolvedOperation
+					val details = resolved2.isOverridingOrImplementing(resolved1.declaration).details
+					if (details.contains(OverrideCheckDetails.SAME_ERASURE) && 
+						resolved1.headerRepresentation != resolved2.headerRepresentation
+					) {
+						error(
+							"'" +
+							resolved2.methodRepresentation + "'" + 
+							" is not compliant with '" +
+								resolved1.methodRepresentation +"'",
+								XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+								REDIRECT_NOT_COMPLIANT
+						)
+					}
+				}
 			}
 		}
 	}
 
 	/**
 	 * This assumes that both members are not null.
+	 * 
+	 * @return true if check succeeded
 	 */
 	private def checkCorrectRedirectionForFieldAndMethod(TJRedirectOperation op, JvmMember member1, JvmMember member2) {
 		if (checkCorrectFieldOrMethodOperation(op, "Redirect", FIELD_REDIRECTED_NOT_FIELD, METHOD_REDIRECTED_NOT_METHOD)) {
@@ -744,6 +763,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
 						FIELD_REDIRECTED_TO_METHOD
 					)
+					return false
 				}
 			} else {
 				if (member2.annotatedRequiredField) {
@@ -754,9 +774,12 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
 						METHOD_REDIRECTED_TO_FIELD
 					)
+					return false
 				}
 			}
+			return true
 		}
+		return false
 	}
 
 	/**

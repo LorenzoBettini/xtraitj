@@ -1138,6 +1138,44 @@ class C uses T3 {
 		]
 	}
 
+	@Test 
+	def void testMethodRedirectNotCompliant() {
+		'''
+		import java.util.List
+		
+		trait T1 {
+			List<? extends String> m();
+			List<String> n();
+		}
+		
+		trait T2 uses T1[redirect n to m] {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJRedirectOperation,
+				XtraitjValidator::REDIRECT_NOT_COMPLIANT,
+				"'List<? extends String> m()' is not compliant with 'List<String> n()'"
+			)
+		]
+	}
+
+	// TODO: this still does not work: implement compliant!
+//	@Test 
+//	def void testMethodRedirectCompliant() {
+//		'''
+//		import java.util.List
+//		import java.util.ArrayList
+//		
+//		trait T1 {
+//			ArrayList<String> m();
+//			List<String> n();
+//		}
+//		
+//		trait T2 uses T1[redirect n to m] {
+//		}
+//		'''.parse.assertNoErrors
+//	}
+
 	@Test def void testFieldRenameNotAField() {
 		'''
 		trait T1 {
