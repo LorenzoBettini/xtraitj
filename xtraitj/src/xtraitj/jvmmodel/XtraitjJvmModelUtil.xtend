@@ -3,7 +3,6 @@ package xtraitj.jvmmodel
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.beans.Introspector
-import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmFeature
@@ -11,18 +10,15 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmType
-import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
-import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.util.Strings
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedConstructor
-import org.eclipse.xtext.xtype.XFunctionTypeRef
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
@@ -38,7 +34,6 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -211,75 +206,95 @@ class XtraitjJvmModelUtil {
 //		]
 //	}
 
-	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			op.simpleName == member.op.simpleName &&
-			compliant(it, member)
-		]
-	}
+//	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
+//		candidates.findFirst[
+//			op.simpleName == member.op.simpleName &&
+//			compliant(it, member)
+//		]
+//	}
+//
+//	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
+//		candidates.findFirst[
+//			op.simpleName == member.op.simpleName &&
+//			compliant(it, member)
+//		]
+//	}
 
-	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			op.simpleName == member.op.simpleName &&
-			compliant(it, member)
-		]
-	}
+//	/**
+//	 * it's return type must be subtype of member's return type
+//	 * and parameters' types must be the same
+//	 */
+//	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
+//		val context = it.op
+//		context.isSubtype(returnType, member.returnType) &&
+//		parametersTypes.size == member.parametersTypes.size &&
+//		{
+//			var ok = true
+//			val paramIterator = parametersTypes.iterator
+//			val memberParamIterator = member.parametersTypes.iterator
+//			while (paramIterator.hasNext && ok) {
+//				if (!context.sameType
+//						(paramIterator.next, memberParamIterator.next))
+//					ok = false
+//			}
+//			ok
+//		}
+//	}
+
+//	def findMatchingMethod(Iterable<? extends JvmOperation> candidates, JvmOperation member) {
+//		candidates.findFirst[
+//			simpleName == member.simpleName &&
+//			compliant(it, member)
+//		]
+//	}
+
+//	/**
+//	 * it's return type must be subtype of member's return type
+//	 * and parameters' types must be the same
+//	 */
+//	def compliant(JvmOperation it, JvmOperation member) {
+//		it.isSubtype(returnType, member.returnType) &&
+//		parameters.size == member.parameters.size &&
+//		{
+//			var ok = true
+//			val paramIterator = parameters.iterator
+//			val memberParamIterator = member.parameters.iterator
+//			while (paramIterator.hasNext && ok) {
+//				if (!it.sameType
+//						(paramIterator.next.parameterType, memberParamIterator.next.parameterType))
+//					ok = false
+//			}
+//			ok
+//		}
+//	}
 
 	/**
-	 * it's return type must be subtype of member's return type
+	 * The return type must be subtype of member's return type
 	 * and parameters' types must be the same
 	 */
-	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
-		val context = it.op
-		context.isSubtype(returnType, member.returnType) &&
-		parametersTypes.size == member.parametersTypes.size &&
-		{
-			var ok = true
-			val paramIterator = parametersTypes.iterator
-			val memberParamIterator = member.parametersTypes.iterator
-			while (paramIterator.hasNext && ok) {
-				if (!context.sameType
-						(paramIterator.next, memberParamIterator.next))
-					ok = false
+	def compliant(IResolvedOperation o1, IResolvedOperation o2) {
+		val params1 = o1.resolvedParameterTypes
+		val params2 = o2.resolvedParameterTypes
+		
+		if (o1.resolvedReturnType.isSubtype(o2.resolvedReturnType) &&
+				params1.size == params2.size) {
+			for (i : 0..<params1.size) {
+				if (!params1.get(i).sameType(params2.get(i))) {
+					return false
+				}								
 			}
-			ok
+			return true
 		}
-	}
-
-	def findMatchingMethod(Iterable<? extends JvmOperation> candidates, JvmOperation member) {
-		candidates.findFirst[
-			simpleName == member.simpleName &&
-			compliant(it, member)
-		]
-	}
-
-	/**
-	 * it's return type must be subtype of member's return type
-	 * and parameters' types must be the same
-	 */
-	def compliant(JvmOperation it, JvmOperation member) {
-		it.isSubtype(returnType, member.returnType) &&
-		parameters.size == member.parameters.size &&
-		{
-			var ok = true
-			val paramIterator = parameters.iterator
-			val memberParamIterator = member.parameters.iterator
-			while (paramIterator.hasNext && ok) {
-				if (!it.sameType
-						(paramIterator.next.parameterType, memberParamIterator.next.parameterType))
-					ok = false
-			}
-			ok
-		}
+		return false
 	}
 	
-	def compliant(JvmMember m1, JvmMember m2) {
-		try {
-			return (m1 as JvmOperation).compliant(m2 as JvmOperation)
-		} catch (Throwable t) {
-			return false
-		}
-	}
+//	def compliant(JvmMember m1, JvmMember m2) {
+//		try {
+//			return (m1 as JvmOperation).compliant(m2 as JvmOperation)
+//		} catch (Throwable t) {
+//			return false
+//		}
+//	}
 
 	def renameGetterOrSetter(String opName, String newname) {
 		if (opName === null)
@@ -326,85 +341,11 @@ class XtraitjJvmModelUtil {
 		}
 	}
 
-	def conflictsWith(XtraitjJvmOperation f1, XtraitjJvmOperation f2) {
-		f1.op != f2.op && 
-		f1.op.simpleName == f2.op.simpleName &&
-		!f1.compliant(f2)
-	}
-
-	def JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {
-		if (typeRef == null)
-			return null
-		
-		val type = typeRef.type
-		if (type instanceof JvmTypeParameter) {
-			// retrieve the index in the type parameters/arguments list
-			val declarator = type.declarator
-			// don't substitute type parameters of the method itself
-			if (declarator instanceof JvmType) {
-				val pos = declarator.typeParameters.indexOf(type)
-				if (pos < typeArguments.size)
-					return typeArguments.get(pos)
-			}
-		}
-		
-		val newTypeRef = typeRef.cloneWithProxies
-		if (newTypeRef instanceof JvmParameterizedTypeReference) {
-			val arguments = (typeRef as JvmParameterizedTypeReference).arguments
-			val newArguments = newTypeRef.arguments
-			// IMPORTANT: get the argument from the original arguments, not
-			// from the cloned one
-			if (!arguments.empty) {
-				for (i : 0..arguments.size - 1) {
-					newArguments.set(i, 
-						arguments.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
-					)
-				}
-				return newTypeRef
-			} else {
-				return typeRef
-			}
-		}
-		
-		if (newTypeRef instanceof XFunctionTypeRef) {
-			val funTypeRef = (typeRef as XFunctionTypeRef)
-			
-			newTypeRef.returnType = funTypeRef.returnType.
-				replaceTypeParameters(typeArguments).cloneWithProxies
-			
-			val paramTypes = funTypeRef.paramTypes
-			val newParamTypes = newTypeRef.paramTypes
-			if (!paramTypes.empty) {
-				for (i : 0..paramTypes.size - 1) {
-					newParamTypes.set(
-						i,
-						paramTypes.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
-					)
-				}
-			}
-			return newTypeRef
-		}
-		
-		if (newTypeRef instanceof JvmWildcardTypeReference) {
-			val constraints = (typeRef as JvmWildcardTypeReference).constraints
-			val newConstraints = newTypeRef.constraints
-			// IMPORTANT: get the constraint from the original constraints, not
-			// from the cloned one
-			if (!constraints.empty) {
-				for (i : 0..constraints.size - 1) {
-					newConstraints.get(i).typeReference = 
-						constraints.get(i).typeReference.
-							replaceTypeParameters(typeArguments).
-								cloneWithProxies
-				}
-				return newTypeRef
-			} else {
-				return typeRef
-			}
-		}
-		
-		return typeRef
-	}
+//	def conflictsWith(XtraitjJvmOperation f1, XtraitjJvmOperation f2) {
+//		f1.op != f2.op && 
+//		f1.op.simpleName == f2.op.simpleName &&
+//		!f1.compliant(f2)
+//	}
 
 	/**
 	 * Retrieve the main inferred method, i.e., the one with the same name

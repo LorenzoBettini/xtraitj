@@ -5,6 +5,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.util.Primitives
+import org.eclipse.xtext.xbase.typesystem.references.LightweightTypeReference
 import org.eclipse.xtext.xbase.typesystem.references.StandardTypeReferenceOwner
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
 
@@ -27,7 +28,11 @@ class XtraitjTypingUtil {
 		
 		val type1 = t1.toLightweightTypeReference(context)
 		val type2 = t2.toLightweightTypeReference(context)
-		return type1.isAssignableFrom(type2) && type2.isAssignableFrom(type1)
+		return sameType(type1, type2)
+	}
+	
+	def sameType(LightweightTypeReference type1, LightweightTypeReference type2) {
+		isSubtype(type1, type2) && isSubtype(type2, type1)
 	}
 
 	def isSubtype(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
@@ -42,6 +47,10 @@ class XtraitjTypingUtil {
 
 		val type1 = t1.toLightweightTypeReference(context)
 		val type2 = t2.toLightweightTypeReference(context)
+		isSubtype(type1, type2)
+	}
+	
+	def isSubtype(LightweightTypeReference type1, LightweightTypeReference type2) {
 		type2.isAssignableFrom(type1)
 	}
 	
