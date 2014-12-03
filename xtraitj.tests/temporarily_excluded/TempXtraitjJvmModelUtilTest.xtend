@@ -27,7 +27,7 @@ import static extension xtraitj.util.XtraitjModelUtil.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjJvmModelUtilTest {
+class TempXtraitjJvmModelUtilTest {
 	@Inject extension ParseHelper<TJProgram>
 	@Inject extension ValidationTestHelper
 	@Inject extension XtraitjInputs
