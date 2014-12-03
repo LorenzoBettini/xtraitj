@@ -268,16 +268,39 @@ class XtraitjJvmModelUtil {
 //		}
 //	}
 
+
 	/**
-	 * The return type must be subtype of member's return type
+	 * o1's return type must be the same as of o2's return type
+	 * and parameters' types must be the same
+	 */
+	def exact(IResolvedOperation o1, IResolvedOperation o2) {
+		compliant(o1, o2, true)
+	}
+
+	/**
+	 * o1's return type must be subtype of o2's return type
 	 * and parameters' types must be the same
 	 */
 	def compliant(IResolvedOperation o1, IResolvedOperation o2) {
+		compliant(o1, o2, false)
+	}
+
+	/**
+	 * o1's return type must be subtype of o2's return type
+	 * (or the same if strict is true)
+	 * and parameters' types must be the same
+	 */
+	def compliant(IResolvedOperation o1, IResolvedOperation o2, boolean strict) {
 		val params1 = o1.resolvedParameterTypes
 		val params2 = o2.resolvedParameterTypes
 		
-		if (o1.resolvedReturnType.isSubtype(o2.resolvedReturnType) &&
-				params1.size == params2.size) {
+		val returnTypeCheck = 
+			if (strict)
+				o1.resolvedReturnType.sameType(o2.resolvedReturnType)
+			else
+				o1.resolvedReturnType.isSubtype(o2.resolvedReturnType);
+		
+		if (returnTypeCheck && params1.size == params2.size) {
 			for (i : 0..<params1.size) {
 				if (!params1.get(i).sameType(params2.get(i))) {
 					return false

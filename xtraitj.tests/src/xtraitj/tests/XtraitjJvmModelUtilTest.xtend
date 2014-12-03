@@ -129,6 +129,14 @@ class XtraitjJvmModelUtilTest {
 		assertCompliant("int m(MyBaseClass p)", "int n(MyDerivedClass p)", false)
 	}
 
+	@Test def void testExactWhenSameSignature() {
+		assertExact("int m(List<String> l)", "int n(List<String> l)", true)
+	}
+
+	@Test def void testNotExactWhenCovariantReturnType() {
+		assertExact("MyDerivedClass m()", "MyBaseClass n()", false)
+	}
+
 	def private assertFieldRepresentation(IResolvedOperation o, String expected) {
 		expected.assertEquals(o.fieldRepresentation)
 	}
@@ -146,6 +154,24 @@ class XtraitjJvmModelUtilTest {
 	}
 
 	def private assertCompliant(String o1Desc, String o2Desc, boolean expected) {
+		configurableAssertForResolvedOperations(o1Desc, o2Desc)
+		[
+			o1, o2 |
+			assertCompliant(o1, o2, expected)
+		]
+	}
+
+	def private assertExact(String o1Desc, String o2Desc, boolean expected) {
+		configurableAssertForResolvedOperations(o1Desc, o2Desc)
+		[
+			o1, o2 |
+			assertExact(o1, o2, expected)
+		]
+	}
+
+	def private configurableAssertForResolvedOperations(String o1Desc, String o2Desc, 
+		(IResolvedOperation, IResolvedOperation) => void acceptor
+	) {
 		'''
 		import java.util.*
 		import xtraitj.input.tests.MyBaseClass
@@ -156,13 +182,19 @@ class XtraitjJvmModelUtilTest {
 			«o2Desc»;
 		}
 		'''.associatedResolvedOperations => [
-			get(0).assertCompliant(get(1), expected)
+			acceptor.apply(get(0), get(1))
 		]
 	}
 
 	def private assertCompliant(IResolvedOperation o1, IResolvedOperation o2, boolean expected) {
 		val result = o1.compliant(o2)
 		assertEquals(o1.headerRepresentation + " compliant to " + o2.headerRepresentation,
+			expected, result)
+	}
+
+	def private assertExact(IResolvedOperation o1, IResolvedOperation o2, boolean expected) {
+		val result = o1.exact(o2)
+		assertEquals(o1.headerRepresentation + " exact " + o2.headerRepresentation,
 			expected, result)
 	}
 
