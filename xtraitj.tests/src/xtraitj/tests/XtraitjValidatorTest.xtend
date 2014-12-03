@@ -1138,6 +1138,36 @@ class C uses T3 {
 		]
 	}
 
+	@Test def void testFieldRenameNotAField() {
+		'''
+		trait T1 {
+			String m() { null }
+		}
+		
+		trait T2 uses T1[rename field m to n] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRenameOperation,
+				XtraitjValidator.FIELD_RENAME_NOT_FIELD,
+				"Rename field using a method: 'm'"
+			)
+	}
+
+	@Test def void testMethodRenameNotAMethod() {
+		'''
+		trait T1 {
+			String f;
+		}
+		
+		trait T2 uses T1[rename f to m] {
+		}
+		'''.parse.assertError(
+				XtraitjPackage.eINSTANCE.TJRenameOperation,
+				XtraitjValidator.METHOD_RENAME_NOT_METHOD,
+				"Rename method using a field: 'f'"
+			)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))

@@ -32,8 +32,10 @@ import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJOperation
 import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRedirectOperation
+import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitOperationForFieldOrMethod
 import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
@@ -634,11 +636,12 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		op.errorForRequiredMember("alias", ALIASING_REQUIRED)
 //		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJAliasOperation_Newname)
 	}
-//
-//	@Check def void checkTraitRenameOperation(TJRenameOperation op) {
+
+	@Check def void checkTraitRenameOperation(TJRenameOperation op) {
+		checkCorrectFieldOrMethodOperation(op, "Rename", FIELD_RENAME_NOT_FIELD, METHOD_RENAME_NOT_METHOD)
 //		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJRenameOperation_Newname)
-//	}
-//
+	}
+
 	@Check def void checkTraitRestrictOperation(TJRestrictOperation op) {
 		op.errorForRequiredMember("restrict", RESTRICTING_REQUIRED)
 	}
@@ -726,43 +729,67 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			}
 		}
 	}
-	
+
+	/**
+	 * This assumes that both members are not null.
+	 */
 	private def checkCorrectRedirectionForFieldAndMethod(TJRedirectOperation op, JvmMember member1, JvmMember member2) {
+		if (checkCorrectFieldOrMethodOperation(op, "Redirect", FIELD_REDIRECTED_NOT_FIELD, METHOD_REDIRECTED_NOT_METHOD)) {
+			if (op.field) {
+				if (!member2.annotatedRequiredField) {
+					error(
+						"Cannot redirect field '" +
+							member1.fieldName + "'" + " to method '" +
+							member2.simpleName +"'",
+						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+						FIELD_REDIRECTED_TO_METHOD
+					)
+				}
+			} else {
+				if (member2.annotatedRequiredField) {
+					error(
+						"Cannot redirect method '" +
+							member1.simpleName + "'" + " to field '" +
+							member2.fieldName +"'",
+						XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+						METHOD_REDIRECTED_TO_FIELD
+					)
+				}
+			}
+		}
+	}
+
+	/**
+	 * Check whether an operation based on 'field' feature actually refers to a field or a
+	 * method. If not, generates the error and returns false. It assumes that the member of the
+	 * operation is not null (i.e., resolved).
+	 * 
+	 * @return true if check succeeded
+	 */
+	private def checkCorrectFieldOrMethodOperation(TJTraitOperationForFieldOrMethod op, String opDesc, String issueForField, String issueForMethod) {
+		val member1 = op.member
 		if (op.field) {
 			if (!member1.annotatedRequiredField) {
 				error(
-					"Redirect field using a method: '" +
+					opDesc + " field using a method: '" +
 						member1.simpleName + "'",
 					XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
-					FIELD_REDIRECTED_NOT_FIELD
+					issueForField
 				)
-			} else if (!member2.annotatedRequiredField) {
-				error(
-					"Cannot redirect field '" +
-						member1.fieldName + "'" + " to method '" +
-						member2.simpleName +"'",
-					XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
-					FIELD_REDIRECTED_TO_METHOD
-				)
+				return false
 			}
 		} else {
 			if (member1.annotatedRequiredField) {
 				error(
-					"Redirect method using a field: '" +
+					opDesc + " method using a field: '" +
 						member1.fieldName + "'",
 					XtraitjPackage.eINSTANCE.TJTraitOperation_Member,
-					METHOD_REDIRECTED_NOT_METHOD
+					issueForMethod
 				)
-			} else if (member2.annotatedRequiredField) {
-				error(
-					"Cannot redirect method '" +
-						member1.simpleName + "'" + " to field '" +
-						member2.fieldName +"'",
-					XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
-					METHOD_REDIRECTED_TO_FIELD
-				)
+				return false
 			}
 		}
+		return true
 	}
 
 	@Check
