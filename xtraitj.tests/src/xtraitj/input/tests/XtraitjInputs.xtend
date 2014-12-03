@@ -2525,6 +2525,101 @@ trait T1<T> {
 		]
 	}
 
+	def traitUsesGenericTraitWithRedirectCompliant() {
+		'''
+package tests;
+
+import java.util.List
+import java.util.ArrayList
+
+trait T1<T> {
+	ArrayList<T> s1;
+	/**
+	 * This will be redirected to prov, and it is correct
+	 * since ArrayList<T> <: List<T>
+	 */
+	List<T> req();
+	ArrayList<T> prov() { return s1; }
+	List<T> callReq() { return req(); }
+}
+
+trait T2 uses T1<String> {
+}
+
+trait T3 uses T2[ redirect req to prov ] {
+}
+
+trait T4 uses T1<String>[ redirect req to prov ] {
+}
+
+class C uses T3 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		'''
+	}
+
+	def traitUsesGenericTraitWithRedirectCompliantSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.ArrayList
+
+class C uses T3 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.ArrayList
+
+class C2 uses T4 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ redirect req to prov ] {
+}
+		''',
+		'''
+package tests;
+
+trait T3 uses T2[ redirect req to prov ] {
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+import java.util.ArrayList
+
+trait T1<T> {
+	ArrayList<T> s1;
+	/**
+	 * This will be redirected to prov, and it is correct
+	 * since ArrayList<T> <: List<T>
+	 */
+	List<T> req();
+	ArrayList<T> prov() { return s1; }
+	List<T> callReq() { return req(); }
+}
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithRestrict() {
 		'''
 package tests;

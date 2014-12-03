@@ -238,6 +238,16 @@ class XtraitjValidatorWithOperationsNoErrorsTest {
 //		]
 //	}
 
+	@Test def void testTraitUsesGenericTraitWithRedirectCompliant() {
+		traitUsesGenericTraitWithRedirectCompliant.parseAndAssertNoErrors
+	}
+
+//	@Test def void testTraitUsesGenericTraitWithRedirectCompliantSeparateFiles() {
+//		traitUsesGenericTraitWithRedirectCompliantSeparateFiles.createResourceSet.compile[
+//			expectationsForTraitUsesGenericTraitWithRedirectCompliant(it)
+//		]
+//	}
+
 	@Test def void testAccessRenameGeneratedJavaCodeWithoutOriginalSource() {
 		accessRenameGeneratedJavaCodeWithoutOriginalSource.parseAndAssertNoErrors
 	}
