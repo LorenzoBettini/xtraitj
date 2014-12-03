@@ -729,10 +729,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations.toList
 					val resolved1 = resolvedOps.findFirst[it.op == member1].resolvedOperation
 					val resolved2 = resolvedOps.findFirst[it.op == member2].resolvedOperation
-					val details = resolved2.isOverridingOrImplementing(resolved1.declaration).details
-					if (details.contains(OverrideCheckDetails.SAME_ERASURE) && 
-						resolved1.headerRepresentation != resolved2.headerRepresentation
-					) {
+					if (!resolved2.compliant(resolved1)) {
 						error(
 							"'" +
 							resolved2.methodRepresentation + "'" + 

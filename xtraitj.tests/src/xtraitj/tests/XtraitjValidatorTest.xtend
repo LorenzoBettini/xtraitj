@@ -1159,22 +1159,21 @@ class C uses T3 {
 		]
 	}
 
-	// TODO: this still does not work: implement compliant!
-//	@Test 
-//	def void testMethodRedirectCompliant() {
-//		'''
-//		import java.util.List
-//		import java.util.ArrayList
-//		
-//		trait T1 {
-//			ArrayList<String> m();
-//			List<String> n();
-//		}
-//		
-//		trait T2 uses T1[redirect n to m] {
-//		}
-//		'''.parse.assertNoErrors
-//	}
+	@Test 
+	def void testMethodRedirectCompliant() {
+		'''
+		import java.util.List
+		import java.util.ArrayList
+		
+		trait T1 {
+			ArrayList<String> m();
+			List<String> n();
+		}
+		
+		trait T2 uses T1[redirect n to m] {
+		}
+		'''.parse.assertNoErrors
+	}
 
 	@Test def void testFieldRenameNotAField() {
 		'''

@@ -198,6 +198,11 @@ class XtraitjJvmModelUtilTest {
 			expected, result)
 	}
 
+	def private headerRepresentation(IResolvedOperation m) {
+		m.resolvedReturnType.simpleName + " " + 
+			m.resolvedParameterTypes.map[simpleName].join(", ")
+	}
+
 	/**
 	 * Retrieves all the JvmOperations associated to (Java interface inferred for) the first 
 	 * trait in the program
