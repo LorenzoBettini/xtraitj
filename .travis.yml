@@ -20,4 +20,4 @@ before_script:
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -Dfindbugs.skip=true
+ - mvn -f xtraitj.releng/pom.xml clean verify -Dfindbugs.skip=true -Pjacoco-report coveralls:report
