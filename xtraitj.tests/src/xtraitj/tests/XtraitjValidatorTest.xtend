@@ -1175,6 +1175,50 @@ class C uses T3 {
 		'''.parse.assertNoErrors
 	}
 
+	@Test 
+	def void testFieldRedirectNotCompliant() {
+		'''
+		trait T1 {
+			int f;
+			String g;
+		}
+		
+		trait T2 uses T1[redirect field g to f] {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJRedirectOperation,
+				XtraitjValidator::REDIRECT_NOT_COMPLIANT,
+				"field 'int f' is not compliant with 'String g'"
+			)
+		]
+	}
+
+	@Test 
+	def void testFieldRedirectNotStrictCompliant() {
+		// for field we need exactly the same type
+		// since it corresponds to a getter and a setter
+		// (the setter would not be compliant)
+		'''
+		import xtraitj.input.tests.MyBaseClass
+		import xtraitj.input.tests.MyDerivedClass
+		
+		trait T1 {
+			MyDerivedClass f;
+			MyBaseClass g;
+		}
+		
+		trait T2 uses T1[redirect field g to f] {
+		}
+		'''.parse => [
+			assertError(
+				XtraitjPackage::eINSTANCE.TJRedirectOperation,
+				XtraitjValidator::REDIRECT_NOT_COMPLIANT,
+				"field 'MyDerivedClass f' is not compliant with 'MyBaseClass g'"
+			)
+		]
+	}
+
 	@Test def void testFieldRenameNotAField() {
 		'''
 		trait T1 {

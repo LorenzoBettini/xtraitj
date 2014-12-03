@@ -729,15 +729,28 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations.toList
 					val resolved1 = resolvedOps.findFirst[it.op == member1].resolvedOperation
 					val resolved2 = resolvedOps.findFirst[it.op == member2].resolvedOperation
-					if (!resolved2.compliant(resolved1)) {
-						error(
-							"'" +
-							resolved2.methodRepresentation + "'" + 
-							" is not compliant with '" +
-								resolved1.methodRepresentation +"'",
-								XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
-								REDIRECT_NOT_COMPLIANT
-						)
+					if (op.field) {
+						if (!resolved2.exact(resolved1)) {
+							error(
+								"field '" +
+								resolved2.fieldRepresentation + "'" + 
+								" is not compliant with '" +
+									resolved1.fieldRepresentation +"'",
+									XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+									REDIRECT_NOT_COMPLIANT
+							)
+						}
+					} else {
+						if (!resolved2.compliant(resolved1)) {
+							error(
+								"'" +
+								resolved2.methodRepresentation + "'" + 
+								" is not compliant with '" +
+									resolved1.methodRepresentation +"'",
+									XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2,
+									REDIRECT_NOT_COMPLIANT
+							)
+						}
 					}
 				}
 			}
