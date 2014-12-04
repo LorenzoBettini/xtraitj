@@ -7,6 +7,7 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmTypeParameter
@@ -35,6 +36,7 @@ import xtraitj.xtraitj.TJRedirectOperation
 import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitOperationForFieldOrMethod
 import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
@@ -634,12 +636,12 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 
 	@Check def void checkTraitAliasOperation(TJAliasOperation op) {
 		op.errorForRequiredMember("alias", ALIASING_REQUIRED)
-//		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJAliasOperation_Newname)
+		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage.eINSTANCE.TJAliasOperation_Newname)
 	}
 
 	@Check def void checkTraitRenameOperation(TJRenameOperation op) {
 		checkCorrectFieldOrMethodOperation(op, "Rename", FIELD_RENAME_NOT_FIELD, METHOD_RENAME_NOT_METHOD)
-//		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage::eINSTANCE.TJRenameOperation_Newname)
+		op.errorForAlterationToExistingMember(op.newname, XtraitjPackage.eINSTANCE.TJRenameOperation_Newname)
 	}
 
 	@Check def void checkTraitRestrictOperation(TJRestrictOperation op) {
@@ -658,60 +660,32 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			)
 		}
 	}
-//
-//	def private errorForAlterationToExistingMember(TJTraitOperation op, 
-//				String newname, EStructuralFeature feature) {
-//		if (op.containingTraitOperationExpression.trait.jvmAllOperations.
-//			exists[simpleName == newname]
-//		) {
-//			error(
-//				"Member already exists '" +
-//					newname + "'",
-//				feature,
-//				MEMBER_ALREADY_EXISTS
-//			)
-//		}
-//	}
-//
-//	@Check def void checkRedirect(TJRedirectOperation op) {
-//		if (op.member != null && op.member2 != null) {
-//			val sourceMember = op.member.originalSource
-//			val sourceMember2 = op.member2.originalSource
-//			if (op.member == op.member2) {
-//				error(
-//					"Redirect to the same member '" + sourceMember.name + "'",
-//					XtraitjPackage::eINSTANCE.TJRedirectOperation_Member2,
-//					REDIRECT_TO_SAME_MEMBER
-//				)
-//			} else if (sourceMember instanceof TJField && sourceMember2 instanceof TJMethodDeclaration) {
-//				error(
-//					"Cannot redirect field '" +
-//						sourceMember.name + "'" + " to method '" +
-//						sourceMember2.name +"'",
-//					XtraitjPackage::eINSTANCE.TJRedirectOperation_Member2,
-//					FIELD_REDIRECTED_TO_METHOD
-//				)
-//			} else if (sourceMember instanceof TJMethodDeclaration && sourceMember2 instanceof TJField) {
-//				error(
-//					"Cannot redirect method '" +
-//						sourceMember.name + "'" + " to field '" +
-//						sourceMember2.name +"'",
-//					XtraitjPackage::eINSTANCE.TJRedirectOperation_Member2,
-//					METHOD_REDIRECTED_TO_FIELD
-//				)
-//			} else if (!op.member2.compliant(op.member)) {
-//				error(
-//					"'" +
-//					op.member2.memberRepresentation + "'" + 
-//					" is not compliant with '" +
-//					op.member.memberRepresentation +"'",
-//					XtraitjPackage::eINSTANCE.TJRedirectOperation_Member2,
-//					REDIRECT_NOT_COMPLIANT
-//				)
-//			}
-//		}
-//	}
-//
+
+	def private errorForAlterationToExistingMember(TJTraitOperation o, 
+				String newname, EStructuralFeature feature) {
+		if (o.member == null) {
+			return; // linking error already reported
+		}
+		
+		val allDeclarations = o.xtraitjResolvedOperations.allDeclarations
+		val exists =
+			if (o.member.annotatedRequiredField) {
+				allDeclarations.exists[op.fieldName == newname]
+			} else {
+				allDeclarations.exists[op.simpleName == newname]
+			};
+		
+		if (exists) {
+			error(
+				"Member already exists '" +
+					newname + "'",
+				feature,
+				MEMBER_ALREADY_EXISTS
+			)
+		}
+	}
+
+
 
 	@Check def void checkRedirect(TJRedirectOperation op) {
 		val member1 = op.member
@@ -726,7 +700,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 				)
 			} else {
 				if (checkCorrectRedirectionForFieldAndMethod(op, member1, member2)) {
-					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations.toList
+					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations
 					val resolved1 = resolvedOps.findFirst[it.op == member1].resolvedOperation
 					val resolved2 = resolvedOps.findFirst[it.op == member2].resolvedOperation
 					if (op.field) {

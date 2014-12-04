@@ -32,10 +32,6 @@ class XtraitjValidatorWithOperationsNoErrorsTest {
 		traitRenameRequiredMethods.parseAndAssertNoErrors
 	}
 
-	@Test def void testTraitRenameRequiredMethodToProvided() {
-		traitRenameProvidedMethodToRequired.parseAndAssertNoErrors
-	}
-
 	@Test def void testTraitRenameOperationsNotUsed() {
 		traitRenameOperationsNotUsed.parseAndAssertNoErrors
 	}

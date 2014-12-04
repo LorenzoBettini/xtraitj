@@ -293,30 +293,6 @@ class C uses T {
 		'''
 	}
 
-	def traitRenameProvidedMethodToRequired() {
-		'''
-		package tests;
-
-		trait T1 {
-			String required(String t);
-			
-			String provided(String t) {
-				return required(t)
-			} 
-		}
-		
-		trait T2 uses T1 {
-			String req(String s) {
-				return s;
-			}
-		}
-		
-		trait T3 uses T2[rename req to required] {}
-		
-		class C uses T2[rename req to required] {}
-		'''
-	}
-
 	def traitRenameProvidedMethodToRequiredAndSum() {
 		'''
 		package tests;

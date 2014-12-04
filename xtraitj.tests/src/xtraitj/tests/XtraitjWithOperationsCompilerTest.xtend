@@ -184,50 +184,6 @@ public class T3Impl implements T3 {
 		]
 	}
 
-	@Test def void testTraitRenameRequiredMethodToProvided() {
-		traitRenameProvidedMethodToRequired.compile[
-assertTraitAdapterJavaInterface("tests", "T3_T2_0",
-'''
-package tests;
-
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public interface T3_T2_0_Adapter {
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("req")
-  public abstract String required(final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract String provided(final String t);
-}
-'''
-)
-
-assertTraitAdapterJavaInterface("tests", "C_T2_0",
-'''
-package tests;
-
-import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
-import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
-
-@SuppressWarnings("all")
-public interface C_T2_0_Adapter {
-  @XtraitjDefinedMethod
-  @XtraitjRenamedMethod("req")
-  public abstract String required(final String s);
-  
-  @XtraitjDefinedMethod
-  public abstract String provided(final String t);
-}
-'''
-)
-			assertGeneratedJavaCodeCompiles
-
-		]
-	}
-
 	@Test def void testTraitRenameOperationsNotUsed() {
 		traitRenameOperationsNotUsed.compile[
 assertTraitAdapterJavaInterface("T3_T2_0",

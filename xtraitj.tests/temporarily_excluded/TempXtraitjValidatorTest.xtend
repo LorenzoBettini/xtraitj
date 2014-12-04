@@ -30,49 +30,6 @@ class TempXtraitjValidatorTest {
 
 
 
-
-
-
-
-
-
-
-	
-	@Test 
-	def void testRedirectNotCompliant() {
-		'''
-		import java.util.List
-		import java.util.ArrayList
-		
-		trait T1 {
-			String f;
-			int i;
-			
-			List<? extends String> m();
-			List<String> n();
-		}
-		
-		trait T2 uses T1[redirect f to i, redirect n to m] {
-		}
-		'''.parse => [
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::REDIRECT_NOT_COMPLIANT,
-				"'int i' is not compliant with 'String f'"
-			)
-			assertError(
-				XtraitjPackage::eINSTANCE.TJRedirectOperation,
-				XtraitjValidator::REDIRECT_NOT_COMPLIANT,
-				"'List<? extends String> m()' is not compliant with 'List<String> n()'"
-			)
-		]
-	}
-
-
-
-
-
-
 	@Test def void testFieldConflicts() {
 		'''
 		trait T1 {
@@ -423,43 +380,9 @@ trait T3 uses T1<Integer>, T2 {
  		]
 	}
 
-	@Test def void testMethodConflictsWithAlias2() {
-		'''
-trait TFirst {
-	String s() { return ""; }
-}
-
-trait T1 uses TFirst[alias s as s2] {
-	
-}
-
-trait T2 uses T1[alias s as s2] {
-	
-}
- 		'''.parse => [
- 			assertAlreadyExistingMember("s2", XtraitjPackage::eINSTANCE.TJAliasOperation)
- 		]
-	}
 
 
-	@Test def void testAlterationsToAlreadyExistingNames() {
-		'''
-		trait T1 {
-			int m() { return 0; }
-			int m1();
-			
-			int n();
-			int n1();
-		}
-		
-		trait T2 uses T1[alias m as m1, rename n to n1] {
-			
-		}
-		'''.parse => [
-			assertAlreadyExistingMember("m1", XtraitjPackage::eINSTANCE.TJAliasOperation)
-			assertAlreadyExistingMember("n1", XtraitjPackage::eINSTANCE.TJRenameOperation)
-		]
-	}
+
 
 
 

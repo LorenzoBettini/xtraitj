@@ -1249,6 +1249,58 @@ class C uses T3 {
 			)
 	}
 
+	@Test def void testAlterationsToAlreadyExistingNames() {
+		'''
+		trait T1 {
+			int m() { return 0; }
+			int m1();
+			
+			int n();
+			int n1();
+		}
+		
+		trait T2 uses T1[alias m as m1, rename n to n1] {
+			
+		}
+		'''.parse => [
+			assertAlreadyExistingMember("m1", XtraitjPackage.eINSTANCE.TJAliasOperation)
+			assertAlreadyExistingMember("n1", XtraitjPackage.eINSTANCE.TJRenameOperation)
+		]
+	}
+
+	@Test def void testRenameFieldToAlreadyExistingField() {
+		'''
+		trait T1 {
+			int f;
+			int g;
+		}
+		
+		trait T2 uses T1[rename field f to g] {
+			
+		}
+		'''.parse => [
+			assertAlreadyExistingMember("g", XtraitjPackage.eINSTANCE.TJRenameOperation)
+		]
+	}
+
+	@Test def void testAliasToAnAlreadyExistingMember() {
+		'''
+trait TFirst {
+	String s() { return ""; }
+}
+
+trait T1 uses TFirst[alias s as s2] {
+	
+}
+
+trait T2 uses T1[alias s as s2] {
+	
+}
+ 		'''.parse => [
+ 			assertAlreadyExistingMember("s2", XtraitjPackage.eINSTANCE.TJAliasOperation)
+ 		]
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
@@ -1327,6 +1379,13 @@ class C uses T3 {
 			XtraitjPackage.eINSTANCE.TJTraitReference,
 			XtraitjValidator.NOT_A_TRAIT,
 			"Not a trait reference '" + typeRefRepr + "'"
+		)
+	}
+
+	def private assertAlreadyExistingMember(EObject o, String memberName, EClass c) {
+		o.assertError(
+			c, XtraitjValidator.MEMBER_ALREADY_EXISTS,
+			"Member already exists '" + memberName + "'"
 		)
 	}
 }
