@@ -822,6 +822,23 @@ class C uses T3 {
 		]
 	}
 
+	@Test
+	def void testClassDoesNotImplementAllInterfaceMethodsInherited() {
+		'''
+		import java.util.List
+		import xtraitj.input.tests.MyDerivedInterface
+		
+		trait T1<T> {
+			List<T> m(int i) { return null; }
+		}
+		
+		// n required by MyBaseInterface
+		class C implements MyDerivedInterface<String> uses T1<String> {}
+		'''.parse => [
+			assertMissingRequiredMethod("List<String> n(int)", -1, 26)
+		]
+	}
+
 	@Test def void testClassImplementsAllInterfaceMethods() {
 		'''
 		import xtraitj.input.tests.MyTestInterface

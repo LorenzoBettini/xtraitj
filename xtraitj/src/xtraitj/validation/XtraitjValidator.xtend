@@ -346,10 +346,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		// it can be either an interface or a used trait
 		
 		var feature = XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression
-		val declaringTypeId = op.declaration.declaringType.identifier
 		
-		val interface = c.interfaces.findFirst[type.identifier == declaringTypeId]
-		if (interface != null) {
+		if (!op.declaration.annotatedRequiredMethod) {
+			// then we assume it comes from a standard Java interface
 			feature = XtraitjPackage.eINSTANCE.TJClass_Interfaces
 		}
 		
