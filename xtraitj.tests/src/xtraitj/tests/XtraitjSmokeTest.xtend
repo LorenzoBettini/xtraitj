@@ -192,6 +192,32 @@ class XtraitjSmokeTest extends XtraitjAbstractTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testRedirectNonExistantMethod2() {
+		'''
+		trait T {
+			void m() {}
+			void n() {}
+		}
+		
+		class C uses T[redirect foo to n] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testRedirectNonExistantMethod3() {
+		'''
+		trait T {
+			void m() {}
+			void n() {}
+		}
+		
+		class C uses T[redirect m to foo] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	@Test def void testRedirectToNotYetSpecified() {
 		'''
 		trait T {

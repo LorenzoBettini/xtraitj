@@ -993,6 +993,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	private def handleRedirectOperation(TJRedirectOperation tOp, Iterable<XtraitjJvmOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
 		val origName = tOp.member?.simpleName
 		
+		if (origName == null) {
+			// member is not resolved
+			return
+		}
+		
 		val newname = if (!tOp.field) {
 			tOp.member2?.simpleName
 		} else {
