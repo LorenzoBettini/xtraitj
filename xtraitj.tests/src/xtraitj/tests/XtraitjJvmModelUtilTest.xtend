@@ -70,28 +70,6 @@ class XtraitjJvmModelUtilTest {
 		"bar".assertEquals("is".renameGetterOrSetter("bar"))
 	}
 
-//	@Test def void testCompliant() {
-//		'''
-//		import java.util.List
-//		
-//		trait T {
-//			int m(List<String> l) { return 0; }
-//			int n(List<String> l) { return 0; }
-//			int o(List<String> l, int j) { return 0; }
-//			boolean p(List<String> l) { return false; }
-//			int q(List<Integer> l) { return 0; }
-//			int r(List<? extends String> l) { return 0; }
-//		}
-//		'''.parse.traits.head.jvmAllOperations => [
-//			get(0).assertCompliant(get(0), true)
-//			get(1).assertCompliant(get(0), true)
-//			get(2).assertCompliant(get(0), false)
-//			get(3).assertCompliant(get(0), false)
-//			get(4).assertCompliant(get(0), false)
-//			get(5).assertCompliant(get(0), false)
-//		]
-//	}
-//
 
 	@Test def void testCompliantWhenSameSignature() {
 		assertCompliant("int m(List<String> l)", "int n(List<String> l)", true)
@@ -135,6 +113,26 @@ class XtraitjJvmModelUtilTest {
 
 	@Test def void testNotExactWhenCovariantReturnType() {
 		assertExact("MyDerivedClass m()", "MyBaseClass n()", false)
+	}
+
+	@Test def void testFindOperationByNameWithMethod() {
+		'''
+		trait T {
+			String n(int i);
+			String p(int i);
+			String m(int i);
+		}
+		'''.assertFindOperationByName("m", "String m(int)")
+	}
+
+	@Test def void testFindOperationByNameWithField() {
+		'''
+		trait T {
+			String n;
+			String p;
+			String m;
+		}
+		'''.assertFindOperationByName("getM", "String getM()")
 	}
 
 	def private assertFieldRepresentation(IResolvedOperation o, String expected) {
@@ -201,6 +199,14 @@ class XtraitjJvmModelUtilTest {
 	def private headerRepresentation(IResolvedOperation m) {
 		m.resolvedReturnType.simpleName + " " + 
 			m.resolvedParameterTypes.map[simpleName].join(", ")
+	}
+
+	def private assertFindOperationByName(CharSequence input, String toFindName, String expectedRepr) {
+		val ops = input.associatedResolvedOperations
+		val toFind = ops.findFirst[op | op.declaration.simpleName == toFindName ]
+		assertNotNull("not found: ", toFind)
+		val found = ops.findOperationByName(toFind)
+		expectedRepr.assertEquals(found.methodRepresentation)
 	}
 
 	/**

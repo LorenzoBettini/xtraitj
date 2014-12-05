@@ -15,10 +15,10 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.common.types.impl.JvmVoidImpl
+import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
-import org.eclipse.xtext.xbase.typesystem.^override.IOverrideCheckResult.OverrideCheckDetails
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
@@ -42,6 +42,7 @@ import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.generator.XtraitjGeneratorExtensions
 
 /**
  * Custom validation rules. 
@@ -64,8 +65,6 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 
 	public static val INCOMPATIBLE_REQUIRED_METHOD = "xtraitj.IncompatibleRequiredMethod"
 
-	public static val MISSING_INTERFACE_METHOD = PREFIX + "MissingInterfaceMethod"
-	
 	public static val HIDING_REQUIRED = PREFIX + "HidingRequired"
 
 	public static val ALIASING_REQUIRED = PREFIX + "AliasingRequired"
@@ -116,6 +115,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjTypingUtil
 	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension XtraitjGeneratorExtensions
+	@Inject
+	private TypeReferences references;
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -233,142 +235,92 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 	}
 
-	@Check def void checkClassProvidesAllRequirements(TJClass c) {
+	@Check
+	def void checkClassProvidesAllRequirements(TJClass c) {
 		val type = c.associatedJavaClass
-		val operations = type.getResolvedOperations
+		val operations = type.getResolvedOperations.allOperations.filter[!(declaration.isAbstract)]
 		
-		val missingOrMismatchFields = <String>newHashSet()
-
-		for (op : operations.declaredOperations) {
-			val allInherited = op.getOverriddenAndImplementedMethods()
-			for(inherited: allInherited) {
-				if (inherited.getOverrideCheckResult().hasProblems()) {
-					val details = inherited.getOverrideCheckResult().getDetails();
-					if (details.contains(OverrideCheckDetails.RETURN_MISMATCH)) {
-						if (inherited.declaration.annotatedRequiredField) {
-							errorMismatchRequiredField(c, op, inherited)
-							missingOrMismatchFields.add(op.fieldName)
-						} else {
-							errorMismatchRequiredMethod(c, op, inherited)
-						}
-					}
-				}
-			}
+		for (interf : c.interfaces) {
+			val interfaceOps = interf.getOperations(interf)
+			checkRequirements(c, interfaceOps, operations, 
+				TypesPackage.eINSTANCE.jvmParameterizedTypeReference_Type
+			) [ interf ]
 		}
 		
-		for (op : operations.allOperations) {
-			val decl = op.declaration
-			if (decl.isAbstract && decl.declaringType != type) {
-				if (decl.annotatedRequiredField) {
-					errorMissingRequiredField(c, op)
-					missingOrMismatchFields.add(op.fieldName)
-				} else if (decl.annotatedRequiredFieldSetter) {
-					if (!missingOrMismatchFields.contains(decl.fieldName)) {
-						// check that an error has not already been reported
-						// when examining the getter
-						errorMissingRequiredField(c, op)
+		for (traitRef : c.traitReferences) {
+			var tRef = traitRef.trait
+			var JvmTypeReference actualTypeReference = tRef
+			if (!traitRef.operations.empty) {
+				actualTypeReference = references.getTypeForName(traitRef.traitExpressionInterfaceName, traitRef, tRef.arguments)
+			}
+			val requirements = actualTypeReference.getXtraitjResolvedOperations(traitRef).allRequirements.map[resolvedOperation]
+			checkRequirements(c, requirements, operations, 
+				XtraitjPackage.eINSTANCE.TJTraitReference_Trait
+			) [ traitRef ]
+		}
+	}
+
+	private def checkRequirements(TJClass c, 
+		Iterable<IResolvedOperation> requirements, 
+		Iterable<IResolvedOperation> definedOps,
+		EStructuralFeature feature,
+		()=>EObject errorSourceProvider
+	) {
+		// setter methods are skipped, since we check getter methods
+		for (req : requirements.filter[!annotatedRequiredFieldSetter]) {
+			val withTheSameName = definedOps.findOperationByName(req)
+			val correspondsToField = req.annotatedRequiredField
+			if (withTheSameName == null) {
+				if (correspondsToField) {
+					error(
+						"Class " + c.name + " must provide required field '" +
+							req.fieldRepresentation + "'",
+						errorSourceProvider.apply(),
+						feature,
+						MISSING_REQUIRED_FIELD
+					)
+				} else {
+					error(
+						"Class " + c.name + " must provide required method '" +
+							req.methodRepresentation + "'",
+						errorSourceProvider.apply(),
+						feature,
+						MISSING_REQUIRED_METHOD
+					)	
+				}
+			} else {
+				if (correspondsToField) {
+					if (!withTheSameName.exact(req)) {
+						// fields are invariant (due to getter and setter)
+						// so the type must be the same
+						error(
+							"Class " + c.name + ": Incompatible field '" +
+								withTheSameName.fieldRepresentation +
+								"' for required field '" +
+								req.fieldRepresentation + "'",
+							errorSourceProvider.apply(),
+							feature,
+							INCOMPATIBLE_REQUIRED_FIELD
+						)
 					}
 				} else {
-					errorMissingRequiredMethod(c, op)
+					if (!withTheSameName.compliant(req)) {
+						// there's a method with the same name but it's not compliant
+						error(
+							"Class " + c.name + ": Incompatible method '" +
+								withTheSameName.methodRepresentation +
+								"' for required method '" +
+								req.methodRepresentation + "'",
+							errorSourceProvider.apply(),
+							feature,
+							INCOMPATIBLE_REQUIRED_METHOD
+						)
+					}
 				}
 			}
 		}
-		
-//		for (requiredField : c.xtraitjJvmAllRequiredFieldOperations) {
-//			if (c.fields.findMatchingField(requiredField) == null) {
-//				error(
-//					"Class must provide required field '" +
-//						requiredField.fieldRepresentation + "'",
-//					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
-//					MISSING_REQUIRED_FIELD,
-//					requiredField.op.simpleName,
-//					requiredField.returnType.identifier
-//				)
-//			}
-//		}
-//		for (requiredMethod : c.xtraitjJvmAllRequiredMethodOperations) {
-//			if (c.xtraitjJvmAllMethodOperations.findMatchingMethod(requiredMethod) == null) {
-//				error(
-//					"Class must provide required method '" +
-//						requiredMethod.methodRepresentation + "'",
-//					XtraitjPackage::eINSTANCE.TJDeclaration_TraitExpression,
-//					MISSING_REQUIRED_METHOD
-//				)
-//			}
-//		}
-//		for (method : c.xtraitjJvmAllInterfaceMethods) {
-//			if (c.xtraitjJvmAllMethodOperations.findMatchingOperation(method) == null) {
-//				error(
-//					"Class must provide interface method '" +
-//						method.methodRepresentation + "'",
-//					XtraitjPackage::eINSTANCE.TJDeclaration_Name,
-//					MISSING_INTERFACE_METHOD
-//				)
-//			}
-//		}
 	}
 	
-	private def errorMissingRequiredField(TJClass c, IResolvedOperation op) {
-		error(
-			"Class " + c.name + " must provide required field '" +
-				op.fieldRepresentation + "'",
-			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-			MISSING_REQUIRED_FIELD,
-			op.declaration.simpleName, // this will be used by the Quickfix
-			op.resolvedReturnType.identifier // this will be used by the Quickfix
-		)
-	}
-
-	private def errorMismatchRequiredField(TJClass c, IResolvedOperation resolved, IResolvedOperation inherited) {
-		error(
-			"Class " + c.name + ": Incompatible field '" +
-				resolved.fieldRepresentation +
-				"' for required field '" +
-				inherited.fieldRepresentation + "'",
-			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-			INCOMPATIBLE_REQUIRED_FIELD
-		)
-	}
-
-	private def errorMismatchRequiredMethod(TJClass c, IResolvedOperation resolved, IResolvedOperation inherited) {
-		error(
-			"Class " + c.name + ": Incompatible method '" +
-				resolved.methodRepresentation +
-				"' for required method '" +
-				inherited.methodRepresentation + "'",
-			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-			INCOMPATIBLE_REQUIRED_METHOD
-		)
-	}
-
-	private def errorMissingRequiredMethod(TJClass c, IResolvedOperation op) {
-		// we must retrieve the type reference for the missing method
-		// it can be either an interface or a used trait
-		
-		var feature = XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression
-		
-		if (!op.declaration.annotatedRequiredMethod) {
-			// then we assume it comes from a standard Java interface
-			feature = XtraitjPackage.eINSTANCE.TJClass_Interfaces
-		}
-		
-		error(
-			"Class " + c.name + " must provide required method '" +
-				op.methodRepresentation + "'",
-			feature,
-			MISSING_REQUIRED_METHOD
-		)
-	}
-
-//	private def errorMismatchRequiredMethod(JvmOperation decl, IResolvedOperation op) {
-//		error(
-//			"Class must provide required method '" +
-//				decl.methodRepresentation + "'",
-//			XtraitjPackage.eINSTANCE.TJDeclaration_TraitExpression,
-//			MISSING_REQUIRED_METHOD
-//		)
-//	}
-
 	@Check def void checkImplementsInterfaces(TJClass c) {
 		for (i : c.interfaces) {
 			if (!i.validInterface) {
@@ -683,8 +635,6 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			)
 		}
 	}
-
-
 
 	@Check def void checkRedirect(TJRedirectOperation op) {
 		val member1 = op.member

@@ -160,11 +160,7 @@ class XtraitjJvmModelUtil {
 	}
 
 	def fieldRepresentation(IResolvedOperation f) {
-		val typeRepr = if (f.declaration.simpleName.startsWith("set")) {
-			f.resolvedParameterTypes.head.simpleName
-		} else {
-			f.resolvedReturnType?.simpleName 
-		}
+		val typeRepr = f.resolvedReturnType?.simpleName 
 		typeRepr + " " + f.fieldName
 	}
 
@@ -263,6 +259,15 @@ class XtraitjJvmModelUtil {
 //		}
 //	}
 
+
+	/**
+	 * Finds a member, IResolvedOperation, using the name of the toFind operation.
+	 * It is responsibility of the caller to know whether we are searching a get method
+	 * corresponding to a field.
+	 */
+	def findOperationByName(Iterable<IResolvedOperation> ops, IResolvedOperation toFind) {
+		ops.findFirst[ op | op.declaration.simpleName == toFind.declaration.simpleName]
+	}
 
 	/**
 	 * o1's return type must be the same as of o2's return type

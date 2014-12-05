@@ -13,6 +13,7 @@ import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface
 import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 
 @Singleton
 class XtraitjAnnotatedElementHelper {
@@ -47,11 +48,19 @@ class XtraitjAnnotatedElementHelper {
 			]
 	}
 
+	def annotatedRequiredField(IResolvedOperation o) {
+		o.declaration.annotatedRequiredField
+	}
+
 	def annotatedRequiredField(JvmMember member) {
 		member.annotations.
 			exists[
 				annotation.identifier == XtraitjRequiredField.name
 			]
+	}
+
+	def annotatedRequiredFieldSetter(IResolvedOperation o) {
+		o.declaration.annotatedRequiredFieldSetter
 	}
 
 	def annotatedRequiredFieldSetter(JvmMember member) {

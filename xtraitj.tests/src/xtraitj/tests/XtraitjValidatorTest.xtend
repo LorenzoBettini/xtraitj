@@ -550,6 +550,32 @@ Couldn't resolve reference to JvmType 'T1'.'''
 		]
 	}
 
+	@Test def void testClassMissingRequiredFieldAfterRenaming() {
+		'''
+		trait T {
+			String s1;
+		}
+		
+		class C uses T[rename field s1 to s] {
+			String s1;
+		}
+		'''.parse => [
+			assertMissingRequiredField('String s')
+		]
+	}
+
+	@Test def void testClassProvidesRequiredFieldAfterRenaming() {
+		'''
+		trait T {
+			String s1;
+		}
+		
+		class C uses T[rename field s1 to s] {
+			String s;
+		}
+		'''.parse.assertNoErrors
+	}
+
 	@Test def void testClassMissingRequiredFields() {
 		'''
 		trait T {
@@ -667,12 +693,13 @@ class C uses T {
 		
 		class C uses T {
 			// although the getter would be fine,
-			// the setter would be wrong
+			// the setter would be wrong, so the field is
+			// considered incompatible
 			MyDerivedClass f;
 		}
 		'''.parse => [
 			assertErrorsAsStrings(
-"Class C must provide required field 'MyBaseClass f'"
+"Class C: Incompatible field 'MyDerivedClass f' for required field 'MyBaseClass f'"
 			)
 		]
 	}
@@ -708,9 +735,7 @@ trait T<U> {
 class C uses T<String> {
 	List<String> r ;
 }
-		'''.parse => [
-			assertNoErrors
-		]
+		'''.parse.assertNoErrors
 	}
 
 	@Test def void testClassMissingFieldAfterTypeArgumentInstantiation() {
@@ -739,7 +764,7 @@ trait T<U> {
 class C uses T {
 }
 		'''.parse => [
-			assertMissingRequiredField('List r')
+			assertMissingRequiredField('List<Object> r')
 		]
 	}
 
@@ -785,7 +810,7 @@ class C uses T3 {
 		]
 	}
 
-	@Test def void testClassMissingRequiredMethod() {
+	@Test def void testClassMissingRequiredMethodByTrait() {
 		'''
 		trait T1 {
 			int m() { return 0; }
@@ -793,14 +818,64 @@ class C uses T3 {
 		}
 		
 		trait T2 {
-			Integer m(); // this satisfy T1's requirement
+			Integer m(); // this satisfies T1's requirement
 		}
 		
 		class C uses T1, T2 {}
 		'''.parse => [
-			// the error is placed on both references
-			assertMissingRequiredMethod("String n(int)", 129, 6)
+			// the error is placed on the single trait reference
+			assertMissingRequiredMethodByTrait("String n(int)", 131, 2)
 		]
+	}
+
+	@Test def void testClassMissingRequiredMethodByTrait2() {
+		'''
+		trait T1 {
+			int m() { return 0; } // this satisfies T2's requirement
+		}
+		
+		trait T2 {
+			Integer m();
+			String n();
+		}
+		
+		class C uses T1, T2 {}
+		'''.parse => [
+			// the error is placed on the single trait reference
+			assertMissingRequiredMethodByTrait("String n()", 130, 2)
+		]
+	}
+
+	@Test def void testClassMissingRequiredMethodAfterRenamingAndSum() {
+		'''
+		trait T1 {
+			int m() { return 0; } // this satisfies T2's requirement
+		}
+		
+		trait T2 {
+			int m();
+		}
+		
+		class C uses T1[rename m to n], T2 {
+			
+		}
+		'''.parse.assertErrorsAsStrings("Class C must provide required method 'int m()'")
+	}
+
+	@Test def void testClassProvidesRequiredMethodAfterRenamingAndSum() {
+		'''
+		trait T1 {
+			int m() { return 0; } // this satisfies T2's n() requirement
+		}
+		
+		trait T2 {
+			Integer n();
+		}
+		
+		class C uses T1, T2[rename n to m] {
+			
+		}
+		'''.parse.assertNoErrors
 	}
 
 	@Test
@@ -818,7 +893,7 @@ class C uses T3 {
 		'''
 		class C implements java.util.List<String> {}
 		'''.parse => [
-			assertMissingRequiredMethod("void add(int, String)", 19, 22)
+			assertMissingRequiredMethod("void add(int, String)", 19, 14)
 		]
 	}
 
@@ -835,7 +910,7 @@ class C uses T3 {
 		// n required by MyBaseInterface
 		class C implements MyDerivedInterface<String> uses T1<String> {}
 		'''.parse => [
-			assertMissingRequiredMethod("List<String> n(int)", -1, 26)
+			assertMissingRequiredMethod("List<String> n(int)", -1, 18)
 		]
 	}
 
@@ -862,7 +937,7 @@ class C uses T3 {
 		
 		// required m(List<String>) provided m(String)
 		class C implements MyGenericTestInterface<String> uses T1<String> {}
-		'''.parse.assertMissingRequiredMethod("int m(List<String>)")
+		'''.parse.assertMismatchRequiredMethodByInterface("int m(List<String>)", "String m(String)")
 	}
 
 	@Test
@@ -876,7 +951,7 @@ class C uses T3 {
 		
 		// required m(List<U>) provided m(U)
 		class C<U> implements MyGenericTestInterface<U> uses T1<U> {}
-		'''.parse.assertMissingRequiredMethod("int m(List<U>)")
+		'''.parse.assertMismatchRequiredMethodByInterface("int m(List<U>)", "U m(U)")
 	}
 
 	@Test
@@ -891,7 +966,7 @@ class C uses T3 {
 		
 		// required m(List<T>) provided m(ArrayList<T>)
 		class C implements MyGenericTestInterface<String> uses T1<String> {}
-		'''.parse.assertMissingRequiredMethod("int m(List<String>)")
+		'''.parse.assertMismatchRequiredMethodByInterface("int m(List<String>)", "int m(ArrayList<String>)")
 	}
 
 	@Test
@@ -905,7 +980,7 @@ class C uses T3 {
 		
 		// required List<String> n(int i) provided String n(int i)
 		class C implements MyGenericTestInterface2<String> uses T1<String> {}
-		'''.parse.assertMismatchRequiredMethod("List<String> n(int)", "String n(int)")
+		'''.parse.assertMismatchRequiredMethodByInterface("List<String> n(int)", "String n(int)")
 	}
 
 	@Test
@@ -937,7 +1012,7 @@ class C uses T3 {
 		}
 		'''.parse => [
 			assertError(
-				XtraitjPackage::eINSTANCE.TJClass,
+				XtraitjPackage::eINSTANCE.TJTraitReference,
 				XtraitjValidator::MISSING_REQUIRED_METHOD,
 				"Class CUsesGeneric must provide required method 'String required(String)'"
 			)
@@ -1346,7 +1421,7 @@ trait T2 uses T1[alias s as s2] {
 
 	def private assertMissingRequiredField(EObject o, String fieldRepr) {
 		o.assertError(
-			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjPackage.eINSTANCE.TJTraitReference,
 			XtraitjValidator.MISSING_REQUIRED_FIELD,
 			"Class C must provide required field '" + fieldRepr + "'"
 		)
@@ -1354,7 +1429,7 @@ trait T2 uses T1[alias s as s2] {
 
 	def private assertMismatchRequiredField(EObject o, String requiredRepr, String actualRepr) {
 		o.assertError(
-			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjPackage.eINSTANCE.TJTraitReference,
 			XtraitjValidator.INCOMPATIBLE_REQUIRED_FIELD,
 			"Incompatible field '" +
 				actualRepr +
@@ -1363,9 +1438,9 @@ trait T2 uses T1[alias s as s2] {
 		)
 	}
 
-	def private assertMismatchRequiredMethod(EObject o, String requiredRepr, String actualRepr) {
+	def private assertMismatchRequiredMethodByInterface(EObject o, String requiredRepr, String actualRepr) {
 		o.assertError(
-			XtraitjPackage.eINSTANCE.TJClass,
+			TypesPackage.eINSTANCE.jvmParameterizedTypeReference,
 			XtraitjValidator.INCOMPATIBLE_REQUIRED_METHOD,
 			"Incompatible method '" +
 				actualRepr +
@@ -1376,17 +1451,18 @@ trait T2 uses T1[alias s as s2] {
 
 	def private assertMissingRequiredMethod(EObject o, String methodRepr, int offset, int length) {
 		o.assertError(
-			XtraitjPackage.eINSTANCE.TJClass,
+			TypesPackage.eINSTANCE.jvmParameterizedTypeReference,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
 			offset, length,
 			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}
 
-	def private assertMissingRequiredMethod(EObject o, String methodRepr) {
+	def private assertMissingRequiredMethodByTrait(EObject o, String methodRepr, int offset, int length) {
 		o.assertError(
-			XtraitjPackage.eINSTANCE.TJClass,
+			XtraitjPackage.eINSTANCE.TJTraitReference,
 			XtraitjValidator.MISSING_REQUIRED_METHOD,
+			offset, length,
 			"Class C must provide required method '" + methodRepr + "'"
 		)
 	}
