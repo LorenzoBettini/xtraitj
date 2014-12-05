@@ -7,15 +7,12 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.XtraitjOutputConfigurationProvider;
-import xtraitj.jvmmodel.XtraitjJvmModelAssociator;
 import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
@@ -46,13 +43,13 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
         return XtraitjOutputConfigurationProvider.class;
     }
 	
-	public Class<? extends IJvmModelAssociator> bindIJvmModelAssociator() {
-		return XtraitjJvmModelAssociator.class;
-	}
-
-	public Class<? extends IJvmModelAssociations> bindIJvmModelAssociations() {
-		return XtraitjJvmModelAssociator.class;
-	}
+//	public Class<? extends IJvmModelAssociator> bindIJvmModelAssociator() {
+//		return XtraitjJvmModelAssociator.class;
+//	}
+//
+//	public Class<? extends IJvmModelAssociations> bindIJvmModelAssociations() {
+//		return XtraitjJvmModelAssociator.class;
+//	}
 
 	public Class<? extends TypeReferenceSerializer> bindTypeReferenceSerializer() {
 		return XtraitjTypeReferenceSerializer.class;
