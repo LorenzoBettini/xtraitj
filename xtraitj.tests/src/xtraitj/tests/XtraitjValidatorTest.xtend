@@ -978,6 +978,42 @@ class C uses T3 {
 	}
 
 	@Test
+	def void testClassDoesNotImplementAllTraitRequiredMethodsWithGenericsMismatchMethod() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			T n(int i) { return null; }
+		}
+		
+		trait T2<U> {
+			List<U> n(int i);
+		}
+		
+		// required List<String> n(int i) provided String n(int i)
+		class C uses T1<String>, T2<String> {}
+		'''.parse.assertMismatchRequiredMethodByTrait("List<String> n(int)", "String n(int)")
+	}
+
+	@Test
+	def void testClassDoesNotImplementAllTraitRequiredMethodsWithGenericsMismatchMethod2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			T n(int i) { return null; }
+		}
+		
+		trait T2<U> {
+			List<U> n(int i);
+		}
+		
+		// required List<V> n(int i) provided V n(int i)
+		class C<V> uses T1<V>, T2<V> {}
+		'''.parse.assertMismatchRequiredMethodByTrait("List<V> n(int)", "V n(int)")
+	}
+
+	@Test
 	def void testClassImplementsAllInterfaceMethodsWithGenericsWithCovariantReturnType() {
 		'''
 		import xtraitj.input.tests.MyGenericTestInterface2
@@ -1435,6 +1471,17 @@ trait T2 uses T1[alias s as s2] {
 	def private assertMismatchRequiredMethodByInterface(EObject o, String requiredRepr, String actualRepr) {
 		o.assertError(
 			TypesPackage.eINSTANCE.jvmParameterizedTypeReference,
+			XtraitjValidator.INCOMPATIBLE_REQUIRED_METHOD,
+			"Incompatible method '" +
+				actualRepr +
+				"' for required method '" +
+				requiredRepr + "'"
+		)
+	}
+
+	def private assertMismatchRequiredMethodByTrait(EObject o, String requiredRepr, String actualRepr) {
+		o.assertError(
+			XtraitjPackage.eINSTANCE.TJTraitReference,
 			XtraitjValidator.INCOMPATIBLE_REQUIRED_METHOD,
 			"Incompatible method '" +
 				actualRepr +
