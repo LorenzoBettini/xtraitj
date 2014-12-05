@@ -13,8 +13,6 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator
 import org.eclipse.xtext.xtype.XFunctionTypeRef
@@ -39,9 +37,7 @@ import static extension xtraitj.util.XtraitjModelUtil.*
  */
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjTypeParametersBindingTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension ValidationTestHelper
+class XtraitjTypeParametersBindingTest extends XtraitjAbstractTest {
 	@Inject extension IJvmModelAssociations
 
 	/** 1 interface, 1 class */

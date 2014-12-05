@@ -1,11 +1,8 @@
 package xtraitj.tests
 
-import com.google.inject.Inject
 import org.apache.log4j.Logger
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator
 import org.junit.After
 import org.junit.Before
@@ -13,16 +10,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.tests.utils.XtraitjLogListener
-import xtraitj.xtraitj.TJProgram
 
 import static org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjSmokeTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension ValidationTestHelper
-	
+class XtraitjSmokeTest extends XtraitjAbstractTest {
 	private final static Logger LOG = Logger.getLogger(JvmModelAssociator);
 
 	var XtraitjLogListener logListener

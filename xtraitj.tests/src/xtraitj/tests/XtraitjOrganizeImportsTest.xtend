@@ -3,20 +3,18 @@ package xtraitj.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.ReplaceRegion
 import org.eclipse.xtext.xbase.imports.ImportOrganizer
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.xtraitj.TJProgram
+
 import static org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjOrganizeImportsTest {
-	@Inject extension ParseHelper<TJProgram> 
+class XtraitjOrganizeImportsTest extends XtraitjAbstractTest {
 	@Inject ImportOrganizer importOrganizer
 
 	def protected assertIsOrganizedTo(CharSequence model, CharSequence expected) {

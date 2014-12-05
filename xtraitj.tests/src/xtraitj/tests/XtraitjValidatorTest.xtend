@@ -1,30 +1,24 @@
 package xtraitj.tests
 
-import com.google.inject.Inject
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.TypesPackage
+import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.xbase.validation.IssueCodes
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
 import xtraitj.validation.XtraitjValidator
-import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.XtraitjPackage
 
-import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import static extension org.junit.Assert.*
-import org.eclipse.xtext.xbase.validation.IssueCodes
-import org.eclipse.xtext.diagnostics.Diagnostic
+import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjValidatorTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension ValidationTestHelper
+class XtraitjValidatorTest extends XtraitjAbstractTest {
 
 	@Test def void testDuplicateMember() {
 		'''

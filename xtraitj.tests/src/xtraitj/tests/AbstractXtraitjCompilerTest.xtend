@@ -7,11 +7,10 @@ import org.eclipse.xtext.resource.FileExtensionProvider
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Rule
-import xtraitj.input.tests.XtraitjInputs
 
 import static extension org.junit.Assert.*
 
-class AbstractXtraitjCompilerTest {
+class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 	@Inject extension ReflectExtensions
 	
 	@Rule
@@ -20,8 +19,6 @@ class AbstractXtraitjCompilerTest {
 	@Inject private FileExtensionProvider extensionProvider
 	
 	@Inject protected extension CompilationTestHelper
-	
-	@Inject protected extension XtraitjInputs
 	
 	def protected void assertTraitAdapterJavaInterface(CompilationTestHelper.Result r, String name, CharSequence expected) {
 		r.assertTraitJavaInterface(name + "_Adapter", expected)

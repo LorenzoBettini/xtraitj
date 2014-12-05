@@ -5,13 +5,11 @@ import java.util.List
 import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.input.tests.XtraitjInputs
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJDeclaration
@@ -22,9 +20,7 @@ import static extension org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjJvmModelUtilTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension XtraitjInputs
+class XtraitjJvmModelUtilTest extends XtraitjAbstractTest {
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension IJvmModelAssociations
 	@Inject extension XtraitjJvmModelHelper

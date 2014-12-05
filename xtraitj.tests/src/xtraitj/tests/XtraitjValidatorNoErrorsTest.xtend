@@ -1,24 +1,14 @@
 package xtraitj.tests
 
-import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
-import xtraitj.input.tests.XtraitjInputs
-import xtraitj.xtraitj.TJProgram
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjValidatorNoErrorsTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension ValidationTestHelper
-	@Inject extension XtraitjInputs
-	@Inject
-//	private Provider<XtextResourceSet> resourceSetProvider;
+class XtraitjValidatorNoErrorsTest extends XtraitjAbstractTest {
 
 	@Test def void testDuplicateTraitReferenceWithOperationsOK() {
 		'''
@@ -322,9 +312,6 @@ class C uses TWithGenericMethod {
 		accessToGeneratedJavaCodeWithoutOriginalSource.parseAndAssertNoErrors
 	}
 
-	def private parseAndAssertNoErrors(CharSequence input) {
-		input.parse.assertNoErrors
-	}
 
 //	def private parseAndAssertNoErrors(List<String> inputs) {
 //		val rs = resourceSetProvider.get
