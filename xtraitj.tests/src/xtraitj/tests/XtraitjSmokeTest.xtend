@@ -252,6 +252,42 @@ class XtraitjSmokeTest extends XtraitjAbstractTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testClassTraitReferenceWithWrongTypeArgs() {
+		'''
+		trait T1<T> {
+			
+		}
+		
+		class C<U,V> uses T1<U,V> {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testClassTraitReferenceWithOperationsWithWrongTypeArgs() {
+		'''
+		trait T1<T> {
+			String m();
+		}
+		
+		class C<U,V> uses T1<U,V>[rename m to n] {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testClassTraitReferenceWithOperationsWithRawType() {
+		'''
+		trait T1<T> {
+			String m();
+		}
+		
+		class C<U,V> uses T1[rename m to n] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 		//	.map[message].forEach[println(it)] // useful for debugging

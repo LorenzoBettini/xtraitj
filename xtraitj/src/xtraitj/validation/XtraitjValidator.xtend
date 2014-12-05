@@ -15,7 +15,6 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.common.types.impl.JvmVoidImpl
-import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
@@ -42,7 +41,6 @@ import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.generator.XtraitjGeneratorExtensions
 
 /**
  * Custom validation rules. 
@@ -115,9 +113,6 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjTypingUtil
 	@Inject extension XtraitjAnnotatedElementHelper
-	@Inject extension XtraitjGeneratorExtensions
-	@Inject
-	private TypeReferences references;
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -248,12 +243,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 		
 		for (traitRef : c.traitReferences) {
-			var tRef = traitRef.trait
-			var JvmTypeReference actualTypeReference = tRef
-			if (!traitRef.operations.empty) {
-				actualTypeReference = references.getTypeForName(traitRef.traitExpressionInterfaceName, traitRef, tRef.arguments)
-			}
-			val requirements = actualTypeReference.getXtraitjResolvedOperations(traitRef).allRequirements.map[resolvedOperation]
+			val requirements = traitRef.getTraitReferenceXtraitjResolvedOperations.allRequirements.map[resolvedOperation]
 			checkRequirements(c, requirements, operations, 
 				XtraitjPackage.eINSTANCE.TJTraitReference_Trait
 			) [ traitRef ]

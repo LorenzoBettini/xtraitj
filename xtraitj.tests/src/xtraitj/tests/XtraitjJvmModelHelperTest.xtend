@@ -3,6 +3,7 @@ package xtraitj.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjInjectorProvider
@@ -12,6 +13,8 @@ import xtraitj.input.tests.MyGenericTestInterface
 import xtraitj.input.tests.MyGenericTestInterfaceWithTwoTypeParameters
 import xtraitj.input.tests.MyGenericThirdTestInterface
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjResolvedOperations
+import xtraitj.xtraitj.TJTrait
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 
@@ -129,8 +132,122 @@ getRequired(List<String>) : String'''
 		)
 	}
 
+	@Test def void testGetXtraitjResolvedOperationsUsingJvmTypeReference() {
+		'''
+		trait T1 uses T2 {
+			
+		}
+		
+		trait T2 {
+			String f;
+			String m(int i);
+			String n(int i) { return null; }
+		}
+		'''.firstTraitReference => [
+			traitRef |
+			traitRef.trait.getXtraitjResolvedOperations(traitRef).
+			assertAllDeclarations(
+'''
+getF() : String
+m(int) : String
+n(int) : String'''
+			)
+		]
+	}
+
+	@Test def void testGetXtraitjResolvedOperationsAfterRenamingUsingJvmTypeReference() {
+		// since we take the JvmTypeReference, alteration operations are not considered
+		// i.e., we still see the original method
+		'''
+		trait T1 uses T2[rename field f to g, rename m to o] {
+			
+		}
+		
+		trait T2 {
+			String f;
+			String m(int i);
+			String n(int i) { return null; }
+		}
+		'''.firstTraitReference => [
+			traitRef |
+			traitRef.trait.getXtraitjResolvedOperations(traitRef).
+			assertAllDeclarations(
+'''
+getF() : String
+m(int) : String
+n(int) : String'''
+			)
+		]
+	}
+
+	@Test def void testGetTraitReferenceXtraitjResolvedOperations() {
+		'''
+		trait T1 uses T2 {
+			
+		}
+		
+		trait T2 {
+			String f;
+			String m(int i);
+			String n(int i) { return null; }
+		}
+		'''.firstTraitReference => [
+			traitRef |
+			traitRef.getTraitReferenceXtraitjResolvedOperations.
+			assertAllDeclarations(
+'''
+getF() : String
+m(int) : String
+n(int) : String'''
+			)
+		]
+	}
+
+	@Test def void testGetTraitReferenceXtraitjResolvedOperationsAfterRenaming() {
+		// renamed methods are considered instead of the original one
+		'''
+		trait T1 uses T2[rename field f to g, rename m to o] {
+			
+		}
+		
+		trait T2 {
+			String f;
+			String m(int i);
+			String n(int i) { return null; }
+		}
+		'''.firstTraitReference => [
+			traitRef |
+			traitRef.getTraitReferenceXtraitjResolvedOperations.
+			assertAllDeclarations(
+'''
+getG() : String
+o(int) : String
+n(int) : String'''
+			)
+		]
+	}
+
+	/**
+	 * Retrieves the first trait in the program
+	 */
+	private def firstTraitReference(CharSequence input) {
+		input.firstTrait.traitExpression.references.head
+	}
+
+	/**
+	 * Retrieves the first trait in the program
+	 */
+	private def firstTrait(CharSequence input) {
+		input.parse.elements.head as TJTrait
+	}
+
 	def private assertResolvedOperations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
-		expected.assertEqualsStrings(clazz.toResourceTypeRef(typeArguments).getOperations.map[
+		val operations = clazz.toResourceTypeRef(typeArguments).getOperations
+		assertResolvedOperations(operations, expected)
+	}
+	
+	private def assertResolvedOperations(Iterable<IResolvedOperation> operations, CharSequence expected) {
+		expected.assertEqualsStrings(operations.map[
 			simpleSignature + " : " + resolvedReturnType
 		].join("; "))
 	}
@@ -164,6 +281,10 @@ getRequired(List<String>) : String'''
 
 	def private assertAllDeclarations(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
+		assertAllDeclarations(resolved, expected)
+	}
+	
+	private def assertAllDeclarations(XtraitjResolvedOperations resolved, CharSequence expected) {
 		expected.assertEqualsStrings(
 			resolved.allDeclarations.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("\n")
 		)
@@ -175,4 +296,5 @@ getRequired(List<String>) : String'''
 			resolved.allRequirements.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("\n")
 		)
 	}
+
 }

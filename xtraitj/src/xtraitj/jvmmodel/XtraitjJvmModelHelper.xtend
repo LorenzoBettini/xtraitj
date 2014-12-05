@@ -9,6 +9,7 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
 import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
@@ -16,15 +17,19 @@ import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJTraitOperation
+import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.generator.XtraitjGeneratorExtensions
 
 @Singleton
 class XtraitjJvmModelHelper {
 	@Inject extension OverrideHelper overrideHelper
 	@Inject extension XtraitjAnnotatedElementHelper
 	@Inject extension XtraitjTypingUtil
-	@Inject XtraitjTypeParameterHelper typeParameterHelper
+	@Inject extension XtraitjGeneratorExtensions
+	@Inject private XtraitjTypeParameterHelper typeParameterHelper
+	@Inject private TypeReferences references;
 
 	def getResolvedOperations(JvmDeclaredType type) {
 		overrideHelper.getResolvedOperations(type)
@@ -88,6 +93,20 @@ class XtraitjJvmModelHelper {
 	def getXtraitjResolvedOperations(JvmTypeReference typeRef, EObject context) {
 		val resolvedOps = typeRef.getOperations(context)
 		getXtraitjResolvedOperations(resolvedOps)
+	}
+
+	/**
+	 * The resolution of operations takes into consideration possible alteration
+	 * operations.
+	 */
+	def getTraitReferenceXtraitjResolvedOperations(TJTraitReference traitRef) {
+		var typeRef = traitRef.trait
+		if (traitRef.operations.empty) {
+			typeRef.getXtraitjResolvedOperations(traitRef)
+		} else {
+			references.getTypeForName(traitRef.traitExpressionInterfaceName, traitRef, typeRef.arguments)
+				.getXtraitjResolvedOperations(traitRef)
+		}
 	}
 
 	/**
