@@ -1438,6 +1438,72 @@ trait T2 uses T1[alias s as s2] {
  		]
 	}
 
+	@Test def void testTraitDeclaredFieldConflict2() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			int i;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+		}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Field conflict 'String s' in T1
+Field conflict 'String s'
+'''
+ 		)
+	}
+
+	@Test def void testTraitDeclaredFieldConflict3() {
+		'''
+		trait T1 {
+			int i;
+		}
+		
+		trait T2 {
+			String s;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+		}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Field conflict 'String s' in T2
+Field conflict 'String s'
+'''
+ 		)
+	}
+
+	@Test def void testTraitDeclaredFieldConflict4() {
+		'''
+		trait T1 {
+			int i;
+		}
+		
+		trait T2 {
+			String s;
+		}
+		
+		trait T3 uses T1, T2 {
+			String s;
+			int i;
+		}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Field conflict 'int i' in T1
+Field conflict 'int i'
+Field conflict 'String s' in T2
+Field conflict 'String s'
+'''
+ 		)
+	}
+
 	@Test def void testClassDeclaredFieldNoConflict() {
 		'''
 		trait T1 {
@@ -1481,8 +1547,47 @@ trait T2 uses T1[alias s as s2] {
  		'''.parse.assertNoErrors
 	}
 
+
+	@Test def void testFieldConflictsWithGenerics() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> i;
+		}
+		
+		trait T2 {
+			List<String> i;
+		}
+		
+		trait T3 uses T1<Integer>, T2 {
+		}'''.parse => [
+ 			assertFieldConflict("List<Integer> i", "T1")
+ 			assertFieldConflict("List<String> i", "T2")
+ 		]
+	}
+
+	@Test def void testFieldConflictsWithGenerics2() {
+		'''
+		import java.util.List
+		
+		trait T1<T> {
+			List<T> i;
+		}
+		
+		trait T2 {
+			List<String> i;
+		}
+		
+		trait T3<U> uses T1<U>, T2 {
+		}'''.parse => [
+ 			assertFieldConflict("List<U> i", "T1")
+ 			assertFieldConflict("List<String> i", "T2")
+ 		]
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
-		expected.assertEqualsStrings(
+		expected.toString.trim.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
 	}
 
