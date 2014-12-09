@@ -5,6 +5,8 @@ package xtraitj.ui;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.common.types.xtext.ui.TypeAwareHyperlinkHelper;
+import org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper;
 import org.eclipse.xtext.ui.util.PluginProjectFactory;
 import org.eclipse.xtext.ui.wizard.IProjectCreator;
 
@@ -32,5 +34,10 @@ public class XtraitjUiModule extends xtraitj.ui.AbstractXtraitjUiModule {
 	@Override
 	public Class<? extends ILabelProvider> bindILabelProvider() {
 		return XtraitjLabelProvider.class;
+	}
+	
+	@Override
+	public Class<? extends IHyperlinkHelper> bindIHyperlinkHelper() {
+		return TypeAwareHyperlinkHelper.class;
 	}
 }
