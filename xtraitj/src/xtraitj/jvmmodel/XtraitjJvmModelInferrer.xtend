@@ -431,13 +431,13 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					if (renameOperation != null && renameOperation.newname != null) {
 						val newname = renameOperation.newname
 						
-						members += t.toAbstractMethod
+						members += renameOperation.toAbstractMethod
 							(jvmOp, origName.renameGetterOrSetter(newname)) => [
 										copyAllAnnotationsFrom(op)
 										annotateAsRenamedMethod(origName) 
 									]
 						if (op.annotatedRequiredField()) {
-							members += t.toAbstractSetterDelegateFromGetter
+							members += renameOperation.toAbstractSetterDelegateFromGetter
 								(jvmOp, newname) => [
 									annotateAsRequiredFieldSetter
 									rebindTypeParameters(traitExpressionInterface)
@@ -450,7 +450,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						
 						val newname = aliasOperation.newname
 						
-						members += t.toAbstractMethod
+						members += aliasOperation.toAbstractMethod
 							(jvmOp, newname) => [
 								copyAllAnnotationsFrom(op)
 //								annotateAsRenamedMethod(origName) 
@@ -459,7 +459,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //						members += jvmOp.toAbstractMethod(aliasOperation.newname)
 						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
 							// we need to add also the original method
-							members += t.toAbstractMethod
+							members += aliasOperation.toAbstractMethod
 								(jvmOp, origName) => [
 									copyAllAnnotationsFrom(op)
 	//								annotateAsRenamedMethod(origName) 
@@ -469,7 +469,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						
 					// restricted methods are added as required methods
 					if (restrictOperation != null) {
-						members += t.toAbstractMethod(jvmOp, op.simpleName) => [
+						members += restrictOperation.toAbstractMethod(jvmOp, op.simpleName) => [
 							copyAllAnnotationsButDefinedFrom(op)
 							annotateAsRequiredMethod
 						]

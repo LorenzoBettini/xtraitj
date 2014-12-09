@@ -4,13 +4,17 @@
 package xtraitj.ui.outline
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.viewers.StyledString
+import org.eclipse.swt.graphics.Image
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.ui.IImageHelper
+import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
@@ -29,6 +33,8 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
+import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmOperation
 
 /**
  * Customization of the default outline structure.
@@ -44,6 +50,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject extension XtraitjJvmModelUtil
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension IJvmModelAssociations
 	
 	def _createChildren(DocumentRootNode parentNode, TJProgram p) {
 		if (p.name != null) {
@@ -213,6 +220,27 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def _isLeaf(TJTraitReference r) {
 		return true;
+	}
+
+	override protected createEObjectNode(IOutlineNode parentNode, EObject modelElement, Image image, Object text, boolean isLeaf) {
+		// a JvmOperation that is modified with an alteration operation will navigate to the corresponding
+		// trait operation;
+		// if it is not modified, but it is "inherited" from a trait reference,
+		// then the outline node will navigate to the original declaration
+		
+		if (modelElement instanceof JvmOperation) {
+			val primarySource = modelElement.primarySourceElement
+			
+			if (primarySource instanceof TJTraitReference) {
+				val type = primarySource.trait.type
+				if (type instanceof JvmGenericType) {
+					val op = type.allFeatures.findFirst[simpleName == modelElement.simpleName]
+					return super.createEObjectNode(parentNode, op, image, text, isLeaf)
+				}
+			}
+		}
+		
+		super.createEObjectNode(parentNode, modelElement, image, text, isLeaf)
 	}
 
 }
