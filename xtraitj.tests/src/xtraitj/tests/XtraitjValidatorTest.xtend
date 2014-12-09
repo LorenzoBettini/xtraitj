@@ -1586,6 +1586,64 @@ Field conflict 'String s'
  		]
 	}
 
+	@Test def void testNonCompliantRequiredMethodConflicts() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int m(int i);
+		}
+		
+		trait T3 uses T1, T2 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertMethodConflict("int m(int)", "T2")
+ 		]
+	}
+
+	@Test def void testCompliantRequiredMethodNoConflict() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			String m(int i);
+		}
+		
+		trait T3 uses T1, T2 {}
+ 		'''.parse.assertNoErrors
+	}
+
+	@Test def void testDefinedMethodCompliantWithUsedTraitRequiredMethodNoConflict() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 uses T1 {
+			String m(int i) { return null; }
+		}
+		'''.parse.assertNoErrors
+	}
+
+//	@Test def void testRequiredMethodConflictsWithUsedTraitDefinedMethod() {
+//		'''
+//		trait T1 {
+//			String m(int i) { return null; }
+//		}
+//		
+//		trait T2 uses T1 {
+//			String m(int i) ;
+//		}
+//		'''.parse => [
+// 			assertMethodConflict("String m(int)", "T1")
+// 			assertDeclaredMethodConflict("String m(int)")
+// 		]
+//	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
@@ -1697,6 +1755,20 @@ Field conflict 'String s'
 		o.assertError(XtraitjPackage.eINSTANCE.TJField,
 			XtraitjValidator.FIELD_CONFLICT,
 			"Field conflict '" + repr + "'"
+		)
+	}
+
+	def private assertMethodConflict(EObject o, String repr, String traitName) {
+		o.assertError(XtraitjPackage.eINSTANCE.TJTraitReference,
+			XtraitjValidator.METHOD_CONFLICT,
+			"Method conflict '" + repr + "' in " + traitName
+		)
+	}
+
+	def private assertDeclaredMethodConflict(EObject o, String repr) {
+		o.assertError(XtraitjPackage.eINSTANCE.TJMember,
+			XtraitjValidator.METHOD_CONFLICT,
+			"Method conflict '" + repr + "'"
 		)
 	}
 }

@@ -33,22 +33,7 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testRequiredMethodConflicts() {
-		'''
-		trait T1 {
-			String m(int i);
-		}
-		
-		trait T2 {
-			int m(int i);
-		}
-		
-		trait T3 uses T1, T2 {}
- 		'''.parse => [
- 			assertMethodConflict("String m(int)", "T1")
- 			assertMethodConflict("int m(int)", "T2")
- 		]
-	}
+
 
 	@Test def void testRequiredMethodConflicts2() {
 		'''

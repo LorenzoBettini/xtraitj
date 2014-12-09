@@ -6,6 +6,7 @@ package xtraitj.validation
 import com.google.common.collect.ListMultimap
 import com.google.common.collect.Lists
 import com.google.inject.Inject
+import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -423,29 +424,19 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		
 		val conflicts = newConflictTable
 		
-		val localSeen = newHashSet()
+		val localSeen = newHashMap()
 		
 		for (traitRef : d.traitReferences) {
 			val traitRefOps = traitRef.getTraitReferenceXtraitjResolvedOperations(type)
 			
-			val requiredFields = traitRefOps.requiredFields.map[resolvedOperation];
+			// only if the existing required field is not strictly compliant
+			checkTraitReferenceConflicts(
+				traitRef, traitRefOps.requiredFields.map[resolvedOperation], conflicts
+			) [existing, current | existing.findFirst[ ex | !ex.value.exact(current)]]
 			
-			for (requiredField : requiredFields) {
-				val resolvedDecl = requiredField.getDeclaration();
-				
-				val simpleName = resolvedDecl.getSimpleName()
-				val existing = conflicts.get(simpleName);
-				if (!existing.empty) {
-					// only if the existing required field is not strictly compliant
-					val conflicting = existing.findFirst[ex | !ex.value.exact(requiredField)]
-					if (conflicting != null) {
-						existing.add(traitRef -> requiredField)
-					}
-				} else {
-					conflicts.put(simpleName, traitRef -> requiredField)
-				}
-			}
-			
+			checkTraitReferenceConflicts(
+				traitRef, traitRefOps.requiredMethods.map[resolvedOperation], conflicts
+			) [existing, current | existing.findFirst[ ex | !ex.value.compliant(current)]]
 		}
 		
 		
@@ -453,10 +444,30 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			val key = op.declaration.simpleName
 			// conflicting elements in the same declaration are reported as
 			// duplicate members in the validator, so we skip them here
-			if (localSeen.add(key)) {
-				conflicts.put(key, d -> op)
-			}
+			localSeen.put(key, op)
 		}
+		
+		val localFilteredOps = localSeen.values.toList
+		checkTraitReferenceConflicts(
+				d, localFilteredOps, conflicts
+			) [existing, current | 
+				existing.findFirst[ 
+					ex |
+					val op = ex.value
+					
+					if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
+						return true // always a conflict
+					} else {
+						// a defined method in the current trait can
+						// fulfill a required method from a used trait
+						return !op.annotatedRequiredMethod
+							&&
+							!current.annotatedDefinedMethod
+							&&
+							!op.compliant(current)
+					}
+				]
+			]
 		
 		for (entry : conflicts.asMap.entrySet) {
 			val duplicates = entry.value
@@ -471,18 +482,49 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 	}
 	
+	private def checkTraitReferenceConflicts(EObject owner, 
+		List<IResolvedOperation> operations,
+		ListMultimap<String, Pair<EObject, IResolvedOperation>> conflicts,
+		(List<Pair<EObject, IResolvedOperation>>, IResolvedOperation)=>Pair<EObject, IResolvedOperation> conflictFinder
+	) {
+		for (current : operations) {
+			val resolvedDecl = current.getDeclaration();
+			
+			val simpleName = resolvedDecl.getSimpleName()
+			val existing = conflicts.get(simpleName);
+			if (!existing.empty) {
+				val conflicting = conflictFinder.apply(existing, current)
+				if (conflicting != null) {
+					existing.add(owner -> current)
+				}
+			} else {
+				conflicts.put(simpleName, owner -> current)
+			}
+		}
+	}
+	
 	private def errorConflicting(EObject owner, IResolvedOperation op) {
 		var source = owner
 		var errorMessage = ""
+		var issue = ""
 		
 		val isRequiredField = op.annotatedRequiredField
 		
 		if (isRequiredField) {
 			errorMessage = "Field conflict '" + op.fieldRepresentation + "'"
+			issue = FIELD_CONFLICT
 			if (owner instanceof TJTraitReference) {
 				errorMessage += " in " + owner.typeRefRepr
 			} else {
 				source = op.declaration.sourceField
+			}
+		} else {
+			errorMessage = "Method conflict '" + op.methodRepresentation + "'"
+			issue = METHOD_CONFLICT
+			if (owner instanceof TJTraitReference) {
+				errorMessage += " in " + owner.typeRefRepr
+			} else {
+				source = op.declaration.sourceMethodDeclaration
 			}
 		}
 		
@@ -490,7 +532,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			errorMessage,
 			source,
 			null,
-			FIELD_CONFLICT
+			issue
 		)
 	}
 

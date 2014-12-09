@@ -70,11 +70,19 @@ class XtraitjAnnotatedElementHelper {
 			]
 	}
 
+	def annotatedRequiredMethod(IResolvedOperation o) {
+		o.declaration.annotatedRequiredMethod
+	}
+
 	def annotatedRequiredMethod(JvmMember member) {
 		member.annotations.
 			exists[
 				annotation.identifier == XtraitjRequiredMethod.name
 			]
+	}
+
+	def annotatedDefinedMethod(IResolvedOperation o) {
+		o.declaration.annotatedDefinedMethod
 	}
 
 	def annotatedDefinedMethod(JvmMember member) {
