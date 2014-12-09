@@ -56,6 +56,18 @@ class XtraitjJvmModelUtil {
 		t.associatedInterfaceType?.createTypeRef()
 	}
 
+	/**
+	 * For a trait returns the inferred Java interface,
+	 * for a class the inferred Java class
+	 */
+	def associatedJavaType(TJDeclaration d) {
+		if (d instanceof TJTrait) {
+			return d.associatedInterfaceType
+		} else {
+			return d.associatedJavaClass
+		}
+	}
+
 	def associatedInterfaceType(TJTrait t) {
 		t._associatedInterfaceType
 	}

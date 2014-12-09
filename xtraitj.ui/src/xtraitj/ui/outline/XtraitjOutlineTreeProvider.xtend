@@ -120,7 +120,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<XtraitjJvmOperation> interfaceMethods) {
-		val associatedClass = d.associatedJavaClass
+		val associatedClass = d.associatedJavaType
 		val ops = associatedClass.getXtraitjResolvedOperationsFromSuperTypes(d)
 		val fieldRequirements = ops.requiredFields
 		val methodRequirements = ops.requiredMethods
@@ -142,7 +142,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def nodesForProvides(EObjectNode parentNode, TJTrait d) {
-		val associatedClass = d.associatedJavaClass
+		val associatedClass = d.associatedInterfaceType
 		val ops = associatedClass.xtraitjResolvedOperationsNotDeclared
 		nodesForProvides(parentNode, ops)
 	}
