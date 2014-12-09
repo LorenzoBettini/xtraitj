@@ -1423,6 +1423,64 @@ trait T2 uses T1[alias s as s2] {
  		]
 	}
 
+	@Test def void testTraitDeclaredFieldConflict() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 uses T1 {
+			String s;
+		}
+ 		'''.parse => [
+ 			assertFieldConflict("String s", "T1")
+ 			assertDeclaredFieldConflict("String s")
+ 		]
+	}
+
+	@Test def void testClassDeclaredFieldNoConflict() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		class C uses T1 {
+			String s;
+		}
+ 		'''.parse.assertNoErrors
+	}
+
+	@Test def void testUsedTraitsNonCompliantFieldsConflict() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			int s;
+		}
+		
+		trait T3 uses T1, T2 {}
+ 		'''.parse => [
+ 			assertFieldConflict("String s", "T1")
+ 			assertFieldConflict("int s", "T2")
+ 		]
+	}
+
+	@Test def void testUsedTraitsCompliantFieldsNoConflict() {
+		'''
+		trait T1 {
+			String s;
+		}
+		
+		trait T2 {
+			String s;
+		}
+		
+		trait T3 uses T1, T2 {}
+ 		'''.parse.assertNoErrors
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
@@ -1520,6 +1578,20 @@ trait T2 uses T1[alias s as s2] {
 		o.assertError(
 			c, XtraitjValidator.MEMBER_ALREADY_EXISTS,
 			"Member already exists '" + memberName + "'"
+		)
+	}
+
+	def private assertFieldConflict(EObject o, String repr, String traitName) {
+		o.assertError(XtraitjPackage.eINSTANCE.TJTraitReference,
+			XtraitjValidator.FIELD_CONFLICT,
+			"Field conflict '" + repr + "' in " + traitName
+		)
+	}
+
+	def private assertDeclaredFieldConflict(EObject o, String repr) {
+		o.assertError(XtraitjPackage.eINSTANCE.TJField,
+			XtraitjValidator.FIELD_CONFLICT,
+			"Field conflict '" + repr + "'"
 		)
 	}
 }

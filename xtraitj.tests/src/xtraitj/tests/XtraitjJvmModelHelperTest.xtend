@@ -17,12 +17,16 @@ import xtraitj.jvmmodel.XtraitjResolvedOperations
 import xtraitj.xtraitj.TJTrait
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
+import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.xtraitj.TJTraitReference
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjJvmModelHelperTest extends XtraitjAbstractTest {
 	
 	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjJvmModelUtil
 	
 	@Test def void testResolvedOperationsWithoutTypeArgument() {
 		MyGenericTestInterface.assertResolvedOperations("m(List<Object>) : int")
@@ -193,7 +197,7 @@ n(int) : String'''
 		}
 		'''.firstTraitReference => [
 			traitRef |
-			traitRef.getTraitReferenceXtraitjResolvedOperations.
+			traitRef.getTraitReferenceXtraitjResolvedOperations(traitRef.containingDeclarationInferredType).
 			assertAllDeclarations(
 '''
 getF() : String
@@ -217,7 +221,7 @@ n(int) : String'''
 		}
 		'''.firstTraitReference => [
 			traitRef |
-			traitRef.getTraitReferenceXtraitjResolvedOperations.
+			traitRef.getTraitReferenceXtraitjResolvedOperations(traitRef.containingDeclarationInferredType).
 			assertAllDeclarations(
 '''
 getG() : String
@@ -297,4 +301,7 @@ n(int) : String'''
 		)
 	}
 
+	def private containingDeclarationInferredType(TJTraitReference traitRef) {
+		traitRef.containingDeclaration.associatedJavaType
+	}
 }

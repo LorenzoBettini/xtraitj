@@ -3,6 +3,7 @@
  */
 package xtraitj.validation
 
+import com.google.common.collect.ListMultimap
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Set
@@ -38,6 +39,7 @@ import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitOperationForFieldOrMethod
 import xtraitj.xtraitj.TJTraitOperationForProvided
+import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
@@ -243,7 +245,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 		
 		for (traitRef : c.traitReferences) {
-			val requirements = traitRef.getTraitReferenceXtraitjResolvedOperations.allRequirements.map[resolvedOperation]
+			val requirements = traitRef.getTraitReferenceXtraitjResolvedOperations(type).allRequirements.map[resolvedOperation]
 			checkRequirements(c, requirements, operations, 
 				XtraitjPackage.eINSTANCE.TJTraitReference_Trait
 			) [ traitRef ]
@@ -406,6 +408,95 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					)
 			}
 		}
+	}
+
+	@Check def void checkConflicts(TJDeclaration d) {
+		val type = d.associatedJavaType
+		val localOps = 
+			if (d instanceof TJTrait) {
+				type.resolvedOperations.declaredOperations
+			} else {
+				// for classes we don't check the locally defined fields
+				// which are provided, thus they're not conflicts at all
+				emptyList
+			};
+		
+		val conflicts = newConflictTable
+		
+		val localSeen = newHashSet()
+		
+		for (traitRef : d.traitReferences) {
+			val traitRefOps = traitRef.getTraitReferenceXtraitjResolvedOperations(type)
+			
+			val requiredFields = traitRefOps.requiredFields.map[resolvedOperation];
+			
+			for (requiredField : requiredFields) {
+				val resolvedDecl = requiredField.getDeclaration();
+				
+				val simpleName = resolvedDecl.getSimpleName()
+				val existing = conflicts.get(simpleName);
+				if (!existing.empty) {
+					// only if the existing required field is not strictly compliant
+					val conflicting = existing.findFirst[ex | !ex.value.exact(requiredField)]
+					if (conflicting != null) {
+						existing.add(traitRef -> requiredField)
+					}
+				} else {
+					conflicts.put(simpleName, traitRef -> requiredField)
+				}
+			}
+			
+		}
+		
+		
+		for (op : localOps) {
+			val key = op.declaration.simpleName
+			// conflicting elements in the same declaration are reported as
+			// duplicate members in the validator, so we skip them here
+			if (localSeen.add(key)) {
+				conflicts.put(key, d -> op)
+			}
+		}
+		
+		for (entry : conflicts.asMap.entrySet) {
+			val duplicates = entry.value
+			if (duplicates.size > 1) {
+				for (dup : duplicates) {
+					val owner = dup.key
+					val op = dup.value
+					
+					errorConflicting(owner, op)
+				}
+			}
+		}
+	}
+	
+	private def errorConflicting(EObject owner, IResolvedOperation op) {
+		var source = owner
+		var errorMessage = ""
+		
+		val isRequiredField = op.annotatedRequiredField
+		
+		if (isRequiredField) {
+			errorMessage = "Field conflict '" + op.fieldRepresentation + "'"
+			if (owner instanceof TJTraitReference) {
+				errorMessage += " in " + owner.typeRefRepr
+			} else {
+				source = op.declaration.sourceField
+			}
+		}
+		
+		error(
+			errorMessage,
+			source,
+			null,
+			FIELD_CONFLICT
+		)
+	}
+
+	def private newConflictTable() {
+		val ListMultimap<String, Pair<EObject, IResolvedOperation>> conflicts = Multimaps2.newLinkedHashListMultimap();
+		return conflicts;
 	}
 
 //	@Check def void checkConflicts(TJDeclaration d) {
@@ -814,9 +905,13 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 	}
 
-//	def private typeRefRepr(JvmTypeReference typeRef) {
-//		typeRef.simpleName
-//	}
+	def private typeRefRepr(TJTraitReference traitRef) {
+		traitRef.trait.typeRefRepr
+	}
+
+	def private typeRefRepr(JvmTypeReference typeRef) {
+		typeRef.simpleName
+	}
 
 	def private <K, T> duplicatesMultimap() {
 		return Multimaps2.<K, T> newLinkedHashListMultimap();

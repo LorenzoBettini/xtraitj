@@ -97,14 +97,16 @@ class XtraitjJvmModelHelper {
 
 	/**
 	 * The resolution of operations takes into consideration possible alteration
-	 * operations.
+	 * operations.  The inferredContainingType is the JvmGenericType inferred for the
+	 * TJDeclration containing the trait reference
 	 */
-	def getTraitReferenceXtraitjResolvedOperations(TJTraitReference traitRef) {
+	def getTraitReferenceXtraitjResolvedOperations(TJTraitReference traitRef, JvmGenericType inferredContainingType) {
 		var typeRef = traitRef.trait
 		if (traitRef.operations.empty) {
 			typeRef.getXtraitjResolvedOperations(traitRef)
 		} else {
-			references.getTypeForName(traitRef.traitExpressionInterfaceName, traitRef, typeRef.arguments)
+			references.getTypeForName(traitRef.traitExpressionInterfaceName, traitRef,
+				inferredContainingType.typeParameters.map[references.createTypeRef(it)])
 				.getXtraitjResolvedOperations(traitRef)
 		}
 	}

@@ -30,37 +30,6 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testFieldConflicts() {
-		'''
-		trait T1 {
-			String s;
-		}
-		
-		trait T2 {
-			int s;
-		}
-		
-		trait T3 uses T1, T2 {}
- 		'''.parse => [
- 			assertFieldConflict("String s", "T1")
- 			assertFieldConflict("int s", "T2")
- 		]
-	}
-
-	@Test def void testFieldConflicts2() {
-		'''
-		trait T1 {
-			String s;
-		}
-		
-		trait T2 uses T1 {
-			String s;
-		}
- 		'''.parse => [
- 			assertFieldConflict("String s", "T1")
- 			assertDeclaredFieldConflict("s")
- 		]
-	}
 
 	@Test def void testFieldConflicts3() {
 		'''
