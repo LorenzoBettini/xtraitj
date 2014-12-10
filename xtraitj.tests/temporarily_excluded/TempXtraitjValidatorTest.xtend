@@ -35,103 +35,11 @@ class TempXtraitjValidatorTest {
 
 
 
-	@Test def void testRequiredMethodConflicts2() {
-		'''
-		trait T1 {
-			String m(int i);
-		}
-		
-		trait T2 uses T1 {
-			String m(int i);
-		}
- 		'''.parse => [
- 			assertMethodConflict("String m(int)", "T1")
- 			assertDeclaredMethodConflict("m")
- 		]
-	}
 
-	@Test def void testRequiredMethodConflicts3() {
-		'''
-		trait T1 {
-			String m(int i);
-		}
-		
-		trait T2 {
-			int n(boolean i);
-		}
-		
-		trait T3 uses T1, T2 {
-			String m(int i);
-		}
- 		'''.parse => [
- 			assertMethodConflict("String m(int)", "T1")
- 			assertDeclaredMethodConflict("m")
- 		]
-	}
 
-	@Test def void testRequiredMethodConflicts4() {
-		'''
-		trait T1 {
-			String m(int i);
-		}
-		
-		trait T2 {
-			int n(boolean i);
-		}
-		
-		trait T3 uses T1, T2 {
-			int n(boolean i);
-		}
- 		'''.parse => [
- 			assertMethodConflict("int n(boolean)", "T2")
- 			assertDeclaredMethodConflict("n")
- 		]
-	}
 
-	@Test def void testRequiredMethodConflicts5() {
-		'''
-		trait T1 {
-			String m(int i);
-		}
-		
-		trait T2 {
-			int n(boolean i);
-		}
-		
-		trait T3 uses T1, T2 {
-			int n(boolean i);
-			String m(int i);
-		}
- 		'''.parse => [
- 			assertMethodConflict("int n(boolean)", "T2")
- 			assertDeclaredMethodConflict("n")
- 			assertMethodConflict("String m(int)", "T1")
- 			assertDeclaredMethodConflict("m")
- 		]
-	}
 
-	@Test def void testMethodConflictsWithGenerics() {
-		'''
-import java.util.List
 
-trait T1<T> {
-	int i();
-	List<T> m();
-}
-
-trait T2  {
-	int i();
-	List<String> m();
-}
-
-trait T3 uses T1<Integer>, T2 {
-	
-}
-		'''.parse => [
- 			assertMethodConflict("List<Integer> m()", "T1")
- 			assertMethodConflict("List<String> m()", "T2")
- 		]
-	}
 
 	@Test def void testRequiredMethodConflictsWithDefinedMethod() {
 		'''

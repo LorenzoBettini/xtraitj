@@ -1601,6 +1601,68 @@ Field conflict 'String s'
  		]
 	}
 
+	@Test def void testDeclaredRequiredMethodConflict2() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			String m(int i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("String m(int)")
+ 		]
+	}
+
+	@Test def void testDeclaredRequiredMethodConflict3() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			int n(boolean i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("int n(boolean)", "T2")
+ 			assertDeclaredMethodConflict("int n(boolean)")
+ 		]
+	}
+
+	@Test def void testDeclaredRequiredMethodConflict4() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int n(boolean i);
+		}
+		
+		trait T3 uses T1, T2 {
+			int n(boolean i);
+			String m(int i);
+		}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Method conflict 'String m(int)' in T1
+Method conflict 'String m(int)'
+Method conflict 'int n(boolean)' in T2
+Method conflict 'int n(boolean)'
+'''
+ 		)
+	}
+
 	@Test def void testNonCompliantRequiredMethodConflicts() {
 		'''
 		trait T1 {
@@ -1618,6 +1680,29 @@ Field conflict 'String s'
  		]
 	}
 
+	@Test def void testNonCompliantRequiredMethodConflictsWithGenerics() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+trait T3 uses T1<Integer>, T2 {
+	
+}
+		'''.parse => [
+ 			assertMethodConflict("List<Integer> m()", "T1")
+ 			assertMethodConflict("List<String> m()", "T2")
+ 		]
+	}
+
 	@Test def void testCompliantRequiredMethodNoConflict() {
 		'''
 		trait T1 {
@@ -1631,6 +1716,27 @@ Field conflict 'String s'
 		trait T3 uses T1, T2 {}
  		'''.parse.assertNoErrors
 	}
+
+	@Test def void testCompliantRequiredMethodNoConflictWithGenerics() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+trait T3 uses T1<String>, T2 {
+	
+}
+		'''.parse.assertNoErrors
+	}
+
 
 	@Test def void testDefinedMethodCompliantWithUsedTraitRequiredMethodNoConflict() {
 		'''
