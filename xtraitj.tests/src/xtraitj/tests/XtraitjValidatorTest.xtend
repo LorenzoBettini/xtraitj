@@ -2115,6 +2115,47 @@ Class C must provide required method 'List<String> m()'
  		]
 	}
 
+	@Test def void testDefinedMethodNoConflictWithHiddenMethodFromUsedTrait() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 uses T1[hide n] {
+			int n(boolean i) { return 0; }
+		}
+ 		'''.parse.assertNoErrors
+	}
+
+	@Test def void testDefinedMethodNoConflictWithRestrictMethodFromUsedTrait() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 uses T1[restrict n] {
+			String n(int i) { return null; }
+		}
+ 		'''.parse.assertNoErrors
+	}
+
+	@Test def void testUncompliantDefinedMethodConflictsWithRestrictMethodFromUsedTrait() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 uses T1[restrict n] {
+			int n(boolean i) { return 0; }
+		}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Method conflict 'String n(int)' in T1
+Method conflict 'int n(boolean)'
+'''
+ 		)
+	}
+
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEqualsStrings(
 			o.validate.map[message].join("\n"))
