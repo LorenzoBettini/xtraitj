@@ -1837,6 +1837,264 @@ Class C must provide required method 'List<String> m()'
 		'''.parse.assertNoErrors
 	}
 
+	@Test def void testDefinedMethodCompliantWithUsedTraitRequiredMethodNoConflict2() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			String m(int i) { return null; }
+		}
+		
+		trait T3 uses T1, T2 {}
+		'''.parse.assertNoErrors
+	}
+
+	@Test def void testClassDefinedMethodCompliantWithUsedTraitRequiredMethodNoConflict() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			String m(int i) { return null; }
+		}
+		
+		class C uses T1, T2 {}
+		'''.parse.assertNoErrors
+	}
+
+	@Test def void testDefinedMethodFromUsedTraitsConflicts() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			int m(int i) { return 0; }
+			String n(int i) { return null; }
+		}
+		
+		trait T3 uses T1, T2 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertMethodConflict("int m(int)", "T2")
+ 			
+ 			assertMethodConflict("String n(int)", "T1")
+ 			assertMethodConflict("String n(int)", "T2")
+ 		]
+	}
+
+	@Test def void testDefinedMethodFromUsedTraitsConflicts2() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 uses T1 {
+			String m(int i) { return null; }
+			int n(boolean i) { return 0; }
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("String m(int)")
+ 			
+ 			assertMethodConflict("String n(int)", "T1")
+ 			assertDeclaredMethodConflict("int n(boolean)")
+ 		]
+	}
+
+	@Test def void testClassDefinedMethodFromUsedTraitsConflicts() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			int m(int i) { return 0; }
+			String n(int i) { return null; }
+		}
+		
+		class C uses T1, T2 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertMethodConflict("int m(int)", "T2")
+ 			
+ 			assertMethodConflict("String n(int)", "T1")
+ 			assertMethodConflict("String n(int)", "T2")
+ 		]
+	}
+
+	@Test def void testMethodConflictsWithRenaming() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T1[rename m to m1, rename n to n1], T2 {
+			String m1(int i) { return null; }
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m1(int)", "T1")
+ 			assertDeclaredMethodConflict("String m1(int)")
+ 			
+ 			assertMethodConflict("String n1(int)", "T1")
+ 			assertMethodConflict("String n1(int)", "T2")
+ 		]
+	}
+
+	@Test def void testMethodConflictsWithRenaming2() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T1[rename n to n1] {
+		}
+		
+		trait T4 uses T3, T2 {
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String n1(int)", "T3")
+ 			assertMethodConflict("String n1(int)", "T2")
+ 		]
+	}
+
+	@Test def void testClassMethodConflictsWithRenaming() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		class C uses T1[rename n to n1], T2 {
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String n1(int)", "T1")
+ 			assertMethodConflict("String n1(int)", "T2")
+ 		]
+	}
+
+	@Test def void testClassMethodConflictsWithRenaming2() {
+		'''
+		trait T1 {
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T1[rename n to n1] {
+		}
+		
+		class C uses T3, T2 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String n1(int)", "T3")
+ 			assertMethodConflict("String n1(int)", "T2")
+ 		]
+	}
+
+	@Test def void testMethodConflictsWithAlias() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T1[alias m as m1], T2[alias n1 as n] {
+			String m1(int i) { return null; }
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m1(int)", "T1")
+ 			assertDeclaredMethodConflict("String m1(int)")
+ 			
+ 			assertMethodConflict("String n(int)", "T1")
+ 			assertMethodConflict("String n(int)", "T2")
+ 		]
+	}
+
+	@Test def void testMethodConflictsWithAlias2() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T2[alias n1 as n] {
+		}
+		
+		trait T4 uses T3, T1 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String n(int)", "T3")
+ 			assertMethodConflict("String n(int)", "T1")
+ 		]
+	}
+
+	@Test def void testClassMethodConflictsWithAlias() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		class C uses T2[alias n1 as n], T1 {
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String n(int)", "T2")
+ 			assertMethodConflict("String n(int)", "T1")
+ 		]
+	}
+
+	@Test def void testClassMethodConflictsWithAlias2() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 {
+			String n1(int i) { return null; }
+		}
+		
+		trait T3 uses T2[alias n1 as n] {
+		}
+		
+		class C uses T3, T1 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String n(int)", "T3")
+ 			assertMethodConflict("String n(int)", "T1")
+ 		]
+	}
+
 //	@Test def void testRequiredMethodConflictsWithUsedTraitDefinedMethod() {
 //		'''
 //		trait T1 {

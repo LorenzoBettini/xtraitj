@@ -437,6 +437,26 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			checkTraitReferenceConflicts(
 				traitRef, traitRefOps.requiredMethods.map[resolvedOperation], conflicts
 			) [existing, current | existing.findFirst[ ex | !ex.value.compliant(current)]]
+			
+			// a defined method is allowed to fulfill a required method from another trait
+			checkTraitReferenceConflicts(
+				traitRef, traitRefOps.definedMethods.map[resolvedOperation], conflicts
+			) [existing, current | existing.findFirst[ 
+					ex |
+					val op = ex.value
+					
+					if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
+						return true // always a conflict
+					} else {
+						// a defined method in the current trait is allowed
+						// fulfill a required method from a used trait
+						return !(op.annotatedRequiredMethod
+							&&
+							current.annotatedDefinedMethod
+							&&
+							op.compliant(current))
+					}
+				] ]
 		}
 		
 		

@@ -61,93 +61,13 @@ class TempXtraitjValidatorTest {
  		]
 	}
 
-	@Test def void testDefinedMethodConflicts() {
-		'''
-		trait T1 {
-			String m(int i) { return null; }
-			String n(int i) { return null; }
-		}
-		
-		trait T2 {
-			int m(int i) { return 0; }
-			String n(int i) { return null; }
-		}
-		
-		trait T3 uses T1, T2 {}
- 		'''.parse => [
- 			assertMethodConflict("String m(int)", "T1")
- 			assertMethodConflict("int m(int)", "T2")
- 			
- 			assertMethodConflict("String n(int)", "T1")
- 			assertMethodConflict("String n(int)", "T2")
- 		]
-	}
 
-	@Test def void testDefinedMethodConflicts2() {
-		'''
-		trait T1 {
-			String m(int i) { return null; }
-			String n(int i) { return null; }
-		}
-		
-		trait T2 uses T1 {
-			String m(int i) { return null; }
-			int n(boolean i) { return 0; }
-		}
- 		'''.parse => [
- 			assertMethodConflict("String m(int)", "T1")
- 			assertDeclaredMethodConflict("m")
- 			
- 			assertMethodConflict("String n(int)", "T1")
- 			assertDeclaredMethodConflict("n")
- 		]
-	}
 
-	@Test def void testMethodConflictsWithRenaming() {
-		'''
-		trait T1 {
-			String m(int i) { return null; }
-			String n(int i) { return null; }
-		}
-		
-		trait T2 {
-			String n1(int i) { return null; }
-		}
-		
-		trait T3 uses T1[rename m to m1, rename n to n1], T2 {
-			String m1(int i) { return null; }
-		}
- 		'''.parse => [
- 			assertMethodConflict("String m1(int)", "T1")
- 			assertDeclaredMethodConflict("m1")
- 			
- 			assertMethodConflict("String n1(int)", "T1")
- 			assertMethodConflict("String n1(int)", "T2")
- 		]
-	}
 
-	@Test def void testMethodConflictsWithAlias() {
-		'''
-		trait T1 {
-			String m(int i) { return null; }
-			String n(int i) { return null; }
-		}
-		
-		trait T2 {
-			String n1(int i) { return null; }
-		}
-		
-		trait T3 uses T1[alias m as m1], T2[alias n1 as n] {
-			String m1(int i) { return null; }
-		}
- 		'''.parse => [
- 			assertMethodConflict("String m1(int)", "T1")
- 			assertDeclaredMethodConflict("m1")
- 			
- 			assertMethodConflict("String n(int)", "T1")
- 			assertMethodConflict("String n(int)", "T2")
- 		]
-	}
+
+
+
+
 
 
 
