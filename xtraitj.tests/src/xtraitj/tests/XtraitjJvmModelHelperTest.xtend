@@ -20,6 +20,8 @@ import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import static extension xtraitj.util.XtraitjModelUtil.*
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import org.eclipse.xtext.common.types.JvmDeclaredType
+import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -134,6 +136,26 @@ getRequired(List<String>) : String'''
 		,
 		String
 		)
+	}
+
+	@Test def void testGetResolvedOperationsDeclaredOperations() {
+		// included both required and defined methods
+		MyGenericAnnotatedJavaInterfaceDerived.assertResolvedOperationsDeclaredOperations(
+'''
+getField2() : T - MyGenericAnnotatedJavaInterfaceDerived
+getRequired2(List<T>) : T - MyGenericAnnotatedJavaInterfaceDerived
+getDefined2(List<T>) : T - MyGenericAnnotatedJavaInterfaceDerived
+notAnnotatedMethod() : String - MyGenericAnnotatedJavaInterfaceDerived
+''')
+	}
+
+	@Test def void testGetResolvedOperationsDeclaredOperationsWhenOverridesDefinedWithRequired() {
+		// a required method overriding a defined method
+		MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired.assertResolvedOperationsDeclaredOperations(
+'''
+getDefined(List<T>) : T - MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired
+notAnnotatedMethod() : String - MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired
+''')
 	}
 
 	@Test def void testGetXtraitjResolvedOperationsUsingJvmTypeReference() {
@@ -274,6 +296,17 @@ n(int) : String'''
 		val resolved = typeRef.getResolvedOperation(typeRef, op)
 		
 		expected.assertEqualsStrings(resolved.simpleSignature + " : " + resolved.resolvedReturnType)
+	}
+
+	def private assertResolvedOperationsDeclaredOperations(Class<?> clazz, CharSequence expected) {
+		val typeRef = clazz.toResourceTypeRef
+		val resolved = (typeRef.type as JvmDeclaredType).getResolvedOperations
+		
+		expected.toString.trim.assertEqualsStrings(
+			resolved.declaredOperations.map[
+				simpleSignature + " : " + resolvedReturnType + " - " + declaration.declaringType.simpleName
+			].join("\n")
+		)
 	}
 
 	def private assertDeclaredMethods(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {

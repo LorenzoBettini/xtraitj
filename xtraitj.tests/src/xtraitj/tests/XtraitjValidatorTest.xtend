@@ -2095,20 +2095,25 @@ Class C must provide required method 'List<String> m()'
  		]
 	}
 
-//	@Test def void testRequiredMethodConflictsWithUsedTraitDefinedMethod() {
-//		'''
-//		trait T1 {
-//			String m(int i) { return null; }
-//		}
-//		
-//		trait T2 uses T1 {
-//			String m(int i) ;
-//		}
-//		'''.parse => [
-// 			assertMethodConflict("String m(int)", "T1")
-// 			assertDeclaredMethodConflict("String m(int)")
-// 		]
-//	}
+	@Test def void testDeclaredRequiredMethodConflictsWithUsedTraitDefinedMethod() {
+		'''
+		trait T1 {
+			String m(int i) { return null; }
+			String n(int i) { return null; }
+		}
+		
+		trait T2 uses T1 {
+			String m(int i);
+			int n(boolean i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("String m(int)")
+ 			
+ 			assertMethodConflict("String n(int)", "T1")
+ 			assertDeclaredMethodConflict("int n(boolean)")
+ 		]
+	}
 
 	def private assertErrorsAsStrings(EObject o, CharSequence expected) {
 		expected.toString.trim.assertEqualsStrings(

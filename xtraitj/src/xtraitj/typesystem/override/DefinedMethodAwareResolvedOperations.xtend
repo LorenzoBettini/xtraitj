@@ -15,6 +15,7 @@ import org.eclipse.xtext.xbase.typesystem.^override.OverrideTester
 import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
 import org.eclipse.xtext.xbase.typesystem.references.LightweightTypeReference
 import xtraitj.util.XtraitjAnnotatedElementHelper
+import java.util.Collections
 
 /**
  * Custom implementation that gives precedence to defined methods over
@@ -31,6 +32,19 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 			OverrideTester overrideTester, XtraitjAnnotatedElementHelper annotatedElementHelper) {
 		super(type, overrideTester);
 		this.annotatedElementHelper = annotatedElementHelper;
+	}
+
+	override protected computeDeclaredOperations() {
+		val rawType = getRawType();
+		if (!(rawType instanceof JvmDeclaredType)) {
+			return emptyList();
+		}
+		val result = newArrayList();
+		val operations = (rawType as JvmDeclaredType).getDeclaredOperations();
+		for(operation: operations) {
+			result.add(createResolvedOperation(operation))
+		}
+		return Collections.unmodifiableList(result)
 	}
 
 	override protected void computeAllOperations(JvmDeclaredType type,
