@@ -1703,6 +1703,46 @@ trait T3 uses T1<Integer>, T2 {
  		]
 	}
 
+	@Test def void testClassNonCompliantRequiredMethodConflicts() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			int m(int i);
+		}
+		
+		class C uses T1, T2 {}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertMethodConflict("int m(int)", "T2")
+ 		]
+	}
+
+	@Test def void testClassNonCompliantRequiredMethodConflictsWithGenerics() {
+		'''
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+class C uses T1<Integer>, T2 {
+	
+}
+		'''.parse => [
+ 			assertMethodConflict("List<Integer> m()", "T1")
+ 			assertMethodConflict("List<String> m()", "T2")
+ 		]
+	}
+
 	@Test def void testCompliantRequiredMethodNoConflict() {
 		'''
 		trait T1 {
@@ -1737,6 +1777,53 @@ trait T3 uses T1<String>, T2 {
 		'''.parse.assertNoErrors
 	}
 
+	@Test def void testClassCompliantRequiredMethodNoConflict() {
+		// of course we'll have errors about missing requirements, but no conflicts
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 {
+			String m(int i);
+		}
+		
+		class C uses T1, T2 {}
+ 		'''.parse.assertErrorsAsStrings(
+'''
+Class C must provide required method 'String m(int)'
+Class C must provide required method 'String m(int)'
+'''
+ 		)
+	}
+
+	@Test def void testClassCompliantRequiredMethodNoConflictWithGenerics() {
+		// of course we'll have errors about missing requirements, but no conflicts
+		'''
+import java.util.List
+
+trait T1<T> {
+	int i();
+	List<T> m();
+}
+
+trait T2  {
+	int i();
+	List<String> m();
+}
+
+class C uses T1<String>, T2 {
+	
+}
+		'''.parse.assertErrorsAsStrings(
+'''
+Class C must provide required method 'int i()'
+Class C must provide required method 'List<String> m()'
+Class C must provide required method 'int i()'
+Class C must provide required method 'List<String> m()'
+'''
+ 		)
+	}
 
 	@Test def void testDefinedMethodCompliantWithUsedTraitRequiredMethodNoConflict() {
 		'''
