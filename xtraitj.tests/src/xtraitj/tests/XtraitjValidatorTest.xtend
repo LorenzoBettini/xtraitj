@@ -1586,6 +1586,21 @@ Field conflict 'String s'
  		]
 	}
 
+	@Test def void testDeclaredRequiredMethodConflict() {
+		'''
+		trait T1 {
+			String m(int i);
+		}
+		
+		trait T2 uses T1 {
+			String m(int i);
+		}
+ 		'''.parse => [
+ 			assertMethodConflict("String m(int)", "T1")
+ 			assertDeclaredMethodConflict("String m(int)")
+ 		]
+	}
+
 	@Test def void testNonCompliantRequiredMethodConflicts() {
 		'''
 		trait T1 {

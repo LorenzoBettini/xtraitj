@@ -458,13 +458,13 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 					if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
 						return true // always a conflict
 					} else {
-						// a defined method in the current trait can
+						// a defined method in the current trait is allowed
 						// fulfill a required method from a used trait
-						return !op.annotatedRequiredMethod
+						return !(op.annotatedRequiredMethod
 							&&
-							!current.annotatedDefinedMethod
+							current.annotatedDefinedMethod
 							&&
-							!op.compliant(current)
+							op.compliant(current))
 					}
 				]
 			]
