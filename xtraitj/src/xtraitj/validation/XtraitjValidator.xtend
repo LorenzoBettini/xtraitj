@@ -426,6 +426,27 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		
 		val localSeen = newHashMap()
 		
+		// a defined method is allowed to fulfill a required method from another trait
+		val conflictFinderForDeclaredMethods = 
+			[List<Pair<EObject, IResolvedOperation>> existing, IResolvedOperation current |
+				existing.findFirst[ 
+					ex |
+					val op = ex.value
+						
+						if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
+							return true // always a conflict
+						} else {
+							// a defined method in the current trait is allowed
+							// fulfill a required method from a used trait
+							return !(op.annotatedRequiredMethod
+								&&
+								current.annotatedDefinedMethod
+								&&
+								op.compliant(current))
+						}
+					]
+			]
+
 		for (traitRef : d.traitReferences) {
 			val traitRefOps = traitRef.getTraitReferenceXtraitjResolvedOperations(type)
 			
@@ -438,25 +459,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 				traitRef, traitRefOps.requiredMethods.map[resolvedOperation], conflicts
 			) [existing, current | existing.findFirst[ ex | !ex.value.compliant(current)]]
 			
-			// a defined method is allowed to fulfill a required method from another trait
 			checkTraitReferenceConflicts(
-				traitRef, traitRefOps.definedMethods.map[resolvedOperation], conflicts
-			) [existing, current | existing.findFirst[ 
-					ex |
-					val op = ex.value
-					
-					if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
-						return true // always a conflict
-					} else {
-						// a defined method in the current trait is allowed
-						// fulfill a required method from a used trait
-						return !(op.annotatedRequiredMethod
-							&&
-							current.annotatedDefinedMethod
-							&&
-							op.compliant(current))
-					}
-				] ]
+				traitRef, traitRefOps.definedMethods.map[resolvedOperation], conflicts,
+				conflictFinderForDeclaredMethods)
 		}
 		
 		
@@ -469,25 +474,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		
 		val localFilteredOps = localSeen.values.toList
 		checkTraitReferenceConflicts(
-				d, localFilteredOps, conflicts
-			) [existing, current | 
-				existing.findFirst[ 
-					ex |
-					val op = ex.value
-					
-					if (op.annotatedRequiredField || op.annotatedDefinedMethod) {
-						return true // always a conflict
-					} else {
-						// a defined method in the current trait is allowed
-						// fulfill a required method from a used trait
-						return !(op.annotatedRequiredMethod
-							&&
-							current.annotatedDefinedMethod
-							&&
-							op.compliant(current))
-					}
-				]
-			]
+				d, localFilteredOps, conflicts, conflictFinderForDeclaredMethods)
 		
 		for (entry : conflicts.asMap.entrySet) {
 			val duplicates = entry.value
