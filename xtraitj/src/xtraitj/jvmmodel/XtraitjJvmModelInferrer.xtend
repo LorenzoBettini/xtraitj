@@ -50,6 +50,8 @@ import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.TJTypeParameterDeclarator
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -228,7 +230,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					getXtraitjResolvedOperationsFromMap(maps.traitInterfaceResolvedOperationsMap).
 						definedMethods
 				for (traitMethod : allDefinedOperations) {
-					val name = traitMethod.op.simpleName
+					val name = traitMethod.declaration.simpleName
 					members += traitRef.toMethodDelegate(traitMethod, 
 						inferredClass, traitRef.traitFieldName, name, "_"+name
 					) => [
@@ -424,7 +426,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
 				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				
-				val op = jvmOp.op
+				val op = jvmOp.declaration
 				val origName = op.simpleName
 				
 				if (!relatedOperations.empty) {
@@ -483,7 +485,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// (see xtraitj.tests.XtraitjWithOperationsCompilerTest.testTraitRenameRequiredMethodToProvided)
 			for (jvmOp : jvmOps) {
 				val relatedOperations = t.operationsForJvmOp(jvmOp)
-				val op = jvmOp.op
+				val op = jvmOp.declaration
 				
 				if (relatedOperations.empty && !members.alreadyDefined(op)) {
 					members += t.toAbstractMethod(jvmOp, op.simpleName) => [
@@ -604,7 +606,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						// and we need to retrieve the corresponding resolved operation
 						// i.e., the one where type arguments are already resolved
 						// but we need to search in the original declarations
-						val XtraitjJvmOperation resolvedOp = allOriginalDeclarations.findFirst[origName == op.simpleName]
+						val resolvedOp = allOriginalDeclarations.findFirst[origName == simpleName]
 						
 						if (resolvedOp != null) {
 							// example T1[hide m]
@@ -625,7 +627,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						val newname = tOp.newname
 						// and we need to retrieve the corresponding resolved operation
 						// i.e., the one where type arguments are already resolved
-						val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
+						val JvmOperation resolvedOp = allDeclarations.map[declaration].findFirst[newname == simpleName]
 						
 						// example T1[alias m as oldm]
 						// m cannot be required
@@ -657,7 +659,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						// and we need to retrieve the corresponding resolved operation
 						// i.e., the one where type arguments are already resolved
 						// but we need to search in the original declarations
-						val XtraitjJvmOperation resolvedOp = allOriginalDeclarations.findFirst[origName == op.simpleName]
+						val resolvedOp = allOriginalDeclarations.findFirst[origName == simpleName]
 						
 						// example T1[restrict m]
 						
@@ -868,7 +870,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 	
-	private def handleRenameOperation(TJRenameOperation tOp, Iterable<XtraitjJvmOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
+	private def handleRenameOperation(TJRenameOperation tOp, Iterable<IResolvedOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
 		val origName = tOp.member?.simpleName
 		
 		val newname = if (!tOp.field) {
@@ -882,7 +884,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		// and we need to retrieve the corresponding resolved operation
 		// i.e., the one where type arguments are already resolved
-		val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
+		val JvmOperation resolvedOp = allDeclarations.map[declaration].findFirst[newname == simpleName]
 		
 		if (resolvedOp != null) {
 			if (!tOp.field) {
@@ -990,7 +992,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-	private def handleRedirectOperation(TJRedirectOperation tOp, Iterable<XtraitjJvmOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
+	private def handleRedirectOperation(TJRedirectOperation tOp, Iterable<IResolvedOperation> allDeclarations, JvmGenericType it, String traitFieldName) {
 		val origName = tOp.member?.simpleName
 		
 		if (origName == null) {
@@ -1011,7 +1013,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		
 		// and we need to retrieve the corresponding resolved operation
 		// i.e., the one where type arguments are already resolved
-		val JvmOperation resolvedOp = allDeclarations.map[op].findFirst[newname == simpleName]
+		val resolvedOp = allDeclarations.map[declaration].findFirst[newname == simpleName]
 		
 		if (resolvedOp != null) {
 			// example T1[redirect m to m1]
@@ -1487,15 +1489,15 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def private toAbstractMethod(EObject source, XtraitjJvmOperation m, String name) {
-		val op = m.op
+	def private toAbstractMethod(EObject source, IResolvedOperation m, String name) {
+		val op = m.declaration
 		source.toMethod(name, m.returnType) [
-			documentation = m.op.documentation
+			documentation = op.documentation
 			
 			copyTypeParameters(op.typeParameters)
 			
 			val paramTypeIt = m.parametersTypes.iterator
-			for (p : m.op.parameters) {
+			for (p : op.parameters) {
 				parameters += source.toParameter(p.name, paramTypeIt.next)
 			}
 			abstract = true
@@ -1508,8 +1510,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			// first delegates for implemented methods 
 			for (traitMethod : resolvedOps.definedMethods) {
-				if (!members.alreadyDefined(traitMethod.op)) {
-   					val methodName = traitMethod.op.simpleName
+				if (!members.alreadyDefined(traitMethod.declaration)) {
+   					val methodName = traitMethod.simpleName
    					// m() { _delegate.m(); }
    					members += tRef.toMethodDelegate(traitMethod, it,
 	   						delegateFieldName, methodName, methodName
@@ -1529,7 +1531,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			val resolvedOps = tRef.getXtraitjResolvedOperationsFromMap(map)
 			
 			for (op : resolvedOps.requiredFields) {
-				val jvmOp = op.op
+				val jvmOp = op.declaration
 				if (!members.alreadyDefined(jvmOp)) {
    					// this is the getter
    					val name = jvmOp.simpleName
@@ -1543,7 +1545,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			// then delegates for required methods
 			for (op : resolvedOps.requiredMethods) {
-				val jvmOp = op.op
+				val jvmOp = op.declaration
 				if (!members.alreadyDefined(jvmOp) && !members.alreadyDefined(jvmOp)) {
 					val name = jvmOp.simpleName
    					members += tRef.toMethodDelegate(op, it,
@@ -1634,8 +1636,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	 * be resolved (scoped) to the original elements, while they must be solved using the
 	 * current target (the JvmGenericType that will own these methods).
 	 */
-	def private toMethodDelegate(EObject source, XtraitjJvmOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
-		val o = op.op
+	def private toMethodDelegate(EObject source, IResolvedOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
+		val o = op.declaration
 		val m = o.originalSource ?: source
 //		if (!o.typeParameters.empty)
 			m.toMethod(methodName, op.returnType) [
@@ -1676,22 +1678,22 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //			] // and we can navigate to the original method
 	}
 	
-	def private toSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op, JvmGenericType target) {
-   		val fieldName = op.op.simpleName.stripGetter
+	def private toSetterDelegateFromGetter(EObject source, IResolvedOperation op, JvmGenericType target) {
+   		val fieldName = op.simpleName.stripGetter
    		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
    		]
    	}
 
-	def private toAbstractSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op) {
-   		val fieldName = op.op.simpleName.stripGetter
+	def private toAbstractSetterDelegateFromGetter(EObject source, IResolvedOperation op) {
+   		val fieldName = op.simpleName.stripGetter
    		source.toSetter(fieldName, op.returnType) => [
    			abstract = true
    		]
    	}
 
-	def private toAbstractSetterDelegateFromGetter(EObject source, XtraitjJvmOperation op, String newName) {
+	def private toAbstractSetterDelegateFromGetter(EObject source, IResolvedOperation op, String newName) {
    		source.toSetter(newName, op.returnType) => [
    			abstract = true
    		]
@@ -1778,8 +1780,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		}
 	}
 
-	def private void copyAnnotationsFrom(JvmOperation target, XtraitjJvmOperation xop) {
-		target.annotations += xop.op.annotations.
+	def private void copyAnnotationsFrom(JvmOperation target, IResolvedOperation xop) {
+		target.annotations += xop.declaration.annotations.
 			filterOutXtraitjAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 

@@ -16,11 +16,11 @@ import xtraitj.types.XtraitjTypeParameterHelper
  */
 class XtraitjResolvedOperations {
 
-	private List<XtraitjJvmOperation> requiredFields;
+	private List<IResolvedOperation> requiredFields;
 
-	private List<XtraitjJvmOperation> requiredMethods;
+	private List<IResolvedOperation> requiredMethods;
 
-	private List<XtraitjJvmOperation> definedMethods;
+	private List<IResolvedOperation> definedMethods;
 	
 	private XtraitjTypeParameterHelper typeParameterHelper;
 
@@ -30,9 +30,9 @@ class XtraitjResolvedOperations {
 		List<IResolvedOperation> definedMethods,
 		XtraitjTypeParameterHelper typeParameterHelper
 	) {
-		this.requiredFields = requiredFields.map[new XtraitjJvmOperation(it)]
-		this.requiredMethods = requiredMethods.map[new XtraitjJvmOperation(it)]
-		this.definedMethods = definedMethods.map[new XtraitjJvmOperation(it)]
+		this.requiredFields = requiredFields
+		this.requiredMethods = requiredMethods
+		this.definedMethods = definedMethods
 		this.typeParameterHelper = typeParameterHelper
 	}
 
@@ -69,9 +69,8 @@ class XtraitjResolvedOperations {
 		definedMethods.resolve
 	}
 
-	def private resolve(Iterable<XtraitjJvmOperation> resolvedOperations) {
-		for (xo : resolvedOperations) {
-			val o = xo.resolvedOperation
+	def private resolve(Iterable<IResolvedOperation> resolvedOperations) {
+		for (o : resolvedOperations) {
 			val contextType = o.contextType
 			val typeDeclarator = contextType.type
 			if (typeDeclarator instanceof JvmTypeParameterDeclarator) {

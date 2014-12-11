@@ -34,6 +34,7 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -409,12 +410,12 @@ class XtraitjJvmModelUtil {
    		"_" + name
    	}
 
-	def operationsForJvmOp(TJTraitReference t, XtraitjJvmOperation jvmOp) {
+	def operationsForJvmOp(TJTraitReference t, IResolvedOperation jvmOp) {
 		t.operations.filter[
-			member?.simpleName == jvmOp.op.simpleName ||
+			member?.simpleName == jvmOp.simpleName ||
 			{
 				val memberSourceField = member?.sourceField 
-				val jvmOpSourceField = jvmOp.op.sourceField;
+				val jvmOpSourceField = jvmOp.declaration.sourceField;
 				(
 					memberSourceField != null &&
 					jvmOpSourceField != null &&

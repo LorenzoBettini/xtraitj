@@ -14,9 +14,7 @@ import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.XtraitjFactory
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
-//import org.eclipse.xtext.ui.editor.quickfix.Fix
-//import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
-//import org.eclipse.xtext.validation.Issue
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 
 /**
  * Custom quickfixes.
@@ -48,7 +46,7 @@ class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
 				XtraitjFactory.eINSTANCE.createTJField => [
 					name = fieldName
 					type = clazz.xtraitjJvmAllRequiredFieldOperations.findFirst[
-						op.simpleName.stripGetter == fieldName
+						simpleName.stripGetter == fieldName
 					].returnType.cloneWithProxies
 				]
 		]

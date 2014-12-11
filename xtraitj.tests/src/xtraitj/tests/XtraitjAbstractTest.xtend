@@ -12,6 +12,7 @@ import xtraitj.util.XtraitjModelUtil
 import xtraitj.xtraitj.TJProgram
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.jvmmodel.XtraitjResolvedOperationUtil
 
 abstract class XtraitjAbstractTest {
 	
@@ -23,6 +24,10 @@ abstract class XtraitjAbstractTest {
 	new() {
 		// to avoid missing coverage from Jacoco
 		new XtraitjModelUtil() {
+			
+		}
+		
+		new XtraitjResolvedOperationUtil() {
 			
 		}
 	}

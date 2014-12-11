@@ -151,7 +151,7 @@ class XtraitjJvmModelHelper {
 	 * and resolve operations from type references that refer to standard Java interfaces.
 	 */
 	def getXtraitjJvmOperationsFromJavaInterfaces(Iterable<JvmParameterizedTypeReference> typeReferences, EObject context) {
-		typeReferences.map[getOperations(context)].flatten.getXtraitjJvmOperations
+		typeReferences.map[getOperations(context)].flatten
 	}
 
 	def getXtraitjJvmOperations(Iterable<IResolvedOperation> resolvedOps) {

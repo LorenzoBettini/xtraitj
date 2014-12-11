@@ -246,7 +246,7 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		}
 		
 		for (traitRef : c.traitReferences) {
-			val requirements = traitRef.getTraitReferenceXtraitjResolvedOperations(type).allRequirements.map[resolvedOperation]
+			val requirements = traitRef.getTraitReferenceXtraitjResolvedOperations(type).allRequirements
 			checkRequirements(c, requirements, operations, 
 				XtraitjPackage.eINSTANCE.TJTraitReference_Trait
 			) [ traitRef ]
@@ -452,15 +452,15 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			
 			// only if the existing required field is not strictly compliant
 			checkTraitReferenceConflicts(
-				traitRef, traitRefOps.requiredFields.map[resolvedOperation], conflicts
+				traitRef, traitRefOps.requiredFields, conflicts
 			) [existing, current | existing.findFirst[ ex | !ex.value.exact(current)]]
 			
 			checkTraitReferenceConflicts(
-				traitRef, traitRefOps.requiredMethods.map[resolvedOperation], conflicts
+				traitRef, traitRefOps.requiredMethods, conflicts
 			) [existing, current | existing.findFirst[ ex | !ex.value.compliant(current)]]
 			
 			checkTraitReferenceConflicts(
-				traitRef, traitRefOps.definedMethods.map[resolvedOperation], conflicts,
+				traitRef, traitRefOps.definedMethods, conflicts,
 				conflictFinderForDeclaredMethods)
 		}
 		
@@ -751,9 +751,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 		val allDeclarations = o.xtraitjResolvedOperations.allDeclarations
 		val exists =
 			if (o.member.annotatedRequiredField) {
-				allDeclarations.exists[op.fieldName == newname]
+				allDeclarations.exists[declaration.fieldName == newname]
 			} else {
-				allDeclarations.exists[op.simpleName == newname]
+				allDeclarations.exists[declaration.simpleName == newname]
 			};
 		
 		if (exists) {
@@ -780,8 +780,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 			} else {
 				if (checkCorrectRedirectionForFieldAndMethod(op, member1, member2)) {
 					val resolvedOps = op.xtraitjResolvedOperations.allDeclarations
-					val resolved1 = resolvedOps.findFirst[it.op == member1].resolvedOperation
-					val resolved2 = resolvedOps.findFirst[it.op == member2].resolvedOperation
+					val resolved1 = resolvedOps.findFirst[it.declaration == member1]
+					val resolved2 = resolvedOps.findFirst[it.declaration == member2]
 					if (op.field) {
 						if (!resolved2.exact(resolved1)) {
 							error(

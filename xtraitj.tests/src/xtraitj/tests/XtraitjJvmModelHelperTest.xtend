@@ -282,11 +282,11 @@ n(int) : String'''
 		var repr = ""
 		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
 		repr += "requiredFields: " +
-			resolved.requiredFields.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("; ") + "\n"
+			resolved.requiredFields.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
 		repr += "requiredMethods: " +
-			resolved.requiredMethods.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("; ") + "\n"
+			resolved.requiredMethods.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
 		repr += "definedMethods: " +
-			resolved.definedMethods.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("; ") + "\n"
+			resolved.definedMethods.map[simpleSignature + " : " + resolvedReturnType].join("; ") + "\n"
 		expected.assertEqualsStrings(repr)
 	}
 
@@ -312,7 +312,7 @@ n(int) : String'''
 	def private assertDeclaredMethods(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
 		expected.assertEqualsStrings(
-			resolved.declaredMethods.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("\n")
+			resolved.declaredMethods.map[simpleSignature + " : " + resolvedReturnType].join("\n")
 		)
 	}
 
@@ -323,14 +323,14 @@ n(int) : String'''
 	
 	private def assertAllDeclarations(XtraitjResolvedOperations resolved, CharSequence expected) {
 		expected.assertEqualsStrings(
-			resolved.allDeclarations.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("\n")
+			resolved.allDeclarations.map[simpleSignature + " : " + resolvedReturnType].join("\n")
 		)
 	}
 
 	def private assertAllRequirements(Class<?> clazz, CharSequence expected, Class<?>... typeArguments) {
 		val resolved = clazz.toResourceTypeRef(typeArguments).xtraitjResolvedOperations
 		expected.assertEqualsStrings(
-			resolved.allRequirements.map[resolvedOperation.simpleSignature + " : " + resolvedOperation.resolvedReturnType].join("\n")
+			resolved.allRequirements.map[simpleSignature + " : " + resolvedReturnType].join("\n")
 		)
 	}
 

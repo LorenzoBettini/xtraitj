@@ -7,6 +7,8 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.swt.graphics.Image
+import org.eclipse.xtext.common.types.JvmGenericType
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.ui.IImageHelper
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
@@ -15,11 +17,11 @@ import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import xtraitj.jvmmodel.XtraitjJvmOperation
 import xtraitj.jvmmodel.XtraitjResolvedOperations
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
@@ -33,8 +35,8 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
-import org.eclipse.xtext.common.types.JvmGenericType
-import org.eclipse.xtext.common.types.JvmOperation
+
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 
 /**
  * Customization of the default outline structure.
@@ -126,7 +128,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		nodesForRequirements(parentNode, d, emptyList)
 	}
 
-	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<XtraitjJvmOperation> interfaceMethods) {
+	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<IResolvedOperation> interfaceMethods) {
 		val associatedClass = d.associatedJavaType
 		val ops = associatedClass.getXtraitjResolvedOperationsFromSuperTypes(d)
 		val fieldRequirements = ops.requiredFields
@@ -163,9 +165,9 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
+	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<IResolvedOperation> requirements) {
 		for (req : requirements) {
-			val jvmOp = req.op
+			val jvmOp = req.declaration
 
 			if (jvmOp.annotatedRequiredField) {
 				reqNode.createEObjectNode(
@@ -181,8 +183,8 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 	
-	private def nodeForJvmOperation(AbstractOutlineNode node, XtraitjJvmOperation req) {
-		val jvmOp = req.op
+	private def nodeForJvmOperation(AbstractOutlineNode node, IResolvedOperation req) {
+		val jvmOp = req.declaration
 		
 		node.createEObjectNode(
 			jvmOp,
@@ -204,7 +206,7 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		"(" + parameterTypes.map[uiStrings.referenceToString(it, "[null]")].join(", ") + ")"
 	}
 
-	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<XtraitjJvmOperation> provides) {
+	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<IResolvedOperation> provides) {
 		for (req : provides) {
 			nodeForJvmOperation(provNode, req)
 		}
