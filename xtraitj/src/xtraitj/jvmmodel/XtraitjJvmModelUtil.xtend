@@ -106,34 +106,8 @@ class XtraitjJvmModelUtil {
 		cons.declaration.sourceElements.head
 	}
 
-	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[traitRef | 
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredFields
-			].flatten
-	}
-
-	def xtraitjJvmAllRequiredMethodOperations(TJClass e) {
-		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
-	}
-
 	def computeXtraitjResolvedOperations(JvmTypeReference ref, EObject context) {
 		ref.getXtraitjResolvedOperations(context)
-	}
-
-	def xtraitjJvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[
-				traitRef |
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.requiredMethods
-			].flatten
-	}
-
-	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[traitRef | 
-				traitRef.traitReferenceJavaType.getXtraitjResolvedOperations.declaredMethods
-			].flatten
 	}
 
 	def computeAndResolveXtraitjResolvedOperations(JvmTypeReference e, EObject context) {
@@ -203,76 +177,6 @@ class XtraitjJvmModelUtil {
 		}
 	}
 
-//	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
-//		candidates.findFirst[
-//			name == member.op.fieldName &&
-//			it.sameType(type, member.returnType)
-//		]
-//	}
-
-//	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-//		candidates.findFirst[
-//			op.simpleName == member.op.simpleName &&
-//			compliant(it, member)
-//		]
-//	}
-//
-//	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-//		candidates.findFirst[
-//			op.simpleName == member.op.simpleName &&
-//			compliant(it, member)
-//		]
-//	}
-
-//	/**
-//	 * it's return type must be subtype of member's return type
-//	 * and parameters' types must be the same
-//	 */
-//	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
-//		val context = it.op
-//		context.isSubtype(returnType, member.returnType) &&
-//		parametersTypes.size == member.parametersTypes.size &&
-//		{
-//			var ok = true
-//			val paramIterator = parametersTypes.iterator
-//			val memberParamIterator = member.parametersTypes.iterator
-//			while (paramIterator.hasNext && ok) {
-//				if (!context.sameType
-//						(paramIterator.next, memberParamIterator.next))
-//					ok = false
-//			}
-//			ok
-//		}
-//	}
-
-//	def findMatchingMethod(Iterable<? extends JvmOperation> candidates, JvmOperation member) {
-//		candidates.findFirst[
-//			simpleName == member.simpleName &&
-//			compliant(it, member)
-//		]
-//	}
-
-//	/**
-//	 * it's return type must be subtype of member's return type
-//	 * and parameters' types must be the same
-//	 */
-//	def compliant(JvmOperation it, JvmOperation member) {
-//		it.isSubtype(returnType, member.returnType) &&
-//		parameters.size == member.parameters.size &&
-//		{
-//			var ok = true
-//			val paramIterator = parameters.iterator
-//			val memberParamIterator = member.parameters.iterator
-//			while (paramIterator.hasNext && ok) {
-//				if (!it.sameType
-//						(paramIterator.next.parameterType, memberParamIterator.next.parameterType))
-//					ok = false
-//			}
-//			ok
-//		}
-//	}
-
-
 	/**
 	 * Finds a member, IResolvedOperation, using the name of the toFind operation.
 	 * It is responsibility of the caller to know whether we are searching a get method
@@ -324,14 +228,6 @@ class XtraitjJvmModelUtil {
 		return false
 	}
 	
-//	def compliant(JvmMember m1, JvmMember m2) {
-//		try {
-//			return (m1 as JvmOperation).compliant(m2 as JvmOperation)
-//		} catch (Throwable t) {
-//			return false
-//		}
-//	}
-
 	def renameGetterOrSetter(String opName, String newname) {
 		if (opName === null)
 			return ""
