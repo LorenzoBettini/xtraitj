@@ -13,6 +13,7 @@ import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
 import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
+import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
@@ -20,7 +21,6 @@ import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.generator.XtraitjGeneratorExtensions
 
 @Singleton
 class XtraitjJvmModelHelper {
@@ -154,7 +154,4 @@ class XtraitjJvmModelHelper {
 		typeReferences.map[getOperations(context)].flatten
 	}
 
-	def getXtraitjJvmOperations(Iterable<IResolvedOperation> resolvedOps) {
-		resolvedOps.map[new XtraitjJvmOperation(it)]
-	}
 }
