@@ -13,7 +13,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 
 	@Test
 	def void testQuickfixForMissingField() {
-		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		createProject(PROJECT_TYPE);
 		val editor = updateEditorContents(
 		'''
 		package my.traits;
@@ -52,7 +52,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 
 	@Test
 	def void testQuickfixForMissingFieldWithGeneric() {
-		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		createProject(PROJECT_TYPE);
 		val editor = updateEditorContents(
 		'''
 		package my.traits;

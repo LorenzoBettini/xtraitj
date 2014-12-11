@@ -179,6 +179,11 @@ public class XtraitjSwtbotAbstractTests {
 
 	protected void createProjectAndAssertNoErrorMarker(String projectType)
 			throws CoreException {
+		createProject(projectType);
+		assertErrorsInProject(0);
+	}
+
+	protected void createProject(String projectType) {
 		bot.menu("File").menu("New").menu("Project...").click();
 
 		SWTBotShell shell = bot.shell("New Project");
@@ -195,9 +200,8 @@ public class XtraitjSwtbotAbstractTests {
 		// creation of a project might require some time
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(TEST_PROJECT));
-
+		
 		waitForAutoBuild();
-		assertErrorsInProject(0);
 	}
 
 	protected void importExampleProjectAndAssertNoErrorMarker(String projectType,
