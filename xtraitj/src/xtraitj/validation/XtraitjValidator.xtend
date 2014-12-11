@@ -44,6 +44,7 @@ import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 
 /**
  * Custom validation rules. 
@@ -270,7 +271,9 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 							req.fieldRepresentation + "'",
 						errorSourceProvider.apply(),
 						feature,
-						MISSING_REQUIRED_FIELD
+						MISSING_REQUIRED_FIELD,
+						req.simpleName,
+						req.returnType.identifier
 					)
 				} else {
 					error(
