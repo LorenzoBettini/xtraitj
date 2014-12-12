@@ -210,10 +210,11 @@ public class XtraitjSwtbotAbstractTests {
 
 		SWTBotShell shell = bot.shell("New");
 		shell.activate();
-		SWTBotTreeItem examplesNode = bot.tree().expandNode("Xtraitj");
+		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
+		waitForNodes(xtraitjNode);
+		SWTBotTreeItem examplesNode = xtraitjNode.expandNode("Examples");
 		waitForNodes(examplesNode);
-		examplesNode.expandNode("Examples")
-				.select(projectType);
+		examplesNode.select(projectType);
 		bot.button("Next >").click();
 
 		bot.button("Finish").click();
