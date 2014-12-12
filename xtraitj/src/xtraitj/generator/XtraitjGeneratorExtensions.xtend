@@ -91,6 +91,10 @@ class XtraitjGeneratorExtensions {
 	def traitClassName(JvmTypeReference t) {
    		var n = t.identifier
    		
+   		if (n == null) {
+   			return "void"
+   		}
+   		
    		var pos = n.indexOf("<")
    		if (pos > 0)
    			n = n.substring(0, pos)
@@ -105,6 +109,10 @@ class XtraitjGeneratorExtensions {
 
 	def traitInterfaceName(JvmTypeReference t) {
    		var n = t.identifier
+   		
+   		if (n == null) {
+   			return "void"
+   		}
    		
    		var pos = n.indexOf("<")
    		if (pos > 0)

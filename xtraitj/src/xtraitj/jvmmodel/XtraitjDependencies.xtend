@@ -34,7 +34,7 @@ class XtraitjDependencies {
 		for (traitRef : e.traitReferences) {
 			val typeRef = traitRef.trait
 			val type = typeRef.getTypeWithoutProxyResolution
-			if (type.eIsProxy) {
+			if (type != null && type.eIsProxy) {
 				val n = typeRef.jvmTypeReferenceString
 				val declaration = program.elements.findFirst[name == n]
 				if (declaration !== null && !processed.contains(declaration)) {

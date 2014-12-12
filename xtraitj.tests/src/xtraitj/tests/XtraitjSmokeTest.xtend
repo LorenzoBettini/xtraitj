@@ -314,6 +314,22 @@ class XtraitjSmokeTest extends XtraitjAbstractTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testClassUsesWithoutTraitReference() {
+		'''
+		class C uses {
+			
+		}
+		'''.parseAndValidate
+	}
+
+	@Test def void testTraitUsesWithoutTraitReference() {
+		'''
+		trait T uses {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	def private void parseAndValidate(CharSequence input) {
 		input.parse.validate
 		//	.map[message].forEach[println(it)] // useful for debugging
