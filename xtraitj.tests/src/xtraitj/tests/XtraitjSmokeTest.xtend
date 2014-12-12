@@ -72,6 +72,18 @@ class XtraitjSmokeTest extends XtraitjAbstractTest {
 		'''.parseAndValidate
 	}
 
+	@Test def void testNoMemberInRenameYet2() {
+		'''
+		trait T {
+			String s;
+		}
+		
+		class C uses T[rename ] {
+			
+		}
+		'''.parseAndValidate
+	}
+
 	@Test def void testNoMemberInRenameFieldYet() {
 		'''
 		trait T {

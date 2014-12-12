@@ -52,7 +52,7 @@ class XtraitjJvmModelUtil {
 	@Inject extension XtraitjGeneratorExtensions
 
 	def associatedInterface(TJTrait t) {
-		t.associatedInterfaceType?.createTypeRef()
+		t.associatedInterfaceType.createTypeRef()
 	}
 
 	/**
@@ -125,8 +125,7 @@ class XtraitjJvmModelUtil {
 	}
 
 	def fieldRepresentation(IResolvedOperation f) {
-		val typeRepr = f.resolvedReturnType?.simpleName 
-		typeRepr + " " + f.fieldName
+		f.resolvedReturnType.simpleName + " " + f.fieldName
 	}
 
 	def methodRepresentation(IResolvedOperation m) {
@@ -142,17 +141,13 @@ class XtraitjJvmModelUtil {
 	 * a getter method and a setter method, thus, we need to recover the
 	 * original field name.
 	 * 
-	 * IMPORTANT: we assume that the JvmOperation is actually a getter or a setter.
+	 * IMPORTANT: we assume that the JvmOperation is actually a getter.
 	 */
 	def fieldName(JvmMember f) {
 		val simpleName = f.simpleName
 		
-		if (simpleName.startsWith("set")) {
-			simpleName.replaceFirst("set", "").toFirstLower
-		} else {
-			simpleName.replaceFirst("get", "").
+		simpleName.replaceFirst("get", "").
 				replaceFirst("is", "").toFirstLower			
-		}
 	}
 
 	/**
@@ -240,9 +235,10 @@ class XtraitjJvmModelUtil {
 	}
 
 	def isValidInterface(JvmParameterizedTypeReference t) {
-		try {
-			(t.type as JvmGenericType).interface
-		} catch (Throwable e) {
+		val type = t.type
+		if (type instanceof JvmGenericType) {
+			return type.interface
+		} else {
 			return false
 		}
 	}
