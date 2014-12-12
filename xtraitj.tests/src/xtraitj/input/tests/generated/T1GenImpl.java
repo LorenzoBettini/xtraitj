@@ -2,6 +2,7 @@ package xtraitj.input.tests.generated;
 
 import xtraitj.input.tests.generated.T1Gen;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
@@ -12,6 +13,15 @@ public class T1GenImpl<T extends Object> implements T1Gen<T> {
   
   public T1GenImpl(final T1Gen<T> delegate) {
     this._delegate = delegate;
+  }
+  
+  @XtraitjRequiredField
+  public T getF() {
+    return _delegate.getF();
+  }
+  
+  public void setF(final T f) {
+    _delegate.setF(f);
   }
   
   @XtraitjRequiredMethod

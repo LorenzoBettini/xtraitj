@@ -3,10 +3,12 @@ These are Java classes generated from this input
 package xtraitj.input.tests.generated;
 
 trait T1Gen<T> {
+	T f;
+
 	T required(T t);
 	
 	T provided(T t) {
-		return required(t)
+		return required(t);
 	} 
 }
 

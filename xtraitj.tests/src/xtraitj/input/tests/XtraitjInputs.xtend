@@ -3260,9 +3260,13 @@ trait T3 {
 	}
 }
 
-class C uses T1 {}
+class C uses T1 {
+	String f;
+}
 
-class C2 uses T2<String>, T3 {}
+class C2 uses T2<String>, T3 {
+	String f;
+}
 '''
 	}
 
@@ -3299,9 +3303,17 @@ trait T3 {
 	}
 }
 
-class C1 uses T1 {}
+class C1 uses T1 {
+	String f;
+}
 
-class C2 uses T2<String>, T3 {}
+class C2 uses T2<String>, T3 {
+	String f;
+}
+
+class C3 uses T1[rename field f to f1] {
+	String f1;
+}
 '''
 	}
 }
