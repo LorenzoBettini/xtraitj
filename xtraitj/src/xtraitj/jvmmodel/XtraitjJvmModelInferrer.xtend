@@ -409,38 +409,35 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				traitExpressionInterface.copyTypeParameters(t.containingDeclaration.typeParameters)
    				
 				t.collectUnmodifiedInterfaceResolvedOperations(jvmGenericType, maps)
-//   				t.collectInterfaceResolvedOperations(jvmGenericType, maps)
    			]
 		)	
 
 		acceptor.accept(traitExpressionInterface) [
-//			copyTypeParameters(t.containingDeclaration.typeParameters)
-			
-			val jvmOps = t.getXtraitjResolvedOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap).allDeclarations
+			val ops = t.getXtraitjResolvedOperationsFromMap(maps.traitUnmodifiedInterfaceResolvedOperationsMap).allDeclarations
 			
 			// we must first add methods that are related to alteration operations...
-			for (jvmOp : jvmOps) {
-				val relatedOperations = t.operationsForJvmOp(jvmOp)
+			for (op : ops) {
+				val relatedOperations = t.traitOperationsForJvmOp(op)
 				val renameOperation = relatedOperations.filter(typeof(TJRenameOperation)).head
 				val hideOperation = relatedOperations.filter(typeof(TJHideOperation)).head
 				val aliasOperation = relatedOperations.filter(typeof(TJAliasOperation)).head
 				val restrictOperation = relatedOperations.filter(typeof(TJRestrictOperation)).head
 				
-				val op = jvmOp.declaration
-				val origName = op.simpleName
+				val jvmop = op.declaration
+				val origName = jvmop.simpleName
 				
 				if (!relatedOperations.empty) {
 					if (renameOperation != null && renameOperation.newname != null) {
 						val newname = renameOperation.newname
 						
 						members += renameOperation.toAbstractMethod
-							(jvmOp, origName.renameGetterOrSetter(newname)) => [
-										copyAllAnnotationsFrom(jvmOp)
+							(op, origName.renameGetterOrSetter(newname)) => [
+										copyAllAnnotationsFrom(op)
 										annotateAsRenamedMethod(origName) 
 									]
-						if (op.annotatedRequiredField()) {
+						if (jvmop.annotatedRequiredField()) {
 							members += renameOperation.toAbstractSetterDelegateFromGetter
-								(jvmOp, newname) => [
+								(op, newname) => [
 									annotateAsRequiredFieldSetter
 									rebindTypeParameters(traitExpressionInterface)
 								]
@@ -453,8 +450,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						val newname = aliasOperation.newname
 						
 						members += aliasOperation.toAbstractMethod
-							(jvmOp, newname) => [
-								copyAllAnnotationsFrom(jvmOp)
+							(op, newname) => [
+								copyAllAnnotationsFrom(op)
 //								annotateAsRenamedMethod(origName) 
 							]
 						
@@ -462,8 +459,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						if (renameOperation == null && hideOperation == null && restrictOperation == null) {
 							// we need to add also the original method
 							members += aliasOperation.toAbstractMethod
-								(jvmOp, origName) => [
-									copyAllAnnotationsFrom(jvmOp)
+								(op, origName) => [
+									copyAllAnnotationsFrom(op)
 	//								annotateAsRenamedMethod(origName) 
 								]
 						}
@@ -471,8 +468,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						
 					// restricted methods are added as required methods
 					if (restrictOperation != null) {
-						members += restrictOperation.toAbstractMethod(jvmOp, op.simpleName) => [
-							copyAllAnnotationsButDefinedFrom(jvmOp)
+						members += restrictOperation.toAbstractMethod(op, jvmop.simpleName) => [
+							copyAllAnnotationsButDefinedFrom(op)
 							annotateAsRequiredMethod
 						]
 					}
@@ -483,24 +480,22 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// e.g., a rename operation can rename a provided method so that it
 			// matches a required one, so we must have already added the renamed version
 			// (see xtraitj.tests.XtraitjWithOperationsCompilerTest.testTraitRenameRequiredMethodToProvided)
-			for (jvmOp : jvmOps) {
-				val relatedOperations = t.operationsForJvmOp(jvmOp)
-				val op = jvmOp.declaration
+			for (op : ops) {
+				val relatedOperations = t.traitOperationsForJvmOp(op)
+				val jvmop = op.declaration
 				
-				if (relatedOperations.empty && !members.alreadyDefined(op)) {
-					members += t.toAbstractMethod(jvmOp, op.simpleName) => [
-						copyAllAnnotationsFrom(jvmOp)
+				if (relatedOperations.empty && !members.alreadyDefined(jvmop)) {
+					members += t.toAbstractMethod(op, jvmop.simpleName) => [
+						copyAllAnnotationsFrom(op)
 					]
-					if (op.annotatedRequiredField()) {
-						members += t.toAbstractSetterDelegateFromGetter(jvmOp) => [
+					if (jvmop.annotatedRequiredField()) {
+						members += t.toAbstractSetterDelegateFromGetter(op) => [
 							annotateAsRequiredFieldSetter
 							rebindTypeParameters(traitExpressionInterface)
 						]
 					}
 				}
 			}
-			
-//			t.collectInterfaceResolvedOperations(it, maps)
 		]
 		
 //		.initializeLater[
@@ -1519,17 +1514,17 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			val resolvedOps = tRef.getXtraitjResolvedOperationsFromMap(map)
 			
 			// first delegates for implemented methods 
-			for (traitMethod : resolvedOps.definedMethods) {
-				if (!members.alreadyDefined(traitMethod.declaration)) {
-   					val methodName = traitMethod.simpleName
+			for (op : resolvedOps.definedMethods) {
+				if (!members.alreadyDefined(op.declaration)) {
+   					val methodName = op.simpleName
    					// m() { _delegate.m(); }
-   					members += tRef.toMethodDelegate(traitMethod, it,
+   					members += tRef.toMethodDelegate(op, it,
 	   						delegateFieldName, methodName, methodName
 	   					) => [ 
 		   					annotateAsDefinedMethod
 		   				]
    					// _m() { delegate to trait defining the method }
-   					members += tRef.toMethodDelegate(traitMethod, it,
+   					members += tRef.toMethodDelegate(op, it,
    						tRef.traitFieldName, methodName.underscoreName,
    						methodName.underscoreName
    					)

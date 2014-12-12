@@ -306,12 +306,12 @@ class XtraitjJvmModelUtil {
    		"_" + name
    	}
 
-	def operationsForJvmOp(TJTraitReference t, IResolvedOperation jvmOp) {
+	def traitOperationsForJvmOp(TJTraitReference t, IResolvedOperation op) {
 		t.operations.filter[
-			member?.simpleName == jvmOp.simpleName ||
+			member?.simpleName == op.simpleName ||
 			{
 				val memberSourceField = member?.sourceField 
-				val jvmOpSourceField = jvmOp.declaration.sourceField;
+				val jvmOpSourceField = op.declaration.sourceField;
 				(
 					memberSourceField != null &&
 					jvmOpSourceField != null &&
