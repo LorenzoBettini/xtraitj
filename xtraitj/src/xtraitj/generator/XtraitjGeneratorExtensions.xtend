@@ -89,25 +89,19 @@ class XtraitjGeneratorExtensions {
 	}
 
 	def traitClassName(JvmTypeReference t) {
-   		var n = t.identifier
+   		val name = reconstructIdentifier(t)
    		
-   		if (n == null) {
-   			return "void"
+   		if (name == "void") {
+   			return name
    		}
-   		
-   		var pos = n.indexOf("<")
-   		if (pos > 0)
-   			n = n.substring(0, pos)
-   		
-   		pos = n.lastIndexOf(".")
-   		var name = ""
-   		if (pos > 0)
-   			name = n.substring(0, pos) + "."
-   		
-   		name + n.substring(pos+1) + "Impl"
+   		return name + "Impl"
    	}
 
 	def traitInterfaceName(JvmTypeReference t) {
+   		reconstructIdentifier(t)
+   	}
+
+	def reconstructIdentifier(JvmTypeReference t) {
    		var n = t.identifier
    		
    		if (n == null) {
@@ -123,7 +117,7 @@ class XtraitjGeneratorExtensions {
    		if (pos > 0)
    			name = n.substring(0, pos) + "."
    		
-   		name + n.substring(pos+1)
+   		return name + n.substring(pos+1)
    	}
 
 	def typeNameWithoutTypeArgs(JvmTypeReference t) {
