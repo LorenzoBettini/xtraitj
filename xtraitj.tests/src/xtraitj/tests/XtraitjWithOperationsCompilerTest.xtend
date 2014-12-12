@@ -2301,20 +2301,32 @@ public class T3Impl implements T3 {
     return (_m + _oldm);
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
   
+  /**
+   * original version of m
+   */
   public String _oldm() {
     return _T2_0._oldm();
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String m() {
     return _delegate.m();
   }
   
+  /**
+   * original version of m
+   */
   public String _m() {
     return _T2_0._m();
   }
@@ -2601,29 +2613,47 @@ public class T3Impl implements T3 {
     return (_m1 + _oldm);
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String m1() {
     return _delegate.m1();
   }
   
+  /**
+   * original version of m
+   */
   public String _m1() {
     return _T2_0._m1();
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
   
+  /**
+   * original version of m
+   */
   public String _oldm() {
     return _T2_0._oldm();
   }
   
+  /**
+   * original version of n
+   */
   @XtraitjDefinedMethod
   public String oldn() {
     return _delegate.oldn();
   }
   
+  /**
+   * original version of n
+   */
   public String _oldn() {
     return _T2_0._oldn();
   }
@@ -3073,11 +3103,17 @@ public class T3Impl implements T3 {
     return this.m();
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
   
+  /**
+   * original version of m
+   */
   public String _oldm() {
     return _T2_0._oldm();
   }

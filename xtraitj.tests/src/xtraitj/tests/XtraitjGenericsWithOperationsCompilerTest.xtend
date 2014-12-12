@@ -1244,20 +1244,32 @@ public class T2Impl implements T2 {
     return (_m + _oldm);
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String oldm() {
     return _delegate.oldm();
   }
   
+  /**
+   * original version of m
+   */
   public String _oldm() {
     return _T1_0._oldm();
   }
   
+  /**
+   * original version of m
+   */
   @XtraitjDefinedMethod
   public String m() {
     return _delegate.m();
   }
   
+  /**
+   * original version of m
+   */
   public String _m() {
     return _T1_0._m();
   }
