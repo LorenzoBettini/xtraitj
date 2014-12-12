@@ -232,7 +232,7 @@ public class XtraitjSwtbotAbstractTests {
 		int msecs = 2000;
 		int count = 0;
 		while (count < retries) {
-			System.out.println("Checking that tree item has children...");
+			System.out.println("Checking that tree item " + treeItem.getText() + " has children...");
 			List<SWTBotTreeItem> foundItems = UIThreadRunnable.syncExec(new ListResult<SWTBotTreeItem>() {
 				public List<SWTBotTreeItem> run() {
 					TreeItem[] items = treeItem.widget.getItems();
@@ -246,6 +246,15 @@ public class XtraitjSwtbotAbstractTests {
 			if (foundItems.isEmpty()) {
 				treeItem.collapse();
 				System.out.println("No chilren... retrying in " + msecs + " milliseconds..."); //$NON-NLS-1$
+				try {
+					Thread.sleep(msecs);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				treeItem.expand();
+			} else if (foundItems.size() == 1 && foundItems.get(0).getText().trim().isEmpty()) {
+				treeItem.collapse();
+				System.out.println("Only one child with empty text... retrying in " + msecs + " milliseconds..."); //$NON-NLS-1$
 				try {
 					Thread.sleep(msecs);
 				} catch (InterruptedException e) {
