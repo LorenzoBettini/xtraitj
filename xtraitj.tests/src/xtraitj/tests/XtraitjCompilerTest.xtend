@@ -1206,6 +1206,10 @@ assertTraitJavaInterface("tests", "T",
 '''
 package tests;
 
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredFieldSetter;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 /**
@@ -1214,6 +1218,23 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 @XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T {
+  @XtraitjRequiredField
+  public abstract String getF();
+  
+  @XtraitjRequiredFieldSetter
+  public abstract void setF(final String f);
+  
+  /**
+   * this is a defined method
+   */
+  @XtraitjDefinedMethod
+  public abstract String def();
+  
+  /**
+   * this is a required method
+   */
+  @XtraitjRequiredMethod
+  public abstract String req();
 }
 '''
 )
@@ -1223,6 +1244,9 @@ assertTraitJavaClass("tests", "T",
 package tests;
 
 import tests.T;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
 
 /**
@@ -1236,6 +1260,38 @@ public class TImpl implements T {
   public TImpl(final T delegate) {
     this._delegate = delegate;
   }
+  
+  @XtraitjRequiredField
+  public String getF() {
+    return _delegate.getF();
+  }
+  
+  public void setF(final String f) {
+    _delegate.setF(f);
+  }
+  
+  /**
+   * this is a required method
+   */
+  @XtraitjRequiredMethod
+  public String req() {
+    return _delegate.req();
+  }
+  
+  /**
+   * this is a defined method
+   */
+  @XtraitjDefinedMethod
+  public String def() {
+    return _delegate.def();
+  }
+  
+  /**
+   * this is a defined method
+   */
+  public String _def() {
+    return this.req();
+  }
 }
 '''
 )
@@ -1244,11 +1300,43 @@ assertJavaClass("tests", "C",
 '''
 package tests;
 
+import tests.T;
+import tests.T2;
+import tests.T2Impl;
+import tests.TImpl;
+
 /**
  * My documented class
  */
 @SuppressWarnings("all")
-public class C {
+public class C implements T, T2 {
+  private String f;
+  
+  public String getF() {
+    return this.f;
+  }
+  
+  public void setF(final String f) {
+    this.f = f;
+  }
+  
+  private TImpl _T = new TImpl(this);
+  
+  /**
+   * this is a defined method
+   */
+  public String def() {
+    return _T._def();
+  }
+  
+  private T2Impl _T2 = new T2Impl(this);
+  
+  /**
+   * this is an implemented method
+   */
+  public String req() {
+    return _T2._req();
+  }
 }
 '''
 )

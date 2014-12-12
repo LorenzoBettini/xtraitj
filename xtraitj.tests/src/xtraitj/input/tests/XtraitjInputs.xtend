@@ -3198,12 +3198,29 @@ package tests;
 /**
  * My documented trait
  */
-trait T {}
+trait T {
+	/** this is a required field */
+	String f;
+	
+	/** this is a required method */
+	String req();
+	
+	/** this is a defined method */
+	String def() { return req(); }
+}
+
+trait T2 {
+	/** this is an implemented method */
+	String req() { return ""; }
+}
 
 /**
  * My documented class
  */
-class C {}
+class C uses T, T2 {
+	/** this is a declared field */
+	String f;
+}
 '''
 	}
 
