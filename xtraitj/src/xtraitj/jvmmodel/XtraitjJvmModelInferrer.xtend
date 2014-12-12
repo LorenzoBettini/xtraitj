@@ -472,7 +472,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// restricted methods are added as required methods
 					if (restrictOperation != null) {
 						members += restrictOperation.toAbstractMethod(jvmOp, op.simpleName) => [
-							copyAllAnnotationsButDefinedFrom(op)
+							copyAllAnnotationsButDefinedFrom(jvmOp)
 							annotateAsRequiredMethod
 						]
 					}
@@ -588,7 +588,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 	   			]
 			]
 			
-			// we need the JvmOperation with resolved type arguments
 			val allDeclarations = 
 				t.getXtraitjResolvedOperationsFromMap(maps.traitInterfaceResolvedOperationsMap)
 					.allDeclarations
@@ -1485,10 +1484,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		buildTypeRefInternal(typeRef, typeKey, maps)
 	}
 
-//	def private toAbstractMethod(XtraitjJvmOperation m, String name) {
-//		m.op.originalSource.toAbstractMethod(m, name)
-//	}
-
 	def private toAbstractMethod(TJMethodDeclaration m, JvmGenericType containerTypeDecl) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
@@ -1499,7 +1494,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 			for (p : m.params) {
 				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
-//				parameters += p.toParameter(p.name, p.parameterType)
 			}
 			abstract = true
 		]
@@ -1616,36 +1610,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		return result
 	}
 
-//	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName) {
-//		source.toMethodDelegateNoRebinding(op, delegateFieldName, op.op.simpleName, "_"+op.op.simpleName)
-//	}
-
-//	def private toMethodDelegateNoRebinding(EObject source, XtraitjJvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-//		val o = op.op
-//		val m = o.originalSource ?: source
-////		if (!o.typeParameters.empty)
-//			m.toMethod(methodName, op.returnType) [
-//				documentation = m.documentation
-//				
-////				if (m instanceof TJMethodDeclaration) {
-//					copyTypeParameters(o.typeParameters)
-////				}
-//	
-//				val paramTypeIt = op.parametersTypes.iterator
-//				for (p : o.parameters) {
-//					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-//					// don't associate the parameter to p, since p is not part of the source tree
-//					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
-//					parameters += m.toParameter(p.name, paramTypeIt.next)
-//				}
-//				val args = o.parameters.map[name].join(", ")
-//				if (op.returnType?.simpleName != "void")
-//					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-//				else
-//					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-//			]
-//	}
-
 	def private toSetterDelegateFromGetter(EObject source, IResolvedOperation op, JvmGenericType target) {
    		val fieldName = op.simpleName.stripGetter
    		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
@@ -1757,8 +1721,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		target.annotations += xop.declaration.annotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
-	def private void copyAllAnnotationsButDefinedFrom(JvmOperation target, JvmOperation op) {
-		target.annotations += op.annotations.
+	def private void copyAllAnnotationsButDefinedFrom(JvmOperation target, IResolvedOperation xop) {
+		target.annotations += xop.declaration.annotations.
 			filterOutXtraitjDefinedAnnotations.map[EcoreUtil2.cloneWithProxies(it)]
 	}
 
