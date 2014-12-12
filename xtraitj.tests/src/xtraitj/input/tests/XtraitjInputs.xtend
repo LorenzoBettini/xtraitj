@@ -3220,6 +3220,9 @@ trait T2 {
 class C uses T, T2 {
 	/** this is a declared field */
 	String f;
+	
+	/** this is a constructor */
+	C(String f) { this.f = f; }
 }
 '''
 	}

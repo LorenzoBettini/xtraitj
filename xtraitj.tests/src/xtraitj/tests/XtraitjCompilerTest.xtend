@@ -1335,6 +1335,13 @@ public class C implements T, T2 {
     this.f = f;
   }
   
+  /**
+   * this is a constructor
+   */
+  public C(final String f) {
+    this.f = f;
+  }
+  
   private TImpl _T = new TImpl(this);
   
   /**

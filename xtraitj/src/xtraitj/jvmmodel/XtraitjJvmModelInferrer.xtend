@@ -193,6 +193,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (cons : c.constructors) {
    				members += cons.toConstructor[
+   					documentation = cons.documentation
    					for (p : cons.params) {
    						parameters += p.toParameter(p.name, p.parameterType)
    					}
