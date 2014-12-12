@@ -181,8 +181,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
    			for (field : c.fields) {
    				members += field.toField(field.name, field.type) [
-   					if (field.init != null)
+   					documentation = field.documentation
+   					if (field.init != null) {
    						initializer = field.init
+   					}
    					translateAnnotations(field.annotations)
    				]
 				members += field.toGetter(field.name, field.type)
@@ -264,6 +266,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    			
 			for (field : t.fields) {
 				members += field.toGetter(field.name, field.type) => [
+					documentation = field.documentation
 					annotateAsRequiredField
 					abstract = true
 					// this must not be rebound using the return type of the operation:
@@ -273,6 +276,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					returnType = field.type.rebindTypeParameters(traitInterface, null)
 				]
 				members += field.toSetter(field.name, field.type) => [
+					documentation = field.documentation
 					annotateAsRequiredFieldSetter
 		   			abstract = true
 		   			// we can use the type references of the inferred operation
@@ -773,10 +777,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
    			for (field : t.fields) {
    				members += toGetterDelegate(field) => [
+   					documentation = field.documentation
    					annotateAsRequiredField
    					rebindTypeParameters(traitClass)
    				]
    				members += field.toSetterDelegate => [
+   					documentation = field.documentation
    					rebindTypeParameters(traitClass)
    				]
    			}

@@ -1218,9 +1218,15 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 @XtraitjTraitInterface
 @SuppressWarnings("all")
 public interface T {
+  /**
+   * this is a required field
+   */
   @XtraitjRequiredField
   public abstract String getF();
   
+  /**
+   * this is a required field
+   */
   @XtraitjRequiredFieldSetter
   public abstract void setF(final String f);
   
@@ -1261,11 +1267,17 @@ public class TImpl implements T {
     this._delegate = delegate;
   }
   
+  /**
+   * this is a required field
+   */
   @XtraitjRequiredField
   public String getF() {
     return _delegate.getF();
   }
   
+  /**
+   * this is a required field
+   */
   public void setF(final String f) {
     _delegate.setF(f);
   }
@@ -1310,6 +1322,9 @@ import tests.TImpl;
  */
 @SuppressWarnings("all")
 public class C implements T, T2 {
+  /**
+   * this is a declared field
+   */
   private String f;
   
   public String getF() {
