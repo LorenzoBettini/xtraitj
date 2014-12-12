@@ -20,6 +20,67 @@ import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjValidatorTest extends XtraitjAbstractTest {
 
+	@Test def void testDuplicateClassesInFiles() {
+		val first = '''
+		package tests;
+		
+		class C {}'''.parse
+		
+		'''
+		package tests;
+		class D {}
+		class C {}
+		'''.parse(first.eResource.resourceSet).
+		assertDuplicateDeclarationInFiles("C", XtraitjPackage.eINSTANCE.TJClass)
+		
+		first.assertDuplicateDeclarationInFiles("C", XtraitjPackage.eINSTANCE.TJClass)
+	}
+
+	@Test def void testDuplicateTraitsInFiles() {
+		val first = '''
+		package tests;
+		
+		trait T {}'''.parse
+		
+		'''
+		package tests;
+		trait T {}
+		'''.parse(first.eResource.resourceSet).
+		assertDuplicateDeclarationInFiles("T", XtraitjPackage.eINSTANCE.TJTrait)
+		
+		first.assertDuplicateDeclarationInFiles("T", XtraitjPackage.eINSTANCE.TJTrait)
+	}
+
+	@Test def void testDuplicateClassAndTraitWithTheSameNameInFiles() {
+		val first = '''
+		package tests;
+		
+		trait Foo {}'''.parse
+		
+		'''
+		package tests;
+		class Foo {}
+		'''.parse(first.eResource.resourceSet).
+		assertDuplicateDeclarationInFiles("Foo", XtraitjPackage.eINSTANCE.TJClass)
+		
+		first.assertDuplicateDeclarationInFiles("Foo", XtraitjPackage.eINSTANCE.TJTrait)
+	}
+
+	@Test def void testElementsWithTheSameNameButDifferentPackagesInFilesOk() {
+		val first = '''
+		package tests.first;
+		
+		class C {}'''.parse
+		
+		'''
+		package tests.second;
+		class D {}
+		class C {}
+		'''.parse(first.eResource.resourceSet).assertNoErrors
+		
+		first.assertNoErrors
+	}
+
 	@Test def void testDuplicateMember() {
 		'''
 		trait T {
@@ -2172,6 +2233,13 @@ Method conflict 'int n(boolean)'
 		o.assertError(
 			c, XtraitjValidator.DUPLICATE_DECLARATION,
 			"Duplicate declaration '" + name + "'"
+		)
+	}
+
+	def private assertDuplicateDeclarationInFiles(EObject o, String name, EClass c) {
+		o.assertError(
+			c, XtraitjValidator.DUPLICATE_DECLARATION,
+			"The element '" + name + "' is already defined"
 		)
 	}
 

@@ -45,6 +45,9 @@ import xtraitj.xtraitj.XtraitjPackage
 
 import static extension xtraitj.util.XtraitjModelUtil.*
 import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
+import org.eclipse.xtext.validation.CheckType
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import xtraitj.scoping.XtraitjIndex
 
 /**
  * Custom validation rules. 
@@ -117,6 +120,8 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 	@Inject extension XtraitjJvmModelHelper
 	@Inject extension XtraitjTypingUtil
 	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension IQualifiedNameProvider
+	@Inject extension XtraitjIndex
 	
 	@Inject
 	private ILogicalContainerProvider logicalContainerProvider
@@ -149,6 +154,25 @@ class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
 				return element.static;
 		}
 		return super.isStaticContext(element);
+	}
+
+	// perform this check only on file save
+	@Check(CheckType.NORMAL)
+	def checkDuplicateDeclarationsInFiles(TJDeclaration d) {
+		val fqn = d.fullyQualifiedName
+		d.getVisibleDeclarationDescriptions.forEach[
+			desc |
+			if (desc.qualifiedName == fqn && 
+					desc.EObjectOrProxy != d && 
+					desc.EObjectURI.trimFragment != d.eResource.URI) {
+				error(
+					"The element '" + d.name + "' is already defined",
+					XtraitjPackage.eINSTANCE.TJDeclaration_Name,
+					DUPLICATE_DECLARATION
+				)
+				return
+			}
+		]
 	}
 
 	/**
