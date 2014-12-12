@@ -1,6 +1,5 @@
 package xtraitj.util
 
-import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
 import org.eclipse.xtext.common.types.JvmType
@@ -18,9 +17,7 @@ import xtraitj.xtraitj.TJProgram
 import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitExpression
-import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
-import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 
@@ -77,25 +74,10 @@ class XtraitjModelUtil {
 			filter[!operations.empty].toList
 	}
 
-	def static representationWithTypes(TJField f) {
-		f.type?.simpleName + " " + f.name
-	}
-	
-	def static representationWithTypes(TJMethodDeclaration f) {
-		f.type?.simpleName + " " + f.name +
-			parameterRepresentation(f)
-	}
-
 	def static parameterRepresentation(TJMethodDeclaration f) {
 		"(" +
 			f.params.map[parameterType?.simpleName].join(", ")
 		+ ")"
-	}
-
-	def static typeArgumentsRepresentation(List<JvmTypeReference> typeArguments) {
-		"<" +
-			typeArguments.map[simpleName].join(",")
-		+ ">"
 	}
 
 	def static constructorRepresentation(TJConstructor c) {
@@ -127,15 +109,4 @@ class XtraitjModelUtil {
 		typeRef.eGet(TypesPackage.eINSTANCE.jvmParameterizedTypeReference_Type, false) as JvmType
 	}
 
-	/**
-	 * Retrieves the name of the member involved in this trait operation
-	 * without actually resolving the member
-	 */
-	def static getOperationMemberName(TJTraitOperation op) {
-		val nodes = NodeModelUtils.findNodesForFeature(op, XtraitjPackage.eINSTANCE.TJTraitOperation_Member)
-		val head = nodes.head
-		if (head == null)
-			return null
-		NodeModelUtils.getTokenText(head)
-	}
 }

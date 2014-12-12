@@ -27,14 +27,12 @@ import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
-import static extension xtraitj.util.XtraitjModelUtil.*
 import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -86,20 +84,8 @@ class XtraitjJvmModelUtil {
 		f.sourceElements.findFirst[(it instanceof TJField)] as TJField
 	}
 
-	def sourceMethod(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJMethod)] as TJMethod
-	}
-
 	def sourceMethodDeclaration(JvmFeature f) {
 		f.sourceElements.findFirst[(it instanceof TJMethodDeclaration)] as TJMethodDeclaration
-	}
-
-	def sourceRequiredMethod(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJRequiredMethod)] as TJRequiredMethod
-	}
-
-	def sourceRestricted(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJRestrictOperation)] as TJRestrictOperation
 	}
 
 	def associatedSource(IResolvedConstructor cons) {
@@ -120,14 +106,6 @@ class XtraitjJvmModelUtil {
 			||
 			(it instanceof TJTraitOperation)
 		]
-	}
-
-	def defines(TJTrait t, JvmMember m) {
-		t.members.exists[name == m.simpleName]
-	}
-
-	def memberByName(Iterable<JvmOperation> members, String name) {
-		members.findFirst[name == simpleName]
 	}
 
 	def alreadyDefined(Iterable<JvmMember> members, JvmMember m) {
@@ -261,10 +239,6 @@ class XtraitjJvmModelUtil {
 		"set" + Strings.toFirstUpper(opName)
 	}
 
-	def fromGetterToSetterName(String opName) {
-		opName.stripGetter.toSetterName
-	}
-
 	def isValidInterface(JvmParameterizedTypeReference t) {
 		try {
 			(t.type as JvmGenericType).interface
@@ -272,12 +246,6 @@ class XtraitjJvmModelUtil {
 			return false
 		}
 	}
-
-//	def conflictsWith(XtraitjJvmOperation f1, XtraitjJvmOperation f2) {
-//		f1.op != f2.op && 
-//		f1.op.simpleName == f2.op.simpleName &&
-//		!f1.compliant(f2)
-//	}
 
 	/**
 	 * Retrieve the main inferred method, i.e., the one with the same name

@@ -114,18 +114,6 @@ class XtraitjAnnotatedElementHelper {
 		]
 	}
 
-	def filterXtraitjAnnotations(Iterable<JvmAnnotationReference> annotations) {
-		annotations.filter[
-			definedAnnotation
-			||
-			renameAnnotation
-			||
-			requiredMethodAnnotation
-			||
-			requiredFieldAnnotation
-		]
-	}
-
 	def filterOutXtraitjDefinedAnnotations(Iterable<JvmAnnotationReference> annotations) {
 		annotations.filter[
 			!definedAnnotation

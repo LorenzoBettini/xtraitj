@@ -78,10 +78,6 @@ class XtraitjGeneratorExtensions {
 				e.containingDeclaration.traitOperationExpressions.indexOf(e)
 	}
 
-	def traitFieldName(TJTrait t) {
-		"_" + t.name
-	}
-
 	def traitFieldName(JvmParameterizedTypeReference t) {
 		val n = t.typeNameWithoutTypeArgs
 		

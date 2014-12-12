@@ -43,14 +43,6 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
         return XtraitjOutputConfigurationProvider.class;
     }
 	
-//	public Class<? extends IJvmModelAssociator> bindIJvmModelAssociator() {
-//		return XtraitjJvmModelAssociator.class;
-//	}
-//
-//	public Class<? extends IJvmModelAssociations> bindIJvmModelAssociations() {
-//		return XtraitjJvmModelAssociator.class;
-//	}
-
 	public Class<? extends TypeReferenceSerializer> bindTypeReferenceSerializer() {
 		return XtraitjTypeReferenceSerializer.class;
 	}
@@ -60,15 +52,6 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		binder.bind(IScopeProvider.class).annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
 				.to(XtraitjImportedNamespaceScopeProvider.class);
 	}
-	
-//	@Override
-//	public Class<? extends IGenerator> bindIGenerator() {
-//		return XtraitjJvmModelGenerator.class;
-//	}
-	
-//	public Class<? extends ErrorSafeExtensions> bindErrorSafeExtensions() {
-//		return XtraitjErrorSafeExtensions.class;
-//	}
 	
 	public Class<? extends OverrideHelper> bindOverrideHelper() {
 		return XtraitjOverrideHelper.class;
