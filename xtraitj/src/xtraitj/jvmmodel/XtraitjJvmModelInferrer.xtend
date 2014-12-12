@@ -636,8 +636,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							// oldm is forwarded to delegate.oldm
 							members += tOp.
 								toMethodDelegate(
-									it,
 									resolvedOp,
+									it,
 									delegateFieldName,
 									newname,
 									newname
@@ -645,8 +645,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							// _oldm is forwarded to T1._m
 							members += tOp.
 								toMethodDelegate(
-									it,
 									resolvedOp,
+									it,
 									traitFieldName,
 									newname.underscoreName,
 									origName.underscoreName
@@ -898,8 +898,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m is forwarded to this.m2()
 					members += tOp.
 						toMethodDelegate(
-							it,
 							resolvedOp,
+							it,
 							"this",
 							origName,
 							newname
@@ -907,8 +907,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m2 is forwarded to delegate.m2()
 					members += tOp.
 						toMethodDelegate(
-							it,
 							resolvedOp,
+							it,
 							delegateFieldName,
 							newname,
 							newname
@@ -920,8 +920,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m is forwarded to this.m2
 					members += tOp.
 						toMethodDelegate(
-							it,
 							resolvedOp,
+							it,
 							"this",
 							origName,
 							newname
@@ -929,8 +929,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// m2 is forwarded to delegate.m2
 					members += tOp.
 						toMethodDelegate(
-							it,
 							resolvedOp,
+							it,
 							delegateFieldName,
 							newname,
 							newname
@@ -940,8 +940,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// _m2 is forwarded to T1._m
 					members += tOp.
 						toMethodDelegate(
-							it,
 							resolvedOp,
+							it,
 							traitFieldName,
 							newname.underscoreName,
 							origName.underscoreName
@@ -953,8 +953,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				// m is forwarded to this.m2()
 				members += tOp.
 					toMethodDelegate(
-						it,
 						resolvedOp,
+						it,
 						"this",
 						origName,
 						newname
@@ -962,8 +962,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				// m2 is forwarded to delegate.m2()
 				members += tOp.
 					toMethodDelegate(
-						it,
 						resolvedOp,
+						it,
 						delegateFieldName,
 						newname,
 						newname
@@ -1020,8 +1020,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			// m is forwarded to delegate.m1
 			members += tOp.
 				toMethodDelegate(
-					it,
 					resolvedOp,
+					it,
 					delegateFieldName,
 					origName,
 					newname
@@ -1292,6 +1292,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    		]
    	}
 
+	/**
+	 * This also rebinds type parameters since the inferred methods are based on signatures of
+	 * resolved operations taken from interfaces and possible type parameter references would
+	 * be resolved (scoped) to the original elements, while they must be solved using the
+	 * current target (the JvmGenericType that will own these methods).
+	 */
 	def private toMethodDelegate(TJMethodDeclaration m, JvmGenericType containerTypeDecl, String delegateFieldName) {
 		m.toMethod(m.name, m.type) [
 			documentation = m.documentation
@@ -1311,8 +1317,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		]
 	}
 
-	def private toMethodDelegate(EObject source, JvmGenericType containerTypeDecl, JvmOperation op, String delegateFieldName, String methodName, String methodToDelegate) {
-		//val o = op.jvmOperation
+	def private toMethodDelegate(EObject source, JvmOperation op, JvmGenericType containerTypeDecl, String delegateFieldName, String methodName, String methodToDelegate) {
 		source.toMethod(methodName, op.returnType) [
 			documentation = op.documentation
 			
@@ -1324,6 +1329,36 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 				parameters += source.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
 			}
 			val args = op.parameters.map[name].join(", ")
+			if (op.returnType?.simpleName != "void")
+				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
+			else
+				body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
+		]
+	}
+
+	/**
+	 * This also rebinds type parameters since the inferred methods are based on signatures of
+	 * resolved operations taken from interfaces and possible type parameter references would
+	 * be resolved (scoped) to the original elements, while they must be solved using the
+	 * current target (the JvmGenericType that will own these methods).
+	 */
+	def private toMethodDelegate(EObject source, IResolvedOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
+		val o = op.declaration
+		val m = o.originalSource ?: source
+		m.toMethod(methodName, op.returnType) [
+			documentation = m.documentation
+			
+			copyTypeParameters(o.typeParameters)
+
+			returnType = returnType.rebindTypeParameters(target, it)
+	
+			val paramTypeIt = op.parametersTypes.iterator
+			for (p : o.parameters) {
+				// don't associate the parameter to p, since p is not part of the source tree
+				// java.lang.IllegalArgumentException: The source element must be part of the source tree.
+				parameters += m.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(target, it))
+			}
+			val args = o.parameters.map[name].join(", ")
 			if (op.returnType?.simpleName != "void")
 				body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
 			else
@@ -1630,54 +1665,6 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 //			]
 //	}
 
-	/**
-	 * This also rebinds type parameters since the inferred methods are based on signatures of
-	 * resolved operations taken from interfaces and possible type parameter references would
-	 * be resolved (scoped) to the original elements, while they must be solved using the
-	 * current target (the JvmGenericType that will own these methods).
-	 */
-	def private toMethodDelegate(EObject source, IResolvedOperation op, JvmGenericType target, String delegateFieldName, String methodName, String methodToDelegate) {
-		val o = op.declaration
-		val m = o.originalSource ?: source
-//		if (!o.typeParameters.empty)
-			m.toMethod(methodName, op.returnType) [
-				documentation = m.documentation
-				
-//				if (m instanceof TJMethodDeclaration) {
-					copyTypeParameters(o.typeParameters)
-//				}
-	
-				returnType = returnType.rebindTypeParameters(target, it)
-		
-				val paramTypeIt = op.parametersTypes.iterator
-				for (p : o.parameters) {
-					//parameters += p.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(it))
-					// don't associate the parameter to p, since p is not part of the source tree
-					// java.lang.IllegalArgumentException: The source element must be part of the source tree.
-					parameters += m.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(target, it))
-				}
-				val args = o.parameters.map[name].join(", ")
-				if (op.returnType?.simpleName != "void")
-					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-				else
-					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-			]
-//		else // if there's no type params we can make things simpler
-//			m.toMethod(methodName, op.returnType) [
-//				documentation = m.documentation
-//				
-//				val paramTypeIt = op.parametersTypes.iterator
-//				for (p : o.parameters) {
-//					parameters += p.toParameter(p.name, paramTypeIt.next)
-//				}
-//				val args = o.parameters.map[name].join(", ")
-//				if (op.returnType?.simpleName != "void")
-//					body = [append('''return «delegateFieldName».«methodToDelegate»(«args»);''')]
-//				else
-//					body = [append('''«delegateFieldName».«methodToDelegate»(«args»);''')]
-//			] // and we can navigate to the original method
-	}
-	
 	def private toSetterDelegateFromGetter(EObject source, IResolvedOperation op, JvmGenericType target) {
    		val fieldName = op.simpleName.stripGetter
    		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
