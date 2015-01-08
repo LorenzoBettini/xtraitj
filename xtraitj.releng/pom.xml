@@ -352,48 +352,4 @@
 		</plugins>
 	</build>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>sonatype_releases</id>
-			<url>https://oss.sonatype.org/content/repositories/releases/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-
-		<!--
-		<pluginRepository>
-			<id>sonatype_snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		 -->
-		
-		<!-- Repository to resolve fornax-oaw-m2-plugin -->
-		<!-- in case of SSL certificates errors, use
-			-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -->
-		<!-- Fornax plugin is now on Maven Central -->
-		<!--
-		<pluginRepository>
-			<id>fornax.plugin.repository</id>
-			<name>Fornax Plugin Repository</name>
-			<url>http://www.fornax-platform.org/m2/repository</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		-->
-	</pluginRepositories>
-
 </project>
