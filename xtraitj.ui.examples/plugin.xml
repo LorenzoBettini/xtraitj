@@ -41,7 +41,7 @@
             wizardID="xtraitj.examples.XtraitjExampleWizard">
          <projectDescriptor
                contentURI="contents/xtraitj.example.examples.zip"
-               description="Some Xtraij Examples"
+               description="Some Xtraitj Examples"
                name="xtraitj.example.examples">
          </projectDescriptor>
       </example>
