@@ -22,10 +22,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.xtext.sdk"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.pde"
          version="0.0.0"/>
 
@@ -39,6 +35,10 @@
 
    <includes
          id="org.eclipse.rcp"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse"
          version="0.0.0"/>
 
 </feature>
