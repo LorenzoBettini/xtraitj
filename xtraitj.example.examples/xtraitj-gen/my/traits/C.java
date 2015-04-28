@@ -2,8 +2,8 @@ package my.traits;
 
 import java.util.List;
 import main.CInterface;
-import my.traits.traits.T;
-import my.traits.traits.impl.TImpl;
+import my.traits.T;
+import my.traits.TImpl;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;

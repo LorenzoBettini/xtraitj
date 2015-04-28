@@ -1,9 +1,11 @@
 package xtraitj.util
 
-import java.util.List
-import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
+import org.eclipse.xtext.common.types.JvmType
 import org.eclipse.xtext.common.types.JvmTypeReference
+import org.eclipse.xtext.common.types.TypesPackage
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -41,25 +43,6 @@ class XtraitjModelUtil {
 		t.members.filter(typeof(TJMethod))
 	}
 
-	def static methods(TJTraitReference e) {
-		e.trait?.methods
-	}
-	
-	def static members(TJDeclaration d) {
-		switch (d) {
-			TJTrait : d.members
-			TJClass : d.fields
-		}
-	}
-
-	def static typeParameters(TJDeclaration d) {
-		if (d instanceof TJTrait) {
-			return d.traitTypeParameters
-		} else {
-			(d as TJClass).classTypeParameters
-		}
-	}
-	
 	def static requiredMethods(TJTrait t) {
 		t.members.filter(typeof(TJRequiredMethod))
 	}
@@ -74,14 +57,6 @@ class XtraitjModelUtil {
 
 	def static containingTraitOperationExpression(EObject e) {
 		e.getContainerOfType(typeof(TJTraitReference))
-	}
-
-	def static containingClass(TJConstructor e) {
-		e.getContainerOfType(typeof(TJClass))
-	}
-
-	def static containingProgram(TJDeclaration e) {
-		e.getContainerOfType(typeof(TJProgram))
 	}
 
 	def static traitReferences(TJDeclaration t) {
@@ -99,58 +74,10 @@ class XtraitjModelUtil {
 			filter[!operations.empty].toList
 	}
 
-	/**
-	 * Recursively collects all TJTrait occurrences in the TJTraitExpression
-	 * of the passed trait,
-	 * avoiding possible cycles
-	 */
-	def static allTraitsDependency(TJTrait t) {
-		if (t.traitExpression == null)
-			return emptyList
-		
-		t.traitExpression.allTraitReferences.filter(typeof(TJTraitReference)).
-			map[trait]
-	}
-
-	def static allTraitReferences(TJTraitExpression e) {
-		<TJTraitReference>newArrayList() => [
-			e.allTraitReferences(it, newHashSet)
-		]
-	}
-
-	def private static void allTraitReferences(TJTraitExpression e, 
-			List<TJTraitReference> traitExpressions,
-			Set<TJTrait> visited) {
-		for (t : e.traitReferences) {
-			// avoid possible cycles
-			if (!visited.contains(t.trait)) {
-				visited += t.trait
-				traitExpressions += t
-				t.trait.traitExpression?.
-					allTraitReferences(traitExpressions, visited)
-			}
-		}
-	}
-
-	def static representationWithTypes(TJField f) {
-		f.type?.simpleName + " " + f.name
-	}
-	
-	def static representationWithTypes(TJMethodDeclaration f) {
-		f.type?.simpleName + " " + f.name +
-			parameterRepresentation(f)
-	}
-
 	def static parameterRepresentation(TJMethodDeclaration f) {
 		"(" +
 			f.params.map[parameterType?.simpleName].join(", ")
 		+ ")"
-	}
-
-	def static typeArgumentsRepresentation(List<JvmTypeReference> typeArguments) {
-		"<" +
-			typeArguments.map[simpleName].join(",")
-		+ ">"
 	}
 
 	def static constructorRepresentation(TJConstructor c) {
@@ -158,6 +85,28 @@ class XtraitjModelUtil {
 			"(" +
 			c.params.map[parameterType?.simpleName].join(", ")
 			+ ")"
+	}
+
+	def static getJvmTypeReferenceString(JvmTypeReference t) {
+		val n = NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(t))
+		
+		removeTypeArgs(n)
+	}
+	
+	def static removeTypeArgs(String n) {
+		var pos = n.indexOf("<")
+   		if (pos > 0)
+   			return n.substring(0, pos)
+   		else
+   			return n
+	}
+
+	/**
+	 * Simply using getType would trigger proxy resolution which we do not want at this
+	 * stage.  This method takes the JvmType reflectively without triggering proxy resolution.
+	 */
+	def static getTypeWithoutProxyResolution(JvmParameterizedTypeReference typeRef) {
+		typeRef.eGet(TypesPackage.eINSTANCE.jvmParameterizedTypeReference_Type, false) as JvmType
 	}
 
 }

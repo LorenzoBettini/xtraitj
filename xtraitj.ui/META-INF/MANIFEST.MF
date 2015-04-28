@@ -6,26 +6,30 @@ Bundle-Version: 2.0.0.qualifier
 Bundle-SymbolicName: xtraitj.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: xtraitj;visibility:=reexport,
- org.eclipse.xtext.ui;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.ui;bundle-version="[2.7.3,2.8.0)",
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.ui.ide;bundle-version="3.5.0",
- org.eclipse.xtext.ui.shared;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.ui.shared,
  org.eclipse.ui;bundle-version="3.5.0",
- org.eclipse.xtext.builder;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.builder,
  org.antlr.runtime,
- org.eclipse.xtext.common.types.ui;bundle-version="[2.6.0,2.7.0)",
- org.eclipse.xtext.ui.codetemplates.ui;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.compare;bundle-version="3.5.0",
- org.eclipse.xtext.xbase.ui;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.xbase.ui,
  org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.xtend,
  org.eclipse.xpand,
  org.eclipse.jdt.core;bundle-version="3.7.0",
- org.eclipse.jdt.ui;bundle-version="3.7.0"
+ org.eclipse.jdt.ui;bundle-version="3.7.0",
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.jdt.debug.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: xtraitj.ui.quickfix,xtraitj.ui.contentassist,xtraitj.u
- i.contentassist.antlr,xtraitj.ui.internal
+Export-Package: xtraitj.ui.quickfix,
+ xtraitj.ui.contentassist,
+ xtraitj.ui.contentassist.antlr,
+ xtraitj.ui.internal
 Bundle-Activator: xtraitj.ui.internal.XtraitjActivator

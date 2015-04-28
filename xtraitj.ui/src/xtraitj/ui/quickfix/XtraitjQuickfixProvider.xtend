@@ -14,9 +14,10 @@ import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.XtraitjFactory
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 
-//import org.eclipse.xtext.ui.editor.quickfix.Fix
-//import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
-//import org.eclipse.xtext.validation.Issue
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
+import static extension xtraitj.util.XtraitjModelUtil.*
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.xtraitj.TJTraitReference
 
 /**
  * Custom quickfixes.
@@ -27,6 +28,7 @@ class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
 	
 	@Inject extension JvmTypesBuilder
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
 
 	@Fix(XtraitjValidator::MISSING_REQUIRED_FIELD)
 	def addMissingRequiredField(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -38,17 +40,21 @@ class XtraitjQuickfixProvider extends DefaultQuickfixProvider {
 			'field_private_obj.gif') 
 		[
 			elem, context |
-			// we need to access the actual required JvmOperation
+			// we need to access the actual required IResolvedOperation
 			// to get the type of the required field as a correct
 			// type reference: using only type string representation
 			// would not allow to get a proper type reference in case
 			// of type paramenters (e.g., List<String>)
-			val clazz = (elem as TJClass)
+			val traitRef = (elem as TJTraitReference)
+			val clazz = traitRef.containingDeclaration as TJClass
+			val associatedType = clazz.associatedJavaType
+			val ops = traitRef.getTraitReferenceXtraitjResolvedOperations(associatedType)
+			val fieldRequirements = ops.requiredFields
 			clazz.fields += 
 				XtraitjFactory.eINSTANCE.createTJField => [
 					name = fieldName
-					type = clazz.xtraitjJvmAllRequiredFieldOperations.findFirst[
-						op.simpleName.stripGetter == fieldName
+					type = fieldRequirements.findFirst[
+						simpleName.stripGetter == fieldName
 					].returnType.cloneWithProxies
 				]
 		]

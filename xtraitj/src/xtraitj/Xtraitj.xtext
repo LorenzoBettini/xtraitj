@@ -2,7 +2,10 @@ grammar xtraitj.Xtraitj with org.eclipse.xtext.xbase.annotations.XbaseWithAnnota
 
 import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
 
-generate xtraitj "http://www.Xtraitj.xtraitj"
+//generate xtraitj "http://www.Xtraitj.xtraitj"
+
+// we manually maintain the ecore
+import "http://www.Xtraitj.xtraitj"
 
 TJProgram:
 	('package' name=QualifiedName ';')?
@@ -16,7 +19,7 @@ TJDeclaration:
 
 TJTrait:
 	'trait' name=ID
-	('<' traitTypeParameters+=JvmTypeParameter (',' traitTypeParameters+=JvmTypeParameter)* '>')? 
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')? 
 	('uses' traitExpression=TJTraitExpression)? '{'
 		members+=TJMember*
 	'}'
@@ -24,7 +27,7 @@ TJTrait:
 
 TJClass:
 	'class' name=ID 
-		('<' classTypeParameters+=JvmTypeParameter (',' classTypeParameters+=JvmTypeParameter)* '>')? 
+		('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')? 
 			('implements'
 				interfaces += JvmParameterizedTypeReference
 				(',' interfaces += JvmParameterizedTypeReference)*
@@ -42,8 +45,8 @@ TJTraitExpression:
 ;
 
 TJTraitReference: 	
-	trait=[TJTrait|QualifiedName]
-	('<' arguments+=JvmArgumentTypeReference (',' arguments+=JvmArgumentTypeReference)* '>')?
+	trait=JvmParameterizedTypeReference // [TJTrait|QualifiedName]
+	//('<' arguments+=JvmArgumentTypeReference (',' arguments+=JvmArgumentTypeReference)* '>')?
 	('['
 		operations+=TJTraitOperation
 		(',' operations+=TJTraitOperation)*
@@ -51,12 +54,12 @@ TJTraitReference:
 ;
 
 TJTraitOperation:
-	TjTraitOperationForProvided |
+	TJTraitOperationForProvided |
 	TJRenameOperation |
 	TJRedirectOperation
 ;
 
-TjTraitOperationForProvided:
+TJTraitOperationForProvided:
 	TJHideOperation | TJRestrictOperation | TJAliasOperation
 ;
 
@@ -66,9 +69,9 @@ TJRestrictOperation: {TJRestrictOperation} 'restrict' member=[types::JvmMember] 
 
 TJAliasOperation: {TJAliasOperation} 'alias' member=[types::JvmMember] 'as' newname=ID ;
 
-TJRenameOperation: {TJRenameOperation} 'rename' member=[types::JvmMember] 'to' newname=ID ;
+TJRenameOperation: {TJRenameOperation} 'rename' (field?='field')? member=[types::JvmMember] 'to' newname=ID ;
 
-TJRedirectOperation: {TJRedirectOperation} 'redirect' member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
+TJRedirectOperation: {TJRedirectOperation} 'redirect' (field?='field')? member=[types::JvmMember] 'to' member2=[types::JvmMember] ;
 
 TJMember:
 	=>TJField | TJMethodDeclaration;

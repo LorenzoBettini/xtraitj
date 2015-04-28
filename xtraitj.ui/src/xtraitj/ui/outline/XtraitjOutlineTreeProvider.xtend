@@ -4,14 +4,26 @@
 package xtraitj.ui.outline
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.viewers.StyledString
+import org.eclipse.swt.graphics.Image
+import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmOperation
+import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.ui.IImageHelper
+import org.eclipse.xtext.ui.editor.outline.IOutlineNode
+import org.eclipse.xtext.ui.editor.outline.impl.AbstractOutlineNode
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.validation.UIStrings
 import org.eclipse.xtext.xtype.XtypePackage
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.jvmmodel.XtraitjResolvedOperations
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJDeclaration
@@ -23,9 +35,8 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
-import xtraitj.jvmmodel.XtraitjJvmOperation
-import org.eclipse.xtext.common.types.JvmTypeReference
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
+
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 
 /**
  * Customization of the default outline structure.
@@ -39,6 +50,9 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	@Inject UIStrings uiStrings
 	
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjAnnotatedElementHelper
+	@Inject extension IJvmModelAssociations
 	
 	def _createChildren(DocumentRootNode parentNode, TJProgram p) {
 		if (p.name != null) {
@@ -69,8 +83,10 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	def _createChildren(EObjectNode parentNode, TJClass c) {
+		val opsFromInterfaces = c.interfaces.getXtraitjJvmOperationsFromJavaInterfaces(c)
+		
 		nodesForTraitReferences(parentNode, c)
-		nodesForRequirements(parentNode, c, c.xtraitjJvmAllInterfaceMethods)
+		nodesForRequirements(parentNode, c, opsFromInterfaces)
 		nodesForProvides(parentNode, c)
 		
 		for (f : c.fields) {
@@ -112,9 +128,11 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		nodesForRequirements(parentNode, d, emptyList)
 	}
 
-	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<XtraitjJvmOperation> interfaceMethods) {
-		val fieldRequirements = d.xtraitjJvmAllRequiredFieldOperations
-		val methodRequirements = d.xtraitjJvmAllRequiredMethodOperationsFromReferences
+	def nodesForRequirements(EObjectNode parentNode, TJDeclaration d, Iterable<IResolvedOperation> interfaceMethods) {
+		val associatedClass = d.associatedJavaType
+		val ops = associatedClass.getXtraitjResolvedOperationsFromSuperTypes(d)
+		val fieldRequirements = ops.requiredFields
+		val methodRequirements = ops.requiredMethods
 		
 		if (!fieldRequirements.empty || !methodRequirements.empty || !interfaceMethods.empty) {
 			val reqNode = new XtraitjRequirementsNode(parentNode, images.getImage("externalize.gif"))
@@ -124,12 +142,22 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForProvides(EObjectNode parentNode, TJDeclaration d) {
-		nodesForProvides(parentNode, d, emptyList)
+	def nodesForProvides(EObjectNode parentNode, TJClass d) {
+		val associatedClass = d.associatedJavaClass
+		// for a class methods are not annotated as defined, so we must
+		// inspect the supertypes
+		val ops = associatedClass.getXtraitjResolvedOperationsFromSuperTypes(d)
+		nodesForProvides(parentNode, ops)
 	}
 
-	def nodesForProvides(EObjectNode parentNode, TJDeclaration d, Iterable<JvmOperation> interfaceMethods) {
-		val provides = d.xtraitjJvmAllMethodOperations
+	def nodesForProvides(EObjectNode parentNode, TJTrait d) {
+		val associatedClass = d.associatedInterfaceType
+		val ops = associatedClass.xtraitjResolvedOperationsNotDeclared
+		nodesForProvides(parentNode, ops)
+	}
+	
+	private def nodesForProvides(EObjectNode parentNode, XtraitjResolvedOperations ops) {
+		val provides = ops.definedMethods
 		
 		if (!provides.empty) {
 			val reqNode = new XtraitjProvidesNode(parentNode, images.getImage("externalize.gif"))
@@ -137,80 +165,50 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<XtraitjJvmOperation> requirements) {
+	def nodesForRequirements(XtraitjRequirementsNode reqNode, Iterable<IResolvedOperation> requirements) {
 		for (req : requirements) {
-			val source = req.op.originalSource
-			if (source != null) {
-				// use the name from req so that
-				// possible renames are applied
-				// but use the original source as the element
-				// so that we can jump to it
-				if (source instanceof TJField)
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						req.op.simpleName.stripGetter +
-						" : " + req.returnType.simpleName,
-						true
-					)
-				else
-					reqNode.createEObjectNode(
-						source,
-						_image(source),
-						new StyledString(
-							req.op.simpleName 
-							+ req.parametersTypes.parameterTypesToString
-						).append(
-							new StyledString(" : " + 
-								req.returnType.simpleName,
-								StyledString::DECORATIONS_STYLER
-							)
-						),
-						true
-					)
-			}
-			// interface methods
-			else
+			val jvmOp = req.declaration
+
+			if (jvmOp.annotatedRequiredField) {
 				reqNode.createEObjectNode(
-					req.op,
-					_image(req.op),
-					new StyledString(
-						req.op.simpleName 
-						+ req.parametersTypes.parameterTypesToString
-					).append(
-						new StyledString(" : " + 
-							req.returnType.simpleName,
-							StyledString::DECORATIONS_STYLER
-						)
-					),
+					jvmOp,
+					_image(jvmOp),
+					jvmOp.simpleName.stripGetter +
+					" : " + req.returnType.simpleName,
 					true
 				)
+			} else {
+				nodeForJvmOperation(reqNode, req)
+			}
 		}
+	}
+	
+	private def nodeForJvmOperation(AbstractOutlineNode node, IResolvedOperation req) {
+		val jvmOp = req.declaration
+		
+		node.createEObjectNode(
+			jvmOp,
+			_image(jvmOp),
+			new StyledString(
+				jvmOp.simpleName 
+				+ req.parametersTypes.parameterTypesToString
+			).append(
+				new StyledString(" : " + 
+					req.returnType.simpleName,
+					StyledString::DECORATIONS_STYLER
+				)
+			),
+			true
+		)
 	}
 
 	def private parameterTypesToString(Iterable<JvmTypeReference> parameterTypes) {
 		"(" + parameterTypes.map[uiStrings.referenceToString(it, "[null]")].join(", ") + ")"
 	}
 
-	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<XtraitjJvmOperation> provides) {
+	def nodesForProvides(XtraitjProvidesNode provNode, Iterable<IResolvedOperation> provides) {
 		for (req : provides) {
-			val source = req.op.originalSource
-			if (source != null) {
-				provNode.createEObjectNode(
-						source,
-						_image(source),
-						new StyledString(
-							req.op.simpleName 
-							+ req.parametersTypes.parameterTypesToString
-						).append(
-							new StyledString(" : " + 
-								req.returnType.simpleName,
-								StyledString::DECORATIONS_STYLER
-							)
-						),
-						true
-					)
-			}
+			nodeForJvmOperation(provNode, req)
 		}
 	}
 	
@@ -224,6 +222,27 @@ class XtraitjOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	def _isLeaf(TJTraitReference r) {
 		return true;
+	}
+
+	override protected createEObjectNode(IOutlineNode parentNode, EObject modelElement, Image image, Object text, boolean isLeaf) {
+		// a JvmOperation that is modified with an alteration operation will navigate to the corresponding
+		// trait operation;
+		// if it is not modified, but it is "inherited" from a trait reference,
+		// then the outline node will navigate to the original declaration
+		
+		if (modelElement instanceof JvmOperation) {
+			val primarySource = modelElement.primarySourceElement
+			
+			if (primarySource instanceof TJTraitReference) {
+				val type = primarySource.trait.type
+				if (type instanceof JvmGenericType) {
+					val op = type.allFeatures.findFirst[simpleName == modelElement.simpleName]
+					return super.createEObjectNode(parentNode, op, image, text, isLeaf)
+				}
+			}
+		}
+		
+		super.createEObjectNode(parentNode, modelElement, image, text, isLeaf)
 	}
 
 }

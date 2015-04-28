@@ -32,7 +32,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import xtraitj.swtbot.tests.utils.PDETargetPlatformUtils;
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils;
 
 public class XtraitjSwtbotAbstractTests {
 
@@ -179,12 +179,17 @@ public class XtraitjSwtbotAbstractTests {
 
 	protected void createProjectAndAssertNoErrorMarker(String projectType)
 			throws CoreException {
+		createProject(projectType);
+		assertErrorsInProject(0);
+	}
+
+	protected void createProject(String projectType) {
 		bot.menu("File").menu("New").menu("Project...").click();
 
 		SWTBotShell shell = bot.shell("New Project");
 		shell.activate();
 		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
-		waitForTreeItems(xtraitjNode);
+		waitForNodes(xtraitjNode);
 		xtraitjNode.select(projectType);
 		bot.button("Next >").click();
 
@@ -195,9 +200,8 @@ public class XtraitjSwtbotAbstractTests {
 		// creation of a project might require some time
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(TEST_PROJECT));
-
+		
 		waitForAutoBuild();
-		assertErrorsInProject(0);
 	}
 
 	protected void importExampleProjectAndAssertNoErrorMarker(String projectType,
@@ -207,9 +211,9 @@ public class XtraitjSwtbotAbstractTests {
 		SWTBotShell shell = bot.shell("New");
 		shell.activate();
 		SWTBotTreeItem xtraitjNode = bot.tree().expandNode("Xtraitj");
-		waitForTreeItems(xtraitjNode);
+		waitForNodes(xtraitjNode);
 		SWTBotTreeItem examplesNode = xtraitjNode.expandNode("Examples");
-		waitForTreeItems(examplesNode);
+		waitForNodes(examplesNode);
 		examplesNode.select(projectType);
 		bot.button("Next >").click();
 
@@ -223,7 +227,7 @@ public class XtraitjSwtbotAbstractTests {
 		assertErrorsInProject(0);
 	}
 
-	public void waitForTreeItems(final SWTBotTreeItem treeItem) {
+	public void waitForNodes(final SWTBotTreeItem treeItem) {
 		int retries = 3;
 		int msecs = 2000;
 		int count = 0;

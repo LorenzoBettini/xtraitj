@@ -7,6 +7,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>../xtraitj.targetplatform</module>
+		<module>../xtraitj.runtime.lib</module>
 		<module>../xtraitj</module>
 		<module>../xtraitj.ui</module>
 		<module>../xtraitj.runtime.requirements</module>
@@ -22,18 +23,18 @@
 	</modules>
 
 	<properties>
-		<tycho-version>0.21.0</tycho-version>
-		<tycho-extras-version>0.21.0</tycho-extras-version>
-		<maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
+		<tycho-version>0.22.0</tycho-version>
+		<tycho-extras-version>0.22.0</tycho-extras-version>
+		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
 		<junit-version>4.11</junit-version>
-		<jacoco-version>0.5.8.201207111220</jacoco-version>
-		<findbugs-version>2.5.4-SNAPSHOT</findbugs-version>
+		<jacoco-version>0.7.4.201502262128</jacoco-version>
+		<findbugs-version>2.5.5</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<xtext.version>2.6.2</xtext.version>
+		<xtext.version>2.7.3</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
-		<fornax-oaw-m2-plugin-version>3.4.0</fornax-oaw-m2-plugin-version>
+		<fornax-oaw-m2-plugin-version>3.5.1</fornax-oaw-m2-plugin-version>
 		
 		<!-- <jacoco.reportPath>../target/jacoco.exec</jacoco.reportPath> -->
 		<!-- <findbugs.reportPath>../target/findbugs</findbugs.reportPath>  -->
@@ -43,12 +44,15 @@
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		<jacoco.reportPath>${project.basedir}/../target/coverage</jacoco.reportPath>
+		<jacoco.xml.reportPath>${jacoco.reportPath}/coverage.xml</jacoco.xml.reportPath>
 		<sonar.junit.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.junit.reportsPath>
 		<sonar.skippedModules>xtraitj.tests,xtraitj.swtbot.tests,xtraitj.example.examples</sonar.skippedModules>
 		<sonar.exclusions>file:**/src-gen/**</sonar.exclusions>
 		
 		<findbugs.skip>false</findbugs.skip>
 		<swtbot.tests.only>false</swtbot.tests.only>
+		<swtbot.tests.skip>false</swtbot.tests.skip>
 	</properties>
 
 	<profiles>
@@ -124,6 +128,19 @@
 						<outputDirectory>xtend-gen</outputDirectory>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<filesets>
+							<fileset>
+								<directory>${basedir}/xtend-gen</directory>
+							</fileset>
+						</filesets>
+					</configuration>
+				</plugin>
 				
 				<plugin>
 		          <groupId>org.codehaus.mojo</groupId>
@@ -154,6 +171,17 @@
 		            </execution>
 		          </executions>
 		        </plugin>
+			
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>3.0.1</version>
+					<configuration>
+						<jacocoReports>
+							<jacocoReport>${jacoco.xml.reportPath}</jacocoReport>
+						</jacocoReports>
+					</configuration>
+				</plugin>
 
 			</plugins>
 		</pluginManagement>
@@ -201,6 +229,7 @@
 								<feature id="xtraitj.swtbot.tests.feature"/>
 
 								<feature id="org.eclipse.swtbot.ide"/>
+								<feature id="org.eclipse.swtbot.eclipse"/>
 								<feature id="org.eclipse.xtext.sdk"/>
 								<feature id="org.eclipse.xtend.sdk"/>
 								<feature id="org.eclipse.pde"/>
@@ -300,17 +329,21 @@
 								<include>xtraitj.*</include>
 							</includes>
 							<excludes>
-								<exclude>**/src-gen/**/*.java</exclude>
-								<exclude>**/org/eclipse/**/*.java</exclude>
+								<exclude>**/org/eclipse/**/*.class</exclude>
 								<exclude>**.antlr**</exclude>
 								<exclude>**.parseTree**</exclude>
-								<exclude>**Abstract*RuntimeModule.java</exclude>
-								<exclude>**/*SetupGenerated*.java</exclude>
-								<exclude>**/Abstract*Validator.java</exclude>
-								<exclude>**/*GrammarAccess.java</exclude>
-								<exclude>**/Abstract*UiModule.java</exclude>
-								<exclude>**/Abstract*ProposalProvider.java</exclude>
-								<exclude>**/*Test.java</exclude>
+								<exclude>**Abstract*RuntimeModule.class</exclude>
+								<exclude>**/*SetupGenerated*.class</exclude>
+								<exclude>**/Abstract*Validator.class</exclude>
+								<exclude>**/*GrammarAccess*.class</exclude>
+								<exclude>**/Abstract*UiModule.class</exclude>
+								<exclude>**/Abstract*ProposalProvider.class</exclude>
+								<exclude>**/*Test.class</exclude>
+								<exclude>**/*Internal*</exclude>
+								<exclude>**/*Sequencer*</exclude>
+								<exclude>**/internal/*</exclude>
+								<exclude>**/xtraitj/xtraitj/util/*</exclude>
+								<exclude>**/xtraitj/xtraitj/impl/*</exclude>
 							</excludes>
 							<append>true</append>
 						</configuration>
@@ -319,49 +352,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>sonatype_releases</id>
-			<url>https://oss.sonatype.org/content/repositories/releases/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	
-		<pluginRepository>
-			<!-- required for findbugs plugin 2.5.4-SNAPSHOT (using findbugs 2.0.3) -->
-			<id>codehaus-snapshots</id>
-			<name>codehaus snapshot repository</name>
-			<!--<url>http://snapshots.repository.codehaus.org/</url> -->
-
-			<url>http://maven.wso2.org/nexus/content/repositories/codehaus-snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-		
-		<!-- Repository to resolve fornax-oaw-m2-plugin -->
-		<!-- in case of SSL certificates errors, use
-			-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -->
-		<pluginRepository>
-			<id>fornax.plugin.repository</id>
-			<name>Fornax Plugin Repository</name>
-			<url>http://www.fornax-platform.org/m2/repository</url>
-			<!--  <url>http://www.fornax-platform.org/nexus/content/groups/public</url> -->
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>

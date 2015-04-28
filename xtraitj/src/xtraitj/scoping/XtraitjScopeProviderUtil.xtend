@@ -9,13 +9,13 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJTraitOperation
-import xtraitj.xtraitj.TjTraitOperationForProvided
+import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.eclipse.xtext.scoping.Scopes.*
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * For the moment Xbase uses two different scope providers, one for
@@ -27,6 +27,7 @@ import static extension xtraitj.util.XtraitjModelUtil.*
  */
 class XtraitjScopeProviderUtil {
 	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
 
 	def IScope createCustomScope(EObject context, EReference reference) {
 		if (reference == XtraitjPackage::eINSTANCE.TJTraitOperation_Member ||
@@ -43,38 +44,32 @@ class XtraitjScopeProviderUtil {
 	}
 
 	def dispatch customScope(TJTraitOperation op) {
+		val ops = getXtraitjResolvedOperations(op)
+		
 		// a JvmMember does not have 'name', but 'simpleName'
 		// thus we must also provide a function for computing the
 		// QualifiedName (the default one relies on 'name')
 		return new SimpleScope(
-			op.containingTraitOperationExpression.trait.jvmAllFeatures.scopedElementsFor [
-				val field = sourceField
-				// avoid to put the same field name twice:
-				// each field has both a getter and a setter associated
-				if (field != null)
-					// so we do not put it when we find the setter
-					if (simpleName.startsWith("set"))
-						null
-					else
-						QualifiedName::create(field.name)
-				else
-					QualifiedName::create(simpleName)
+			ops.requiredFields.map[declaration].scopedElementsFor [
+				QualifiedName::create(simpleName.stripGetter)
+			] +
+			ops.declaredMethods.map[declaration].scopedElementsFor [
+				QualifiedName::create(simpleName)
 			]
 		)
 	}
-
-	def dispatch customScope(TjTraitOperationForProvided op) {
+	
+	def dispatch customScope(TJTraitOperationForProvided op) {
 		return scopeForDefinedMethods(op)
 	}
 
 	def scopeForDefinedMethods(TJTraitOperation op) {
 		new SimpleScope(
-			op.containingTraitOperationExpression.trait.jvmAllFeatures.
+			getXtraitjResolvedOperations(op).
+				declaredMethods.
+				map[declaration].
 				scopedElementsFor [
-					if (sourceField == null && originalSource != null)
-						QualifiedName::create(simpleName)
-					else
-						null
+					QualifiedName::create(simpleName)
 				]
 		)
 	}

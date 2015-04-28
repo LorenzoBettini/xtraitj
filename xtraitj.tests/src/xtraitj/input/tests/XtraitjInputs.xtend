@@ -172,6 +172,24 @@ class C uses T {
 		'''
 	}
 
+	def traitRenameOperationsNotUsed() {
+		'''
+		trait T1 {
+			String s;
+			int m() { return 0; }
+			int t1() { return 0; }
+		}
+		
+		trait T2 uses T1 {
+			int n();
+		}
+		
+		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
+			
+		}
+		'''
+	}
+
 	def traitRenameOperations() {
 		'''
 		trait T1 {
@@ -186,10 +204,47 @@ class C uses T {
 		
 		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
 			int foo() { 
-				return n2() + m2();
+				return this.n2() + m2();
 			}
 		}
 		'''
+	}
+
+	def traitRenameOperationsWithTraitReferenceFullyQualified() {
+		'''
+		package tests;
+		
+		trait T1 {
+			int m() { return 0; }
+		}
+		
+		trait T2 uses tests.T1[ rename m to m2 ] {
+			int foo() { 
+				return m2();
+			}
+		}
+		'''
+	}
+
+	def traitRenameOperationsWithTraitReferenceFullyQualifiedDifferentFiles() {
+		#[
+		'''
+		package tests;
+		
+		trait T2 uses tests.T1[ rename m to m2 ] {
+			int foo() { 
+				return m2();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			int m() { return 0; }
+		}
+		'''
+		]
 	}
 
 	def traitRenameProvidedMethods() {
@@ -442,6 +497,8 @@ class C uses T {
 			String n() { return m(); }
 		}
 		
+		// a required method of the used trait, req1, is renamed
+		// so that it matches the method req provided by this trait
 		trait T3 uses T2[ rename req1 to req ] {
 			String req() {
 				return "T3.req"
@@ -469,6 +526,8 @@ class C uses T {
 			String n() { return "T2.n;"; }
 		}
 		
+		// since m and n are renamed, we can (re)define a new
+		// version in this trait
 		trait T3 uses T2[ rename m to m2, rename n to n2 ] {
 			String m() {
 				return "T3." + m2();
@@ -512,6 +571,45 @@ class C uses T {
 		'''
 	}
 
+	def traitDoubleRenamingSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2[ rename m to m2, rename n to n2 ], 
+		              T2[ rename m to m3, rename n to n3 ] {
+			String m() {
+				return "T3." + m2();
+			}
+			String foo() { 
+				return n3() + m();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2 uses T1 {
+			String n() { return "T2.n;"; }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			String m() { return "T1.m;"; }
+		}
+		'''
+		]
+	}
+
 	def traitRenameField() {
 		'''
 		package tests;
@@ -526,8 +624,12 @@ class C uses T {
 			boolean n() { return fieldB; }
 		}
 		
-		trait T3 uses T2[ rename fieldS to s, rename fieldB to b ] {
-			String meth() { return s + b; }
+		trait T3 uses T2[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				s = "foo"
+				b = false
+				return s + b;
+			}
 		}
 		'''
 	}
@@ -539,6 +641,27 @@ class C uses T {
 		class C uses T3 {
 			boolean b = true;
 			String s = "test";
+		}
+		'''
+	}
+
+	def classRenameFields() {
+		'''
+		package tests;
+		
+		trait T1 {
+			String fieldS;
+			String m() { return fieldS; }
+		}
+		
+		trait T2 uses T1 {
+			boolean fieldB;
+			boolean n() { return fieldB; }
+		}
+		
+		class C uses T2[ rename field fieldS to s, rename field fieldB to b ] {
+			String s = "foo";
+			boolean b = false;
 		}
 		'''
 	}
@@ -575,6 +698,51 @@ class C uses T3 {
 	String s = "";
 }
 		'''
+	}
+
+	def traitHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+class C uses T3 {
+	String s = "";
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1 {
+	String p() { return m(); }
+}
+		''',
+		'''
+package tests;
+
+trait T1 {
+	String s;
+	/* original version of m */
+	String m() { return "T1.m;"; }
+	String n() { return m(); }
+}
+		'''
+		]
 	}
 
 	def traitAlias() {
@@ -641,6 +809,53 @@ class C uses T3 {
 			String s = "";
 		}
 		'''
+	}
+
+	def traitAliasWithRenameAndHideSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			String s = "";
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+			/* independent version of n */
+			String n(int i) {
+				return oldn() + i + " - ";
+			}
+			String callN() { 
+				return n(10) + p();
+			}
+			String callM() { 
+				return m1() + oldm();
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2 uses T1 {
+			String p() { return m() + n(); }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1 {
+			String s;
+			/* original version of m */
+			String m() { return "T1.m;"; }
+			/* original version of n */
+			String n() { return "T1.n;"; }
+		}
+		'''
+		]
 	}
 
 	def traitRestrict() {
@@ -742,7 +957,7 @@ class C uses T3 {
 			String useField() { return s1; }
 		}
 		
-		trait T3 uses T2[ redirect s1 to s2, redirect req to prov ] {
+		trait T3 uses T2[ redirect field s1 to s2, redirect req to prov ] {
 		}
 		
 		class C uses T3 {
@@ -1054,6 +1269,27 @@ trait T3 uses T1<String>, T2 {
 		'''
 	}
 
+	def genericTraitWithRecursiveTypeParameterNotUsed() {
+		'''
+		package tests;
+		
+		trait T1 <T extends Comparable<T>> {
+		}
+		'''
+	}
+
+	def genericTraitWithRecursiveTypeParameterUsedInMethod() {
+		'''
+		package tests;
+		
+		trait T1 <T extends Comparable<T>> {
+			int compare(T t1, T t2) {
+				return t1.compareTo(t2)
+			}
+		}
+		'''
+	}
+
 	def genericTraitWithRecursiveTypeParameter() {
 		'''
 		package tests;
@@ -1102,6 +1338,8 @@ trait T3 uses T1<String>, T2 {
 		
 		trait T2 uses T1 {}
 		
+		trait T3 uses T2 {}
+		
 		class C uses T2 {}
 		
 		class C2 uses T1 {}
@@ -1130,6 +1368,12 @@ trait T1 {
 		return recursive(recursive(v))
 	}
 
+	/**
+	 * IMPORTANT:
+	 * The generated Java code in T1Impl._noReturn() must be
+	 * InputOutput.<U>println(u);
+	 * Otherwise it means type parameter references are not correctly bound!
+	 */
 	<U> void noReturn(U u) {
 		println(u)
 	}
@@ -1172,6 +1416,87 @@ class C uses T1 {}
 
 class C2 uses T2 {}
 '''
+	}
+
+	def traitUsingGenericMethodSeparateFiles() {
+#[
+'''
+package tests;
+
+trait T1 {
+	<T> T identity(T t) {
+		return t
+	}
+	
+	String useIdentity() {
+		val s = identity("foo")
+		val i = identity(0)
+		val l = identity(newArrayList(true, false))
+		return s + "," + i + "," + l
+	}
+
+	<V> V recursive(V v) {
+		return recursive(recursive(v))
+	}
+
+	/**
+	 * IMPORTANT:
+	 * The generated Java code in T1Impl._noReturn() must be
+	 * InputOutput.<U>println(u);
+	 * Otherwise it means type parameter references are not correctly bound!
+	 */
+	<U> void noReturn(U u) {
+		println(u)
+	}
+
+	void useRecursive() {
+		println(recursive(0) + recursive("foo"))
+	}
+
+	String useIdentityNested() {
+		val s = identity(identity("foo"))
+		val i = identity(identity(0))
+		val l = identity(identity(newArrayList(true, false)))
+		return s + "," + i + "," + l
+	}
+	
+	void useNoReturn() {
+		noReturn("foo")
+		noReturn(0)
+	}
+}
+''',
+'''
+package tests;
+
+trait T2 uses T1 {
+	String useIdentity2() {
+		val s = identity("bar")
+		return s + "," + useIdentity()
+	}
+	
+	String useIdentityNested2() {
+		val s = identity(identity("bar"))
+		return s + "," + useIdentityNested()
+	}
+	
+	void useNoReturn2() {
+		noReturn("foo")
+		noReturn(0)
+	}
+}
+''',
+'''
+package tests;
+
+class C2 uses T2 {}
+''',
+'''
+package tests;
+
+class C uses T1 {}
+'''
+]
 	}
 
 	def traitWithGenericMethodShadowingTraitTypeParameter() {
@@ -1404,6 +1729,147 @@ class CUsesGeneric2 uses T2 {
 		'''
 	}
 
+	def traitWithTypeParametersWithDifferentNames() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldT1;
+			E1 mT1() { return null; }
+		}
+		
+		trait T2<G2> uses T1<G2> {
+			G2 fieldT2;
+			G2 mT2() { return null; }
+		}
+		
+		trait T3<G3> uses T2<G3> {
+			String meth() {
+				println(fieldT1)
+				val t1 = fieldT1
+				fieldT1 = t1
+				println(fieldT2)
+				val t2 = fieldT2
+				fieldT2 = t2
+				return "foo" // t1 + t2;
+			}
+		}
+		
+		class C3<U> uses T3<U>{
+			U fieldT1;
+			U fieldT2;
+		}
+		'''
+	}
+
+	def traitWithTypeParametersWithDifferentNamesSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		trait T3<G3> uses T2<G3> {
+			String meth() {
+				println(fieldT1)
+				val t1 = fieldT1
+				fieldT1 = t1
+				println(fieldT2)
+				val t2 = fieldT2
+				fieldT2 = t2
+				return "foo" // t1 + t2;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		class C3<U> uses T3<U>{
+			U fieldT1;
+			U fieldT2;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G2> uses T1<G2> {
+			G2 fieldT2;
+			G2 mT2() { return null; }
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldT1;
+			E1 mT1() { return null; }
+		}
+		'''
+		]
+	}
+
+	def traitUsesGenericTraitWithRenameSimpler() {
+		'''
+package tests;
+
+import java.util.List
+import java.util.LinkedList
+
+trait TGeneric<T> {
+	List<T> returnList() {
+		return new LinkedList<T>
+	}
+	void printList(List<T> l) {}
+}
+
+trait UsesTGeneric uses 
+	TGeneric<Integer>[rename returnList to returnListOfInteger, rename printList to printListOfInteger]
+{
+	String useLists() {
+		val intList = returnListOfInteger() => [add(1)]
+		printListOfInteger(intList)
+		return intList.toString
+	}
+}
+
+class C uses UsesTGeneric {}
+		'''
+	}
+
+	def traitUsesGenericTraitWithRenameSimplerSeparateFiles() {
+		#[
+		'''
+package tests;
+
+class C uses UsesTGeneric {}
+		''',
+		'''
+package tests;
+
+trait UsesTGeneric uses 
+	TGeneric<Integer>[rename returnList to returnListOfInteger, rename printList to printListOfInteger]
+{
+	String useLists() {
+		val intList = returnListOfInteger() => [add(1)]
+		printListOfInteger(intList)
+		return intList.toString
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+import java.util.LinkedList
+
+trait TGeneric<T> {
+	List<T> returnList() {
+		return new LinkedList<T>
+	}
+	void printList(List<T> l) {}
+}
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithRename() {
 		'''
 package tests;
@@ -1437,6 +1903,328 @@ trait UsesTGeneric uses
 class C uses UsesTGeneric {}
 		'''
 	}
+
+	def traitUsesGenericTraitWithRenameSeparateFiles() {
+		#[
+		'''
+package tests;
+
+class C uses UsesTGeneric {}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait UsesTGeneric uses 
+	TGeneric<Integer>[rename returnList to returnListOfInteger],
+	TGeneric<List<Integer>>[rename returnList to returnListOfListOfInteger],
+	TGeneric<String> 
+{
+	String useLists() {
+		val stringList = returnList() => [add("foo")]
+		val intList = returnListOfInteger() => [add(1)]
+		val intListList = returnListOfListOfInteger() => [
+			add(
+				returnListOfInteger() => [ add(2) ]
+			)
+		]
+		(stringList.toString + intList.toString + intListList.toString)
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+import java.util.LinkedList
+
+trait TGeneric<T> {
+	List<T> returnList() {
+		return new LinkedList<T>
+	}
+}
+		'''
+		]
+	}
+
+	def traitRenameGenericFieldInstantiated() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+		}
+		
+		trait T3 uses T2<String,Boolean>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				s = "foo"
+				b = false
+				return s + b;
+			}
+		}
+		'''
+	}
+
+	def classUsesTraitWithGenericRenamedFieldsInstantiated() {
+		'''
+		«traitRenameGenericFieldInstantiated»
+		
+		class C uses T3 {
+			Boolean b = true;
+			String s = "test";
+		}
+		'''
+	}
+
+	def classUsesTraitWithGenericRenamedFieldsInstantiatedSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C uses T3 {
+			Boolean b = true;
+			String s = "test";
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3 uses T2<String,Boolean>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				s = "foo"
+				b = false
+				return s + b;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		'''
+		]
+	}
+
+	def traitRenameGenericFieldNotInstantiated() {
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+			
+			String T2meth() {
+				println(fieldS)
+				val t = fieldS
+				println(t)
+				return "foo" // fieldS + fieldB;
+			}
+		}
+		
+		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				println(s)
+				val t1 = s
+				s = t1
+				println(b)
+				val t2 = b
+				b = t2
+				return "foo" // s + b;
+			}
+		}
+		
+		class C3<U extends String,V> uses T3<U,V>{
+			U s;
+			V b;
+		}
+		'''
+	}
+
+	def traitRenameGenericFieldNotInstantiatedSeparateFiles() {
+		#[
+		'''
+		package tests;
+		
+		class C3<U extends String,V> uses T3<U,V>{
+			U s;
+			V b;
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T3<U extends String,V> uses T2<U,V>[ rename field fieldS to s, rename field fieldB to b ] {
+			String meth() {
+				println(s)
+				val t1 = s
+				s = t1
+				println(b)
+				val t2 = b
+				b = t2
+				return "foo" // s + b;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T2<G1,G2> uses T1<G1> {
+			G2 fieldB;
+			
+			String T2meth() {
+				println(fieldS)
+				val t = fieldS
+				println(t)
+				return "foo" // fieldS + fieldB;
+			}
+		}
+		''',
+		'''
+		package tests;
+		
+		trait T1<E1> {
+			E1 fieldS;
+		}
+		'''
+		]
+	}
+
+	def traitUsesGenericClass() {
+'''
+package tests;
+
+import java.util.List;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		val c = new C<T>()
+		// the class' field will be null
+		// so we set it using our field
+		// which is initialized by the specific class
+		// where type parameters are instantiated
+		c.f = f
+		return c.n()
+	}
+	
+	String n() {
+		return f.toString;
+	}
+}
+
+class C<U> uses T1<U> {
+	U f;
+}
+
+class CString uses T1<String> {
+	String f = "test";
+}
+
+class CInteger uses T1<Integer> {
+	Integer f = 10;
+}
+
+class CListOfStrings uses T1<List<String>> {
+	List<String> f = #["a", "b", "c"];
+}
+'''
+	}
+
+	def traitUsesGenericClassSeparateFiles() {
+		#[
+'''
+package tests;
+
+class C<U> uses T1<U> {
+	U f;
+}
+''',
+'''
+package tests;
+
+import java.util.List;
+
+class CString uses T1<String> {
+	String f = "test";
+}
+
+class CInteger uses T1<Integer> {
+	Integer f = 10;
+}
+
+class CListOfStrings uses T1<List<String>> {
+	List<String> f = #["a", "b", "c"];
+}
+''',
+'''
+package tests;
+
+trait T1<T> {
+	T f;
+	
+	String m() {
+		val c = new C<T>()
+		// the class' field will be null
+		// so we set it using our field
+		// which is initialized by the specific class
+		// where type parameters are instantiated
+		c.f = f
+		return c.n()
+	}
+	
+	String n() {
+		return f.toString;
+	}
+}
+'''
+		]
+	}
+
+	def traitUsesTraitWithRenameGenericMethod() {
+		'''
+package tests;
+
+import java.util.List
+
+trait T1 {
+	<T> List<T> returnList(T t) {
+		return newArrayList(t)
+	}
+}
+
+trait UsesTGeneric uses 
+	T1[rename returnList to returnListOfInteger],
+	T1 
+{
+	String useLists() {
+		val stringList = returnList("bar") => [add("foo")]
+		val intList = returnListOfInteger(0) => [add(1)]
+		return stringList.toString + intList.toString
+	}
+}
+
+class C uses UsesTGeneric {}
+		'''
+	}
+
 
 	def traitUsesGenericTraitWithAlias() {
 		'''
@@ -1485,6 +2273,8 @@ class C2 uses T4 {
 	
 	def traitUsesGenericTraitWithHide() {
 		'''
+package tests;
+
 import java.util.List
 
 trait T1<T> {
@@ -1538,6 +2328,88 @@ class C2 uses T4 {
 		'''
 	}
 
+	def traitUsesGenericTraitWithHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > l = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+class C2 uses T4 {
+	List < String > l = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T3 uses T2[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + p();
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ hide m ] {
+	/* independent new version of m */
+	int m(int i) {
+		return i;
+	}
+	String callN() { 
+		return n() + m(10);
+	}
+	int callM() { 
+		return m(10);
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> l;
+	/* original version of m */
+	T m() { 
+		return l.get(0);
+	}
+	T n() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T2 uses T1<String> {
+	String p() { return m(); }
+}
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithRedirect() {
 		'''
 package tests;
@@ -1556,10 +2428,10 @@ trait T2 uses T1<String> {
 	String useField() { return s1.get(0); }
 }
 
-trait T3 uses T2[ redirect s1 to s2, redirect req to prov ] {
+trait T3 uses T2[ redirect field s1 to s2, redirect req to prov ] {
 }
 
-trait T4 uses T1<String>[ redirect s1 to s2, redirect req to prov ] {
+trait T4 uses T1<String>[ redirect field s1 to s2, redirect req to prov ] {
 	String useField() { return s2.get(0); }
 }
 
@@ -1571,6 +2443,157 @@ class C2 uses T4 {
 	List < String > s2 = newArrayList("foo", "bar");
 }
 		'''
+	}
+
+	def traitUsesGenericTraitWithRedirectSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > s2 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+class C2 uses T4 {
+	List < String > s2 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ redirect field s1 to s2, redirect req to prov ] {
+	String useField() { return s2.get(0); }
+}
+		''',
+		'''
+package tests;
+
+trait T3 uses T2[ redirect field s1 to s2, redirect req to prov ] {
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+	String useField() { return s1.get(0); }
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s1;
+	List<T> s2;
+	T req();
+	T prov() { return s2.get(0); }
+	T callReq() { return req(); }
+}
+		'''
+		]
+	}
+
+	def traitUsesGenericTraitWithRedirectCompliant() {
+		'''
+package tests;
+
+import java.util.List
+import java.util.ArrayList
+
+trait T1<T> {
+	ArrayList<T> s1;
+	/**
+	 * This will be redirected to prov, and it is correct
+	 * since ArrayList<T> <: List<T>
+	 */
+	List<T> req();
+	ArrayList<T> prov() { return s1; }
+	List<T> callReq() { return req(); }
+}
+
+trait T2 uses T1<String> {
+}
+
+trait T3 uses T2[ redirect req to prov ] {
+}
+
+trait T4 uses T1<String>[ redirect req to prov ] {
+}
+
+class C uses T3 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		'''
+	}
+
+	def traitUsesGenericTraitWithRedirectCompliantSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.ArrayList
+
+class C uses T3 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.ArrayList
+
+class C2 uses T4 {
+	ArrayList<String> s1 = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ redirect req to prov ] {
+}
+		''',
+		'''
+package tests;
+
+trait T3 uses T2[ redirect req to prov ] {
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+import java.util.ArrayList
+
+trait T1<T> {
+	ArrayList<T> s1;
+	/**
+	 * This will be redirected to prov, and it is correct
+	 * since ArrayList<T> <: List<T>
+	 */
+	List<T> req();
+	ArrayList<T> prov() { return s1; }
+	List<T> callReq() { return req(); }
+}
+		'''
+		]
 	}
 
 	def traitUsesGenericTraitWithRestrict() {
@@ -1679,6 +2702,81 @@ class C2 uses T4 {
 		'''
 	}
 
+	def traitUsesGenericTraitWithRestrictAndAliasSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > s = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+class C2 uses T4 {
+	List < String > s = newArrayList("foo", "bar");
+}
+		''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ alias m as oldm, restrict m ] {
+	/* new version of m */
+	String m() {
+		return "T3.m;" + oldm();
+	}
+	String callN() { 
+		return n();
+	}
+	String callM() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T3 uses T2[ alias m as oldm, restrict m ] {
+	/* new version of m */
+	String m() {
+		return "T3.m;" + oldm();
+	}
+	String callN() { 
+		return n() + p();
+	}
+	String callM() { 
+		return m();
+	}
+}
+		''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+	String p() { return m(); }
+}
+		''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s;
+	/* original version of m */
+	T m() { return s.get(0); }
+	T n() { return m(); }
+}
+
+		'''
+		]
+	}
+
 	def traitUsesGenericTraitWithAliasRenameHide() {
 		'''
 package tests;
@@ -1734,6 +2832,77 @@ class C2 uses T4 {
 '''
 	}
 
+	def traitUsesGenericTraitWithAliasRenameHideSeparateFiles() {
+		#[
+		'''
+package tests;
+
+import java.util.List
+
+class C uses T3 {
+	List < String > s = newArrayList("foo", "bar");
+}
+
+class C2 uses T4 {
+	List < String > s = newArrayList("foo", "bar");
+}
+''',
+		'''
+package tests;
+
+trait T4 uses T1<String>[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10);
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+''',
+		'''
+package tests;
+
+trait T3 uses T2[ alias m as oldm, alias n as oldn,
+		                  rename m to m1, hide n ] {
+	/* independent version of n */
+	String n(int i) {
+		return oldn() + i + " - ";
+	}
+	String callN() { 
+		return n(10) + p();
+	}
+	String callM() { 
+		return m1() + oldm();
+	}
+}
+''',
+		'''
+package tests;
+
+trait T2 uses T1<String> {
+	String p() { return m() + n(); }
+}
+''',
+		'''
+package tests;
+
+import java.util.List
+
+trait T1<T> {
+	List<T> s;
+	/* original version of m */
+	T m() { return s.get(0); }
+	T n() { return m(); }
+}
+'''
+		]
+	}
+
 	def traitUsesGenericTraitWithWildCard() {
 		'''
 package tests;
@@ -1776,7 +2945,7 @@ class C uses TUsesGeneric {
 		'''
 	}
 
-	def genericFunctionType() {
+	def traitWithGenericFunctionType() {
 		'''
 package tests;
 
@@ -1802,9 +2971,35 @@ trait TGenericExtensions<T> {
 		return result
 	}
 }
+		'''
+	}
+
+	def genericFunctionType() {
+		'''
+«traitWithGenericFunctionType»
 
 trait TStringExtensions uses TGenericExtensions<String> {
 	
+}
+		'''
+	}
+
+	def classUsesTraitWithGenericFunctionType() {
+		'''
+«traitWithGenericFunctionType»
+
+class StringExtensions<U> uses TGenericExtensions<U> {
+	Iterable<U> iterable;
+}
+		'''
+	}
+
+	def classUsesTraitWithGenericFunctionTypeInstantiated() {
+		'''
+«traitWithGenericFunctionType»
+
+class StringExtensions uses TGenericExtensions<String> {
+	Iterable<String> iterable;
 }
 		'''
 	}
@@ -1833,6 +3028,31 @@ trait TTransformerIterator<T,R> uses TIterator<T>[rename next to origNext] {
 		val T o = origNext();
 		return function.apply(o);
 	}
+}
+		'''
+	}
+
+	def classGenericFunctionAsField() {
+		'''
+package tests;
+
+trait T1<T> {
+	(T) => T function;
+	T f;
+	
+	T m() {
+		function.apply(f)
+	}
+}
+
+class C1<U> uses T1<U> {
+	(U) => U function;
+	U f;
+}
+
+class C2 uses T1<String> {
+	String f = "test";
+	(String) => String function = [p | p.toFirstUpper];
 }
 		'''
 	}
@@ -1878,6 +3098,73 @@ class CWithOp<Z> uses T1<Z>[hide m] {
 '''
 	}
 
+	def passTypeParameterAsTypeArgumentSeparateFiles() {
+		#[
+'''
+package tests;
+
+class CWithOp<Z> uses T1<Z>[hide m] {
+	Z s;
+}
+''',
+'''
+package tests;
+
+class C uses T2<String> {
+	String s = "foo";
+}
+''',
+'''
+package tests;
+
+class C1<U> uses T2<U> {
+	U s;
+}
+''',
+'''
+package tests;
+
+import java.util.List
+
+class C3 uses T3<String> {
+	List<String> s = newArrayList("foo", "bar");
+}
+''',
+'''
+package tests;
+
+import java.util.List
+
+trait T3<V> uses T2<List<V>> {
+	
+}
+''',
+'''
+package tests;
+
+trait T2<W> uses T1<W> {
+	
+}
+''',
+'''
+package tests;
+
+trait TWithOp<Z> uses T1<Z>[hide m] {
+	
+}
+
+''',
+'''
+package tests;
+
+trait T1<T> {
+	T s;
+	T m() { return s }
+}
+'''
+		]
+	}
+
 	def annotatedElements() {
 '''
 package tests;
@@ -1911,12 +3198,122 @@ package tests;
 /**
  * My documented trait
  */
-trait T {}
+trait T {
+	/** this is a required field */
+	String f;
+	
+	/** this is a required method */
+	String req();
+	
+	/** this is a defined method */
+	String def() { return req(); }
+}
+
+trait T2 {
+	/** this is an implemented method */
+	String req() { return ""; }
+}
 
 /**
  * My documented class
  */
-class C {}
+class C uses T, T2 {
+	/** this is a declared field */
+	String f;
+	
+	/** this is a constructor */
+	C(String f) { this.f = f; }
+}
+'''
+	}
+
+	def accessToGeneratedJavaCodeWithoutOriginalSource() {
+'''
+package tests;
+
+import xtraitj.input.tests.generated.T1Gen
+
+// T1Gen was generated started from xtraitj code,
+// but we remove the original source
+
+trait T1 uses T1Gen<String> {
+	String required(String s) {
+		return s;
+	}
+
+	String useProvided() {
+		return provided("test");
+	}
+}
+
+trait T2<U> uses T1Gen<U> {
+	U required(U s) {
+		return s;
+	}
+}
+
+trait T3 {
+	String provided(String s);
+	
+	String useProvided() {
+		return provided("test");
+	}
+}
+
+class C uses T1 {
+	String f;
+}
+
+class C2 uses T2<String>, T3 {
+	String f;
+}
+'''
+	}
+
+	def accessRenameGeneratedJavaCodeWithoutOriginalSource() {
+'''
+package tests;
+
+import xtraitj.input.tests.generated.T1Gen
+
+// T1Gen was generated started from xtraitj code,
+// but we remove the original source
+
+trait T1 uses T1Gen<String>[rename provided to renamedProvided] {
+	String required(String s) {
+		return s;
+	}
+
+	String useProvided() {
+		return renamedProvided("test");
+	}
+}
+
+trait T2<U> uses T1Gen<U>[rename required to req] {
+	U req(U s) {
+		return s;
+	}
+}
+
+trait T3 {
+	String provided(String s);
+	
+	String useProvided() {
+		return provided("test");
+	}
+}
+
+class C1 uses T1 {
+	String f;
+}
+
+class C2 uses T2<String>, T3 {
+	String f;
+}
+
+class C3 uses T1[rename field f to f1] {
+	String f1;
+}
 '''
 	}
 }

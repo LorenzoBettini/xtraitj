@@ -9,6 +9,10 @@ import org.eclipse.xtext.xbase.lib.Functions;
 import xtraitj.XtraitjInjectorProvider;
 import xtraitj.XtraitjRuntimeModule;
 import xtraitj.XtraitjStandaloneSetup;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredField;
+import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Guice;
@@ -62,6 +66,11 @@ public class InjectorProviderCustom extends XtraitjInjectorProvider {
 				compiler.addClassPathOfClass(Inject.class);
 				compiler.addClassPathOfClass(javax.inject.Provider.class);
 				compiler.addClassPathOfClass(Supplier.class);
+				
+				compiler.addClassPathOfClass(XtraitjTraitInterface.class);
+				compiler.addClassPathOfClass(XtraitjRequiredField.class);
+				compiler.addClassPathOfClass(XtraitjRequiredMethod.class);
+				compiler.addClassPathOfClass(XtraitjDefinedMethod.class);
 			}
 		}
 	}

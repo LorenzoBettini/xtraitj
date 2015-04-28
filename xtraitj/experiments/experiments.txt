@@ -15,3 +15,60 @@
 		}
 	}
 	
+	
+INFERRER
+
+This does not work because methods inferred for the interface are not correctly resolved
+(the type parameters are resolved against the methods of the inferred class) 
+	
+		def private addDelegates(List<TJTraitReference> traitReferences, JvmGenericType it) {
+		for (tRef : traitReferences) {
+			val traitRef = tRef.traitReferenceJavaType
+		
+			// first delegates for implemented methods 
+			for (traitMethod : traitRef.xtraitjJvmAllDefinedMethodOperations(tRef)) {
+				if (!members.alreadyDefined(traitMethod.op)) {
+   					val methodName = traitMethod.op.simpleName
+   					// m() { _delegate.m(); }
+   					members += traitMethod.toMethodDelegate(
+	   						delegateFieldName, methodName, methodName
+	   					) => [ 
+		   					traitMethod.op.annotateAsDefinedMethod(it)
+		   				]
+   					// _m() { delegate to trait defining the method }
+   					members += traitMethod.toMethodDelegate(
+   						tRef.traitFieldName, methodName.underscoreName,
+   						methodName.underscoreName
+   					)
+				}
+			}
+		}
+		
+		for (tRef : traitReferences) {
+			val traitRef = tRef.traitReferenceJavaType
+			
+			for (op : traitRef.xtraitjJvmAllRequiredFieldOperations(tRef)) {
+				if (!members.alreadyDefined(op.op)) {
+   					// this is the getter
+   					members += op.toMethodDelegate(
+					delegateFieldName,
+					op.op.simpleName, op.op.simpleName) => [
+	   					op.op.annotateAsRequiredField(it)
+	   				]
+	   				members += op.toSetterDelegateFromGetter
+   				}
+			}
+			
+			// then delegates for required methods
+			// TODO deal with restrict
+			// see old xtraitjJvmAllRequiredOperations
+			for (op : traitRef.xtraitjJvmAllRequiredMethodOperations(tRef))
+				if (!members.alreadyDefined(op.op) && !members.alreadyDefined(op.op)) {
+					members += op.toMethodDelegate(
+						delegateFieldName,
+						op.op.simpleName, op.op.simpleName) => [
+			   					op.op.annotateAsRequiredMethod(it)
+			   				]
+				}
+		}
+	}

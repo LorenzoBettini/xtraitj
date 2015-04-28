@@ -8,9 +8,10 @@ logs.zip
 
 src-gen/
 xtend-gen/
+emf-gen/
 
 buildroot
 
 target
-generated
+#generated
 generated-sources

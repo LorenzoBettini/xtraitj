@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import xtraitj.example.examples.stack.IStack;
-import xtraitj.example.examples.stack.traits.TStack;
-import xtraitj.example.examples.stack.traits.impl.TStackImpl;
+import xtraitj.example.examples.stack.TStack;
+import xtraitj.example.examples.stack.TStackImpl;
 
 @SuppressWarnings("all")
-public class CStack<T> implements IStack<T>, TStack<T> {
+public class CStack<T extends Object> implements IStack<T>, TStack<T> {
   private List<T> collection = new ArrayList<T>();
   
   public List<T> getCollection() {

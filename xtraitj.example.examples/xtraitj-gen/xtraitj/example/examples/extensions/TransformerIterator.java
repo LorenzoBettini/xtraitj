@@ -2,11 +2,11 @@ package xtraitj.example.examples.extensions;
 
 import java.util.Iterator;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import xtraitj.example.examples.extensions.traits.TTransformerIterator;
-import xtraitj.example.examples.extensions.traits.impl.TTransformerIteratorImpl;
+import xtraitj.example.examples.extensions.TTransformerIterator;
+import xtraitj.example.examples.extensions.TTransformerIteratorImpl;
 
 @SuppressWarnings("all")
-public class TransformerIterator<T, R> implements Iterator<R>, TTransformerIterator<T, R> {
+public class TransformerIterator<T extends Object, R extends Object> implements Iterator<R>, TTransformerIterator<T, R> {
   private Iterator<T> iterator;
   
   public Iterator<T> getIterator() {
@@ -38,12 +38,12 @@ public class TransformerIterator<T, R> implements Iterator<R>, TTransformerItera
     return _TTransformerIterator._next();
   }
   
-  public boolean hasNext() {
-    return _TTransformerIterator._hasNext();
-  }
-  
   public T origNext() {
     return _TTransformerIterator._origNext();
+  }
+  
+  public boolean hasNext() {
+    return _TTransformerIterator._hasNext();
   }
   
   public void remove() {

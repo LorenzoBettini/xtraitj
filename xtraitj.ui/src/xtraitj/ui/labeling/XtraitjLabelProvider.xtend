@@ -5,10 +5,14 @@ package xtraitj.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jdt.ui.JavaElementImageDescriptor
+import org.eclipse.jface.resource.ImageDescriptor
 import org.eclipse.jface.viewers.StyledString
+import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmVisibility
 import org.eclipse.xtext.xbase.ui.labeling.XbaseImages2
 import org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider
+import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJConstructor
 import xtraitj.xtraitj.TJField
@@ -18,7 +22,6 @@ import xtraitj.xtraitj.TJRequiredMethod
 import xtraitj.xtraitj.TJTrait
 import xtraitj.xtraitj.TJTraitReference
 
-import org.eclipse.jdt.ui.JavaElementImageDescriptor
 import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
@@ -29,6 +32,7 @@ import static extension xtraitj.util.XtraitjModelUtil.*
 class XtraitjLabelProvider extends XbaseLabelProvider {
 	
 	@Inject XbaseImages2 images
+	@Inject extension XtraitjAnnotatedElementHelper
 
 	@Inject
 	new(AdapterFactoryLabelProvider delegate) {
@@ -55,7 +59,7 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 	}
 	
 	def text(TJTraitReference r) {
-		r.trait?.name
+		r.trait.simpleName
 	}
 	
 	def image(TJTrait t) {
@@ -67,16 +71,29 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 	}
 	
 	def image(TJField f) {
-		images.forField(
-			JvmVisibility::PRIVATE, 0);
+		imageForRequiredField();
 	}
 	
+	private def imageForRequiredField() {
+		images.forField(JvmVisibility::PRIVATE, 0)
+	}
+	
+	protected override ImageDescriptor _imageDescriptor(JvmOperation operation) {
+		if (operation.annotatedRequiredField) {
+			imageForRequiredField()
+		} else if (operation.annotatedDefinedMethod) {
+			images.forOperation(JvmVisibility.PUBLIC, 0)
+		} else {
+			super._imageDescriptor(operation)
+		}
+	}
+
 	def image(TJMethod m) {
 		images.forOperation(
 			if (m.private)
-				JvmVisibility::PRIVATE
+				JvmVisibility.PRIVATE
 			else
-				JvmVisibility::PUBLIC
+				JvmVisibility.PUBLIC
 			, 
 			0);
 	}
@@ -97,13 +114,4 @@ class XtraitjLabelProvider extends XbaseLabelProvider {
 		return "trait_ref.gif"
 	}
 	
-	// Labels and icons can be computed like this:
-	
-//	def text(Greeting ele) {
-//		'A greeting to ' + ele.name
-//	}
-//
-//	def image(Greeting ele) {
-//		'Greeting.gif'
-//	}
 }

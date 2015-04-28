@@ -3,22 +3,19 @@ package xtraitj.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
+import xtraitj.XtraitjInjectorProvider
+import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJMember
-import xtraitj.xtraitj.TJProgram
 
 import static org.junit.Assert.*
 
-import xtraitj.XtraitjInjectorProvider
-import xtraitj.typing.XtraitjTypingUtil
 import static extension xtraitj.util.XtraitjModelUtil.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjTypingUtilTest {
-	@Inject extension ParseHelper<TJProgram>
+class XtraitjTypingUtilTest extends XtraitjAbstractTest {
 	@Inject extension XtraitjTypingUtil
 
 	@Test def void testSameType() {

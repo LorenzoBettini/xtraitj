@@ -1,15 +1,47 @@
 package xtraitj.ui.tests
 
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.jdt.core.IJavaProject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.junit.ui.AbstractContentAssistTest
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils
+import xtraitj.tests.utils.ui.PluginProjectHelper
+import xtraitj.ui.internal.XtraitjActivator
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
 class XtraitjContentAssistTest extends AbstractContentAssistTest {
+
+	static IJavaProject pluginJavaProject
+	
+	val static PROJECT_NAME = "customPluginProject"
+	
+	@BeforeClass
+	def static void setUp() {
+		PDETargetPlatformUtils.setTargetPlatform();
+		
+		val injector = XtraitjActivator.getInstance().getInjector(XtraitjActivator.XTRAITJ_XTRAITJ);
+		val projectHelper = injector.getInstance(PluginProjectHelper)
+		
+		pluginJavaProject = projectHelper.createJavaPluginProject
+			(PROJECT_NAME, newArrayList("xtraitj.runtime.requirements"))
+	}
+	
+	@AfterClass
+	def static void tearDown() {
+		pluginJavaProject.project.delete(true, new NullProgressMonitor)
+	}
+	
+	override getJavaProject(ResourceSet resourceSet) {
+		pluginJavaProject
+	}
 
 	val T = '''
 		trait T {
@@ -23,7 +55,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		newBuilder.append(
 		T + '''
 		trait T1 uses T[rename '''
-		).assertText('m', 's')
+		).assertText('field', 'm', 's')
 	}
 
 	@Test
@@ -60,7 +92,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		}
 		
 		trait T1 uses T[rename '''
-		).assertText('n')
+		).assertText('field', 'n')
 	}
 
 	@Test
@@ -68,7 +100,7 @@ class XtraitjContentAssistTest extends AbstractContentAssistTest {
 		newBuilder.append(
 		T + '''
 		trait T1 uses T[redirect '''
-		).assertText('m', 's')
+		).assertText('field', 'm', 's')
 		.append(" m to ").assertText('m', 's')
 	}
 

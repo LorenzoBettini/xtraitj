@@ -1,8 +1,8 @@
 package xtraitj.jvmmodel
 
 import com.google.inject.Inject
+import com.google.inject.Singleton
 import java.beans.Introspector
-import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.common.types.JvmFeature
@@ -10,28 +10,28 @@ import org.eclipse.xtext.common.types.JvmGenericType
 import org.eclipse.xtext.common.types.JvmMember
 import org.eclipse.xtext.common.types.JvmOperation
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference
-import org.eclipse.xtext.common.types.JvmType
-import org.eclipse.xtext.common.types.JvmTypeParameter
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator
 import org.eclipse.xtext.common.types.JvmTypeReference
-import org.eclipse.xtext.common.types.JvmWildcardTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.util.Strings
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedConstructor
+import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
+import xtraitj.generator.XtraitjGeneratorExtensions
+import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration
 import xtraitj.xtraitj.TJField
 import xtraitj.xtraitj.TJMember
 import xtraitj.xtraitj.TJMethod
 import xtraitj.xtraitj.TJMethodDeclaration
-import xtraitj.xtraitj.TJRequiredMethod
-import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitOperation
 import xtraitj.xtraitj.TJTraitReference
 
-import org.eclipse.xtext.xtype.XFunctionTypeRef
-import xtraitj.typing.XtraitjTypingUtil
+import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
 import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
@@ -40,6 +40,7 @@ import static extension xtraitj.util.XtraitjModelUtil.*
  * <p>The JVM model should contain all elements that would appear in the Java code 
  * which is generated from the source model. Other models link against the JVM model rather than the source model.</p>     
  */
+@Singleton
 class XtraitjJvmModelUtil {
 
 	@Inject extension TypeReferences
@@ -47,49 +48,24 @@ class XtraitjJvmModelUtil {
 	@Inject extension XtraitjTypingUtil
 	@Inject extension JvmTypesBuilder
 	@Inject extension IQualifiedNameProvider
-
-	def associatedInterface(TJTraitReference t) {
-		val associated = t.associatedInterfaceType
-		try {
-			if (t.operations.empty)
-				associated?.createTypeRef(
-					t.arguments.map[cloneWithProxies]
-				)
-			else
-				associated?.createTypeRef
-		} catch (IllegalArgumentException e) {
-			// FIXME
-			// this can be due to the fact that we refer to a trait
-			// directly instead of using a parameterized type reference
-			// thus if type arguments are not correct, the creation of
-			// type reference will raise such exception.
-			// we check type arguments in the validator, but that's too late
-			return null
-		}
-	}
-
-	def associatedTraitInterface(TJTraitReference t) {
-		t.trait.associatedInterfaceType?.createTypeRef(
-			t.arguments.map[cloneWithProxies]
-		)
-	}
-
-	def associatedTraitClass(TJTraitReference t) {
-		t.trait.associatedClassType?.createTypeRef(
-			t.arguments.map[cloneWithProxies]
-		)
-	}
-
-	def associatedInterfaceType(TJTraitReference t) {
-		if (t.operations.empty)
-			return t.trait.associatedInterfaceType
-		return t._associatedInterfaceType
-	}
+	@Inject extension XtraitjJvmModelHelper
+	@Inject extension XtraitjGeneratorExtensions
 
 	def associatedInterface(TJTrait t) {
-		t.associatedInterfaceType?.createTypeRef()
+		t.associatedInterfaceType.createTypeRef()
 	}
 
+	/**
+	 * For a trait returns the inferred Java interface,
+	 * for a class the inferred Java class
+	 */
+	def associatedJavaType(TJDeclaration d) {
+		if (d instanceof TJTrait) {
+			return d.associatedInterfaceType
+		} else {
+			return d.associatedJavaClass
+		}
+	}
 
 	def associatedInterfaceType(TJTrait t) {
 		t._associatedInterfaceType
@@ -100,264 +76,40 @@ class XtraitjJvmModelUtil {
 			filter[interface].head
 	}
 
-	def associatedClass(TJTraitReference t) {
-		val associatedType = t.associatedClassType
-		try {
-			if (t.operations.empty)
-				associatedType?.createTypeRef(
-					t.arguments.map[cloneWithProxies]
-				)
-			else
-				associatedType?.createTypeRef
-		} catch (IllegalArgumentException e) {
-			// FIXME
-			// this can be due to the fact that we refer to a trait
-			// directly instead of using a parameterized type reference
-			// thus if type arguments are not correct, the creation of
-			// type reference will raise such exception.
-			// we check type arguments in the validator, but that's too late
-			return null
-		}
-	}
-
-	def associatedClassType(TJTraitReference t) {
-		if (t.operations.empty)
-			return t.trait.associatedClassType
-		return t._associatedClassType
-	}
-
-	def associatedClass(TJTrait t) {
-		t.associatedClassType?.createTypeRef()
-	}
-
-	def associatedClassType(TJTrait t) {
-		t._associatedClassType
-	}
-
-	def _associatedClassType(EObject t) {
-		t.jvmElements.filter(typeof(JvmGenericType)).
-			filter[!interface].head
-	}
-
-	def jvmAllFeatures(TJTrait t) {
-		t._jvmAllFeatures.filter[
-			// must correspond to something in the program
-			!sourceElements.empty
-		]
-	}
-
-	def _jvmAllFeatures(TJTrait t) {
-		t.associatedInterfaceType?.allFeatures ?:
-			emptyList
-	}
-
-	def _jvmAllFeatures(TJTraitReference t) {
-		t.associatedInterfaceType?.allFeatures ?:
-			emptyList
-	}
-
-	def jvmAllOperations(TJTrait t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation))
-	}
-
-	def xtraitjJvmAllFieldOperations(TJTraitReference t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation)).
-			filter[sourceField != null].createXtraitjJvmOperations(t)
-	}
-
-	def xtraitjJvmAllRequiredOperations(TJTraitReference t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation)).
-			filter[required].createXtraitjJvmOperations(t)
-	}
-
-	def xtraitjJvmAllMethodOperations(TJTraitReference t) {
-		t.jvmAllMethodOperations.createXtraitjJvmOperations(t)
-	}
-
-	def xtraitjJvmAllMethodDeclarationOperations(TJTraitReference t) {
-		t.jvmAllMethodDeclarationOperations.createXtraitjJvmOperations(t)
-	}
-
-	def jvmAllOperations(TJTraitReference t) {
-		t.jvmAllFeatures.filter(typeof(JvmOperation))
+	def associatedJavaClass(EObject t) {
+		t.jvmElements.filter(JvmGenericType).head
 	}
 
 	def sourceField(JvmMember f) {
 		f.sourceElements.findFirst[(it instanceof TJField)] as TJField
 	}
 
-	def sourceMethod(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJMethod)] as TJMethod
-	}
-
 	def sourceMethodDeclaration(JvmFeature f) {
 		f.sourceElements.findFirst[(it instanceof TJMethodDeclaration)] as TJMethodDeclaration
 	}
 
-	def sourceRequiredMethod(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJRequiredMethod)] as TJRequiredMethod
+	def associatedSource(IResolvedConstructor cons) {
+		cons.declaration.sourceElements.head
 	}
 
-	def sourceRestricted(JvmFeature f) {
-		f.sourceElements.findFirst[(it instanceof TJRestrictOperation)] as TJRestrictOperation
+	def computeXtraitjResolvedOperations(JvmTypeReference ref, EObject context) {
+		ref.getXtraitjResolvedOperations(context)
 	}
 
-	def jvmAllFeatures(TJTraitReference t) {
-		t._jvmAllFeatures.filter[
-			// must correspond to something in the program
-			!sourceElements.empty
-		]
-	}
-
-	def _jvmAllOperations(TJTraitReference t) {
-		t.associatedInterfaceType?.allFeatures ?:
-			emptyList
-	}
-
-	def jvmAllMethodOperations(TJTraitReference e) {
-		e._jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[sourceMethod != null]
-			// filter[sourceField == null && sourceMethod != null]
-	}
-
-	def jvmAllMethodDeclarationOperations(TJTraitReference e) {
-		e._jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[sourceMethodDeclaration != null]
-	}
-
-	def jvmAllInterfaceMethods(TJClass e) {
-		e.interfaces.map[jvmAllInterfaceMethods].flatten
-	}
-
-	def jvmAllInterfaceMethods(JvmParameterizedTypeReference e) {
-		val type = e.type
-		if (type instanceof JvmGenericType) {
-			return type.allFeatures.filter(typeof(JvmOperation)).
-				filter[declaringType.identifier != "java.lang.Object"]
-		}
-		return emptyList
-	}
-
-	def jvmAllRequiredMethodOperations(TJTraitReference e) {
-		e._jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[requiredMethod]
-	}
-
-	def jvmAllRequiredMethodOperations(TJTrait e) {
-		e.jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[requiredMethod]
-	}
-
-	def jvmAllRequiredMethodOperations(TJClass e) {
-		e.jvmAllRequiredMethodOperationsFromReferences
-	}
-
-	def jvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[jvmAllRequiredMethodOperations].flatten
-	}
-
-	def jvmAllFieldOperations(TJTrait e) {
-		e.jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[sourceField != null]
-	}
-
-	def jvmAllFieldOperations(TJTraitReference e) {
-		e._jvmAllOperations.
-			filter(typeof(JvmOperation)).
-				filter[sourceField != null]
-	}
-
-	def xtraitjJvmAllRequiredFieldOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[traitRef | 
-				traitRef.jvmAllRequiredFieldOperations.
-					createXtraitjJvmOperations(traitRef)
-			].flatten
-	}
-
-	def xtraitjJvmAllRequiredFieldOperations(TJTraitReference traitRef) {
-		traitRef.jvmAllRequiredFieldOperations.
-					createXtraitjJvmOperations(traitRef)
-	}
-
-	def xtraitjJvmAllRequiredMethodOperations(TJClass e) {
-		e.xtraitjJvmAllRequiredMethodOperationsFromReferences
-	}
-
-	def xtraitjJvmAllRequiredMethodOperations(TJTraitReference traitRef) {
-		traitRef.jvmAllRequiredMethodOperations.
-					createXtraitjJvmOperations(traitRef)
-	}
-
-	def xtraitjJvmAllRequiredMethodOperationsFromReferences(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[
-				traitRef |
-				traitRef.jvmAllRequiredMethodOperations.
-					createXtraitjJvmOperations(traitRef)
-			].flatten
-	}
-
-	def xtraitjJvmAllMethodOperations(TJDeclaration e) {
-		e.traitExpression.traitReferences.
-			map[traitRef | 
-				traitRef.jvmAllMethodOperations.
-					createXtraitjJvmOperations(traitRef)
-			].flatten
-	}
-
-	def xtraitjJvmAllInterfaceMethods(TJClass e) {
-		e.interfaces.
-			map[interf | 
-				interf.jvmAllInterfaceMethods.
-					createXtraitjJvmOperations(interf)
-			].flatten
-	}
-
-	/**
-	 * Do not put the operations corresponding to set methods
-	 * since we want a single operation for each field (while
-	 * in Java there will be both getter and setter)
-	 */
-	def jvmAllRequiredFieldOperations(TJTraitReference e) {
-		e.jvmAllFieldOperations.filter[!(simpleName.startsWith("set"))]
+	def computeAndResolveXtraitjResolvedOperations(JvmTypeReference e, EObject context) {
+		e.computeXtraitjResolvedOperations(context) => [resolveAll]
 	}
 
 	def originalSource(JvmMember o) {
-		o.sourceElements.findFirst[(it instanceof TJMember)] as TJMember
-	}
-
-	def defines(TJTrait t, JvmMember m) {
-		t.members.exists[name == m.simpleName]
-	}
-
-	def memberByName(Iterable<JvmOperation> members, String name) {
-		members.findFirst[name == simpleName]
+		o.sourceElements.findFirst[
+			(it instanceof TJMember)
+			||
+			(it instanceof TJTraitOperation)
+		]
 	}
 
 	def alreadyDefined(Iterable<JvmMember> members, JvmMember m) {
 		members.exists[simpleName == m.simpleName]
-	}
-
-	def isRequired(JvmMember m) {
-		m.sourceElements.exists[
-			(it instanceof TJRequiredMethod) ||
-			(it instanceof TJField) ||
-			(it instanceof TJRestrictOperation)
-		]
-	}
-
-	def isRequiredMethod(JvmMember m) {
-		m.sourceElements.exists[
-			(it instanceof TJRequiredMethod) ||
-			(it instanceof TJRestrictOperation)
-		]
 	}
 
 	def associatedTrait(JvmTypeParameterDeclarator type) {
@@ -372,128 +124,83 @@ class XtraitjJvmModelUtil {
 		type.sourceElements.filter(TJClass).head
 	}
 
-	def memberRepresentation(JvmMember m) {
-		if (m instanceof JvmOperation) {
-			if (m.sourceField != null)
-				return m.fieldRepresentation
-			else
-				return m.methodRepresentation
-		} else {
-			return m.simpleName
-		}
+	def fieldRepresentation(IResolvedOperation f) {
+		f.resolvedReturnType.simpleName + " " + f.fieldName
 	}
 
-	def fieldRepresentation(XtraitjJvmOperation f) {
-		f.returnType?.simpleName + " " + 
-			f.op.fieldName
+	def methodRepresentation(IResolvedOperation m) {
+		m.resolvedReturnType.simpleName + " " + m.simpleSignature
 	}
 
-	def fieldRepresentation(JvmOperation f) {
-		f.returnType?.simpleName + " " + 
-			f.fieldName
-	}
-
-	def methodRepresentation(XtraitjJvmOperation m) {
-		m.returnType?.simpleName + " " + m.op.simpleName +
-			"(" +
-			m.parametersTypes.map[simpleName].join(", ")
-			+ ")"
-	}
-
-	def methodRepresentation(JvmOperation m) {
-		m.returnType?.simpleName + " " + m.simpleName +
-			"(" +
-			m.parameters.map[parameterType?.simpleName].join(", ")
-			+ ")"
+	def fieldName(IResolvedOperation o) {
+		o.declaration.fieldName
 	}
 
 	/**
 	 * To each field a JvmOperation will correspond in the Java model
-	 * which is the getter method, thus, we need to recover the
+	 * a getter method and a setter method, thus, we need to recover the
 	 * original field name.
+	 * 
+	 * IMPORTANT: we assume that the JvmOperation is actually a getter.
 	 */
-	def fieldName(JvmOperation f) {
-		f.simpleName.replaceFirst("get", "").
-			replaceFirst("is", "").toFirstLower
-	}
-
-	def findMatchingField(Iterable<? extends TJField> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			name == member.op.fieldName &&
-			it.sameType(type, member.returnType)
-		]
-	}
-
-	def findMatchingMethod(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			op.simpleName == member.op.simpleName &&
-			compliant(it, member)
-		]
-	}
-
-	def findMatchingOperation(Iterable<? extends XtraitjJvmOperation> candidates, XtraitjJvmOperation member) {
-		candidates.findFirst[
-			op.simpleName == member.op.simpleName &&
-			compliant(it, member)
-		]
+	def fieldName(JvmMember f) {
+		val simpleName = f.simpleName
+		
+		simpleName.replaceFirst("get", "").
+				replaceFirst("is", "").toFirstLower			
 	}
 
 	/**
-	 * it's return type must be subtype of member's return type
-	 * and parameters' types must be the same
+	 * Finds a member, IResolvedOperation, using the name of the toFind operation.
+	 * It is responsibility of the caller to know whether we are searching a get method
+	 * corresponding to a field.
 	 */
-	def compliant(XtraitjJvmOperation it, XtraitjJvmOperation member) {
-		val context = it.op
-		context.isSubtype(returnType, member.returnType) &&
-		parametersTypes.size == member.parametersTypes.size &&
-		{
-			var ok = true
-			val paramIterator = parametersTypes.iterator
-			val memberParamIterator = member.parametersTypes.iterator
-			while (paramIterator.hasNext && ok) {
-				if (!context.sameType
-						(paramIterator.next, memberParamIterator.next))
-					ok = false
-			}
-			ok
-		}
-	}
-
-	def findMatchingMethod(Iterable<? extends JvmOperation> candidates, JvmOperation member) {
-		candidates.findFirst[
-			simpleName == member.simpleName &&
-			compliant(it, member)
-		]
+	def findOperationByName(Iterable<IResolvedOperation> ops, IResolvedOperation toFind) {
+		ops.findFirst[ op | op.declaration.simpleName == toFind.declaration.simpleName]
 	}
 
 	/**
-	 * it's return type must be subtype of member's return type
+	 * o1's return type must be the same as of o2's return type
 	 * and parameters' types must be the same
 	 */
-	def compliant(JvmOperation it, JvmOperation member) {
-		it.isSubtype(returnType, member.returnType) &&
-		parameters.size == member.parameters.size &&
-		{
-			var ok = true
-			val paramIterator = parameters.iterator
-			val memberParamIterator = member.parameters.iterator
-			while (paramIterator.hasNext && ok) {
-				if (!it.sameType
-						(paramIterator.next.parameterType, memberParamIterator.next.parameterType))
-					ok = false
+	def exact(IResolvedOperation o1, IResolvedOperation o2) {
+		compliant(o1, o2, true)
+	}
+
+	/**
+	 * o1's return type must be subtype of o2's return type
+	 * and parameters' types must be the same
+	 */
+	def compliant(IResolvedOperation o1, IResolvedOperation o2) {
+		compliant(o1, o2, false)
+	}
+
+	/**
+	 * o1's return type must be subtype of o2's return type
+	 * (or the same if strict is true)
+	 * and parameters' types must be the same
+	 */
+	def compliant(IResolvedOperation o1, IResolvedOperation o2, boolean strict) {
+		val params1 = o1.resolvedParameterTypes
+		val params2 = o2.resolvedParameterTypes
+		
+		val returnTypeCheck = 
+			if (strict)
+				o1.resolvedReturnType.sameType(o2.resolvedReturnType)
+			else
+				o1.resolvedReturnType.isSubtype(o2.resolvedReturnType);
+		
+		if (returnTypeCheck && params1.size == params2.size) {
+			for (i : 0..<params1.size) {
+				if (!params1.get(i).sameType(params2.get(i))) {
+					return false
+				}								
 			}
-			ok
+			return true
 		}
+		return false
 	}
 	
-	def compliant(JvmMember m1, JvmMember m2) {
-		try {
-			return (m1 as JvmOperation).compliant(m2 as JvmOperation)
-		} catch (Throwable t) {
-			return false
-		}
-	}
-
 	def renameGetterOrSetter(String opName, String newname) {
 		if (opName === null)
 			return ""
@@ -523,127 +230,17 @@ class XtraitjJvmModelUtil {
 		return opName
 	}
 
+	def toSetterName(String opName) {
+		"set" + Strings.toFirstUpper(opName)
+	}
+
 	def isValidInterface(JvmParameterizedTypeReference t) {
-		try {
-			(t.type as JvmGenericType).interface
-		} catch (Throwable e) {
+		val type = t.type
+		if (type instanceof JvmGenericType) {
+			return type.interface
+		} else {
 			return false
 		}
-	}
-
-	def conflictsWith(XtraitjJvmOperation f1, XtraitjJvmOperation f2) {
-		f1.op != f2.op && 
-		f1.op.simpleName == f2.op.simpleName &&
-		!f1.compliant(f2)
-	}
-
-	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, JvmParameterizedTypeReference ref) {
-		ops.map[
-			op |
-			val arguments = ref.arguments
-			new XtraitjJvmOperation(
-				op,
-				op.returnType.replaceTypeParameters(arguments),
-				op.parameters.map[
-					parameterType.replaceTypeParameters(arguments)
-				]
-			)
-		]
-	}
-
-	def createXtraitjJvmOperations(Iterable<JvmOperation> ops, TJTraitReference traitReference) {
-		ops.map[createXtraitjJvmOperation(traitReference)].filter[
-			// we must discard elements where type parameters (excluding the ones occurring
-			// in the type arguments) are still present
-			// this happens if we redefined a method with type params in a trait
-			// interface using a method with type params already instantiated
-			!hasTypeParametersDeclaredInJvmType(traitReference.arguments)
-		]
-	}
-
-	def createXtraitjJvmOperation(JvmOperation op, TJTraitReference traitReference) {
-		val arguments = traitReference.arguments
-		new XtraitjJvmOperation(
-			op,
-			op.returnType.replaceTypeParameters(arguments),
-			op.parameters.map[
-				parameterType.replaceTypeParameters(arguments)
-			]
-		)
-	}
-
-	def JvmTypeReference replaceTypeParameters(JvmTypeReference typeRef, List<JvmTypeReference> typeArguments) {
-		if (typeRef == null)
-			return null
-		
-		val type = typeRef.type
-		if (type instanceof JvmTypeParameter) {
-			// retrieve the index in the type parameters/arguments list
-			val declarator = type.declarator
-			// don't substitute type parameters of the method itself
-			if (declarator instanceof JvmType) {
-				val pos = declarator.typeParameters.indexOf(type)
-				if (pos < typeArguments.size)
-					return typeArguments.get(pos)
-			}
-		}
-		
-		val newTypeRef = typeRef.cloneWithProxies
-		if (newTypeRef instanceof JvmParameterizedTypeReference) {
-			val arguments = (typeRef as JvmParameterizedTypeReference).arguments
-			val newArguments = newTypeRef.arguments
-			// IMPORTANT: get the argument from the original arguments, not
-			// from the cloned one
-			if (!arguments.empty) {
-				for (i : 0..arguments.size - 1) {
-					newArguments.set(i, 
-						arguments.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
-					)
-				}
-				return newTypeRef
-			} else {
-				return typeRef
-			}
-		}
-		
-		if (newTypeRef instanceof XFunctionTypeRef) {
-			val funTypeRef = (typeRef as XFunctionTypeRef)
-			
-			newTypeRef.returnType = funTypeRef.returnType.
-				replaceTypeParameters(typeArguments).cloneWithProxies
-			
-			val paramTypes = funTypeRef.paramTypes
-			val newParamTypes = newTypeRef.paramTypes
-			if (!paramTypes.empty) {
-				for (i : 0..paramTypes.size - 1) {
-					newParamTypes.set(
-						i,
-						paramTypes.get(i).replaceTypeParameters(typeArguments).cloneWithProxies
-					)
-				}
-			}
-			return newTypeRef
-		}
-		
-		if (newTypeRef instanceof JvmWildcardTypeReference) {
-			val constraints = (typeRef as JvmWildcardTypeReference).constraints
-			val newConstraints = newTypeRef.constraints
-			// IMPORTANT: get the constraint from the original constraints, not
-			// from the cloned one
-			if (!constraints.empty) {
-				for (i : 0..constraints.size - 1) {
-					newConstraints.get(i).typeReference = 
-						constraints.get(i).typeReference.
-							replaceTypeParameters(typeArguments).
-								cloneWithProxies
-				}
-				return newTypeRef
-			} else {
-				return typeRef
-			}
-		}
-		
-		return typeRef
 	}
 
 	/**
@@ -673,10 +270,18 @@ class XtraitjJvmModelUtil {
    		"_" + name
    	}
 
-	def traitClassName(TJTrait t) {
-   		val n = t.fullyQualifiedName
-   		n.skipLast(1).append("traits").append("impl").
-   			append(n.lastSegment).toString + "Impl"
-   	}
+	def traitOperationsForJvmOp(TJTraitReference t, IResolvedOperation op) {
+		t.operations.filter[
+			member?.simpleName == op.simpleName
+		]
+	}
+
+	def traitReferenceJavaType(TJTraitReference t) {
+		if (t.operations.empty)
+			t.trait.cloneWithProxies as JvmParameterizedTypeReference
+		else
+			t.traitExpressionClassName.getTypeForName(t) as JvmParameterizedTypeReference
+	}
+
 }
 

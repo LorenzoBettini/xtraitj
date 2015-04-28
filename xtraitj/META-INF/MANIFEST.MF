@@ -5,26 +5,40 @@ Bundle-Vendor: Lorenzo Bettini
 Bundle-Version: 2.0.0.qualifier
 Bundle-SymbolicName: xtraitj;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext;bundle-version="[2.6.0,2.7.0)";visibility:=reexport,
- org.eclipse.xtext.xbase;bundle-version="[2.6.0,2.7.0)";resolution:=optional;visibility:=reexport,
- org.eclipse.xtext.generator;bundle-version="[2.6.0,2.7.0)";resolution:=optional,
+Require-Bundle: org.eclipse.xtext;bundle-version="[2.7.3,2.8.0)";visibility:=reexport,
+ org.eclipse.xtext.xbase;resolution:=optional;visibility:=reexport,
+ org.eclipse.xtext.generator;resolution:=optional,
  org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
  org.eclipse.emf.codegen.ecore;bundle-version="2.7.0";resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
- org.eclipse.xtext.util;bundle-version="[2.6.0,2.7.0)",
+ org.eclipse.xtext.util,
  org.eclipse.emf.ecore;bundle-version="2.7.0",
  org.eclipse.emf.common;bundle-version="2.7.0",
  org.antlr.runtime,
- org.eclipse.xtext.common.types;bundle-version="[2.6.0,2.7.0)",
- org.eclipse.xtext.xbase.lib;bundle-version="[2.6.0,2.7.0)",
- org.eclipse.xtend.standalone;bundle-version="[2.6.0,2.7.0)",
- org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport
+ org.eclipse.xtext.common.types,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.standalone,
+ org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
+ xtraitj.runtime.lib;visibility:=reexport,
+ org.eclipse.xtext.ecore
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: xtraitj,xtraitj.formatting,xtraitj.generator,xtraitj.j
- vmmodel,xtraitj.parser.antlr,xtraitj.parser.antlr.internal,xtraitj.sc
- oping,xtraitj.serializer,xtraitj.services,xtraitj.typing,xtraitj.util
- ,xtraitj.validation,xtraitj.xtraitj,xtraitj.xtraitj.impl,xtraitj.xtra
- itj.util
+Export-Package: xtraitj,
+ xtraitj.formatting,
+ xtraitj.generator,
+ xtraitj.jvmmodel,
+ xtraitj.parser.antlr,
+ xtraitj.parser.antlr.internal,
+ xtraitj.scoping,
+ xtraitj.serializer,
+ xtraitj.services,
+ xtraitj.types,
+ xtraitj.typesystem.override,
+ xtraitj.typing,
+ xtraitj.util,
+ xtraitj.validation,
+ xtraitj.xtraitj,
+ xtraitj.xtraitj.impl,
+ xtraitj.xtraitj.util

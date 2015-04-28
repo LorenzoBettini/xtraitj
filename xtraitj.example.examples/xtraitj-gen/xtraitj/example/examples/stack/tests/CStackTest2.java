@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import xtraitj.example.examples.stack.IStack;
 import xtraitj.example.examples.stack.tests.traits.TStackSetup2;
+import xtraitj.example.examples.stack.tests.traits.TStackSetup2Impl;
 import xtraitj.example.examples.stack.tests.traits.TStackTestCase;
-import xtraitj.example.examples.stack.tests.traits.impl.TStackSetup2Impl;
-import xtraitj.example.examples.stack.tests.traits.impl.TStackTestCaseImpl;
+import xtraitj.example.examples.stack.tests.traits.TStackTestCaseImpl;
 
 @SuppressWarnings("all")
 public class CStackTest2 implements TStackTestCase, TStackSetup2 {

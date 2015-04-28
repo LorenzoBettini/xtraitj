@@ -13,7 +13,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 
 	@Test
 	def void testQuickfixForMissingField() {
-		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		createProject(PROJECT_TYPE);
 		val editor = updateEditorContents(
 		'''
 		package my.traits;
@@ -52,7 +52,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 
 	@Test
 	def void testQuickfixForMissingFieldWithGeneric() {
-		createProjectAndAssertNoErrorMarker(PROJECT_TYPE);
+		createProject(PROJECT_TYPE);
 		val editor = updateEditorContents(
 		'''
 		package my.traits;
@@ -83,6 +83,60 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		
 		class C uses T<Integer> {
 		Integer s ;
+		}
+		'''.toString.
+		assertEqualsStrings(editor.text)
+		
+	}
+
+	@Test
+	def void testQuickfixForMissingFieldAfterRenaming() {
+		createProject(PROJECT_TYPE);
+		// in this test it seems that we need to update the editor contents
+		// twice otherwise the error marker and the quickfix don't appear
+		// it must be a problem with the workbench in the case of SWTBot tests
+		updateEditorContents(
+		'''
+		package my.traits;
+		
+		trait T<Type> {
+			Type s;
+		}
+		
+		class C uses T<Integer>[rename field s to s1] {
+		}
+		'''
+		)
+		val editor = updateEditorContents(
+		'''
+		package my.traits;
+		
+		trait T<Type> {
+			Type s;
+		}
+		
+		class C uses T<Integer>[rename field s to s1] {
+		}
+		'''
+		).toTextEditor
+		
+		//1.assertEquals(editor.quickFixes.size)
+		
+		editor.selectRange(6, 13, 10)
+		
+		editor.quickfixCustom
+		
+		editor.saveAndWaitForAutoBuild
+		
+		'''
+		package my.traits;
+		
+		trait T<Type> {
+			Type s;
+		}
+		
+		class C uses T<Integer>[rename field s to s1] {
+		Integer s1 ;
 		}
 		'''.toString.
 		assertEqualsStrings(editor.text)

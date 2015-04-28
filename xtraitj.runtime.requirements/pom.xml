@@ -11,4 +11,14 @@
 
 	<artifactId>xtraitj.runtime.requirements</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	
+	<dependencies>
+		<!-- This is required only for allowing the X
+			be used as a Maven jar with the xtext-maven-plugin  -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>xtraitj.runtime.lib</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

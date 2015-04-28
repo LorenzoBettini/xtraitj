@@ -495,7 +495,7 @@
    </extension>
    <extension point="org.eclipse.ui.editorActions">
       <editorContribution targetID="xtraitj.Xtraitj" 
-                          id="xtraitj.Xtraitj.ide.rulerActions">
+                          id="xtraitj.Xtraitj.rulerActions">
 	     <action
 	             label="Not Used"
 	             class="xtraitj.ui.XtraitjExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
@@ -506,17 +506,29 @@
    </extension>
    <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
-         targetID="example.rulerContextMenuId"
-         id="xtraitj.Xtraitj.ide.RulerPopupActions">
+         targetID="xtraitj.Xtraitj.RulerContext"
+         id="xtraitj.Xtraitj.RulerPopupActions">
          <action
             label="Toggle Breakpoint"
             class="xtraitj.ui.XtraitjExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
-            menubarPath="additions"
-            id="xtraitj.Xtraitj.ide.rulerContextMenu.toggleBreakpointAction">
+            menubarPath="debug"
+            id="xtraitj.Xtraitj.rulerContextMenu.toggleBreakpointAction">
+         </action>
+         <action
+            label="Not used"
+            class="xtraitj.ui.XtraitjExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+            menubarPath="debug"
+            id="xtraitj.Xtraitj.rulerContextMenu.enableDisableBreakpointAction">
+         </action>
+         <action
+           label="Breakpoint Properties"
+           helpContextId="breakpoint_properties_action_context"
+           class="xtraitj.ui.XtraitjExecutableExtensionFactory:org.eclipse.jdt.debug.ui.actions.JavaBreakpointPropertiesRulerActionDelegate"
+           menubarPath="group.properties"
+           id="xtraitj.Xtraitj.rulerContextMenu.openBreapointPropertiesAction">
          </action>
       </viewerContribution>
    </extension>
-   
     <!-- Introduce Local Variable Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 

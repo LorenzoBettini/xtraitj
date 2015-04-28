@@ -1,20 +1,37 @@
 package xtraitj.ui.tests
 
+import com.google.inject.Inject
+import org.eclipse.core.runtime.CoreException
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
 import org.eclipse.xtext.ui.tests.editor.outline.AbstractOutlineWorkbenchTest
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import xtraitj.XtraitjUiInjectorProvider
+import xtraitj.tests.utils.ui.PDETargetPlatformUtils
+import xtraitj.tests.utils.ui.PluginProjectHelper
 import xtraitj.ui.internal.XtraitjActivator
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
 class XtraitjOutlineTest extends AbstractOutlineWorkbenchTest {
 	
+	@Inject PluginProjectHelper projectHelper
+	
 	override protected getEditorId() {
 		XtraitjActivator.XTRAITJ_XTRAITJ
+	}
+
+	@BeforeClass
+	def static void setUpTargetPlatform() {
+		PDETargetPlatformUtils.setTargetPlatform();
+	}
+
+	override protected createjavaProject(String projectName) throws CoreException {
+		projectHelper.createJavaPluginProject
+			(projectName, newArrayList("xtraitj.runtime.requirements"))
 	}
 
 	@Test
@@ -161,6 +178,32 @@ C
 	}
 
 	@Test
+	def void testOutlineForFieldRequirementsInClass() {
+		'''
+package my.traits;
+
+trait T1 {
+	String s;
+}
+
+class C uses T1 {
+	String s;
+}
+		'''.assertAllLabels(
+'''
+my.traits
+T1
+  s : String
+C
+  T1
+  requirements
+    s : String
+  s : String
+'''
+		)
+	}
+
+	@Test
 	def void testOutlineForProvides() {
 		'''
 package my.traits;
@@ -256,7 +299,7 @@ T1
   m(T) : T
   n(T) : T
 T2
-  T1
+  T1<String>
   requirements
     s : String
     m(String) : String

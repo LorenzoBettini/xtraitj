@@ -5,25 +5,20 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.xtraitj.TJProgram
+import xtraitj.XtraitjInjectorProvider
+import xtraitj.scoping.XtraitjXbaseBatchScopeProvider
+import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJRenameOperation
+import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.junit.Assert.*
-import xtraitj.xtraitj.TJHideOperation
-import xtraitj.xtraitj.TJRestrictOperation
-import xtraitj.XtraitjInjectorProvider
-import xtraitj.input.tests.XtraitjInputs
-import xtraitj.scoping.XtraitjXbaseBatchScopeProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
-class XtraitjScopeProviderTest {
-	@Inject extension ParseHelper<TJProgram>
-	@Inject extension XtraitjInputs
+class XtraitjScopeProviderTest extends XtraitjAbstractTest {
 	@Inject extension XtraitjXbaseBatchScopeProvider
 
 	val memberFeature = XtraitjPackage::eINSTANCE.TJTraitOperation_Member
@@ -31,13 +26,13 @@ class XtraitjScopeProviderTest {
 	@Test def void testTraitRenameOperations() {
 		traitRenameOperations.parse.
 			renameOperation.assertScope
-			(memberFeature, "n, m, t1, s")
+			(memberFeature, "s, n, m, t1")
 	}
 
 	@Test def void testTraitRenameFieldOperations() {
 		traitRenameField.parse.
 			renameOperation.assertScope
-			(memberFeature, "fieldB, n, m, fieldS")
+			(memberFeature, "fieldB, fieldS, n, m")
 	}
 
 	@Test def void testTraitHideOperations() {
