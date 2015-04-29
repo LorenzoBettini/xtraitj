@@ -7,6 +7,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 public interface MyAnnotatedJavaInterfaceWithDefined extends
 		MyAnnotatedJavaInterfaceWithRequirements {
 
+	@Override
 	@XtraitjDefinedMethod
 	String getRequired();
 

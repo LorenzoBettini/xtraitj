@@ -84,6 +84,7 @@ public class XtraitjSwtbotAbstractTests {
 
 	protected static void closeWelcomePage() throws InterruptedException {
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (PlatformUI.getWorkbench().getIntroManager().getIntro() != null) {
 					PlatformUI.getWorkbench().getIntroManager()
@@ -234,6 +235,7 @@ public class XtraitjSwtbotAbstractTests {
 		while (count < retries) {
 			System.out.println("Checking that tree item " + treeItem.getText() + " has children...");
 			List<SWTBotTreeItem> foundItems = UIThreadRunnable.syncExec(new ListResult<SWTBotTreeItem>() {
+				@Override
 				public List<SWTBotTreeItem> run() {
 					TreeItem[] items = treeItem.widget.getItems();
 					List<SWTBotTreeItem> results = new ArrayList<SWTBotTreeItem>();

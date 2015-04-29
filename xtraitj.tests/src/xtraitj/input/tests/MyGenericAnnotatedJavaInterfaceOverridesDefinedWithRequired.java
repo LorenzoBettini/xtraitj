@@ -17,8 +17,10 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 public interface MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired<T> extends
 		MyGenericAnnotatedJavaInterface<T> {
 
+	@Override
 	@XtraitjRequiredMethod
 	T getDefined(List<T> l);
 
+	@Override
 	String notAnnotatedMethod();
 }

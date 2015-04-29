@@ -9,6 +9,7 @@ import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
 public interface MyAnnotatedJavaInterfaceWithRenamedField extends
 		MyAnnotatedJavaInterfaceWithDefined {
 
+	@Override
 	@XtraitjDefinedMethod
 	String getRequired();
 

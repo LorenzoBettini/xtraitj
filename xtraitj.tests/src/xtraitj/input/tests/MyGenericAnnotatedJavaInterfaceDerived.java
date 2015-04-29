@@ -20,5 +20,6 @@ public interface MyGenericAnnotatedJavaInterfaceDerived<T> extends
 	@XtraitjDefinedMethod
 	T getDefined2(List<T> l);
 
+	@Override
 	String notAnnotatedMethod();
 }
