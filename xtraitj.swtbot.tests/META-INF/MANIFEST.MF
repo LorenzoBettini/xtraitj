@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.swtbot.go;bundle-version="2.1.0",
  org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
  org.eclipse.pde.core;bundle-version="3.10.0",
  xtraitj.tests
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 

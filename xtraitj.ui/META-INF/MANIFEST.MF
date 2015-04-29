@@ -27,7 +27,7 @@ Require-Bundle: xtraitj;visibility:=reexport,
  org.eclipse.jdt.debug.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: xtraitj.ui.quickfix,
  xtraitj.ui.contentassist,
  xtraitj.ui.contentassist.antlr,
