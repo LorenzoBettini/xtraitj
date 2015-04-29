@@ -12,7 +12,7 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.util.TypeReferences
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
-import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
+import org.eclipse.xtext.xbase.typesystem.^override.ResolvedFeatures
 import xtraitj.generator.XtraitjGeneratorExtensions
 import xtraitj.types.XtraitjTypeParameterHelper
 import xtraitj.typing.XtraitjTypingUtil
@@ -32,7 +32,7 @@ class XtraitjJvmModelHelper {
 	@Inject private TypeReferences references;
 
 	def getResolvedOperations(JvmDeclaredType type) {
-		overrideHelper.getResolvedOperations(type)
+		overrideHelper.getResolvedFeatures(type)
 	}
 	
 	/**
@@ -56,11 +56,11 @@ class XtraitjJvmModelHelper {
 	 * The operations will have type parameters instantiated
 	 */
 	def getOperations(JvmTypeReference typeRef, EObject context) {
-		val resolvedOps = typeRef.toLightweightTypeReference(context).resolvedOperations
+		val resolvedOps = typeRef.toLightweightTypeReference(context).resolvedFeatures
 		getOperationsExcludingJavaObject(resolvedOps)
 	}
 	
-	private def getOperationsExcludingJavaObject(ResolvedOperations resolvedOps) {
+	private def getOperationsExcludingJavaObject(ResolvedFeatures resolvedOps) {
 		resolvedOps.allOperations.filter[
 			declaration.declaringType.notJavaLangObject
 		]
@@ -79,7 +79,7 @@ class XtraitjJvmModelHelper {
 	 * Then m must be resolved as String m using T1&lt;String&gt; as the type context
 	 */
 	def getResolvedOperation(JvmTypeReference typeRef, EObject context, JvmOperation op) {
-		typeRef.toLightweightTypeReference(context).resolvedOperations.getResolvedOperation(op)
+		typeRef.toLightweightTypeReference(context).resolvedFeatures.getResolvedOperation(op)
 	}
 
 	def getXtraitjResolvedOperations(TJTraitOperation op) {

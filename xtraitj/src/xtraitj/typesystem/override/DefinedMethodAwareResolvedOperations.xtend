@@ -4,6 +4,7 @@
 package xtraitj.typesystem.^override;
 
 import com.google.common.collect.Multimap
+import java.util.Collections
 import java.util.List
 import java.util.Set
 import org.eclipse.xtext.common.types.JvmDeclaredType
@@ -12,10 +13,12 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.xbase.typesystem.^override.AbstractResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideTester
-import org.eclipse.xtext.xbase.typesystem.^override.ResolvedOperations
+import org.eclipse.xtext.xbase.typesystem.^override.ResolvedFeatures
 import org.eclipse.xtext.xbase.typesystem.references.LightweightTypeReference
 import xtraitj.util.XtraitjAnnotatedElementHelper
-import java.util.Collections
+import com.google.common.collect.Lists
+import com.google.common.collect.HashMultimap
+import com.google.common.collect.Sets
 
 /**
  * Custom implementation that gives precedence to defined methods over
@@ -24,7 +27,7 @@ import java.util.Collections
  * @author Lorenzo Bettini
  *
  */
-public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
+public class DefinedMethodAwareResolvedOperations extends ResolvedFeatures {
 	
 	var private XtraitjAnnotatedElementHelper annotatedElementHelper;
 
@@ -47,7 +50,28 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedOperations {
 		return Collections.unmodifiableList(result)
 	}
 
-	override protected void computeAllOperations(JvmDeclaredType type,
+	/**
+	 * Temporarily override this method to reproduce the logic of
+	 * Xtext 2.7.3; in the future we could override only specific methods.
+	 */
+	override protected computeAllOperations() {
+		val rawType = getRawType();
+		if (!(rawType instanceof JvmDeclaredType)) {
+			return Collections.emptyList();
+		}
+		val result = Lists.newArrayList();
+		val processed = HashMultimap.create();
+		val processedTypes = Sets.newHashSet();
+		computeAllOperations(rawType as JvmDeclaredType, processed, processedTypes, result);
+		return Collections.unmodifiableList(result);
+	}
+
+	/**
+	 * This used to be overridded when we were using Xtext 2.7.3; in Xtext 2.8
+	 * this is not present anymore since the implementation has changed (see
+	 * the note in the previous method)
+	 */
+	def protected void computeAllOperations(JvmDeclaredType type,
 			Multimap<String, AbstractResolvedOperation> processedOperations,
 			Set<JvmDeclaredType> processedTypes, List<IResolvedOperation> result) {
 		if (type != null && !type.eIsProxy() && processedTypes.add(type)) {

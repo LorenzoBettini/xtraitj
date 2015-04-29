@@ -68,7 +68,7 @@ getField() : String - [XtraitjRequiredField] - MyAnnotatedJavaInterfaceWithRequi
 		val typeRef = clazz.toResourceTypeRef(typeArguments)
 		val lightweightTypeRef = typeRef.toLightweightTypeReference(typeRef)
 		expected.assertEqualsStrings(
-			lightweightTypeRef.resolvedOperations.allOperations.filter[
+			lightweightTypeRef.resolvedFeatures.allOperations.filter[
 				declaration.declaringType.notJavaLangObject
 			].map[
 				simpleSignature + " : " + resolvedReturnType + " - " +
