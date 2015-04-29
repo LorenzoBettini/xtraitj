@@ -8,16 +8,16 @@
    </feature>
    <feature id="xtraitj.examples.feature" version="0.0.0">
       <category name="main"/>
-   </feature>  
+   </feature>
    <feature id="xtraitj.runtime.requirements.feature" version="0.0.0">
       <category name="main"/>
    </feature>
-   <category-def name="main" label="Xtraitj 2.0.x">
+   <category-def name="main" label="Xtraitj 3.0.x">
       <description>
          Xtraitj - Pure Trait Programming for the Java Platform
       </description>
    </category-def>
-   <category-def name="main.source" label="Xtraitj 2.0.x (Sources)">
+   <category-def name="main.source" label="Xtraitj 3.0.x (Sources)">
       <description>
          Xtraitj - Pure Trait Programming for the Java Platform
       </description>
