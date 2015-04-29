@@ -9,6 +9,31 @@ import org.junit.runner.RunWith
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(InjectorProviderCustom))
 class XtraitjCompilerTest extends AbstractXtraitjCompilerTest {
+
+	@Test(expected=RuntimeException)
+	def void testCompilerErrorsAreDetected() {
+		'''
+		trait T uses Foo {}
+		'''.compile[]
+	}
+
+	@Test
+	def void testCompilerErrorsIgnored() {
+		'''
+		trait T uses Foo {}
+		'''.compile(false)[
+assertTraitJavaInterface("T",
+'''
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T extends void {
+}
+''')
+			
+		]
+	}
 	
 	@Test def void testTraitMethods() {
 		'''

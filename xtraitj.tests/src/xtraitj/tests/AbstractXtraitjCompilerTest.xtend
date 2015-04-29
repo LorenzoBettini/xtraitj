@@ -9,6 +9,11 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Rule
 
 import static extension org.junit.Assert.*
+import org.eclipse.xtext.util.IAcceptor
+import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
+import org.eclipse.xtext.diagnostics.Severity
+import com.google.common.base.Joiner
+import org.eclipse.emf.ecore.resource.ResourceSet
 
 class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 	@Inject extension ReflectExtensions
@@ -18,7 +23,7 @@ class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 	
 	@Inject private FileExtensionProvider extensionProvider
 	
-	@Inject protected extension CompilationTestHelper
+	@Inject private CompilationTestHelper compilationTestHelper
 	
 	def protected void assertTraitAdapterJavaInterface(CompilationTestHelper.Result r, String name, CharSequence expected) {
 		r.assertTraitJavaInterface(name + "_Adapter", expected)
@@ -92,7 +97,41 @@ class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 					extensionProvider.getPrimaryFileExtension() -> e
 			]
 		] 
-		resourceSet(pairs)
+		compilationTestHelper.resourceSet(pairs)
+	}
+
+	def protected compile(ResourceSet rs, IAcceptor<Result> acceptor) {
+		rs.compile(true, acceptor)
+	}
+
+	def protected compile(ResourceSet rs, boolean checkValidationErrors, IAcceptor<Result> acceptor) {
+		compilationTestHelper.compile(rs)[
+			if (checkValidationErrors) {
+				assertNoValidationErrors
+			}
+			acceptor.accept(it)
+		]
+	}
+
+	def protected compile(CharSequence input, IAcceptor<Result> acceptor) {
+		input.compile(true, acceptor)
+	}
+
+	def protected compile(CharSequence input, boolean checkValidationErrors, IAcceptor<Result> acceptor) {
+		compilationTestHelper.compile(input)[
+			if (checkValidationErrors) {
+				assertNoValidationErrors
+			}
+			acceptor.accept(it)
+		]
 	}
 	
+	private def assertNoValidationErrors(Result it) {
+		val allErrors = getErrorsAndWarnings.filter[severity == Severity.ERROR]
+		if (!allErrors.empty) {
+			throw new IllegalStateException("One or more resources contained errors : "+
+				Joiner.on(',').join(allErrors)
+			);
+		}
+	}
 }
