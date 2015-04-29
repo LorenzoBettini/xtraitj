@@ -24,7 +24,9 @@ before_script:
  - metacity --sm-disable --replace &
  - sleep 10 # give metacity some time to start
 
+# Temporarily disable coveralls
+#  -Pjacoco-report coveralls:report
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true -Dswtbot.tests.skip=true -Pjacoco-report coveralls:report
+ - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true -Dswtbot.tests.skip=true
