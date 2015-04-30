@@ -37,19 +37,6 @@ public class DefinedMethodAwareResolvedOperations extends ResolvedFeatures {
 		this.annotatedElementHelper = annotatedElementHelper;
 	}
 
-	override protected computeDeclaredOperations() {
-		val rawType = getRawType();
-		if (!(rawType instanceof JvmDeclaredType)) {
-			return emptyList();
-		}
-		val result = newArrayList();
-		val operations = (rawType as JvmDeclaredType).getDeclaredOperations();
-		for(operation: operations) {
-			result.add(createResolvedOperation(operation))
-		}
-		return Collections.unmodifiableList(result)
-	}
-
 	/**
 	 * Temporarily override this method to reproduce the logic of
 	 * Xtext 2.7.3; in the future we could override only specific methods.
