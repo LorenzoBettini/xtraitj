@@ -533,7 +533,7 @@ public class T3Impl implements T3 {
 	}
 
 	@Test def void testTraitRenameOperationsWithTraitReferenceFullyQualifiedDifferentFiles() {
-		traitRenameOperationsWithTraitReferenceFullyQualifiedDifferentFiles.createResourceSet.compile[
+		traitRenameOperationsWithTraitReferenceFullyQualifiedDifferentFiles.compile[
 			expectationsForTraitRenameOperationsWithTraitReferenceFullyQualified(it)
 		]
 	}
@@ -757,7 +757,7 @@ public class T3Impl implements T3 {
 	}
 
 	@Test def void testTraitDoubleRenamingSeparateFiles() {
-		traitDoubleRenamingSeparateFiles.createResourceSet.compile[
+		traitDoubleRenamingSeparateFiles.compile[
 			expectationsForTraitDoubleRenaming(it)
 		]
 	}
@@ -1908,7 +1908,7 @@ public class T3Impl implements T3 {
 
 	@Test def void testTraitHideSeparateFiles() {
 		// m will be hidden by T3
-		traitHideSeparateFiles.createResourceSet.compile[
+		traitHideSeparateFiles.compile[
 			expectationsForTraitHide(it)
 		]
 	}
@@ -2375,7 +2375,7 @@ public class T3Impl implements T3 {
 	}
 
 	@Test def void testTraitAliasWithRenameAndHideSeparateFiles() {
-		traitAliasWithRenameAndHideSeparateFiles.createResourceSet.compile[
+		traitAliasWithRenameAndHideSeparateFiles.compile[
 			expectationsForTraitAliasWithRenameAndHide(it)
 		]
 	}

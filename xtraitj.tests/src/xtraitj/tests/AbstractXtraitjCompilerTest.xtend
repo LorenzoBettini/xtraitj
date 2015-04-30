@@ -1,27 +1,22 @@
 package xtraitj.tests
 
+import com.google.common.base.Joiner
 import com.google.inject.Inject
-import java.util.List
+import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.junit4.TemporaryFolder
-import org.eclipse.xtext.resource.FileExtensionProvider
+import org.eclipse.xtext.util.IAcceptor
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper
+import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Rule
 
 import static extension org.junit.Assert.*
-import org.eclipse.xtext.util.IAcceptor
-import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
-import org.eclipse.xtext.diagnostics.Severity
-import com.google.common.base.Joiner
-import org.eclipse.emf.ecore.resource.ResourceSet
 
 class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 	@Inject extension ReflectExtensions
 	
 	@Rule
 	@Inject public TemporaryFolder temporaryFolder 
-	
-	@Inject private FileExtensionProvider extensionProvider
 	
 	@Inject private CompilationTestHelper compilationTestHelper
 	
@@ -89,23 +84,12 @@ class AbstractXtraitjCompilerTest extends XtraitjAbstractTest {
 		r.compiledClass // check Java compilation succeeds
 	}
 
-	def protected createResourceSet(List<? extends CharSequence> inputs) {
-		val pairs = newArrayList() => [
-			list |
-			inputs.forEach[e, i|
-				list += "MyFile" + i + "." + 
-					extensionProvider.getPrimaryFileExtension() -> e
-			]
-		] 
-		compilationTestHelper.resourceSet(pairs)
+	def protected compile(Iterable<? extends CharSequence> sources, IAcceptor<Result> acceptor) {
+		sources.compile(true, acceptor)
 	}
 
-	def protected compile(ResourceSet rs, IAcceptor<Result> acceptor) {
-		rs.compile(true, acceptor)
-	}
-
-	def protected compile(ResourceSet rs, boolean checkValidationErrors, IAcceptor<Result> acceptor) {
-		compilationTestHelper.compile(rs)[
+	def protected compile(Iterable<? extends CharSequence> sources, boolean checkValidationErrors, IAcceptor<Result> acceptor) {
+		compilationTestHelper.compile(sources)[
 			if (checkValidationErrors) {
 				assertNoValidationErrors
 			}
