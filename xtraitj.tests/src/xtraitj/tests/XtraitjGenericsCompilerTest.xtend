@@ -1858,7 +1858,7 @@ public class CUsesGeneric implements TUsesGeneric {
 	}
 
 	@Test def void testTraitUsingGenericMethodSeparateFiles() {
-		traitUsingGenericMethodSeparateFiles.createResourceSet.compile[
+		traitUsingGenericMethodSeparateFiles.compile[
 			expectationsForTraitUsingGenericMethod(it)
 		]
 	}
@@ -2422,7 +2422,7 @@ public class C2 implements T1 {
 	}
 
 	@Test def void testTraitWithTypeParametersWithDifferentNamesSeparateFiles() {
-		traitWithTypeParametersWithDifferentNamesSeparateFiles.createResourceSet.compile[
+		traitWithTypeParametersWithDifferentNamesSeparateFiles.compile[
 			expectationsForTraitWithTypeParametersWithDifferentNames(it)
 		]
 	}
@@ -2563,7 +2563,7 @@ public class C3<U extends Object> implements T3<U> {
 	}
 
 	@Test def void testTraitUsesGenericTraitClassSeparateFiles() {
-		traitUsesGenericClassSeparateFiles.createResourceSet.compile[
+		traitUsesGenericClassSeparateFiles.compile[
 			expectationsForTraitUsesGenericClass(it)
 		]
 	}

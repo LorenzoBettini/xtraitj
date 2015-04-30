@@ -17,7 +17,7 @@ class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerT
 	}
 
 	@Test def void testTraitUsesGenericTraitWithRenameSimplerSeparateFiles() {
-		traitUsesGenericTraitWithRenameSimplerSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithRenameSimplerSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithRenameSimpler(it)
 		]
 	}
@@ -212,7 +212,7 @@ class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerT
 	}
 
 	@Test def void testTraitUsesGenericTraitWithRenameSeparateFiles() {
-		traitUsesGenericTraitWithRenameSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithRenameSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithRename(it)
 		]
 	}
@@ -440,7 +440,7 @@ class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerT
 	}
 
 	@Test def void traitRenameGenericFieldInstantiatedSeparateFiles() {
-		classUsesTraitWithGenericRenamedFieldsInstantiatedSeparateFiles.createResourceSet.compile[
+		classUsesTraitWithGenericRenamedFieldsInstantiatedSeparateFiles.compile[
 			expectationsForTraitRenameGenericFieldInstantiated(it)
 		]
 	}
@@ -617,7 +617,7 @@ public class T3Impl implements T3 {
 	}
 
 	@Test def void testRenameGenericFieldNotInstantiatedSeparateFiles() {
-		traitRenameGenericFieldNotInstantiatedSeparateFiles.createResourceSet.compile[
+		traitRenameGenericFieldNotInstantiatedSeparateFiles.compile[
 			expectationsForRenameGenericFieldNotInstantiated(it)
 		]
 	}
@@ -1061,7 +1061,7 @@ public class C implements UsesTGeneric {
 	}
 
 	@Test def void testTraitUsesGenericTraitWithHideSeparateFiles() {
-		traitUsesGenericTraitWithHideSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithHideSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithHide(it)
 		]
 	}
@@ -1342,7 +1342,7 @@ public interface T2_T1_0_Adapter {
 	}
 
 	@Test def void testTraitUsesGenericTraitWithAliasRenameHideSeparateFiles() {
-		traitUsesGenericTraitWithAliasRenameHideSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithAliasRenameHideSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithAliasRenameHide(it)
 		]
 	}
@@ -1385,7 +1385,7 @@ public interface T2_T1_0_Adapter {
 	}
 
 	@Test def void testTraitUsesGenericTraitWithRestrictAndAliasSeparateFiles() {
-		traitUsesGenericTraitWithRestrictAndAliasSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithRestrictAndAliasSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithRestrictAndAlias(it)
 		]
 	}
@@ -1526,7 +1526,7 @@ public class TTransformerIteratorImpl<T extends Object, R extends Object> implem
 	}
 
 	@Test def void testPassTypeParameterAsTypeArgumentSeparateFiles() {
-		passTypeParameterAsTypeArgumentSeparateFiles.createResourceSet.compile[
+		passTypeParameterAsTypeArgumentSeparateFiles.compile[
 			expectationsForPassTypeParameterAsTypeArgument(it)
 		]
 	}
@@ -1782,7 +1782,7 @@ public class CWithOp_T1_0_AdapterImpl<Z extends Object> implements CWithOp_T1_0_
 	}
 
 	@Test def void testTraitUsesGenericTraitWithRedirectSeparateFiles() {
-		traitUsesGenericTraitWithRedirectSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithRedirectSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithRedirect(it)
 		]
 	}
@@ -1806,7 +1806,7 @@ public class CWithOp_T1_0_AdapterImpl<Z extends Object> implements CWithOp_T1_0_
 	}
 
 	@Test def void testTraitUsesGenericTraitWithRedirectCompliantSeparateFiles() {
-		traitUsesGenericTraitWithRedirectCompliantSeparateFiles.createResourceSet.compile[
+		traitUsesGenericTraitWithRedirectCompliantSeparateFiles.compile[
 			expectationsForTraitUsesGenericTraitWithRedirectCompliant(it)
 		]
 	}

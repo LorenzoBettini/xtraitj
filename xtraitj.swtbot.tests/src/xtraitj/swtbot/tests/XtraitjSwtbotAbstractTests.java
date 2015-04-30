@@ -4,6 +4,7 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.root;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.waitForAutoBuild;
+import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanBuild;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -84,6 +85,7 @@ public class XtraitjSwtbotAbstractTests {
 
 	protected static void closeWelcomePage() throws InterruptedException {
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (PlatformUI.getWorkbench().getIntroManager().getIntro() != null) {
 					PlatformUI.getWorkbench().getIntroManager()
@@ -222,7 +224,11 @@ public class XtraitjSwtbotAbstractTests {
 		// creation of a project might require some time
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(mainProjectId));
-		
+
+		// this will also create xtraitj-gen folder
+		waitForAutoBuild();
+		// a clean build is required to simulate what happens in the Workbench
+		cleanBuild();
 		waitForAutoBuild();
 		assertErrorsInProject(0);
 	}
@@ -234,6 +240,7 @@ public class XtraitjSwtbotAbstractTests {
 		while (count < retries) {
 			System.out.println("Checking that tree item " + treeItem.getText() + " has children...");
 			List<SWTBotTreeItem> foundItems = UIThreadRunnable.syncExec(new ListResult<SWTBotTreeItem>() {
+				@Override
 				public List<SWTBotTreeItem> run() {
 					TreeItem[] items = treeItem.widget.getItems();
 					List<SWTBotTreeItem> results = new ArrayList<SWTBotTreeItem>();

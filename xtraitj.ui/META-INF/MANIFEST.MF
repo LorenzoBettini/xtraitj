@@ -6,7 +6,7 @@ Bundle-Version: 3.0.0.qualifier
 Bundle-SymbolicName: xtraitj.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: xtraitj;visibility:=reexport,
- org.eclipse.xtext.ui;bundle-version="[2.7.3,2.8.0)",
+ org.eclipse.xtext.ui;bundle-version="[2.8.2,2.9.0)",
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.xtext.ui.shared,
@@ -27,7 +27,7 @@ Require-Bundle: xtraitj;visibility:=reexport,
  org.eclipse.jdt.debug.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: xtraitj.ui.quickfix,
  xtraitj.ui.contentassist,
  xtraitj.ui.contentassist.antlr,

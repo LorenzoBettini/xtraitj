@@ -5,7 +5,7 @@ package xtraitj.typesystem.override;
 
 import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 import org.eclipse.xtext.xbase.typesystem.override.OverrideTester;
-import org.eclipse.xtext.xbase.typesystem.override.ResolvedOperations;
+import org.eclipse.xtext.xbase.typesystem.override.ResolvedFeatures;
 import org.eclipse.xtext.xbase.typesystem.references.LightweightTypeReference;
 
 import xtraitj.util.XtraitjAnnotatedElementHelper;
@@ -30,7 +30,7 @@ public class XtraitjOverrideHelper extends OverrideHelper {
 	private XtraitjAnnotatedElementHelper annotatedElementHelper;
 	
 	@Override
-	public ResolvedOperations getResolvedOperations(
+	public ResolvedFeatures getResolvedFeatures(
 			LightweightTypeReference contextType) {
 		return new DefinedMethodAwareResolvedOperations(contextType, overrideTester, annotatedElementHelper);
 	}

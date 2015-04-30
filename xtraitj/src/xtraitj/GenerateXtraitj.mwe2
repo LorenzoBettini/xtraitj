@@ -13,11 +13,13 @@ var encoding = "UTF-8"
 
 Workflow {
     bean = StandaloneSetup {
+    	// initialize the EMF singleton with proper classpath to platform:/resource mappings
     	scanClassPath = true
-    	platformUri = "${runtimeProject}/.."
-    	// The following two lines can be removed, if Xbase is not used.
-    	registerGeneratedEPackage = "org.eclipse.xtext.xbase.XbasePackage"
+    	// put the Xbase genmodel into the EMF plugins singleton
     	registerGenModelFile = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel"
+
+    	// register current projects and its siblings for platform URI map, as they are not on the classpath.
+    	platformUri = "${runtimeProject}/.."
     }
 
     component = DirectoryCleaner {
@@ -25,6 +27,8 @@ Workflow {
     }
 
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+		// generate the Java code for the EPackage
+		// the Xtraitj genmodel needs to find the Xbase genmodel thus the latter was registered in the standalone setup
 		genModel = "platform:/resource/${projectName}/model/custom/Xtraitj.genmodel"
 		srcPath = "platform:/resource/${projectName}/src"
 	}
@@ -53,7 +57,15 @@ Workflow {
     	projectNameUi = "${projectName}.ui"
     	encoding = encoding
     	language = auto-inject {
+    		// here we initialize a resource set with a list of ecore files such that the grammar points to the local EPackages
+    		// rather than the generated EPackages (which would be inconsistent).
+    		loadedResource = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore"
+    		loadedResource = "platform:/resource/org.eclipse.xtext.xbase/model/Xtype.ecore"
+    		loadedResource = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore"
+    		loadedResource = "platform:/resource/org.eclipse.xtext.xbase/model/XAnnotations.ecore"
+
     		loadedResource = "platform:/resource/${projectName}/model/custom/Xtraitj.ecore"
+
     		uri = grammarURI
     
     		// Java API to access grammar elements (required by several other fragments)

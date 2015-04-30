@@ -22,6 +22,7 @@ import com.google.inject.Provider;
 
 public class InjectorProviderCustom extends XtraitjInjectorProvider {
 
+	@Override
 	public Injector internalCreateInjector() {
 			return new XtraitjStandaloneSetup() {
 				@Override

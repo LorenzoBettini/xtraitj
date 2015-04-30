@@ -7,7 +7,7 @@ Bundle-Activator: xtraitj.swtbot.tests.Activator
 Bundle-Vendor: Lorenzo Bettini
 Require-Bundle: org.eclipse.swtbot.go;bundle-version="2.1.0",
  org.eclipse.core.resources;bundle-version="3.7.100",
- org.eclipse.xtext.junit4;bundle-version="[2.7.3,2.8.0)",
+ org.eclipse.xtext.junit4,
  org.eclipse.xtend.lib,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.swtbot.go;bundle-version="2.1.0",
  org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
  org.eclipse.pde.core;bundle-version="3.10.0",
  xtraitj.tests
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 

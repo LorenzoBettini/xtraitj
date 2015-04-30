@@ -35,6 +35,7 @@ public class C implements CInterface, T {
   
   public C(final Iterable<String> iterable) {
     final Function1<String, String> _function = new Function1<String, String>() {
+      @Override
       public String apply(final String it) {
         return StringExtensions.toFirstUpper(it);
       }

@@ -245,7 +245,7 @@ public class T3Impl implements T3 {
 			Object n() { m(newLinkedList("bar"), "foo"); }
 		}
 		'''
-		].createResourceSet.compile [
+		].compile [
 			expectationsForTraitAndClass(it)
 		]
 	}
