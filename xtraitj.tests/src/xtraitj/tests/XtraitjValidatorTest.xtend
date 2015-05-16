@@ -877,10 +877,11 @@ class C uses T3 {
 		}
 		
 		class C uses T1, T2 {}
-		'''.parse => [
+		'''.removeCR.parse => [
 			// the error is placed on the single trait reference
 			assertMissingRequiredMethodByTrait("String n(int)", 131, 2)
 		]
+		// remove CR characters, otherwise in Windows, the expected offset will be different
 	}
 
 	@Test def void testClassMissingRequiredMethodByTrait2() {
@@ -895,10 +896,11 @@ class C uses T3 {
 		}
 		
 		class C uses T1, T2 {}
-		'''.parse => [
+		'''.removeCR.parse => [
 			// the error is placed on the single trait reference
 			assertMissingRequiredMethodByTrait("String n()", 130, 2)
 		]
+		// remove CR characters, otherwise in Windows, the expected offset will be different
 	}
 
 	@Test def void testClassMissingRequiredMethodAfterRenamingAndSum() {

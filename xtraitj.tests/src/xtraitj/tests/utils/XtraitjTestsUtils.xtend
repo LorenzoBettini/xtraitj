@@ -9,6 +9,10 @@ class XtraitjTestsUtils {
 	}
 
 	def static assertEqualsStrings(CharSequence expected, CharSequence actual) {
-		assertEquals(expected.toString().replaceAll("\r", ""), actual.toString());
+		assertEquals(removeCR(expected), actual.toString());
+	}
+	
+	def static removeCR(CharSequence s) {
+		s.toString().replaceAll("\r", "")
 	}
 }
