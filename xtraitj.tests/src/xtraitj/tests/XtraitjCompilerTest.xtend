@@ -34,6 +34,63 @@ public interface T extends void {
 			
 		]
 	}
+
+	@Test def void testTraitDefinedMethod() {
+		'''
+		import java.util.List
+		
+		trait T {
+			Iterable<String> m(List<String> l, String s) {
+				val f = newArrayList("a")
+				return l + f;
+			}
+		}
+		'''.compile [
+assertTraitJavaInterface("T",
+'''
+import java.util.List;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitInterface;
+
+@XtraitjTraitInterface
+@SuppressWarnings("all")
+public interface T {
+  @XtraitjDefinedMethod
+  public abstract Iterable<String> m(final List<String> l, final String s);
+}
+''')
+assertTraitJavaClass("T",
+'''
+import com.google.common.collect.Iterables;
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
+import xtraitj.runtime.lib.annotation.XtraitjTraitClass;
+
+@XtraitjTraitClass
+@SuppressWarnings("all")
+public class TImpl implements T {
+  private T _delegate;
+  
+  public TImpl(final T delegate) {
+    this._delegate = delegate;
+  }
+  
+  @XtraitjDefinedMethod
+  public Iterable<String> m(final List<String> l, final String s) {
+    return _delegate.m(l, s);
+  }
+  
+  public Iterable<String> _m(final List<String> l, final String s) {
+    final ArrayList<String> f = CollectionLiterals.<String>newArrayList("a");
+    return Iterables.<String>concat(l, f);
+  }
+}
+''')
+			assertGeneratedJavaCodeCompiles
+		]
+	}
 	
 	@Test def void testTraitMethods() {
 		'''
