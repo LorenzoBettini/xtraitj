@@ -5,12 +5,14 @@ package xtraitj.scoping;
 
 import static java.util.Collections.singletonList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
+import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -24,33 +26,18 @@ import org.eclipse.xtext.scoping.impl.ScopeBasedSelectable;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.scoping.XImportSectionNamespaceScopeProvider;
 
-import xtraitj.jvmmodel.XtraitjJvmModelUtil;
-import xtraitj.xtraitj.TJMethod;
-
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.inject.Inject;
 
 /**
- * Since we infer several Java methods for the same trait method, in case there
- * are type parameters involved, we must fix the scoping of type parameters
- * so that they refer to the type parameters of the method in the inferred
- * class for the trait.
+ * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=468174
  * 
  * @author Lorenzo Bettini
  *
  */
-public class XtraitjImportedNamespaceScopeProvider extends
-		XImportSectionNamespaceScopeProvider {
-	
-	@Inject private XtraitjJvmModelUtil jvmModelUtil;
+public class PatchedXImportSectionNamespaceScopeProvider extends XImportSectionNamespaceScopeProvider {
 
-	/**
-	 * This is copied from the base class, with a fix for the type parameters
-	 */
 	@Override
-	protected IScope getLocalElementsScope(IScope parent, IScope globalScope,
-			EObject context, EReference reference) {
+	protected IScope getLocalElementsScope(IScope parent, IScope globalScope, EObject context, EReference reference) {
 		IScope result = parent;
 		QualifiedName name = getQualifiedNameOfLocalElement(context);
 		boolean ignoreCase = isIgnoreCase(reference);
@@ -70,15 +57,10 @@ public class XtraitjImportedNamespaceScopeProvider extends
 		}
 		
 		// scope for jvm elements
-		/* This is the modified part, to retrieve the JvmOperation in the class
-		 * inferred for the trait that corresponds to the original method */
-		Set<EObject> elements = jvmModelUtil.allJvmElements(context);
-		if (context instanceof TJMethod) {
-			EObject primaryElement = jvmModelUtil.traitClassInferredMethod((TJMethod) context, elements);
-			if (primaryElement != null)
-				elements = Sets.newHashSet(primaryElement);
-		}
-		
+		// before using associated Jvm elements, check whether the context is itself a Jvm element
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468174
+		Set<EObject> elements = context instanceof JvmIdentifiableElement ? Collections.singleton(context) : getAssociations().getJvmElements(context);
+
 		for (EObject derivedJvmElement : elements) {
 			// scope for JvmDeclaredTypes
 			if (derivedJvmElement instanceof JvmDeclaredType) {

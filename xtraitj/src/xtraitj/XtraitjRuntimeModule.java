@@ -13,7 +13,7 @@ import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.XtraitjOutputConfigurationProvider;
-import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider;
+import xtraitj.scoping.PatchedXImportSectionNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
 import xtraitj.typesystem.override.XtraitjOverrideHelper;
@@ -50,7 +50,7 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	@Override
 	public void configureIScopeProviderDelegate(Binder binder) {
 		binder.bind(IScopeProvider.class).annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
-				.to(XtraitjImportedNamespaceScopeProvider.class);
+				.to(PatchedXImportSectionNamespaceScopeProvider.class);
 	}
 	
 	public Class<? extends OverrideHelper> bindOverrideHelper() {
