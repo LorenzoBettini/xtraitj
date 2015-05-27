@@ -188,7 +188,10 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    					translateAnnotations(field.annotations)
    				]
 				members += field.toGetter(field.name, field.type)
-				members += field.toSetter(field.name, field.type)
+				members += field.toSetter(field.name, field.type) => [
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468174
+					parameters.head.parameterType = field.type.cloneWithProxies
+				]
    			}
    			
    			for (cons : c.constructors) {
@@ -877,7 +880,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
+				parameters += p.cloneWithProxies
 			}
 			val args = m.params.map[name].join(", ")
 			if (m.type?.simpleName != "void")
@@ -934,7 +937,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			returnType = method.type.rebindTypeParameters(containerTypeDecl, it)
 			
 			for (p : method.params) {
-				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
+				parameters += p.cloneWithProxies
 			}
 			body = method.body
 		]
@@ -1048,7 +1051,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
-				parameters += p.toParameter(p.name, p.parameterType.rebindTypeParameters(containerTypeDecl, it))
+				parameters += p.cloneWithProxies
 			}
 			abstract = true
 		]
