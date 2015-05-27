@@ -1,6 +1,7 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import java.util.List
 import org.apache.log4j.Logger
 import org.eclipse.xtext.common.types.JvmConstraintOwner
 import org.eclipse.xtext.common.types.JvmGenericType
@@ -830,34 +831,49 @@ class XtraitjTypeParametersBindingTest extends XtraitjAbstractTest {
 		}
 	}
 	
-	private def void assertJvmTypeParameterBindingAgainstTypeParDeclarator(JvmTypeParameterDeclarator op, JvmTypeReference jvmTypeRef, JvmTypeParameterDeclarator typeParDeclarator, String desc) {
-		val expectedTypePar = typeParDeclarator.typeParameters.head
+	private def void assertJvmTypeParameterBindingAgainstTypeParDeclarator(
+		JvmTypeParameterDeclarator op, JvmTypeReference jvmTypeRef,
+		JvmTypeParameterDeclarator typeParDeclarator, String desc
+	) {
+		val typeParams = typeParDeclarator.typeParameters
 		
-		val type = jvmTypeRef.type
+		for (typeParam : typeParams) {
+			val type = jvmTypeRef.type
 		
-		if (type instanceof JvmTypeParameter) {
-			assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, type, desc)
-		} else if (type instanceof JvmGenericType) {
-			val firstTypeArg = (jvmTypeRef as JvmParameterizedTypeReference).arguments.head
-			
-			if (firstTypeArg instanceof JvmWildcardTypeReference) {
-				for (c : firstTypeArg.constraints) {
-					op.assertJvmTypeParameterBindingAgainstTypeParDeclarator(
-						c.typeReference, typeParDeclarator, "Wildcard." + desc
-					)
+			if (type instanceof JvmTypeParameter) {
+				assertTypeParameterBinding(
+					op, jvmTypeRef,
+					typeParams.typeParamByName(jvmTypeRef), type, desc
+				)
+			} else if (type instanceof JvmGenericType) {
+				val typeArgs = (jvmTypeRef as JvmParameterizedTypeReference).arguments
+				for (typeArg : typeArgs) {
+					if (typeArg instanceof JvmWildcardTypeReference) {
+						for (c : typeArg.constraints) {
+							op.assertJvmTypeParameterBindingAgainstTypeParDeclarator(
+								c.typeReference, typeParDeclarator, "Wildcard." + desc
+							)
+						}
+					} else {
+						if (typeArg != null) {
+							assertTypeParameterBinding(
+								op, jvmTypeRef,
+								typeParams.typeParamByName(typeArg), 
+								typeArg.type, desc
+							)
+						}
+					}
 				}
 			} else {
-				if (firstTypeArg != null) {
-					// assume it is a parameterized type and we take the first type argument
-					// e.g., List<T> 
-					assertTypeParameterBinding(op, jvmTypeRef, expectedTypePar, 
-						firstTypeArg.type, desc
-					)
-				}
-			}
-		} else {
-			fail("Unknown JvmType: " + type)
+				fail("Unknown JvmType: " + type)
+			}	
 		}
+	}
+
+	private def typeParamByName(List<JvmTypeParameter> typeParams, JvmTypeReference typeRef) {
+		val typePar = typeParams.findFirst[ tp | tp.simpleName == typeRef.type.simpleName ]
+		assertNotNull("could not find " + typeRef.type.simpleName, typePar)
+		return typePar
 	}
 	
 	private def assertTypeParameterBinding(JvmTypeParameterDeclarator e, JvmTypeReference jvmTypeRef, JvmTypeParameter expectedTypePar, JvmType actualType, String desc) {
