@@ -7,12 +7,14 @@ import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer;
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder;
 import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider;
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer;
 import org.eclipse.xtext.xbase.typesystem.override.OverrideHelper;
 
 import xtraitj.compiler.XtraitjTypeReferenceSerializer;
 import xtraitj.generator.XtraitjOutputConfigurationProvider;
+import xtraitj.jvmmodel.PatchedJvmTypesBuilder;
 import xtraitj.scoping.PatchedXImportSectionNamespaceScopeProvider;
 import xtraitj.scoping.XtraitjXbaseBatchScopeProvider;
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer;
@@ -60,5 +62,9 @@ public class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 	@Override
 	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.eclipse.xtext.xbase.validation.JvmTypeReferencesValidator> bindJvmTypeReferencesValidator() {
 		return XtraitjJvmTypeReferencesValidator.class;
+	}
+
+	public Class<? extends JvmTypesBuilder> bindJvmTypesBuilder() {
+		return PatchedJvmTypesBuilder.class;
 	}
 }
