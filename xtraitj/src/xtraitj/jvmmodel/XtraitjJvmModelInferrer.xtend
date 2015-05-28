@@ -910,7 +910,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			for (p : o.parameters) {
 				// don't associate the parameter to p, since p is not part of the source tree
 				// java.lang.IllegalArgumentException: The source element must be part of the source tree.
-				parameters += m.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(target, it))
+				parameters += m.toParameter(p.name, paramTypeIt.next.cloneWithProxies)
+//				parameters += m.toParameter(p.name, paramTypeIt.next.rebindTypeParameters(target, it))
 			}
 			val args = o.parameters.map[name].join(", ")
 			if (op.returnType?.simpleName != "void")
@@ -1048,7 +1049,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 			copyTypeParametersAndRebind(m)
 			
-			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
+			returnType = m.type.cloneWithProxies //rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
 				parameters += p.cloneWithProxies
@@ -1238,12 +1239,12 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		val originalTypeParameters = t.typeParameters
 		target.copyTypeParameters(originalTypeParameters)
 		
-		val map = new HashMap<JvmTypeParameter, JvmTypeParameter>  
-		var i = 0	
-	   	for (typePar : target.typeParameters) {
-	   		typePar.rebindConstraintsTypeParameters(originalTypeParameters.get(i), target, null, map)
-	   		i = i + 1
-	   	}
+//		val map = new HashMap<JvmTypeParameter, JvmTypeParameter>  
+//		var i = 0	
+//	   	for (typePar : target.typeParameters) {
+//	   		typePar.rebindConstraintsTypeParameters(originalTypeParameters.get(i), target, null, map)
+//	   		i = i + 1
+//	   	}
 	}
 
 	def private void copyTypeParameters(JvmTypeParameterDeclarator target, List<JvmTypeParameter> typeParameters) {

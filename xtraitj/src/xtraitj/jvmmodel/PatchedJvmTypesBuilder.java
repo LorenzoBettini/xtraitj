@@ -7,20 +7,29 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.LanguageInfo;
+import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.common.types.JvmTypeConstraint;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmUpperBound;
+import org.eclipse.xtext.common.types.JvmVisibility;
 import org.eclipse.xtext.common.types.JvmWildcardTypeReference;
 import org.eclipse.xtext.common.types.TypesFactory;
 import org.eclipse.xtext.common.types.access.impl.URIHelperConstants;
+import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.Triple;
+import org.eclipse.xtext.xbase.compiler.output.ITreeAppendable;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder;
+import org.eclipse.xtext.xbase.lib.Procedures;
+import org.eclipse.xtext.xbase.typesystem.InferredTypeIndicator;
 
 import com.google.inject.Inject;
 
@@ -36,6 +45,9 @@ public class PatchedJvmTypesBuilder extends JvmTypesBuilder {
 	private IJvmModelAssociator associator;
 	
 	@Inject
+	private TypeReferences references;
+	
+	@Inject
 	private LanguageInfo languageInfo;
 	
 	@Inject
@@ -43,6 +55,103 @@ public class PatchedJvmTypesBuilder extends JvmTypesBuilder {
 	
 	@Inject
 	private LazyURIEncoder encoder;
+
+	/**
+	 * Creates a getter method for the given property name and the field name.
+	 * 
+	 * Example: <code>
+	 * public String getPropertyName() {
+	 *   return this.fieldName;
+	 * }
+	 * </code>
+	 * 
+	 * @return a getter method for a JavaBeans property, <code>null</code> if sourceElement or name are <code>null</code>.
+	 */
+	/* @Nullable */
+	@Override
+	public JvmOperation toGetter(/* @Nullable */ final EObject sourceElement, /* @Nullable */ final String propertyName, /* @Nullable */ final String fieldName, /* @Nullable */ JvmTypeReference typeRef) {
+		if(sourceElement == null || propertyName == null || fieldName == null) 
+			return null;
+		JvmOperation result = typesFactory.createJvmOperation();
+		result.setVisibility(JvmVisibility.PUBLIC);
+		String prefix = (isPrimitiveBoolean(typeRef) ? "is" : "get");
+		result.setSimpleName(prefix + Strings.toFirstUpper(propertyName));
+		result.setReturnType(cloneWithProxies(typeRef));
+		setBody(result, new Procedures.Procedure1<ITreeAppendable>() {
+			@Override
+			public void apply(/* @Nullable */ ITreeAppendable p) {
+				if(p != null) {
+					p = p.trace(sourceElement);
+					p.append("return this.");
+					p.append(fieldName);
+					p.append(";");
+				}
+			}
+		});
+		return associate(sourceElement, result);
+	}
+
+	/**
+	 * Detects whether the type reference refers to primitive boolean, first trying without
+	 * triggering proxy resolution (looking at the original text reference).
+	 * 
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=468641
+	 * 
+	 * @param typeRef
+	 * @return
+	 */
+	private boolean isPrimitiveBoolean(JvmTypeReference typeRef) {
+		if (InferredTypeIndicator.isInferred(typeRef)) {
+			return false;
+		}
+		
+		ICompositeNode actualNodeFor = NodeModelUtils.findActualNodeFor(typeRef);
+		if (actualNodeFor != null) {
+			return "boolean".equals(NodeModelUtils.getTokenText(actualNodeFor));
+		} else {
+			return typeRef.getType()!=null 
+					&& !typeRef.getType().eIsProxy() && "boolean".equals(typeRef.getType().getIdentifier());
+		}
+	}
+
+	/**
+	 * Creates a setter method for the given properties name with the standard implementation assigning the passed
+	 * parameter to a similarly named field.
+	 * 
+	 * Example: <code>
+	 * public void setFoo(String foo) {
+	 *   this.foo = foo;
+	 * }
+	 * </code>
+	 *
+	 * @return a setter method for a JavaBeans property with the given name, <code>null</code> if sourceElement or name are <code>null</code>.
+	 */
+	/* @Nullable */ 
+	@Override
+	public JvmOperation toSetter(/* @Nullable */ final EObject sourceElement, /* @Nullable */ final String propertyName, /* @Nullable */ final String fieldName, /* @Nullable */ JvmTypeReference typeRef) {
+		if(sourceElement == null || propertyName == null || fieldName == null) 
+			return null;
+		JvmOperation result = typesFactory.createJvmOperation();
+		result.setVisibility(JvmVisibility.PUBLIC);
+		result.setReturnType(references.getTypeForName(Void.TYPE,sourceElement));
+		result.setSimpleName("set" + Strings.toFirstUpper(propertyName));
+		result.getParameters().add(toParameter(sourceElement, propertyName, typeRef));
+		setBody(result, new Procedures.Procedure1<ITreeAppendable>() {
+			@Override
+			public void apply(/* @Nullable */ ITreeAppendable p) {
+				if(p != null) {
+					p = p.trace(sourceElement);
+					p.append("this.");
+					p.append(fieldName);
+					p.append(" = ");
+					p.append(propertyName);
+					p.append(";");
+				}
+			}
+		});
+		return associate(sourceElement, result);
+	}
+
 
 	/**
 	 * Creates a deep copy of the given object and associates each copied instance with the
