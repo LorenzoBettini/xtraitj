@@ -1851,6 +1851,12 @@ public class CUsesGeneric implements TUsesGeneric {
 		]
 	}
 
+	@Test def void testTraitUsingGenericMethodOnlyCompile() {
+		traitUsingGenericMethod.compile(false)[
+			expectationsForTraitUsingGenericMethod(it)
+		]
+	}
+
 	@Test def void testTraitUsingGenericMethod() {
 		traitUsingGenericMethod.compile[
 			expectationsForTraitUsingGenericMethod(it)

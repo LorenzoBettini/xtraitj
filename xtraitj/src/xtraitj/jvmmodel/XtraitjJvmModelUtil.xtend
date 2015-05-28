@@ -97,7 +97,7 @@ class XtraitjJvmModelUtil {
 	}
 
 	def computeAndResolveXtraitjResolvedOperations(JvmTypeReference e, EObject context) {
-		e.computeXtraitjResolvedOperations(context) => [resolveAll]
+		e.computeXtraitjResolvedOperations(context)// => [resolveAll]
 	}
 
 	def originalSource(JvmMember o) {
