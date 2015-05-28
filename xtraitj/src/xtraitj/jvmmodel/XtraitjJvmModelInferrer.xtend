@@ -277,7 +277,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					// it won't be resolved after Xtext 2.7.3
 					// since it's not contained in any resource yet
 					// we must use the field.type that can be resolved
-					returnType = field.type.rebindTypeParameters(traitInterface, null)
+//					returnType = field.type.rebindTypeParameters(traitInterface, null)
 				]
 				members += field.toSetter(field.name, field.type) => [
 					documentation = field.documentation
@@ -285,7 +285,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 		   			abstract = true
 		   			// we can use the type references of the inferred operation
 		   			// since they're already resolved.
-		   			rebindTypeParameters(traitInterface)
+//		   			rebindTypeParameters(traitInterface)
 		   		]
 			}
 			
@@ -358,7 +358,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 							members += renameOperation.toAbstractSetterDelegateFromGetter
 								(op, newname) => [
 									annotateAsRequiredFieldSetter
-									rebindTypeParameters(traitExpressionInterface)
+//									rebindTypeParameters(traitExpressionInterface)
 								]
 						}
 					}
@@ -407,7 +407,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 					if (jvmop.annotatedRequiredField()) {
 						members += t.toAbstractSetterDelegateFromGetter(op) => [
 							annotateAsRequiredFieldSetter
-							rebindTypeParameters(traitExpressionInterface)
+//							rebindTypeParameters(traitExpressionInterface)
 						]
 					}
 				}
@@ -663,7 +663,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						"this",
 						origSetterName,
 						newSetterName
-					) => [m | m.rebindTypeParameters(it)]
+					) //=> [m | m.rebindTypeParameters(it)]
 				// m2 is forwarded to delegate.m2()
 				members += tOp.
 					toSetterMethodDelegate(
@@ -671,7 +671,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						delegateFieldName,
 						newSetterName,
 						newSetterName
-					) => [m | m.rebindTypeParameters(it)]
+					) //=> [m | m.rebindTypeParameters(it)]
 			}
 		}
 	}
@@ -725,7 +725,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 						delegateFieldName,
 						origSetterName,
 						newSetterName
-					) => [m | m.rebindTypeParameters(it)]
+					) //=> [m | m.rebindTypeParameters(it)]
 			}
 		}
 	}
@@ -783,11 +783,11 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
    				members += toGetterDelegate(field) => [
    					documentation = field.documentation
    					annotateAsRequiredField
-   					rebindTypeParameters(traitClass)
+//   					rebindTypeParameters(traitClass)
    				]
    				members += field.toSetterDelegate => [
    					documentation = field.documentation
-   					rebindTypeParameters(traitClass)
+//   					rebindTypeParameters(traitClass)
    				]
    			}
    			
@@ -877,7 +877,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 			copyTypeParameters(m.typeParameters)
 			
-			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
+//			returnType = m.type.rebindTypeParameters(containerTypeDecl, it)
 
 			for (p : m.params) {
 				parameters += p.cloneWithProxies
@@ -904,7 +904,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			copyTypeParameters(o.typeParameters)
 
-			returnType = returnType.rebindTypeParameters(target, it)
+//			returnType = returnType.rebindTypeParameters(target, it)
 	
 			val paramTypeIt = op.parametersTypes.iterator
 			for (p : o.parameters) {
@@ -935,7 +935,7 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 			
 			copyTypeParameters(method.typeParameters)
 			
-			returnType = method.type.rebindTypeParameters(containerTypeDecl, it)
+//			returnType = method.type.rebindTypeParameters(containerTypeDecl, it)
 			
 			for (p : method.params) {
 				parameters += p.cloneWithProxies
@@ -1171,7 +1171,8 @@ class XtraitjJvmModelInferrer extends AbstractModelInferrer {
 
 	def private toSetterDelegateFromGetter(EObject source, IResolvedOperation op, JvmGenericType target) {
    		val fieldName = op.simpleName.stripGetter
-   		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
+//   		source.toSetter(fieldName, op.returnType.rebindTypeParameters(target, null)) => [
+   		source.toSetter(fieldName, op.returnType) => [
    			method |
    			method.body = [append('''«delegateFieldName».«method.simpleName»(«fieldName»);''')]
    		]
