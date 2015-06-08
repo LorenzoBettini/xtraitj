@@ -22,6 +22,9 @@
 					<filesets combine.children="append">
 						<fileset>
 							<directory>${basedir}/xtraitj-gen</directory>
+							<excludes>
+								<exclude>README.txt</exclude>
+						    </excludes>
 						</fileset>
 					</filesets>
 				</configuration>
