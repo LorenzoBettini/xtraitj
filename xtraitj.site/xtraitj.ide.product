@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="XtraitjIDE" uid="xtraitj.ide.product" id="org.eclipse.sdk.ide" application="org.eclipse.ui.ide.workbench" version="2.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="XtraitjIDE" uid="xtraitj.ide.product" id="org.eclipse.sdk.ide" application="org.eclipse.ui.ide.workbench" version="3.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="eclipse_lg.gif"/>
@@ -44,10 +44,9 @@
    </plugins>
 
    <features>
+      <feature id="xtraitj.ide.feature"/>
       <feature id="xtraitj.sdk" installMode="root"/>
       <feature id="xtraitj.sdk.source" installMode="root"/>
-      <feature id="org.eclipse.rcp"/>
-      <feature id="org.eclipse.sdk" installMode="root"/>
       <feature id="xtraitj.examples.feature" installMode="root"/>
    </features>
 

@@ -19,19 +19,34 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 
+			<properties>
+				<!-- set it to true to have a self contained p2 repository https://wiki.eclipse.org/Tycho/eclipse-repository#Creating_a_self-contained_p2_repository -->
+				<includeAllDependencies>true</includeAllDependencies>
+			</properties>
+
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-repository-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<includeAllDependencies>${includeAllDependencies}</includeAllDependencies>
+						</configuration>
+					</plugin>
+
 					<plugin>
 						<groupId>org.eclipse.tycho.extras</groupId>
 						<artifactId>tycho-eclipserun-plugin</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
-							<appArgLine>-application org.eclipse.ant.core.antRunner -buildfile packaging-p2composite.ant p2.composite.add -Dupdates.dir=xtraitj -Dsite.label="Xtraitj Site" -Dproject.build.directory=${project.build.directory} -DunqualifiedVersion=${unqualifiedVersion} -DbuildQualifier=${buildQualifier}</appArgLine>
+							<!-- IMPORTANT: DO NOT split the arg line -->
+							<appArgLine>-application org.eclipse.ant.core.antRunner -buildfile ${ant-files-path}/packaging-p2composite.ant p2.composite.add -Dupdates.dir=${updates.dir} -Dsite.label="${site.label}" -Dproject.build.directory=${project.build.directory} -DunqualifiedVersion=${unqualifiedVersion} -DbuildQualifier=${buildQualifier}</appArgLine>
 							<repositories>
 								<repository>
-									<id>kepler</id>
+									<id>luna</id>
 									<layout>p2</layout>
-									<url>http://download.eclipse.org/releases/kepler</url>
+									<url>http://download.eclipse.org/releases/luna</url>
 								</repository>
 							</repositories>
 							<dependencies>
@@ -71,11 +86,147 @@
 							</execution>
 						</executions>
 					</plugin>
+					
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven-antrun-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>update-local-repository</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<ant antfile="${ant-files-path}/rsync.ant" target="rsync-update">
+										</ant>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+	
+							<execution>
+								<id>deploy-repository</id>
+								<phase>verify</phase>
+								<configuration>
+									<target>
+										<ant antfile="${ant-files-path}/rsync.ant" target="rsync-commit">
+										</ant>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
-
 		</profile>
-		
+
+		<profile>
+			<id>build-ide</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-director-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>materialize-products</id>
+								<goals>
+									<goal>materialize-products</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>archive-products</id>
+								<goals>
+									<goal>archive-products</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<products>
+								<product>
+									<id>xtraitj.ide.product</id>
+									<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
+								</product>
+							</products>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>deploy-ide</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-director-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>materialize-products</id>
+								<goals>
+									<goal>materialize-products</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>archive-products</id>
+								<goals>
+									<goal>archive-products</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<products>
+								<product>
+									<id>xtraitj.ide.product</id>
+									<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
+								</product>
+							</products>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<!-- this is configured in pluginManagement section of the parent pom -->
+						<artifactId>maven-antrun-plugin</artifactId>
+						
+						<!-- and we add the execution for copying zipped products -->
+						<executions>
+							<execution>
+								<id>deploy-ides</id>
+								<phase>verify</phase>
+								<configuration>
+									<target>
+										<ant antfile="${ant-files-path}/rsync.ant" 
+													target="rsync-copy-dir-contents">
+											<property name="rsync.remote.dir" value="${remote.dir}/products/"/>
+											<property name="rsync.local.dir" value="${project.build.directory}/products/"/>
+										</ant>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	
 		<profile>
 			<id>jacoco-report</id>
 			<activation>

@@ -8,6 +8,7 @@
 <repository location="http://download.itemis.com/updates/releases/2.1.1/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.executable.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.xpand" version="0.0.0"/>

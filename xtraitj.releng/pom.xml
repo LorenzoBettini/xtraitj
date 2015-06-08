@@ -12,13 +12,14 @@
 		<module>../xtraitj.ui</module>
 		<module>../xtraitj.runtime.requirements</module>
 		<module>../xtraitj.runtime.requirements.feature</module>
-		<module>../xtraitj.ui.examples</module>
 		<module>../xtraitj.example.examples</module>
+		<module>../xtraitj.ui.examples</module>
 		<module>../xtraitj.tests</module>
 		<module>../xtraitj.swtbot.tests.feature</module>
 		<module>../xtraitj.swtbot.tests</module>
 		<module>../xtraitj.examples.feature</module>
 		<module>../xtraitj.sdk</module>
+		<module>../xtraitj.ide.feature</module>
 		<module>../xtraitj.site</module>
 	</modules>
 
@@ -53,6 +54,25 @@
 		<findbugs.skip>false</findbugs.skip>
 		<swtbot.tests.only>false</swtbot.tests.only>
 		<swtbot.tests.skip>false</swtbot.tests.skip>
+		
+		<!-- properties for deploying the composite update site and zipped products on Sourceforge -->
+		
+		<!-- we need to make sure the path always points to this pom's directory -->
+		<ant-files-path>${project.basedir}/../xtraitj.releng/ant</ant-files-path>
+
+		<!-- the subdirectory for the composite update site -->
+		<updates.dir>xtraitj</updates.dir>
+		<site.label>Xtraitj Site</site.label>
+
+		<remote.dir>lbettini,xtraitj@frs.sourceforge.net:/home/frs/project/xtraitj</remote.dir>
+	
+		<!-- local source directory of p2 site for rsync -->
+		<rsync.remote.dir>${remote.dir}/updates/</rsync.remote.dir>
+		<!-- remote directory of p2 site for rsync -->
+		<rsync.local.dir>${user.home}/p2.repositories/${updates.dir}/</rsync.local.dir>
+
+		<!-- pass "-n" to perform a trial run with no changes made -->
+		<dryrun>-n</dryrun>
 	</properties>
 
 	<profiles>
@@ -85,21 +105,6 @@
 			</properties>
 		</profile>
 	
-		<profile>
-			<id>build-ide</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			
-			<properties>
-				<findbugs.skip>true</findbugs.skip>
-				<target-file-name>luna</target-file-name>
-			</properties>
-
-			<modules>
-				<module>../xtraitj.ide</module>
-			</modules>
-		</profile>
 	</profiles>
 
 	<build>

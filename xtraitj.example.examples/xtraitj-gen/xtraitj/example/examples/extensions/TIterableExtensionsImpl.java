@@ -127,7 +127,6 @@ public class TIterableExtensionsImpl<T extends Object> implements TIterableExten
   
   public <R extends Object> Iterable<R> _map(final Function1<? super T, ? extends R> mapper) {
     final Iterable<R> _function = new Iterable<R>() {
-      @Override
       public Iterator<R> iterator() {
         Iterable<T> _iterable = TIterableExtensionsImpl.this.getIterable();
         Iterator<T> _iterator = _iterable.iterator();
