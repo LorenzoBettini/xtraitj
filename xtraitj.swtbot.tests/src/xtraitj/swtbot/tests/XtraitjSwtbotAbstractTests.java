@@ -4,7 +4,6 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.root;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.waitForAutoBuild;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanBuild;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -225,10 +224,6 @@ public class XtraitjSwtbotAbstractTests {
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(mainProjectId));
 
-		// this will also create xtraitj-gen folder
-		waitForAutoBuild();
-		// a clean build is required to simulate what happens in the Workbench
-		cleanBuild();
 		waitForAutoBuild();
 		assertErrorsInProject(0);
 	}
