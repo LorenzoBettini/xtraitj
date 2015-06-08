@@ -1,6 +1,0 @@
-setpref targetPlatformPath="${target.platform}"
-# we assume that projects have already been resolved
-# and so has the target platform
-# we assume Xtend files have already been compiled
-build
-perform "xtraitj.site#site.p2"

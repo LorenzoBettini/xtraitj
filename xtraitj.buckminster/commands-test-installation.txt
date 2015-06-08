@@ -1,6 +1,0 @@
-setpref targetPlatformPath="${target.platform}"
-build
-#perform "xtraitj.site#eclipse-install-test-indigo"
-#perform "xtraitj.site#eclipse-install-test-juno"
-#perform "xtraitj.site#eclipse-install-test-kepler"
-perform "xtraitj.site#eclipse-install-test"
