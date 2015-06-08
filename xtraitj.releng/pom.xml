@@ -72,7 +72,7 @@
 		<rsync.local.dir>${user.home}/p2.repositories/${updates.dir}/</rsync.local.dir>
 
 		<!-- pass "-n" to perform a trial run with no changes made -->
-		<dryrun>-n</dryrun>
+		<dryrun></dryrun>
 	</properties>
 
 	<profiles>
