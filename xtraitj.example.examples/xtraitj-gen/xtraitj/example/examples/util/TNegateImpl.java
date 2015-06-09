@@ -1,6 +1,6 @@
-package xtrait.example.examples.util;
+package xtraitj.example.examples.util;
 
-import xtrait.example.examples.util.TNegate;
+import xtraitj.example.examples.util.TNegate;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;
 import xtraitj.runtime.lib.annotation.XtraitjTraitClass;

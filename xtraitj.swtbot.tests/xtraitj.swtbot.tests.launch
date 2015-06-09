@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
 <setAttribute key="additional_plugins">
 <setEntry value="org.objectweb.asm:5.0.1.v201404251740:default:true"/>
-<setEntry value="xtraitj.swtbot.tests:2.0.0.qualifier:default:true"/>
+<setEntry value="xtraitj.swtbot.tests:3.0.0.qualifier:default:true"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <booleanAttribute key="askclear" value="false"/>

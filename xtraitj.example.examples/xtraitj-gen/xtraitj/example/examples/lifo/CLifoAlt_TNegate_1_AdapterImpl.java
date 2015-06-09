@@ -1,8 +1,8 @@
 package xtraitj.example.examples.lifo;
 
-import xtrait.example.examples.util.TNegate;
-import xtrait.example.examples.util.TNegateImpl;
 import xtraitj.example.examples.lifo.CLifoAlt_TNegate_1_Adapter;
+import xtraitj.example.examples.util.TNegate;
+import xtraitj.example.examples.util.TNegateImpl;
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRenamedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;

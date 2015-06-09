@@ -19,4 +19,13 @@ Import-Package: org.apache.commons.logging,
  org.apache.log4j,
  xtraitj
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: my.traits
+Export-Package: my.traits,
+ xtraitj.example,
+ xtraitj.example.examples.extensions,
+ xtraitj.example.examples.extensions.tests,
+ xtraitj.example.examples.lifo,
+ xtraitj.example.examples.lifo.tests,
+ xtraitj.example.examples.stack,
+ xtraitj.example.examples.stack.tests,
+ xtraitj.example.examples.stack.tests.traits,
+ xtraitj.example.examples.util

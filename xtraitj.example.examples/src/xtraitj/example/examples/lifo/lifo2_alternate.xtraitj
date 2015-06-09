@@ -2,10 +2,10 @@ package xtraitj.example.examples.lifo;
 
 import java.util.ArrayList
 import java.util.List
+import xtraitj.example.examples.stack.TStack
+import xtraitj.example.examples.util.TNegate
 
-trait TLifoAlt<T> 
-		uses xtraitj.example.examples.stack.TStack<T>
-				[rename pop to old_pop] {
+trait TLifoAlt<T> uses TStack<T>[rename pop to old_pop] {
 	void pop() { 
 		old_pop()
 	}
@@ -16,9 +16,9 @@ trait TLifoAlt<T>
 	}
 }
 
-class CLifoAlt<T> implements ILifo<T> uses TLifoAlt<T>[hide old_pop], 
-		xtrait.example.examples.util.TNegate
-			[rename op to isEmpty, rename notOp to isNotEmpty] {
+class CLifoAlt<T> implements ILifo<T>
+			uses TLifoAlt<T>[hide old_pop],
+			TNegate[rename op to isEmpty, rename notOp to isNotEmpty] {
 	// the required method isNotEmpty from the interface ILifo
 	// is obtained through the TNegate trait (after renaming its methods);
 	// the TNegate's required method op, renamed to isEmpty, is

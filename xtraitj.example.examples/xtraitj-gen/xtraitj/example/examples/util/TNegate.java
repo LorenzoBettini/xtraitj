@@ -1,4 +1,4 @@
-package xtrait.example.examples.util;
+package xtraitj.example.examples.util;
 
 import xtraitj.runtime.lib.annotation.XtraitjDefinedMethod;
 import xtraitj.runtime.lib.annotation.XtraitjRequiredMethod;

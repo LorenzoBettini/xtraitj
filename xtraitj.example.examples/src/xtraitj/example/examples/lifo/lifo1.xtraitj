@@ -2,9 +2,9 @@ package xtraitj.example.examples.lifo;
 
 import java.util.ArrayList
 import java.util.List
+import xtraitj.example.examples.stack.TStack
 
-trait TLifo<V> uses xtraitj.example.examples.stack.TStack<V>
-				[hide pop] {
+trait TLifo<V> uses TStack<V>[hide pop] {
 	void pop() { 
 		if (!isEmpty)
 			collection.remove(0)
