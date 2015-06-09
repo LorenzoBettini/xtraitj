@@ -93,9 +93,9 @@ public class TIterableExtensionsImpl<T extends Object> implements TIterableExten
     final Iterator<T> iterator = _iterable.iterator();
     while (iterator.hasNext()) {
       {
-        final T next = iterator.next();
-        final String elementToString = next.toString();
-        result.append(elementToString);
+        T _next = iterator.next();
+        String _string = _next.toString();
+        result.append(_string);
         boolean _hasNext = iterator.hasNext();
         if (_hasNext) {
           result.append(separator);

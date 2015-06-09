@@ -1,25 +1,26 @@
 package xtraitj.example.examples.extensions;
 
+import java.util.ArrayList
+import java.util.Iterator
 import java.util.List
 import java.util.SortedSet
-import java.util.ArrayList
-import xtraitj.example.examples.extensions.TransformerIterator
+import java.util.Collection
 
 trait TIterableExtensions<T> {
 	
 	Iterable<T> iterable;
 	
 	T head() {
-		val iterator = iterable.iterator
-		if (iterator.hasNext)
-			return iterator.next
-		return null
+		val iterator = iterable.iterator();
+		if (iterator.hasNext())
+			return iterator.next();
+		return null;
 	}
 	
 	T last() {
 		// optimized according to the iterable type
 		if (iterable instanceof List<?>) {
-			val list = iterable as List<T>
+			val list = iterable as List<T>;
 			if (list.isEmpty())
 				return null;
 			return list.get(list.size() - 1);
@@ -41,9 +42,7 @@ trait TIterableExtensions<T> {
 		val result = new StringBuilder();
 		val iterator = iterable.iterator();
 		while (iterator.hasNext()) {
-			val T next = iterator.next();
-			val elementToString = next.toString;
-			result.append(elementToString);
+			result.append(iterator.next().toString());
 			if (iterator.hasNext())
 				result.append(separator);
 		}
@@ -51,11 +50,11 @@ trait TIterableExtensions<T> {
 	}
 
 	<R> List<R> mapToList((T) => R mapper) {
-		val result = new ArrayList<R>()
+		val result = new ArrayList<R>();
 		for (e : iterable) {
-			result += mapper.apply(e)
+			result += mapper.apply(e);
 		}
-		return result
+		return result;
 	}
 
 	<R> Iterable<R> map((T) => R mapper) {
@@ -65,10 +64,28 @@ trait TIterableExtensions<T> {
 	}
 }
 
-class StringListWithExtensions uses TIterableExtensions<String> {
-	Iterable<String> iterable;
+trait TIterable<T> {
+	Iterable<T> delegate;
 	
-	StringListWithExtensions(Iterable<String> iterable) {
-		this.iterable = iterable
+	Iterator<T> iterator() { return delegate.iterator(); }
+}
+
+class StringIterableWithExtensionsAlternative implements Iterable<String> 
+		uses TIterableExtensions<String>, TIterable<String> {
+	Iterable<String> iterable; // required by TIterableExtensions<String>
+	Iterable<String> delegate; // required by TIterable<String>
+	
+	StringIterableWithExtensionsAlternative(Collection<String> col) {
+		this.iterable = col;
+		this.delegate = iterable;
+	}
+}
+
+class StringIterableWithExtensions implements Iterable<String> 
+		uses TIterableExtensions<String>, TIterable<String>[rename field delegate to iterable] {
+	Iterable<String> iterable; // required by TIterableExtensions<String>
+	
+	StringIterableWithExtensions(Collection<String> col) {
+		this.iterable = col;
 	}
 }

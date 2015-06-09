@@ -1,12 +1,16 @@
 package xtraitj.example.examples.extensions;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import xtraitj.example.examples.extensions.StringIterableWithExtensions_TIterable_0_Adapter;
+import xtraitj.example.examples.extensions.StringIterableWithExtensions_TIterable_0_AdapterImpl;
 import xtraitj.example.examples.extensions.TIterableExtensions;
 import xtraitj.example.examples.extensions.TIterableExtensionsImpl;
 
 @SuppressWarnings("all")
-public class StringListWithExtensions implements TIterableExtensions<String> {
+public class StringIterableWithExtensions implements Iterable<String>, TIterableExtensions<String>, StringIterableWithExtensions_TIterable_0_Adapter {
   private Iterable<String> iterable;
   
   public Iterable<String> getIterable() {
@@ -17,8 +21,8 @@ public class StringListWithExtensions implements TIterableExtensions<String> {
     this.iterable = iterable;
   }
   
-  public StringListWithExtensions(final Iterable<String> iterable) {
-    this.iterable = iterable;
+  public StringIterableWithExtensions(final Collection<String> col) {
+    this.iterable = col;
   }
   
   private TIterableExtensionsImpl<String> _TIterableExtensions = new TIterableExtensionsImpl(this);
@@ -41,5 +45,11 @@ public class StringListWithExtensions implements TIterableExtensions<String> {
   
   public <R extends Object> Iterable<R> map(final Function1<? super String, ? extends R> mapper) {
     return _TIterableExtensions._map(mapper);
+  }
+  
+  private StringIterableWithExtensions_TIterable_0_AdapterImpl _TIterable_0 = new StringIterableWithExtensions_TIterable_0_AdapterImpl(this);
+  
+  public Iterator<String> iterator() {
+    return _TIterable_0._iterator();
   }
 }

@@ -30,7 +30,7 @@ class TransformerIterator<T,R>
 	(T) => R function ;
 	
 	TransformerIterator(Iterator<T> iterator, (T) => R function) {
-		this.iterator = iterator
-		this.function = function
+		this.iterator = iterator;
+		this.function = function;
 	}
 }

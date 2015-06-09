@@ -10,23 +10,23 @@ import org.eclipse.xtext.xbase.lib.Functions;
 import org.junit.Before;
 import org.junit.Test;
 
-import xtraitj.example.examples.extensions.StringListWithExtensions;
+import xtraitj.example.examples.extensions.StringIterableWithExtensions;
 
 import com.google.common.collect.Lists;
 
 public class ExtensionsTest {
 	
-	StringListWithExtensions list;
+	StringIterableWithExtensions list;
 	
 	@Before
 	public void setUp() {
-		list = new StringListWithExtensions(
+		list = new StringIterableWithExtensions(
 				Lists.newArrayList("first", "second", "third"));
 	}
 
 	@Test
 	public void testEmptyList() {
-		list = new StringListWithExtensions(new ArrayList<String>());
+		list = new StringIterableWithExtensions(new ArrayList<String>());
 		assertNull(list.head());
 		assertNull(list.last());
 	}
