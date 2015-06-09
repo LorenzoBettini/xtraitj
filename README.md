@@ -11,3 +11,5 @@ A trait is a set of methods which is completely independent from any class hiera
 Xtraitj is an implementation of traits completely compatible with Java. Single parts of a project can be refactored to use traits, without requiring a complete rewrite of the whole existing code-base.
 
 It is implemented in Xtext and Xbase.
+
+Download and installation instructions can be found at http://xtraitj.sourceforge.net/download/.
