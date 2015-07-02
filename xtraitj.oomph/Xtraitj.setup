@@ -6,12 +6,13 @@
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:launching="http://www.eclipse.org/oomph/setup/launching/1.0"
+    xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/launching/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Launching.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="xtraitj"
     label="Xtraitj">
   <setupTask
@@ -42,6 +43,22 @@
       defaultValue="Mars"
       storageURI="scope://Workspace"/>
   <setupTask
+      xsi:type="setup:VariableTask"
+      name="mwe2.site"
+      value="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.7.1/"/>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      name="xtext.site"
+      value="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.8.3/"/>
+  <setupTask
+      xsi:type="setup:VariableTask"
+      id="githubpassword"
+      type="PASSWORD"
+      name="github.user.password"
+      label="GitHub password for issues">
+    <description>Github User Password</description>
+  </setupTask>
+  <setupTask
       xsi:type="setup:CompoundTask"
       id="p2.eclipse.ide.plugins"
       name="Eclipse IDE plug-ins">
@@ -52,6 +69,8 @@
         licenseConfirmationDisabled="true">
       <requirement
           name="org.eclipse.sdk"/>
+      <requirement
+          name="org.eclipse.emf.sdk.feature.group"/>
       <description>Eclipse Core</description>
     </setupTask>
     <setupTask
@@ -60,11 +79,7 @@
         label="Xtext Releases"
         licenseConfirmationDisabled="true">
       <requirement
-          name="org.eclipse.emf.sdk.feature.group"/>
-      <requirement
           name="org.eclipse.xtext.sdk.feature.group"/>
-      <requirement
-          name="org.eclipse.xtend.sdk.feature.group"/>
       <requirement
           name="org.eclipse.emf.mwe2.language.sdk.feature.group"/>
       <requirement
@@ -72,9 +87,9 @@
       <requirement
           name="de.itemis.xtext.antlr.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/modeling/emf/emf/updates/releases/"/>
+          url="${xtext.site}"/>
       <repository
-          url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+          url="${mwe2.site}"/>
       <repository
           url="http://download.itemis.com/updates/releases/2.1.1/"/>
       <description>Xtext &amp; Xtend</description>
@@ -87,7 +102,7 @@
       <requirement
           name="org.eclipse.egit.feature.group"/>
       <repository
-          url="http://download.eclipse.org/egit/updates-stable-nightly"/>
+          url="http://download.eclipse.org/egit/updates"/>
       <description>Git connector</description>
     </setupTask>
     <setupTask
@@ -102,9 +117,9 @@
       <requirement
           name="org.eclipse.mylyn.github.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/kepler"/>
+          url="http://download.eclipse.org/egit/github/updates"/>
       <repository
-          url="http://download.eclipse.org/egit/github/updates-nightly"/>
+          url="http://download.eclipse.org/mylyn/releases/latest"/>
       <description>Task and build connector</description>
     </setupTask>
     <setupTask
@@ -117,8 +132,6 @@
       <requirement
           name="org.eclipse.m2e.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/kepler"/>
-      <repository
           url="http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.8.0/N/LATEST"/>
       <description>Maven connector</description>
     </setupTask>
@@ -129,6 +142,10 @@
         licenseConfirmationDisabled="true">
       <requirement
           name="org.eclipse.swtbot.eclipse.feature.group"/>
+      <requirement
+          name="org.eclipse.swtbot.ide.feature.group"/>
+      <requirement
+          name="org.eclipse.swtbot.generator.feature.feature.group"/>
       <repository
           url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
       <description>UI testing framework</description>
@@ -187,9 +204,11 @@
         <repository
             url="http://download.itemis.com/updates/releases/2.1.1/"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/releases/"/>
+            url="${xtext.site}"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+            url="${mwe2.site}"/>
+        <repository
+            url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
       </repositoryList>
       <repositoryList
           name="Luna">
@@ -198,9 +217,11 @@
         <repository
             url="http://download.itemis.com/updates/releases/2.1.1/"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/releases/"/>
+            url="${xtext.site}"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+            url="${mwe2.site}"/>
+        <repository
+            url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -225,6 +246,30 @@
       xsi:type="launching:LaunchTask"
       id="GenerateXtraitj2"
       launcher="Generate Language Infrastructure (xtraitj)"/>
+  <setupTask
+      xsi:type="mylyn:MylynQueriesTask"
+      connectorKind="github"
+      repositoryURL="https://github.com/LorenzoBettini/xtraitj"
+      userID="${github.user.id}"
+      password="${github.user.password}">
+    <query summary="${scope.project.label} bugs">
+      <attribute
+          key="state"
+          value="open::"/>
+      <attribute
+          key="labels"
+          value="bug::"/>
+    </query>
+    <query summary="${scope.project.label} features"
+        url="">
+      <attribute
+          key="state"
+          value="open::"/>
+      <attribute
+          key="labels"
+          value="enhancement::"/>
+    </query>
+  </setupTask>
   <stream name="master"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
