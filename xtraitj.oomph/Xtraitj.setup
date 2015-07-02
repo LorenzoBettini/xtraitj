@@ -16,6 +16,7 @@
     label="Xtraitj">
   <setupTask
       xsi:type="jdt:JRETask"
+      id=""
       version="JavaSE-1.7"
       location="${jre.location-1.7}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
@@ -56,7 +57,7 @@
     <setupTask
         xsi:type="setup.p2:P2Task"
         id="p2.org.eclipse.xtext"
-        label="TMF Xtext Releases"
+        label="Xtext Releases"
         licenseConfirmationDisabled="true">
       <requirement
           name="org.eclipse.emf.sdk.feature.group"/>
