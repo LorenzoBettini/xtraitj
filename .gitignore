@@ -7,7 +7,6 @@ logs.zip
 *.smap
 
 src-gen/
-xtend-gen/
 emf-gen/
 
 buildroot
