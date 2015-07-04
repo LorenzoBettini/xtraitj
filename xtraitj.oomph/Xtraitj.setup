@@ -326,6 +326,12 @@
       id="GenerateXtraitj2"
       launcher="Generate Language Infrastructure (xtraitj)"/>
   <setupTask
+      xsi:type="launching:LaunchTask"
+      id="GenerateExamplesZips"
+      launcher="Build Zips">
+    <description>Generate Zips of Examples</description>
+  </setupTask>
+  <setupTask
       xsi:type="mylyn:MylynQueriesTask"
       connectorKind="github"
       repositoryURL="https://github.com/LorenzoBettini/xtraitj"
