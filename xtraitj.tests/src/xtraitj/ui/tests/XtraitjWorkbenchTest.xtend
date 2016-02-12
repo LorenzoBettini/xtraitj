@@ -160,12 +160,12 @@ class XtraitjWorkbenchTest extends AbstractWorkbenchTest {
 	}
 
 	def waitForAutoBuildAndAssertNoErrors(IFile file) {
-		waitForAutoBuild();
+		waitForBuild();
 		assertNoErrors(file)
 	}
 
 	def waitForAutoBuildAndAssertErrors(IFile file) {
-		waitForAutoBuild();
+		waitForBuild();
 		assertErrors(file)
 	}
 
