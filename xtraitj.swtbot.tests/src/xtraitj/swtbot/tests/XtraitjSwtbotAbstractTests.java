@@ -1,9 +1,7 @@
 package xtraitj.swtbot.tests;
 
 import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.root;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.waitForAutoBuild;
+import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -79,7 +77,7 @@ public class XtraitjSwtbotAbstractTests {
 	@After
 	public void runAfterEveryTest() throws CoreException {
 		cleanWorkspace();
-		waitForAutoBuild();
+		reallyWaitForAutoBuild();
 	}
 
 	protected static void closeWelcomePage() throws InterruptedException {
@@ -202,7 +200,7 @@ public class XtraitjSwtbotAbstractTests {
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(TEST_PROJECT));
 		
-		waitForAutoBuild();
+		reallyWaitForAutoBuild();
 	}
 
 	protected void importExampleProjectAndAssertNoErrorMarker(String projectType,
@@ -224,7 +222,7 @@ public class XtraitjSwtbotAbstractTests {
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(mainProjectId));
 
-		waitForAutoBuild();
+		waitForBuild();
 		assertErrorsInProject(0);
 	}
 
@@ -298,7 +296,7 @@ public class XtraitjSwtbotAbstractTests {
 
 	protected void saveAndWaitForAutoBuild(SWTBotEditor botEditor) {
 		botEditor.save();
-		waitForAutoBuild();
+		reallyWaitForAutoBuild();
 	}
 
 }

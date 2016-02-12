@@ -132,7 +132,7 @@ public interface CInterface {
 }
 '''.toString);
 
-		IResourcesSetupUtil.waitForAutoBuild
+		IResourcesSetupUtil.waitForBuild
 		
 		'''
 package my.traits;
@@ -160,7 +160,7 @@ public interface CInterface<T> {
 }
 '''.toString);
 
-		IResourcesSetupUtil.waitForAutoBuild
+		IResourcesSetupUtil.waitForBuild
 		
 		'''
 package my.traits;

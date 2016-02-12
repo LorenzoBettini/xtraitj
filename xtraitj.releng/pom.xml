@@ -33,7 +33,7 @@
 		<findbugs-version>2.5.5</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<xtext.version>2.8.3</xtext.version>
+		<xtext.version>2.8.4</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
 		<fornax-oaw-m2-plugin-version>3.5.1</fornax-oaw-m2-plugin-version>
 		
@@ -77,9 +77,20 @@
 
 	<profiles>
 		<profile>
-			<id>luna</id>
+			<id>mars</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
+			</activation>
+			
+			<properties>
+				<target-file-name>mars-xtext-2.8</target-file-name>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>luna</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			
 			<properties>
@@ -293,11 +304,13 @@
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<!-- This is not present in Mars
 						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86</arch>
 						</environment>
+						 -->
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
