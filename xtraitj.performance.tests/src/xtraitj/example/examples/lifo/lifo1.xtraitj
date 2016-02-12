@@ -1,0 +1,30 @@
+package xtraitj.example.examples.lifo;
+
+import java.util.ArrayList
+import java.util.List
+import xtraitj.example.examples.stack.TStack
+
+trait TLifo<V> uses TStack<V>[hide pop] {
+	void pop() { 
+		if (!isEmpty)
+			collection.remove(0)
+	}
+	V top() {
+		if (isEmpty)
+			return null
+		return collection.get(0)
+	}
+}
+
+trait TNegateIsEmpty {
+	boolean isEmpty(); // required
+	boolean isNotEmpty() { return !isEmpty }
+}
+
+class CLifo<T> implements ILifo<T> uses TLifo<T>, TNegateIsEmpty {
+	// the required method isNotEmpty from the interface ILifo
+	// is obtained through the TNegateIsEmpty trait;
+	// the TNegateIsEmpty's required method isEmpty is
+	// provided by TLifo
+	List<T> collection = new ArrayList();
+}

@@ -1,0 +1,9 @@
+package xtraitj.example.examples.util;
+
+/**
+ * A simple trait that negates a boolean operation
+ */
+trait TNegate {
+	boolean op(); // required
+	boolean notOp() { return !op() }
+}

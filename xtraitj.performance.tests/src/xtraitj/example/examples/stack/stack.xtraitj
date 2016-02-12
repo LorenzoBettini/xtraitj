@@ -1,0 +1,54 @@
+package xtraitj.example.examples.stack;
+
+import java.util.List
+import xtraitj.example.examples.stack.IStack
+import java.util.ArrayList
+import java.util.Collection
+import java.util.Set
+
+trait TStack<T> {
+	List<T> collection;
+	
+	boolean isEmpty() { return collection.size == 0; }
+	void push(T o) { collection.add(0, o) }
+	T pop() { 
+		if (isEmpty())
+			return null;
+		return collection.remove(0);
+	}
+}
+
+class CStack<T> implements IStack<T> uses TStack<T> {
+	List<T> collection = new ArrayList();
+	
+	CStack() {}
+	
+	CStack(Collection<T> c) {
+		collection.addAll(c);
+	}
+}
+
+class CStackOfSetsOfComparable<T extends Comparable<T>> 
+				implements IStack<Set<T>> uses TStack<Set<T>> {
+	List<Set<T>> collection = new ArrayList();
+}
+
+trait TStackUtilities {
+	<U> String toString(IStack<U> stack) {
+		val buffer = new StringBuffer();
+		while (!stack.isEmpty()) {
+			buffer.append(stack.pop().toString())
+			buffer.append("\n")
+		}
+		return buffer.toString();
+	}
+}
+
+class CStackUtilities uses TStackUtilities {
+	
+}
+
+trait TCollectionStack<T extends Collection<U>, U> 
+		uses TStack<Collection<U>> {
+	
+}
