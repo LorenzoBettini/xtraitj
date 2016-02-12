@@ -222,7 +222,7 @@ public class XtraitjSwtbotAbstractTests {
 		bot.waitUntil(shellCloses(shell), SWTBotPreferences.TIMEOUT);
 		assertTrue("Project doesn't exist", isProjectCreated(mainProjectId));
 
-		reallyWaitForAutoBuild();
+		waitForBuild();
 		assertErrorsInProject(0);
 	}
 
