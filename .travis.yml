@@ -10,6 +10,11 @@ cache:
 
 env: DISPLAY=:99.0
 
+addons:
+  apt:
+    packages:
+    - metacity
+
 install: true
 
 #before_install:
@@ -29,4 +34,4 @@ before_script:
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true -Dswtbot.tests.skip=true
+ - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true
