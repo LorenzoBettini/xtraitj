@@ -17,12 +17,12 @@
 		<module>../xtraitj.ui.examples</module>
 		<module>../xtraitj.tests</module>
 		<module>../xtraitj.performance.tests</module>
-		<module>../xtraitj.swtbot.tests.feature</module>
-		<module>../xtraitj.swtbot.tests</module>
 		<module>../xtraitj.examples.feature</module>
 		<module>../xtraitj.sdk</module>
 		<module>../xtraitj.ide.feature</module>
 		<module>../xtraitj.site</module>
+		<module>../xtraitj.swtbot.tests.feature</module>
+		<module>../xtraitj.swtbot.tests</module>
 	</modules>
 
 	<properties>
@@ -34,6 +34,7 @@
 		<jacoco-version>0.7.4.201502262128</jacoco-version>
 		<findbugs-version>2.5.5</findbugs-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<os-jvm-flags />
 		<memoryArgs>-Xms256M -Xmx1024M -XX:PermSize=256M -XX:MaxPermSize=256M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<xtext.version>2.8.4</xtext.version>
 		<platform-version>[3.9,4.0)</platform-version>
@@ -56,6 +57,8 @@
 		<findbugs.skip>false</findbugs.skip>
 		<swtbot.tests.only>false</swtbot.tests.only>
 		<swtbot.tests.skip>false</swtbot.tests.skip>
+		
+		<target-file-name>mars-xtext-2.8</target-file-name>
 		
 		<!-- properties for deploying the composite update site and zipped products on Sourceforge -->
 		
@@ -116,6 +119,72 @@
 			<properties>
 				<target-file-name>local</target-file-name>
 			</properties>
+		</profile>
+		
+		<profile>
+			<id>deploy-ide</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<properties>
+				<findbugs.skip>true</findbugs.skip>
+			</properties>
+
+			<build>
+				<plugins>
+					<!-- specify all environments when building the IDE for deployment -->
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>xtraitj</groupId>
+									<artifactId>xtraitj.targetplatform</artifactId>
+									<version>${project.version}</version>
+									<classifier>${target-file-name}</classifier> 
+								</artifact>
+							</target>
+							<environments>
+								<environment>
+									<os>win32</os>
+									<ws>win32</ws>
+									<arch>x86</arch>
+								</environment>
+								<environment>
+									<os>win32</os>
+									<ws>win32</ws>
+									<arch>x86_64</arch>
+								</environment>
+								<environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>x86_64</arch>
+								</environment>
+								<!-- This is not present in Mars
+								<environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>x86</arch>
+								</environment>
+								 -->
+								<environment>
+									<os>linux</os>
+									<ws>gtk</ws>
+									<arch>x86</arch>
+								</environment>
+								<environment>
+									<os>linux</os>
+									<ws>gtk</ws>
+									<arch>x86_64</arch>
+								</environment>
+							</environments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	
 	</profiles>
@@ -278,6 +347,7 @@
 			</plugin>
 			
 			<plugin>
+				<!-- in standard build, use only the current environment -->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
@@ -290,40 +360,6 @@
 							<classifier>${target-file-name}</classifier> 
 						</artifact>
 					</target>
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<!-- This is not present in Mars
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86</arch>
-						</environment>
-						 -->
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
 				</configuration>
 			</plugin>
 			

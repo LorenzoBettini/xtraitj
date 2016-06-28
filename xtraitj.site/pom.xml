@@ -13,6 +13,38 @@
 	<artifactId>xtraitj.site</artifactId>
 	<packaging>eclipse-repository</packaging>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<products>
+						<product>
+							<id>xtraitj.ide.product</id>
+							<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
+						</product>
+					</products>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<profiles>
 		<profile>
 			<id>release-composite</id>
@@ -126,45 +158,6 @@
 		</profile>
 
 		<profile>
-			<id>build-ide</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-p2-director-plugin</artifactId>
-						<version>${tycho-version}</version>
-						<executions>
-							<execution>
-								<id>materialize-products</id>
-								<goals>
-									<goal>materialize-products</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>archive-products</id>
-								<goals>
-									<goal>archive-products</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<products>
-								<product>
-									<id>xtraitj.ide.product</id>
-									<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
-								</product>
-							</products>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>deploy-ide</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -172,34 +165,6 @@
 
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-p2-director-plugin</artifactId>
-						<version>${tycho-version}</version>
-						<executions>
-							<execution>
-								<id>materialize-products</id>
-								<goals>
-									<goal>materialize-products</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>archive-products</id>
-								<goals>
-									<goal>archive-products</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<products>
-								<product>
-									<id>xtraitj.ide.product</id>
-									<archiveFileName>xtraitj-ide-${unqualifiedVersion}-${buildQualifier}</archiveFileName>
-								</product>
-							</products>
-						</configuration>
-					</plugin>
-
 					<plugin>
 						<!-- this is configured in pluginManagement section of the parent pom -->
 						<artifactId>maven-antrun-plugin</artifactId>

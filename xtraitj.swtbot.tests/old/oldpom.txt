@@ -1,0 +1,53 @@
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<skip>${swtbot.tests.skip}</skip>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+						for jacoco agent -->
+					<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true -Dorg.eclipse.swtbot.search.timeout=180000</argLine>
+					<excludes>
+						<exclude>**/*AbstractTest*.java</exclude>
+						<exclude>**/utils/*.java</exclude>
+						<exclude>**/*Activator*.java</exclude>
+					</excludes>
+					<includes>
+						<include>**/Xtraitj*Test*.java</include>
+					</includes>
+					<environmentVariables>
+						<SWT_GTK3>0</SWT_GTK3>
+					</environmentVariables>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<!-- to get the org.eclipse.osgi.compatibility.state plugin iff the 
+								targeted Eclipse version (e.g., Luna) has it (backwards compatible with kepler 
+								and previous versions) -->
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>xtraitj.swtbot.tests.feature</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
