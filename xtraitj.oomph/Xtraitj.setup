@@ -431,6 +431,10 @@
   </setupTask>
   <setupTask
       xsi:type="launching:LaunchTask"
+      id="GenerateXtraitjModelClasses"
+      launcher="GenerateXtraitjModelClasses.mwe2"/>
+  <setupTask
+      xsi:type="launching:LaunchTask"
       id="GenerateXtraitj2"
       launcher="Generate Language Infrastructure (xtraitj)"/>
   <setupTask
