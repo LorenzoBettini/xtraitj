@@ -1,66 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-	<relativePath>../xtraitj.releng/pom.xml</relativePath>
-	<groupId>xtraitj</groupId>
-	<artifactId>xtraitj.releng</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
-  </parent>
+	<parent>
+		<relativePath>../xtraitj.releng/pom.xml</relativePath>
+		<groupId>xtraitj</groupId>
+		<artifactId>xtraitj.releng</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
 
 	<artifactId>xtraitj.swtbot.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
-  <build>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.eclipse.xtend</groupId>
-			<artifactId>xtend-maven-plugin</artifactId>
-		</plugin>
-		
-		<plugin>
-	        <groupId>org.eclipse.tycho</groupId>
-	        <artifactId>tycho-surefire-plugin</artifactId>
-	        <version>${tycho-version}</version>
-			<configuration>
-				<skip>${swtbot.tests.skip}</skip>
-				<useUIHarness>true</useUIHarness>
-				<useUIThread>false</useUIThread>
-				<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
-				<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true -Dorg.eclipse.swtbot.search.timeout=180000</argLine>
-				<excludes>
-					<exclude>**/*AbstractTest*.java</exclude>
-					<exclude>**/utils/*.java</exclude>
-					<exclude>**/*Activator*.java</exclude>
-				</excludes>
-				<includes>
-					<include>**/Xtraitj*Test*.java</include>
-				</includes>
-				<environmentVariables>
-					<SWT_GTK3>0</SWT_GTK3>
-				</environmentVariables>
-			</configuration>
-	    </plugin>
-	    
-	    <plugin>
-			<groupId>org.eclipse.tycho</groupId>
-			<artifactId>target-platform-configuration</artifactId>
-			<configuration>
-				<dependency-resolution>
-					<extraRequirements>
-						<!-- to get the org.eclipse.osgi.compatibility.state plugin iff 
-						the targeted Eclipse version (e.g., Luna) has it
-						(backwards compatible with kepler and previous versions) -->
-						<requirement>
-							<type>eclipse-feature</type>
-							<id>xtraitj.swtbot.tests.feature</id>
-							<versionRange>0.0.0</versionRange>
-						</requirement>
-					</extraRequirements>
-				</dependency-resolution>
-			</configuration>
-		</plugin>
-  	</plugins>
-  </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<skip>${swtbot.tests.skip}</skip>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+						for jacoco agent -->
+					<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true -Dorg.eclipse.swtbot.search.timeout=180000</argLine>
+					<excludes>
+						<exclude>**/*AbstractTest*.java</exclude>
+						<exclude>**/utils/*.java</exclude>
+						<exclude>**/*Activator*.java</exclude>
+					</excludes>
+					<includes>
+						<include>**/Xtraitj*Test*.java</include>
+					</includes>
+					<environmentVariables>
+						<SWT_GTK3>0</SWT_GTK3>
+					</environmentVariables>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<!-- to get the org.eclipse.osgi.compatibility.state plugin iff the 
+								targeted Eclipse version (e.g., Luna) has it (backwards compatible with kepler 
+								and previous versions) -->
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>xtraitj.swtbot.tests.feature</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
