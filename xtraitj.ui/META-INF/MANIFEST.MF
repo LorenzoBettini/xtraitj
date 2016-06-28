@@ -31,5 +31,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: xtraitj.ui.quickfix,
  xtraitj.ui.contentassist,
  xtraitj.ui.contentassist.antlr,
- xtraitj.ui.internal
+ xtraitj.ui.internal,
+ xtraitj.ui.contentassist.antlr.internal
 Bundle-Activator: xtraitj.ui.internal.XtraitjActivator
