@@ -17,14 +17,17 @@ import org.eclipse.xtext.common.types.JvmTypeReference
 import org.eclipse.xtext.common.types.JvmUpperBound
 import org.eclipse.xtext.common.types.TypesPackage
 import org.eclipse.xtext.common.types.impl.JvmVoidImpl
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.validation.Check
-import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsJavaValidator
+import org.eclipse.xtext.validation.CheckType
+import org.eclipse.xtext.xbase.annotations.validation.XbaseWithAnnotationsValidator
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.eclipse.xtext.xbase.typesystem.util.Multimaps2
 import org.eclipse.xtext.xbase.validation.IssueCodes
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.scoping.XtraitjIndex
 import xtraitj.typing.XtraitjTypingUtil
 import xtraitj.util.XtraitjAnnotatedElementHelper
 import xtraitj.xtraitj.TJAliasOperation
@@ -43,18 +46,15 @@ import xtraitj.xtraitj.TJTraitOperationForProvided
 import xtraitj.xtraitj.TJTraitReference
 import xtraitj.xtraitj.XtraitjPackage
 
-import static extension xtraitj.util.XtraitjModelUtil.*
 import static extension xtraitj.jvmmodel.XtraitjResolvedOperationUtil.*
-import org.eclipse.xtext.validation.CheckType
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import xtraitj.scoping.XtraitjIndex
+import static extension xtraitj.util.XtraitjModelUtil.*
 
 /**
  * Custom validation rules. 
  *
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
-class XtraitjValidator extends XbaseWithAnnotationsJavaValidator {
+class XtraitjValidator extends XbaseWithAnnotationsValidator {
 
 	public static val PREFIX = "xtraitj."
 
