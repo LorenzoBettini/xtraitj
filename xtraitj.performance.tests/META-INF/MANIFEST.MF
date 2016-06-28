@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: xtraitj.performance.tests
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Lorenzo Bettini
+Bundle-Version: 3.0.0.qualifier
 Bundle-SymbolicName: xtraitj.performance.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
