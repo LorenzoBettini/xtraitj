@@ -20,4 +20,8 @@
       name="xtraitj.site"/>
   <requirement
       name="xtraitj.analysis.feature"/>
+  <requirement
+      name="xtraitj.ide.feature.feature.group"/>
+  <requirement
+      name="xtraitj.performance.tests"/>
 </targlets:ComponentDefinition>
