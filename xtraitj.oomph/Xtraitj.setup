@@ -440,6 +440,13 @@
     <description>Generate Zips of Examples</description>
   </setupTask>
   <setupTask
+      xsi:type="projects:ProjectsBuildTask"
+      id="CleanBuild"
+      refresh="true"
+      clean="true">
+    <description>CleanBuild</description>
+  </setupTask>
+  <setupTask
       xsi:type="mylyn:MylynQueriesTask"
       connectorKind="github"
       repositoryURL="https://github.com/LorenzoBettini/xtraitj"
