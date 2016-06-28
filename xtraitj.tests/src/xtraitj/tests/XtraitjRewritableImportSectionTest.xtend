@@ -11,8 +11,8 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.xbase.imports.RewritableImportSection
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.xtraitj.TJProgram
+
 import static org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))

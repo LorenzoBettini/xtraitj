@@ -6,8 +6,8 @@ import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.tests.AbstractXtraitjCompilerTest
+import xtraitj.tests.XtraitjInjectorProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))

@@ -24,4 +24,6 @@
       name="xtraitj.ide.feature.feature.group"/>
   <requirement
       name="xtraitj.performance.tests"/>
+  <requirement
+      name="xtraitj.ui.tests"/>
 </targlets:ComponentDefinition>

@@ -9,7 +9,6 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
 import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.xtraitj.TJDeclaration

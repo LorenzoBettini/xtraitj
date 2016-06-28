@@ -3,34 +3,30 @@
  */
 package xtraitj
 
+import com.google.inject.Binder
+import com.google.inject.name.Names
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.eclipse.xtext.service.SingletonBinding
 import org.eclipse.xtext.xbase.compiler.TypeReferenceSerializer
-import org.eclipse.xtext.xbase.scoping.batch.XbaseBatchScopeProvider
 import org.eclipse.xtext.xbase.typesystem.conformance.TypeConformanceComputer
 import org.eclipse.xtext.xbase.typesystem.^override.OverrideHelper
+import org.eclipse.xtext.xbase.validation.JvmTypeReferencesValidator
 import xtraitj.compiler.XtraitjTypeReferenceSerializer
 import xtraitj.generator.XtraitjOutputConfigurationProvider
 import xtraitj.scoping.XtraitjImportedNamespaceScopeProvider
-import xtraitj.scoping.XtraitjXbaseBatchScopeProvider
 import xtraitj.typesystem.conformance.XtraitjTypeConformanceComputer
 import xtraitj.typesystem.^override.XtraitjOverrideHelper
 import xtraitj.validation.XtraitjJvmTypeReferencesValidator
-import com.google.inject.Binder
-import com.google.inject.name.Names
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
+class XtraitjRuntimeModule extends AbstractXtraitjRuntimeModule {
 	override void configure(Binder binder) {
 		super.configure(binder)
 		binder.bind(TypeConformanceComputer).to(XtraitjTypeConformanceComputer)
-	}
-
-	override Class<? extends XbaseBatchScopeProvider> bindXbaseBatchScopeProvider() {
-		return XtraitjXbaseBatchScopeProvider
 	}
 
 	def Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
@@ -50,7 +46,7 @@ class XtraitjRuntimeModule extends xtraitj.AbstractXtraitjRuntimeModule {
 		return XtraitjOverrideHelper
 	}
 
-	@org.eclipse.xtext.service.SingletonBinding(eager=true) override Class<? extends org.eclipse.xtext.xbase.validation.JvmTypeReferencesValidator> bindJvmTypeReferencesValidator() {
+	@SingletonBinding(eager=true) override Class<? extends JvmTypeReferencesValidator> bindJvmTypeReferencesValidator() {
 		return XtraitjJvmTypeReferencesValidator
 	}
 }

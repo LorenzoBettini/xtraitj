@@ -1,27 +1,26 @@
 package xtraitj.tests
 
 import com.google.inject.Inject
+import org.eclipse.xtext.common.types.JvmDeclaredType
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.typesystem.^override.IResolvedOperation
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.MyGenericAnnotatedJavaInterface
 import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceDerived
+import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired
 import xtraitj.input.tests.MyGenericTestInterface
 import xtraitj.input.tests.MyGenericTestInterfaceWithTwoTypeParameters
 import xtraitj.input.tests.MyGenericThirdTestInterface
 import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
 import xtraitj.jvmmodel.XtraitjResolvedOperations
 import xtraitj.xtraitj.TJTrait
+import xtraitj.xtraitj.TJTraitReference
 
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
 import static extension xtraitj.util.XtraitjModelUtil.*
-import xtraitj.xtraitj.TJTraitReference
-import xtraitj.jvmmodel.XtraitjJvmModelUtil
-import org.eclipse.xtext.common.types.JvmDeclaredType
-import xtraitj.input.tests.MyGenericAnnotatedJavaInterfaceOverridesDefinedWithRequired
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))

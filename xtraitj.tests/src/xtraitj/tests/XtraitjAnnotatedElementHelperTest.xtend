@@ -7,14 +7,13 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.input.tests.MyAnnotatedJavaClass
 import xtraitj.input.tests.MyAnnotatedJavaInterface
+import xtraitj.input.tests.MyAnnotatedRenamedMethod
 import xtraitj.util.XtraitjAnnotatedElementHelper
 
 import static extension org.junit.Assert.*
 import static extension xtraitj.tests.utils.XtraitjTestsUtils.*
-import xtraitj.input.tests.MyAnnotatedRenamedMethod
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))

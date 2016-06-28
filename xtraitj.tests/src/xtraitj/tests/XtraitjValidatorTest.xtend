@@ -9,7 +9,6 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.validation.IssueCodes
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.validation.XtraitjValidator
 import xtraitj.xtraitj.XtraitjPackage
 

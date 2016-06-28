@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.xtext;bundle-version="[2.10.0,2.11.0)";visibility:=r
  org.objectweb.asm;bundle-version="5.0.1";visibility:=reexport,
  org.eclipse.equinox.common,
  xtraitj.runtime.lib;visibility:=reexport,
- org.eclipse.xtext.ecore
+ org.eclipse.xtext.ecore,
+ org.eclipse.xtend.lib
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
