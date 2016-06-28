@@ -25,6 +25,7 @@
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 					<useUIHarness>true</useUIHarness>
+					<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
