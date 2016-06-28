@@ -6,11 +6,11 @@ import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
+import xtraitj.XtraitjInjectorProvider
 import xtraitj.tests.AbstractXtraitjCompilerTest
-import xtraitj.tests.InjectorProviderCustom
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(InjectorProviderCustom))
+@InjectWith(typeof(XtraitjInjectorProvider))
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class XtraitjCompilerPerformanceTest extends AbstractXtraitjCompilerTest {
 

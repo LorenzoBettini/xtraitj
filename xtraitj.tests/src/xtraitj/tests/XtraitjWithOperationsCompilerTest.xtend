@@ -5,9 +5,10 @@ import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.xbase.compiler.CompilationTestHelper.Result
 import org.junit.Test
 import org.junit.runner.RunWith
+import xtraitj.XtraitjInjectorProvider
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(InjectorProviderCustom))
+@InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjWithOperationsCompilerTest extends AbstractXtraitjCompilerTest {
 	
 	@Test def void testTraitRenamedRequiredMethodDoesNotConflict() {
