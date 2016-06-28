@@ -27,7 +27,6 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: xtraitj,
- xtraitj.formatting,
  xtraitj.generator,
  xtraitj.jvmmodel,
  xtraitj.parser.antlr,
@@ -42,4 +41,5 @@ Export-Package: xtraitj,
  xtraitj.validation,
  xtraitj.xtraitj,
  xtraitj.xtraitj.impl,
- xtraitj.xtraitj.util
+ xtraitj.xtraitj.util,
+ xtraitj.formatting2

@@ -44,6 +44,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		class C uses T {
 		String s ;
 		}
+		
 		'''.toString.
 		assertEqualsStrings(editor.text)
 		
@@ -83,6 +84,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		class C uses T<Integer> {
 		Integer s ;
 		}
+		
 		'''.toString.
 		assertEqualsStrings(editor.text)
 		
@@ -137,6 +139,7 @@ class XtraitjQuickfixTests extends XtraitjSwtbotAbstractTests {
 		class C uses T<Integer>[rename field s to s1] {
 		Integer s1 ;
 		}
+		
 		'''.toString.
 		assertEqualsStrings(editor.text)
 		
