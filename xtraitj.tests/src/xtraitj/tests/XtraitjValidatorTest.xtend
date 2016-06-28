@@ -391,8 +391,8 @@ trait UsesT uses
 }
 		'''.parse.assertErrorsAsStrings(
 '''
-Couldn't resolve reference to JvmIdentifiableElement 'f'.
-Couldn't resolve reference to JvmIdentifiableElement 'b'.
+The method or field f is undefined
+The method or field b is undefined
 The method f(String) is undefined
 The method b(boolean) is undefined'''
 )
@@ -511,7 +511,7 @@ trait T2 uses T1<String> {
 }
 		'''.parse.assertErrorsAsStrings(
 '''
-Couldn't resolve reference to JvmType 'T1'.'''
+T1 cannot be resolved to a type.'''
 		)
 	}
 
@@ -1229,7 +1229,7 @@ class C uses T3 {
 			assertError(
 				XtraitjPackage.eINSTANCE.TJRestrictOperation,
 				Diagnostic.LINKING_DIAGNOSTIC,
-				"Couldn't resolve reference to JvmMember 'n'."
+				"n cannot be resolved."
 			)
 		]
 	}
