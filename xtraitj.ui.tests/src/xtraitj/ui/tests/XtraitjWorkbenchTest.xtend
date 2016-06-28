@@ -2,6 +2,7 @@ package xtraitj.ui.tests
 
 import com.google.inject.Inject
 import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.IMarker
 import org.eclipse.core.resources.IResource
 import org.eclipse.emf.ecore.EValidator
 import org.eclipse.xtext.junit4.InjectWith
@@ -10,12 +11,10 @@ import org.eclipse.xtext.junit4.ui.AbstractWorkbenchTest
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjUiInjectorProvider
 import xtraitj.tests.utils.ui.PDETargetPlatformUtils
 import xtraitj.tests.utils.ui.PluginProjectHelper
 
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.*
-import org.eclipse.core.resources.IMarker
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))

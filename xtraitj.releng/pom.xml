@@ -17,6 +17,7 @@
 		<module>../xtraitj.example.examples</module>
 		<module>../xtraitj.ui.examples</module>
 		<module>../xtraitj.tests</module>
+		<module>../xtraitj.ui.tests</module>
 		<module>../xtraitj.performance.tests</module>
 		<module>../xtraitj.examples.feature</module>
 		<module>../xtraitj.sdk</module>

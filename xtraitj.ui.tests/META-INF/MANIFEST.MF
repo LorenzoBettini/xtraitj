@@ -10,9 +10,13 @@ Require-Bundle: xtraitj.ui,
  org.eclipse.xtext.junit4,
  org.eclipse.xtext.xbase.junit,
  org.eclipse.ui.workbench;resolution:=optional,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.core,
+ org.eclipse.pde.core,
+ org.eclipse.xtext.common.types.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: xtraitj.ui.tests
+Export-Package: xtraitj.tests.utils.ui,
+ xtraitj.ui.tests
 Import-Package: org.junit.runners;version="4.5.0",
  org.junit.runners.model;version="4.5.0",
  org.hamcrest.core,

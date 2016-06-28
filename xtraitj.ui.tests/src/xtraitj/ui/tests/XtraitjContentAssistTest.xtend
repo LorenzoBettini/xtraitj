@@ -10,7 +10,6 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjUiInjectorProvider
 import xtraitj.tests.utils.ui.PDETargetPlatformUtils
 import xtraitj.tests.utils.ui.PluginProjectHelper
 import xtraitj.ui.internal.XtraitjActivator
