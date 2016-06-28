@@ -13,11 +13,49 @@
 	<artifactId>xtraitj.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<executions>
+					<execution>
+						<!-- The execution id default-test must be left to tycho-surefire-plugin 
+							since it will execute it anyway -->
+						<id>MavenSurefirePluginTest</id>
+						<phase>test</phase>
+						<configuration>
+							<skip>${swtbot.tests.only}</skip>
+							<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+								for jacoco agent -->
+							<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
+							<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+							<includes>
+								<include>**/xtraitj/tests/*Test.java</include>
+							</includes>
+							<excludes>
+								<exclude>**/xtraitj/tests/*CompilerTest.java</exclude>
+							</excludes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -37,7 +75,7 @@
 								for jacoco agent -->
 							<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
 							<includes>
-								<include>**/xtraitj/tests/*Test.java</include>
+								<include>**/xtraitj/tests/*CompilerTest.java</include>
 							</includes>
 						</configuration>
 						<goals>
