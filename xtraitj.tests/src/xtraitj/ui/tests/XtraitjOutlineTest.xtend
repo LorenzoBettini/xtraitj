@@ -4,8 +4,8 @@ import com.google.inject.Inject
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.junit4.ui.AbstractOutlineTest
 import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil
-import org.eclipse.xtext.ui.tests.editor.outline.AbstractOutlineWorkbenchTest
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,7 +16,7 @@ import xtraitj.ui.internal.XtraitjActivator
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjUiInjectorProvider))
-class XtraitjOutlineTest extends AbstractOutlineWorkbenchTest {
+class XtraitjOutlineTest extends AbstractOutlineTest {
 	
 	@Inject PluginProjectHelper projectHelper
 	
