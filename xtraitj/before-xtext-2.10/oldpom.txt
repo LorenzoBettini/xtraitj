@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../xtraitj.releng/pom.xml</relativePath>
+		<groupId>xtraitj</groupId>
+		<artifactId>xtraitj.releng</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>xtraitj</artifactId>
+	<packaging>eclipse-plugin</packaging>
+
+	<!-- <name>Xtraitj</name> -->
+
+	<dependencies>
+		<!-- This is required only for allowing the X
+			be used as a Maven jar with the xtext-maven-plugin  -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>xtraitj.runtime.requirements</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<!-- The following is required so that the mwe2 workflow finds the .xtext 
+			grammar file -->
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.xtext</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+				<!-- We let the mwe2 workflow clean the src-gen folders -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 				<artifactId>maven-clean-plugin</artifactId> -->
+<!-- 				<version>2.5</version> -->
+<!-- 				<configuration> -->
+<!-- 					<skip>${mwe2.skip}</skip> -->
+<!-- 					<filesets> -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/src-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/xtend-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 						clean ui plugin as well -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/../${project.artifactId}.ui/src-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/../${project.artifactId}.ui/xtend-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 						clean test fragment as well -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/../${project.artifactId}.tests/src-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 						<fileset> -->
+<!-- 							<directory>${basedir}/../${project.artifactId}.tests/xtend-gen</directory> -->
+<!-- 						</fileset> -->
+<!-- 					</filesets> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+
+			<plugin>
+				<groupId>org.fornax.toolsupport</groupId>
+				<artifactId>fornax-oaw-m2-plugin</artifactId>
+				<version>${fornax-oaw-m2-plugin-version}</version>
+				<configuration>
+					<skip>${mwe2.skip}</skip>
+					<workflowEngine>mwe2</workflowEngine>
+					<workflowDescriptor>src/xtraitj/GenerateXtraitj.mwe2</workflowDescriptor>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run-workflow</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.xtext</groupId>
+						<artifactId>xtext-antlr-generator</artifactId>
+						<version>[2.1.1, 3.0)</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
