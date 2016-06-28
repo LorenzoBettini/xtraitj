@@ -1,6 +1,6 @@
 package xtraitj.example.examples.lifo;
 
-import java.util.ArrayList
+import java.util.LinkedList
 import java.util.List
 import xtraitj.example.examples.stack.TStack
 import xtraitj.example.examples.util.TNegate
@@ -23,5 +23,5 @@ class CLifoAlt<T> implements ILifo<T>
 	// is obtained through the TNegate trait (after renaming its methods);
 	// the TNegate's required method op, renamed to isEmpty, is
 	// provided by TLifo
-	List<T> collection = new ArrayList();
+	List<T> collection = new LinkedList();
 }

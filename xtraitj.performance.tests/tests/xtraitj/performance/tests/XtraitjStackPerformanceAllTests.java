@@ -6,8 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	XtraitjManualStackPerformanceTest.class,
-	XtraitjTraitStackPerformanceTest.class
+	XtraitjTraitStackPerformanceTest.class,
+	XtraitjManualStackPerformanceTest.class
 })
 public class XtraitjStackPerformanceAllTests {
 

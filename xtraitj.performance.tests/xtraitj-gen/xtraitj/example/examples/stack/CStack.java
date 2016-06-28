@@ -1,7 +1,7 @@
 package xtraitj.example.examples.stack;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import xtraitj.example.examples.stack.IStack;
 import xtraitj.example.examples.stack.TStack;
@@ -9,7 +9,7 @@ import xtraitj.example.examples.stack.TStackImpl;
 
 @SuppressWarnings("all")
 public class CStack<T extends Object> implements IStack<T>, TStack<T> {
-  private List<T> collection = new ArrayList<T>();
+  private List<T> collection = new LinkedList<T>();
   
   public List<T> getCollection() {
     return this.collection;

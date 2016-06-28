@@ -1,6 +1,6 @@
 package xtraitj.example.examples.lifo;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import xtraitj.example.examples.lifo.CLifoAlt_TLifoAlt_0_Adapter;
 import xtraitj.example.examples.lifo.CLifoAlt_TLifoAlt_0_AdapterImpl;
@@ -10,7 +10,7 @@ import xtraitj.example.examples.lifo.ILifo;
 
 @SuppressWarnings("all")
 public class CLifoAlt<T extends Object> implements ILifo<T>, CLifoAlt_TLifoAlt_0_Adapter<T>, CLifoAlt_TNegate_1_Adapter<T> {
-  private List<T> collection = new ArrayList<T>();
+  private List<T> collection = new LinkedList<T>();
   
   public List<T> getCollection() {
     return this.collection;

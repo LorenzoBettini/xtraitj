@@ -1,11 +1,11 @@
 package xtraitj.example.examples.stack;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ManualStack<T> implements IStack<T> {
 
-	private List<T> collection = new ArrayList<T>();
+	private List<T> collection = new LinkedList<T>();
 
 	@Override
 	public boolean isEmpty() {

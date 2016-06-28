@@ -1,9 +1,9 @@
 package xtraitj.example.examples.stack;
 
-import java.util.List
-import xtraitj.example.examples.stack.IStack
 import java.util.ArrayList
 import java.util.Collection
+import java.util.LinkedList
+import java.util.List
 import java.util.Set
 
 trait TStack<T> {
@@ -19,7 +19,7 @@ trait TStack<T> {
 }
 
 class CStack<T> implements IStack<T> uses TStack<T> {
-	List<T> collection = new ArrayList();
+	List<T> collection = new LinkedList();
 	
 	CStack() {}
 	
