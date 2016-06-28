@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-	<relativePath>../xtraitj.releng/pom.xml</relativePath>
-	<groupId>xtraitj</groupId>
-	<artifactId>xtraitj.releng</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
-  </parent>
+	<parent>
+		<relativePath>../xtraitj.releng/pom.xml</relativePath>
+		<groupId>xtraitj</groupId>
+		<artifactId>xtraitj.releng</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
 
 	<artifactId>xtraitj.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
@@ -19,105 +19,105 @@
 			<version>${junit-version}</version>
 		</dependency>
 	</dependencies>
-	  
-  <build>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.eclipse.xtend</groupId>
-			<artifactId>xtend-maven-plugin</artifactId>
-		</plugin>
-		
-		<plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>${maven-surefire-plugin.version}</version>
-	       	<executions>
-				<execution>
-					<!-- The execution id default-test must be left to tycho-surefire-plugin
-						since it will execute it anyway -->
-					<id>MavenSurefirePluginTest</id>
-					<phase>test</phase>
-					<configuration>
-						<skip>${swtbot.tests.only}</skip>
-						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
-						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
-						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-						<includes>
-							<include>**/xtraitj/tests/*Test.java</include>
-						</includes>
-						<excludes>
-							<exclude>**/xtraitj/tests/*CompilerTest.java</exclude>
-						</excludes>
-					</configuration>
-					<goals>
-						<goal>test</goal>
-					</goals>
-				</execution>
-			</executions>
-	    </plugin>
-		
-		<plugin>
-	        <groupId>org.eclipse.tycho</groupId>
-	        <artifactId>tycho-surefire-plugin</artifactId>
-	        <version>${tycho-version}</version>
-	        <executions>
-	        	<execution>
-	        		<!--  compiler tests need an OSGI environment, but no UI  -->
-					<id>default-test</id>
-					<phase>integration-test</phase>
-					<configuration>
-						<skip>${swtbot.tests.only}</skip>
-						<useUIHarness>false</useUIHarness>
-						<useUIThread>false</useUIThread>
-						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
-						<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
-						<includes>
-							<include>**/xtraitj/tests/*CompilerTest.java</include>
-						</includes>
-					</configuration>
-					<goals>
-						<goal>test</goal>
-					</goals>
-				</execution>
-				<execution>
-					<id>TychoSurefirePluginUiTest</id>
-					<phase>integration-test</phase>
-					<configuration>
-						<skip>${swtbot.tests.only}</skip>
-						<useUIHarness>true</useUIHarness>
-						<useUIThread>true</useUIThread>
-						<!-- tycho.testArgLine repeated to re-use the configuration for argLine for jacoco agent -->
-						<argLine>${tycho.testArgLine} ${memoryArgs} -DbuildingWithTycho=true</argLine>
-						<includes>
-							<include>**/xtraitj/ui/tests/*Test.java</include>
-						</includes>
-					</configuration>
-					<goals>
-						<goal>test</goal>
-					</goals>
-				</execution>
-			</executions>
-	    </plugin>
-	    
-	    	<plugin>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<executions>
+					<execution>
+						<!-- The execution id default-test must be left to tycho-surefire-plugin 
+							since it will execute it anyway -->
+						<id>MavenSurefirePluginTest</id>
+						<phase>test</phase>
+						<configuration>
+							<skip>${swtbot.tests.only}</skip>
+							<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+								for jacoco agent -->
+							<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
+							<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+							<includes>
+								<include>**/xtraitj/tests/*Test.java</include>
+							</includes>
+							<excludes>
+								<exclude>**/xtraitj/tests/*CompilerTest.java</exclude>
+							</excludes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<!-- compiler tests need an OSGI environment, but no UI -->
+						<id>default-test</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<skip>${swtbot.tests.only}</skip>
+							<useUIHarness>false</useUIHarness>
+							<useUIThread>false</useUIThread>
+							<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+								for jacoco agent -->
+							<argLine>${tycho.testArgLine} ${memoryArgs}</argLine>
+							<includes>
+								<include>**/xtraitj/tests/*CompilerTest.java</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>TychoSurefirePluginUiTest</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<skip>${swtbot.tests.only}</skip>
+							<useUIHarness>true</useUIHarness>
+							<useUIThread>true</useUIThread>
+							<!-- tycho.testArgLine repeated to re-use the configuration for argLine 
+								for jacoco agent -->
+							<argLine>${tycho.testArgLine} ${memoryArgs}
+								-DbuildingWithTycho=true</argLine>
+							<includes>
+								<include>**/xtraitj/ui/tests/*Test.java</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<configuration>
 					<dependency-resolution>
 						<extraRequirements>
-							<!-- to get the org.eclipse.osgi.compatibility.state plugin iff 
-							the targeted Eclipse version (e.g., Luna) has it
-							(backwards compatible with kepler and previous versions) -->
+							<!-- to get the org.eclipse.osgi.compatibility.state plugin iff the 
+								targeted Eclipse version (e.g., Luna) has it (backwards compatible with kepler 
+								and previous versions) -->
 							<requirement>
 								<type>eclipse-feature</type>
 								<id>org.eclipse.rcp</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
-							<!--
-								See
-								https://github.com/LorenzoBettini/jbase/issues/3
-								https://www.eclipse.org/forums/index.php/t/1073366/
-							 -->
+							<!-- See https://github.com/LorenzoBettini/jbase/issues/3 https://www.eclipse.org/forums/index.php/t/1073366/ -->
 							<requirement>
 								<type>eclipse-feature</type>
 								<id>org.eclipse.jdt</id>
@@ -127,6 +127,6 @@
 					</dependency-resolution>
 				</configuration>
 			</plugin>
-  	</plugins>
-  </build>
+		</plugins>
+	</build>
 </project>
