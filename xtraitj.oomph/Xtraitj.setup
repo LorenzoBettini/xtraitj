@@ -105,11 +105,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="mwe2.site"
-      value="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.8.1/"/>
+      value="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0/"/>
   <setupTask
       xsi:type="setup:VariableTask"
       name="xtext.site"
-      value="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.8.4/"/>
+      value="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.10.0/"/>
   <setupTask
       xsi:type="setup:VariableTask"
       id="githubpassword"
@@ -139,7 +139,8 @@
         label="Xtext Releases"
         licenseConfirmationDisabled="true">
       <requirement
-          name="org.eclipse.xtext.sdk.feature.group"/>
+          name="org.eclipse.xtext.sdk.feature.group"
+          versionRange="[2.10.0,2.11.0)"/>
       <requirement
           name="org.eclipse.emf.mwe2.language.sdk.feature.group"/>
       <requirement
@@ -220,7 +221,7 @@
       <requirement
           name="org.eclipse.b3.aggregator.editor.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/modeling/emft/b3/updates-4.3"/>
+          url="http://download.eclipse.org/modeling/emft/b3/updates-4.4"/>
     </setupTask>
     <setupTask
         xsi:type="setup.p2:P2Task"
