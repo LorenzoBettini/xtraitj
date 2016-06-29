@@ -13,3 +13,5 @@ Xtraitj is an implementation of traits completely compatible with Java. Single p
 It is implemented in Xtext and Xbase.
 
 Download and installation instructions can be found at http://xtraitj.sourceforge.net/download/.
+
+[![Build Status](https://travis-ci.org/LorenzoBettini/xtraitj.svg?branch=master)](https://travis-ci.org/LorenzoBettini/xtraitj) [![Coverage Status](https://coveralls.io/repos/github/LorenzoBettini/xtraitj/badge.svg?branch=master)](https://coveralls.io/github/LorenzoBettini/xtraitj?branch=master)
