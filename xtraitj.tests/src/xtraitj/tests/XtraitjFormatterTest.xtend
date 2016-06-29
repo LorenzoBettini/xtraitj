@@ -16,6 +16,9 @@ class XtraitjFormatterTest {
 		assertFormatted[
 			toBeFormatted = '''
 				package tests;
+				import java.util.List
+				
+				trait T  {  int  m ( List < String >  l1 ,  int  p )  {  return  0  ;  }}
 				
 				class C {
 				String s; 		C() {}
@@ -23,6 +26,13 @@ class XtraitjFormatterTest {
 			'''
 			expectation = '''
 				package tests;
+				import java.util.List
+				
+				trait T {
+					int  m ( List<String> l1 ,  int p )  {
+						return 0;
+					}
+				}
 				
 				class C {
 					String s;
