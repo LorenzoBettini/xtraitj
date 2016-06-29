@@ -100,7 +100,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="Mars"
+      defaultValue="Neon"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup:VariableTask"
@@ -304,6 +304,19 @@
       <sourceLocator
           rootFolder="${git.clone.location}"
           locateNestedProjects="true"/>
+      <repositoryList
+          name="Neon">
+        <repository
+            url="http://download.eclipse.org/releases/neon"/>
+        <repository
+            url="http://download.itemis.com/updates/releases/2.1.1/"/>
+        <repository
+            url="${xtext.site}"/>
+        <repository
+            url="${mwe2.site}"/>
+        <repository
+            url="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
+      </repositoryList>
       <repositoryList
           name="Mars">
         <repository
