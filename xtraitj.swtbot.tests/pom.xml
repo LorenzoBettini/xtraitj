@@ -79,7 +79,7 @@
 													<classfiles>
 														<fileset dir="../xtraitj.ui/target/classes" 
 															includes="**/*.class"
-															excludes="**/*ExtensionFactory*,**/*UiModule*,**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*"/>
+															excludes="**/*ExtensionFactory*,**/*UiModule*,**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*,**/*ProjectCreator*,**/*ProjectWizard*"/>
 													</classfiles>
 													<sourcefiles>
 														<fileset dir="../xtraitj.ui/src" />
