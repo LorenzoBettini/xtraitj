@@ -6,6 +6,16 @@ package xtraitj.scoping
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.impl.SimpleScope
+import xtraitj.jvmmodel.XtraitjJvmModelHelper
+import xtraitj.jvmmodel.XtraitjJvmModelUtil
+import xtraitj.xtraitj.TJTraitOperation
+import xtraitj.xtraitj.TJTraitOperationForProvided
+import xtraitj.xtraitj.XtraitjPackage
+
+import static extension org.eclipse.xtext.scoping.Scopes.*
 
 /**
  * This class contains custom scoping description.
@@ -14,13 +24,54 @@ import org.eclipse.emf.ecore.EReference
  * on how and when to use it.
  */
 class XtraitjScopeProvider extends AbstractXtraitjScopeProvider {
-	@Inject extension XtraitjScopeProviderUtil
-	
+	@Inject extension XtraitjJvmModelUtil
+	@Inject extension XtraitjJvmModelHelper
+
 	override getScope(EObject context, EReference reference) {
 		val scope = context.createCustomScope(reference)
-		
+
 		if (scope != null)
 			return scope;
 		super.getScope(context, reference);
+	}
+
+	def IScope createCustomScope(EObject context, EReference reference) {
+		if (reference == XtraitjPackage.eINSTANCE.TJTraitOperation_Member ||
+			reference == XtraitjPackage.eINSTANCE.TJRedirectOperation_Member2) {
+			return context.customScope
+		}
+
+		return null;
+	}
+
+	def dispatch customScope(EObject op) {
+		IScope.NULLSCOPE
+	}
+
+	def dispatch customScope(TJTraitOperation op) {
+		val ops = getXtraitjResolvedOperations(op)
+
+		// a JvmMember does not have 'name', but 'simpleName'
+		// thus we must also provide a function for computing the
+		// QualifiedName (the default one relies on 'name')
+		return new SimpleScope(
+			ops.requiredFields.map[declaration].scopedElementsFor [
+				QualifiedName::create(simpleName.stripGetter)
+			] + ops.declaredMethods.map[declaration].scopedElementsFor [
+				QualifiedName::create(simpleName)
+			]
+		)
+	}
+
+	def dispatch customScope(TJTraitOperationForProvided op) {
+		return scopeForDefinedMethods(op)
+	}
+
+	def scopeForDefinedMethods(TJTraitOperation op) {
+		new SimpleScope(
+			getXtraitjResolvedOperations(op).declaredMethods.map[declaration].scopedElementsFor [
+				QualifiedName.create(simpleName)
+			]
+		)
 	}
 }

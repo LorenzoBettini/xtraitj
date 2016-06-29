@@ -14,6 +14,8 @@ import xtraitj.xtraitj.TJRestrictOperation
 import xtraitj.xtraitj.XtraitjPackage
 
 import static extension org.junit.Assert.*
+import org.eclipse.emf.ecore.EcorePackage
+import org.eclipse.xtext.scoping.IScope
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
@@ -44,6 +46,11 @@ class XtraitjScopeProviderTest extends XtraitjAbstractTest {
 		traitRestrict.parse.
 			restrictOperation.assertScope
 			(memberFeature, "p, m, n")
+	}
+
+	@Test def void testCustomScopeWithEObject() {
+		IScope.NULLSCOPE.assertSame(
+			EcorePackage.eINSTANCE.EClass.customScope)
 	}
 
 	def private renameOperation(EObject o) {
