@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: xtraitj.ide
+Bundle-Vendor: Lorenzo Bettini
+Bundle-Version: 3.0.0.qualifier
+Bundle-SymbolicName: xtraitj.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: xtraitj,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: xtraitj.ide.contentassist.antlr,
+ xtraitj.ide.contentassist.antlr.internal
+

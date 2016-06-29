@@ -7,8 +7,7 @@ import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
-import xtraitj.scoping.XtraitjXbaseBatchScopeProvider
+import xtraitj.scoping.XtraitjScopeProvider
 import xtraitj.xtraitj.TJHideOperation
 import xtraitj.xtraitj.TJRenameOperation
 import xtraitj.xtraitj.TJRestrictOperation
@@ -19,7 +18,7 @@ import static extension org.junit.Assert.*
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjScopeProviderTest extends XtraitjAbstractTest {
-	@Inject extension XtraitjXbaseBatchScopeProvider
+	@Inject extension XtraitjScopeProvider
 
 	val memberFeature = XtraitjPackage::eINSTANCE.TJTraitOperation_Member
 

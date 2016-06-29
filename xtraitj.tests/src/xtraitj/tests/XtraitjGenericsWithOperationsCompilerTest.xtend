@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(InjectorProviderCustom))
+@InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjGenericsWithOperationsCompilerTest extends AbstractXtraitjCompilerTest {
 
 	@Test def void testTraitUsesGenericTraitWithRenameSimpler() {

@@ -21,7 +21,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 import xtraitj.tests.utils.XtraitjLogListener
 import xtraitj.xtraitj.TJClass
 import xtraitj.xtraitj.TJDeclaration

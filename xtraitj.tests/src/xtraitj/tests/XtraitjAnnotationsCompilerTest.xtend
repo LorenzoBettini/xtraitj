@@ -6,7 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(InjectorProviderCustom))
+@InjectWith(typeof(XtraitjInjectorProvider))
 class XtraitjAnnotationsCompilerTest extends AbstractXtraitjCompilerTest {
 	
 	@Test def void testAnnotatedMethods() {

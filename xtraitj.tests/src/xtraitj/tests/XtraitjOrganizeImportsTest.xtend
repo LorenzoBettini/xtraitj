@@ -8,7 +8,6 @@ import org.eclipse.xtext.util.ReplaceRegion
 import org.eclipse.xtext.xbase.imports.ImportOrganizer
 import org.junit.Test
 import org.junit.runner.RunWith
-import xtraitj.XtraitjInjectorProvider
 
 import static org.junit.Assert.*
 

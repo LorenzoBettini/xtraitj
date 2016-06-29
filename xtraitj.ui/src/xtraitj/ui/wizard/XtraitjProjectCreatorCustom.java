@@ -11,7 +11,7 @@ public class XtraitjProjectCreatorCustom extends XtraitjProjectCreator {
 
 	@Override
 	protected List<String> getAllFolders() {
-		return ImmutableList.of(SRC_ROOT,
+		return ImmutableList.of("src",
 				XtraitjOutputConfigurationProvider.TRAITJ_GEN);
 	}
 	
