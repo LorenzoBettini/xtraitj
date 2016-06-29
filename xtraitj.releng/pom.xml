@@ -62,7 +62,7 @@
 		<swtbot.tests.only>false</swtbot.tests.only>
 		<swtbot.tests.skip>false</swtbot.tests.skip>
 		
-		<target-file-name>mars-xtext-2.10</target-file-name>
+		<target-file-name>neon-xtext-2.10</target-file-name>
 		
 		<!-- properties for deploying the composite update site and zipped products on Sourceforge -->
 		
@@ -85,39 +85,6 @@
 	</properties>
 
 	<profiles>
-		<profile>
-			<id>mars</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			
-			<properties>
-				<target-file-name>mars-xtext-2.10</target-file-name>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>luna</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			
-			<properties>
-				<target-file-name>luna</target-file-name>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>kepler</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			
-			<properties>
-				<target-file-name>kepler</target-file-name>
-			</properties>
-		</profile>
-		
 		<profile>
 			<id>local</id>
 			<properties>
