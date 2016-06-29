@@ -227,7 +227,7 @@
 														<!-- Process class files only, ignore jacocoagent.jar -->
 														<fileset dir="../xtraitj/target/classes" 
 															includes="**/*.class"
-															excludes="**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*" 
+															excludes="**/*RuntimeModule*,**/*StandaloneSetup*,**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*" 
 														/>
 													</classfiles>
 													<sourcefiles>
@@ -239,7 +239,7 @@
 													<classfiles>
 														<fileset dir="../xtraitj.ui/target/classes" 
 															includes="**/*.class"
-															excludes="**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*"/>
+															excludes="**/*ExtensionFactory*,**/*UiModule*,**/*Internal*,**/*Sequencer*,**/*Abstract*,**/*GrammarAccess*,**/antlr/*.*,**/internal/*.*,**/xtraitj/xtraitj/util/*.*,**/xtraitj/xtraitj/impl/*.*"/>
 													</classfiles>
 													<sourcefiles>
 														<fileset dir="../xtraitj.ui/src" />

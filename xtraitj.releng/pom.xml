@@ -217,6 +217,7 @@
 					</executions>
 					<configuration>
 						<outputDirectory>xtend-gen</outputDirectory>
+						<xtendAsPrimaryDebugSource>true</xtendAsPrimaryDebugSource>
 					</configuration>
 				</plugin>
 
@@ -269,7 +270,7 @@
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>4.1.0</version>
 					<configuration>
 						<jacocoReports>
 							<jacocoReport>${jacoco.xml.reportPath}</jacocoReport>

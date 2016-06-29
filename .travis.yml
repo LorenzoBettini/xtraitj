@@ -34,4 +34,4 @@ before_script:
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true
+ - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true -Pjacoco-report coveralls:report
