@@ -25,10 +25,7 @@ class XtraitjIndex {
 	def getVisibleContainers(EObject o) {
 		val index = rdp.getResourceDescriptions(o.eResource)
 		val rd = index.getResourceDescription(o.eResource.URI)
-		if (rd != null)
-			cm.getVisibleContainers(rd, index)
-		else
-			emptyList
+		cm.getVisibleContainers(rd, index)
 	}
 
 }
