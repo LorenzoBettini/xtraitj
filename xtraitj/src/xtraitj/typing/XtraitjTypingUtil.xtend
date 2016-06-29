@@ -10,12 +10,12 @@ import org.eclipse.xtext.xbase.typesystem.references.StandardTypeReferenceOwner
 import org.eclipse.xtext.xbase.typesystem.util.CommonTypeComputationServices
 
 class XtraitjTypingUtil {
-	
+
 	@Inject CommonTypeComputationServices services;
 	@Inject extension Primitives
-	
+
 	val static objectClassName = Object.simpleName
-	
+
 	def sameType(EObject context, JvmTypeReference t1, JvmTypeReference t2) {
 		if (t1 == null || t2 == null)
 			return false
@@ -25,12 +25,12 @@ class XtraitjTypingUtil {
 		// but in Java method signatures they are not the same!
 		if (t1.primitive || t2.primitive)
 			return t1.type == t2.type
-		
+
 		val type1 = t1.toLightweightTypeReference(context)
 		val type2 = t2.toLightweightTypeReference(context)
 		return sameType(type1, type2)
 	}
-	
+
 	def sameType(LightweightTypeReference type1, LightweightTypeReference type2) {
 		isSubtype(type1, type2) && isSubtype(type2, type1)
 	}
@@ -49,11 +49,11 @@ class XtraitjTypingUtil {
 		val type2 = t2.toLightweightTypeReference(context)
 		isSubtype(type1, type2)
 	}
-	
+
 	def isSubtype(LightweightTypeReference type1, LightweightTypeReference type2) {
 		type2.isAssignableFrom(type1)
 	}
-	
+
 	def toLightweightTypeReference(JvmTypeReference typeRef, EObject context) {
 		return newTypeReferenceOwner(context).toLightweightTypeReference(typeRef)
 	}
@@ -65,5 +65,5 @@ class XtraitjTypingUtil {
 	def isNotJavaLangObject(JvmType type) {
 		type.simpleName != objectClassName
 	}
-	
+
 }

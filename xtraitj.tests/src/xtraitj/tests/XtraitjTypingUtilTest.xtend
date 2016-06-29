@@ -37,6 +37,19 @@ class XtraitjTypingUtilTest extends XtraitjAbstractTest {
 		]
 	}
 
+	@Test def void testSameTypeWithNull() {
+		'''
+		import java.util.List
+		
+		class C {
+			Object o1;
+		}
+		'''.parse.classes.head.fields => [
+			assertFalse(get(0).sameType(get(0).type, null))
+			assertFalse(get(0).sameType(null, get(0).type))
+		]
+	}
+
 	@Test def void testSubtype() {
 		'''
 		import java.util.List
@@ -66,6 +79,19 @@ class XtraitjTypingUtilTest extends XtraitjAbstractTest {
 			get(3).assertSubtype(get(5), true)
 			// ArrayList<? extends String> <: List<? extends String>
 			get(6).assertSubtype(get(5), true)
+		]
+	}
+
+	@Test def void testSubtypeTypeWithNull() {
+		'''
+		import java.util.List
+		
+		class C {
+			Object o1;
+		}
+		'''.parse.classes.head.fields => [
+			assertFalse(get(0).isSubtype(get(0).type, null))
+			assertFalse(get(0).isSubtype(null, get(0).type))
 		]
 	}
 
