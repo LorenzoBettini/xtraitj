@@ -29,7 +29,7 @@ install: true
 # - sudo apt-get install metacity
 # - sudo apt-get install libwebkit-dev
 
-before_script:
+before_install:
  - bash -e ./before_script.sh
 
 # Temporarily disable coveralls
