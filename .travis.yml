@@ -2,13 +2,18 @@ sudo: false
 
 language: java
 
-jdk: oraclejdk8
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      jdk: oraclejdk8
+      env: DISPLAY=:99.0
+    - os: osx
+      osx_image: xcode8
 
 cache:
   directories:
   - $HOME/.m2
-
-env: DISPLAY=:99.0
 
 addons:
   apt:
@@ -23,15 +28,12 @@ install: true
 # - sudo apt-get install metacity
 # - sudo apt-get install libwebkit-dev
 
-before_script:
- - sh -e /etc/init.d/xvfb start
- - sleep 10 # give xvfb some time to start
- - metacity --sm-disable --replace 2> metacity.err &
- - sleep 10 # give metacity some time to start
+before_install:
+ - bash -e ./before_script.sh
 
 # Temporarily disable coveralls
 #  -Pjacoco-report coveralls:report
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true -Pjacoco-report coveralls:report
+ - bash -e ./travis_build.sh
