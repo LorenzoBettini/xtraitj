@@ -36,4 +36,4 @@ before_install:
  
 script:
  - export
- - mvn -f xtraitj.releng/pom.xml clean verify -U -Dfindbugs.skip=true
+ - bash -e ./travis_build.sh
