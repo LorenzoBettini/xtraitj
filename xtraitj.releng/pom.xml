@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>xtraitj</groupId>
 	<artifactId>xtraitj.releng</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>../xtraitj.targetplatform</module>

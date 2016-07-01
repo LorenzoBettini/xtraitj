@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Xtraitj Runtime Library
 Bundle-SymbolicName: xtraitj.runtime.lib
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Require-Bundle: org.eclipse.xtext.xbase.lib;bundle-version="[2.10.0,2.11.0)";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Lorenzo Bettini

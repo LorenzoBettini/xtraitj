@@ -2,7 +2,7 @@
 <feature
       id="xtraitj.examples.feature"
       label="Xtraitj Examples"
-      version="3.0.0.qualifier">
+      version="4.0.0.qualifier">
 
    <description url="http://xtraitj.sourceforge.net">
       Xtraitj Example projects.
