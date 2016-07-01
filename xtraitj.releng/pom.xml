@@ -64,24 +64,33 @@
 		
 		<target-file-name>neon-xtext-2.10</target-file-name>
 		
-		<!-- properties for deploying the composite update site and zipped products on Sourceforge -->
-		
 		<!-- we need to make sure the path always points to this pom's directory -->
 		<ant-files-path>${project.basedir}/../xtraitj.releng/ant</ant-files-path>
-
-		<!-- the subdirectory for the composite update site -->
-		<updates.dir>xtraitj</updates.dir>
+		
+		<!-- for deployment on bintray -->
+		<!-- The name of your own Bintray repository -->
+		<bintray.repo>xtraitj</bintray.repo>
+		<!-- The name of your own Bintray repository's package for releases -->
+		<bintray.package>releases</bintray.package>
+		<bintray.products.package>eclipse-distributions</bintray.products.package>
+		<!-- The label for the Composite sites -->
 		<site.label>Xtraitj Site</site.label>
 
-		<remote.dir>lbettini,xtraitj@frs.sourceforge.net:/home/frs/project/xtraitj</remote.dir>
-	
-		<!-- local source directory of p2 site for rsync -->
-		<rsync.remote.dir>${remote.dir}/updates/</rsync.remote.dir>
-		<!-- remote directory of p2 site for rsync -->
-		<rsync.local.dir>${user.home}/p2.repositories/${updates.dir}/</rsync.local.dir>
+		<!-- If the Bintray repository is owned by someone different from your
+			user, then specify the bintray.owner explicitly -->
+		<bintray.owner>${bintray.user}</bintray.owner>
+		<!-- Define bintray.user and bintray.apikey in some secret place,
+			like .m2/settings.xml -->
 
-		<!-- pass "-n" to perform a trial run with no changes made -->
-		<dryrun></dryrun>
+		<!-- Default values for remote directories -->
+		<bintray.base.path></bintray.base.path>
+		<bintray.releases.path>${bintray.base.path}releases</bintray.releases.path>
+		<bintray.composite.path>${bintray.base.path}updates</bintray.composite.path>
+		<bintray.zip.path>${bintray.base.path}zipped</bintray.zip.path>
+		<bintray.products.path>${bintray.base.path}products</bintray.products.path>
+		<!-- note that the following must be consistent with the path schema
+			used to publish child composite repositories and actual released p2 repositories -->
+		<child.repository.path.prefix>../../releases/</child.repository.path.prefix>
 	</properties>
 
 	<profiles>

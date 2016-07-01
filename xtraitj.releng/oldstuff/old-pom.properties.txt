@@ -1,0 +1,18 @@
+<!-- properties for deploying the composite update site and zipped products on Sourceforge -->
+
+<!-- we need to make sure the path always points to this pom's directory -->
+<ant-files-path>${project.basedir}/../xtraitj.releng/ant</ant-files-path>
+
+<!-- the subdirectory for the composite update site -->
+<updates.dir>xtraitj</updates.dir>
+<site.label>Xtraitj Site</site.label>
+
+<remote.dir>lbettini,xtraitj@frs.sourceforge.net:/home/frs/project/xtraitj</remote.dir>
+
+<!-- local source directory of p2 site for rsync -->
+<rsync.remote.dir>${remote.dir}/updates/</rsync.remote.dir>
+<!-- remote directory of p2 site for rsync -->
+<rsync.local.dir>${user.home}/p2.repositories/${updates.dir}/</rsync.local.dir>
+
+<!-- pass "-n" to perform a trial run with no changes made -->
+<dryrun></dryrun>
