@@ -71,6 +71,7 @@
 
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven-antrun-plugin.version}</version>
 						<executions>
 							<execution>
 								<!-- Retrieve possibly existing remote composite metadata -->
@@ -169,6 +170,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven-antrun-plugin.version}</version>
 						<!-- we add the execution for copying zipped products -->
 						<executions>
 							<execution>
