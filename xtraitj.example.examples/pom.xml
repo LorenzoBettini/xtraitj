@@ -13,68 +13,68 @@
 	<artifactId>xtraitj.example.examples</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
-	<profiles>
-		<profile>
-			<id>other-os</id>
-			<activation>
-				<os>
-					<family>!mac</family>
-				</os>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-clean-plugin</artifactId>
-						<version>2.5</version>
-						<configuration>
-							<filesets combine.children="append">
-								<fileset>
-									<directory>${basedir}/xtraitj-gen</directory>
-									<excludes>
-										<exclude>README.txt</exclude>
-								    </excludes>
-								</fileset>
-							</filesets>
-						</configuration>
-					</plugin>
-					<!-- This seems to fail in Mac -->
-					<plugin>
-						<groupId>org.eclipse.xtext</groupId>
-						<artifactId>xtext-maven-plugin</artifactId>
-						<version>${xtext.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>generate</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<failOnValidationError>true</failOnValidationError>
-							<languages>
-								<language>
-									<setup>xtraitj.XtraitjStandaloneSetup</setup>
-									<outputConfigurations>
-										<outputConfiguration>
-											<outputDirectory>${basedir}/xtraitj-gen</outputDirectory>
-										</outputConfiguration>
-									</outputConfigurations>
-								</language>
-							</languages>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>xtraitj</groupId>
-								<artifactId>xtraitj</artifactId>
-								<version>${project.version}</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+<!-- 	<profiles> -->
+<!-- 		<profile> -->
+<!-- 			<id>other-os</id> -->
+<!-- 			<activation> -->
+<!-- 				<os> -->
+<!-- 					<family>!mac</family> -->
+<!-- 				</os> -->
+<!-- 			</activation> -->
+<!-- 			<build> -->
+<!-- 				<plugins> -->
+<!-- 					<plugin> -->
+<!-- 						<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 						<artifactId>maven-clean-plugin</artifactId> -->
+<!-- 						<version>2.5</version> -->
+<!-- 						<configuration> -->
+<!-- 							<filesets combine.children="append"> -->
+<!-- 								<fileset> -->
+<!-- 									<directory>${basedir}/xtraitj-gen</directory> -->
+<!-- 									<excludes> -->
+<!-- 										<exclude>README.txt</exclude> -->
+<!-- 								    </excludes> -->
+<!-- 								</fileset> -->
+<!-- 							</filesets> -->
+<!-- 						</configuration> -->
+<!-- 					</plugin> -->
+<!-- 					This seems to fail in Mac -->
+<!-- 					<plugin> -->
+<!-- 						<groupId>org.eclipse.xtext</groupId> -->
+<!-- 						<artifactId>xtext-maven-plugin</artifactId> -->
+<!-- 						<version>${xtext.version}</version> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<goals> -->
+<!-- 									<goal>generate</goal> -->
+<!-- 								</goals> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 						<configuration> -->
+<!-- 							<failOnValidationError>true</failOnValidationError> -->
+<!-- 							<languages> -->
+<!-- 								<language> -->
+<!-- 									<setup>xtraitj.XtraitjStandaloneSetup</setup> -->
+<!-- 									<outputConfigurations> -->
+<!-- 										<outputConfiguration> -->
+<!-- 											<outputDirectory>${basedir}/xtraitj-gen</outputDirectory> -->
+<!-- 										</outputConfiguration> -->
+<!-- 									</outputConfigurations> -->
+<!-- 								</language> -->
+<!-- 							</languages> -->
+<!-- 						</configuration> -->
+<!-- 						<dependencies> -->
+<!-- 							<dependency> -->
+<!-- 								<groupId>xtraitj</groupId> -->
+<!-- 								<artifactId>xtraitj</artifactId> -->
+<!-- 								<version>${project.version}</version> -->
+<!-- 							</dependency> -->
+<!-- 						</dependencies> -->
+<!-- 					</plugin> -->
+<!-- 				</plugins> -->
+<!-- 			</build> -->
+<!-- 		</profile> -->
+<!-- 	</profiles> -->
 
 	<build>
 		<plugins>

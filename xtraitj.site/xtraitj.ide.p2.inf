@@ -1,2 +1,2 @@
-instructions.configure=org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(location:http${#58}//sourceforge.net/projects/xtraitj/files/updates/3.0/,type:0,name:Xtraitj,enabled:true); \
-  org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(location:http${#58}//sourceforge.net/projects/xtraitj/files/updates/3.0/,type:1,name:Xtraitj,enabled:true);
+instructions.configure=org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(location:http${#58}//dl.bintray.com/lorenzobettini/xtraitj/updates/,type:0,name:Xtraitj,enabled:true); \
+  org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(location:http${#58}//dl.bintray.com/lorenzobettini/xtraitj/updates/,type:1,name:Xtraitj,enabled:true);
