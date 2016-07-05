@@ -6,7 +6,9 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
 		echo "Build on MacOSX: Pull Request"
 		mvn -f xtraitj.releng/pom.xml clean verify -Dfindbugs.skip=true
 	else
-		echo "Skipping build on MacOSX for standard commit"
+		#echo "Skipping build on MacOSX for standard commit"
+		echo "Build on MacOSX for standard commit"
+		mvn -f xtraitj.releng/pom.xml clean verify -Dfindbugs.skip=true
 	fi
 else
 	echo "Build on Linux"
